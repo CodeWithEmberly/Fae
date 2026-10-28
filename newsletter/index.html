@@ -1,28 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
 <title>The Long Game</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
-/* Layout: a plain daily page in the EV tradition. Masthead tally strip, linked item list, numbered items with footnotes in a reading column, a narrow sidebar ledger, yesterday's issue folded below. */
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
 :root{
-  --paper:#fbfbf9;
-  --ink:#1b1e24;
-  --muted:#5d6370;
-  --rule:#d9dbe0;
-  --accent:#1d4e89;
-  --accent-soft:#e7eef7;
-  --stamp:#9a4a12;
-  --ok:#2f6b3a;
-  --font-head:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
-  --font-body:"Source Serif 4",Georgia,"Times New Roman",serif;
-  --font-data:"IBM Plex Mono",Consolas,"Courier New",monospace;
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#14171c;--ink:#e6e8ec;--muted:#9aa1ad;--rule:#2c313a;--accent:#8db7ea;--accent-soft:#1c2633;--stamp:#e0a06a;--ok:#86c795;color-scheme:dark}}
-:root[data-theme="dark"]{
-  --paper:#14171c;--ink:#e6e8ec;--muted:#9aa1ad;--rule:#2c313a;--accent:#8db7ea;--accent-soft:#1c2633;--stamp:#e0a06a;--ok:#86c795;color-scheme:dark}
 
-body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.6}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
 .wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 a{color:var(--accent);text-underline-offset:2px}
@@ -154,33 +155,51 @@ aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0
 .qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
 .qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
 .pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
 footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <header class="mast">
     <h1>The Long Game</h1>
     <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
   </header>
   <div class="tally" aria-label="Running tallies">
-    <span>628 books: <b>1</b> read · <b>1</b> in seminar today · <b>16</b> to go</span>
-    <span>Midterms in <b>7</b> days</span>
-    <span>628 paper due in <b>35</b> days</span>
+    <span>628 books: <b>2</b> read · <b>16</b> to go</span>
+    <span>Midterms in <b>6</b> days</span>
+    <span>628 paper due in <b>34</b> days</span>
   </div>
-  <p class="mockflag"><strong>Sample issue · sources shown.</strong> Every factual claim has a footnote. <span class="chk">Checked</span> means the passage was read in your Drive copy or at the linked page. <span class="tbc">To check</span> means the claim is from memory and still needs a look. Lines labeled as opinion have no footnote.</p>
 
   <div class="cols">
     <main>
-      <p class="dateline">Tuesday, October 27, 2026</p>
+      <p class="dateline">Wednesday, October 28, 2026</p>
       <nav class="toc" aria-label="Today's items">
         <h2>Today's Items</h2>
         <ol>
-          <li><a href="#crane">Seminar at 1200: Crane in Review</a></li>
+          <li><a href="#crane">Crane in Review: After the Seminar</a></li>
           <li><a href="#shelf">The Shelf: What You've Read</a></li>
-          <li><a href="#zhang">Next Up: Zhang, Thursday</a></li>
+          <li><a href="#zhang">Tomorrow: Zhang, Red Wings over the Yalu</a></li>
           <li><a href="#comps">Comps Bank: 20 Questions, Cumulative</a></li>
-          <li><a href="#lab">Writing Lab: Evaluation, the Step Everyone Skips</a></li>
+          <li><a href="#lab">Writing Lab: "This What?" and "How Many?"</a></li>
           <li><a href="#t1">Nebraska Is Running the Strongpoint Play</a></li>
           <li><a href="#t2">850 Jets, Millions of Drones, and the Perception of Means</a></li>
           <li><a href="#t3">Change for What? Petraeus, Kennan, and the Order of Operations</a></li>
@@ -188,9 +207,9 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
       </nav>
 
       <section class="block" aria-label="Seminar prep">
-        <h2>Seminar Prep · Class at 1200</h2>
+        <h2>Seminar Prep · Zhang is tomorrow</h2>
         <article id="crane">
-          <span class="kicker">Book of the Day · Crane, <i>American Airpower Strategy in Korea</i></span>
+          <span class="kicker">Review · Crane, <i>American Airpower Strategy in Korea</i> · seminar was yesterday</span>
           <h3><a href="#crane">The Air Force Didn't Advertise Its Limits. Korea Did.</a></h3>
           <p class="howto">Recall first: answer each question from memory, then open it to check. Trying before looking is what makes it stick.</p>
           <ul class="recall">
@@ -242,7 +261,7 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         </article>
 
         <article id="zhang">
-          <span class="kicker">Next Up · Thursday 29 Oct</span>
+          <span class="kicker">Tomorrow · Thursday 29 Oct</span>
           <h3><a href="#zhang">Zhang: The Same Air War, from North of the Yalu</a></h3>
           <p>Xiaoming Zhang's <i>Red Wings over the Yalu</i> tells the Korean air war from the Communist side, mostly the Chinese side, using newly opened Chinese and Russian archives and PLAAF oral histories.<sup><a href="#zn1">1</a></sup> It follows three threads: China's ideas about airpower and its rush to build an air force, the odd shape of Soviet help, and how Chinese air operations actually went.<sup><a href="#zn2">2</a></sup> Zhang's ambition is plain: "This book thus should significantly modify conventional wisdom about the Korean War."<sup><a href="#zn3">3</a></sup></p>
           <p><b>The bridge from Crane.</b> Crane shows Washington limiting American airpower for political reasons. Zhang argues that the US and Soviet operations were limited mainly by politics, while the PLAAF was held back by inexperience.<sup><a href="#zn4">4</a></sup> Same war, different kinds of limits. That's the syllabus's second theme in one comparison.</p>
@@ -417,32 +436,33 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
       </section>
 
       <section class="block lab" id="lab" aria-label="Writing Lab">
-        <h2>Writing Lab · Week 1, Day 2</h2>
-        <h3>Evaluation: The Step Everyone Skips</h3>
-        <p><b>The rule.</b> Hollon's PEER paragraph runs Point, Evidence, Evaluation, Review. Evaluation means judging the evidence (is it reliable, biased, complete?) and explaining how it supports your point. Hollon calls the missing Evaluation "the source of A LOT of problems for all writers."<sup><a href="#ln1">1</a></sup> The usual failure is the evidence dump: three facts in a row, then "Thus."</p>
+        <h2>Writing Lab · Week 1, Day 3</h2>
+        <h3>Precise Language: "This What?" and "How Many?"</h3>
+        <p><b>The rule.</b> Hollon says to search your draft for <i>this, these, those, that, many, most, some, several, would,</i> and <i>often</i>.<sup><a href="#ln1">1</a></sup> A sentence that opens with a bare "this" usually points back at the previous sentence. Either combine the two sentences or put a noun after "this." Words like "many" and "most" try to sound significant without committing to anything, so ask: how many, and how do you know?<sup><a href="#ln1">1</a></sup></p>
 
         <h4>Before and after</h4>
         <div class="ba">
-          <div class="before"><b>Before: evidence dump</b>Kennan identified five centers of industrial and military power. He favored strongpoint defense over perimeter defense. The Truman administration believed its resources were limited. Thus, Kennan's strategy was adopted.</div>
-          <div class="after"><b>After: full PEER</b><span class="tag-p">[P]</span> Kennan's strongpoint strategy won early acceptance less for its logic than for its fit with the Truman administration's budget. <span class="tag-p">[E]</span> Kennan argued that only five centers of industrial and military power mattered and that the United States should defend those strongpoints rather than a perimeter.<sup><a href="#ln2">2</a></sup> <span class="tag-p">[Ev]</span> Gaddis is careful on this point. He presents Kennan's ideas partly as rationalizations of moves the administration was already making, which weakens any claim that Kennan drove policy alone.<sup><a href="#ln3">3</a></sup> <span class="tag-p">[E/Ev]</span> The appeal lay in fit, since officials were convinced the country had only limited resources.<sup><a href="#ln4">4</a></sup> <span class="tag-p">[R]</span> If the strategy rested on a perception of scarcity, it should have unraveled once that perception changed, and the next section tests that prediction against NSC-68.</div>
+          <div class="before"><b>Before: vague</b>Many sorties were flown against the railways, but this did not stop the enemy. Some people thought interdiction was not working. This led to a new strategy.</div>
+          <div class="after"><b>After: precise</b>FEAF's rail campaign produced more than 15,000 rail cuts at a cost of 243 aircraft destroyed, yet an April 1952 FEAF study concluded that interdiction had not worked.<sup><a href="#ln2">2</a></sup> Fifth Air Force intelligence estimated that as many as 500,000 soldiers and civilians were working to keep enemy transportation routes open.<sup><a href="#ln3">3</a></sup> The same study proposed a replacement: "air pressure" through selective destruction.<sup><a href="#ln2">2</a></sup></div>
         </div>
-        <p class="fine" style="margin-top:8px">What changed: the point makes a claim instead of stating a fact. One sentence judges the source. The last sentence tells the reader where the argument goes next. The "after" follows Hollon's other rules too: no contractions, third person, no bare "this."</p>
+        <p class="fine" style="margin-top:8px">What changed: "many sorties" became two numbers. "Some people" became a named study with a date. Each "this" became the thing it pointed to. The paragraph got more persuasive without getting longer.</p>
 
         <h4>Pro tip</h4>
-        <p class="protip"><b>The scaffold trick.</b> After each piece of evidence, write a sentence that starts "This matters because…" Then delete those three words and sharpen what's left. The scaffold forces you to evaluate, and deleting it keeps you clear of Hollon's bare-"this" rule.</p>
+        <p class="protip"><b>Run the list, then ask one question.</b> Use Ctrl+F for each word on Hollon's list. At every hit, ask "which one?" or "how many?" If you can answer, write the answer in. If you can't, you've found a gap in your research, not a style problem. Go back to the book.</p>
 
         <h4>Model of the week</h4>
         <p>Lamb and Grego's War on the Rocks piece "Golden Dome Is Technologically and Financially Infeasible" puts the thesis in its title. It gives one subheading per reason and evaluates the other side's best evidence: it takes on the Congressional Budget Office's lower cost estimate by naming the assumptions behind it.<sup><a href="#ln5">5</a></sup> That's the skeleton for the 628 paper: one crisis, one claim, a handful of reasons.<sup><a href="#ln6">6</a></sup></p>
 
         <h4>Two-minute drill</h4>
         <ul class="recall">
-          <li><details><summary>Fix it: "It was decided that interdiction would continue."</summary><p>Passive voice with no actor (run the "by an idiot" test). Name the decider your source identifies: "[The commander] continued interdiction." If you don't know who decided, that's a research question, not a style choice.</p></details></li>
-          <li><details><summary>Fix it: "This shows that airpower had limits."</summary><p>Bare "this," plus a claim too vague to argue. Name the noun and sharpen the claim: "The interdiction campaign's results show that…" Then say which limits, and who imposed them.</p></details></li>
+          <li><details><summary>Fix it: "Several restrictions often limited airmen."</summary><p>"Several" and "often" hide the evidence. Name the restrictions and who imposed them: "The JCS barred strikes near the Soviet and Manchurian borders and limited the Yalu bridge attacks to the Korean side of the spans."<sup><a href="#ln4">4</a></sup></p></details></li>
+          <li><details><summary>Fix it: "Most historians agree this was a failure."</summary><p>Which historians, and what failed? Cite the one you can name: "Crane argues that rail interdiction failed despite more than 15,000 cuts."<sup><a href="#ln2">2</a></sup> "Most historians" is a claim you'd have to prove with a survey of the literature.</p></details></li>
+          <li><details><summary>Review from Tuesday: "It was decided that interdiction would continue."</summary><p>Passive voice with no actor (the "by an idiot" test). Name the decider your source identifies. If you don't know who decided, that's a research question.</p></details></li>
         </ul>
 
         <h4>Your turn</h4>
         <div class="mine">
-          <label for="mine-crane">After seminar, write one PEER paragraph on Crane.</label>
+          <label for="mine-crane">Write one paragraph on Crane, then run Hollon's word list on it.</label>
           <textarea id="mine-crane" placeholder="[P] Crane argues… [E] … [Ev] … [R] …"></textarea>
           <small>Saved only in this browser on this device. Writing it yourself is how it sticks.</small>
         </div>
@@ -451,16 +471,16 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         <p class="fine">Mon: passive voice · Tue: Evaluation · Wed: precise language ("this," "many," "some") · Thu: the thesis is king · Fri: footnotes and Chicago style · Sat: one drill from each</p>
 
         <ol class="notes">
-          <li id="ln1"><span class="chk">Checked</span>Col Hollon, "Keys to Editing Success," item 4c.</li>
-          <li id="ln2"><span class="chk">Checked</span>Gaddis, <i>Strategies of Containment</i>, 29, 57.</li>
-          <li id="ln3"><span class="chk">Checked</span>Gaddis, 57.</li>
-          <li id="ln4"><span class="chk">Checked</span>Gaddis, 57–58.</li>
+          <li id="ln1"><span class="chk">Checked</span>Col Hollon, "Keys to Editing Success," item 6a–c.</li>
+          <li id="ln2"><span class="chk">Checked</span>Crane, <i>American Airpower Strategy in Korea</i>, 115–116.</li>
+          <li id="ln3"><span class="chk">Checked</span>Crane, 82–83.</li>
+          <li id="ln4"><span class="chk">Checked</span>Crane, 23–24, 49–50.</li>
           <li id="ln5"><span class="chk">Checked</span>Frederick Lamb and Laura Grego, "<a href="https://warontherocks.com/cogs-of-war/golden-dome-is-technologically-and-financially-infeasible/" target="_blank" rel="noopener">Golden Dome Is Technologically and Financially Infeasible</a>," <i>War on the Rocks</i>, Oct. 15, 2026.</li>
           <li id="ln6"><span class="chk">Checked</span>SAASS 628 AY27 Syllabus, "Grading."</li>
         </ol>
       </section>
 
-      <p class="dateline" style="margin-top:8px">News × the Books</p>
+      <p class="dateline" style="margin-top:8px">News × the Books · from Tuesday</p>
 
       <article id="t1">
         <span class="kicker">Political Strategy <span class="tie">× Gaddis</span></span>
@@ -601,8 +621,8 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         <table class="ledger">
           <tbody>
             <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
-            <tr><td>27 Oct</td><td class="st-now">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill now">SEMINAR</span></td></tr>
-            <tr><td>29 Oct</td><td>Zhang, <i>Red Wings over the Yalu</i></td><td></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-now">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill now">NEXT</span></td></tr>
             <tr><td>30 Oct</td><td>McDougall, <i>…The Heavens and the Earth</i></td><td></td></tr>
             <tr><td>2 Nov</td><td>Schlight + document pack (decision exercise)</td><td></td></tr>
             <tr><td>3 Nov</td><td>Clodfelter, <i>The Limits of Airpower</i></td><td></td></tr>
@@ -616,9 +636,9 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
       </section>
       <section>
         <h2>Countdowns</h2>
-        <div class="count"><span>Midterm Election Day, 3 Nov</span><b>7</b></div>
-        <div class="count"><span>Vietnam decision exercise, 2 Nov</span><b>6</b></div>
-        <div class="count"><span>628 paper due, 1 Dec</span><b>35</b></div>
+        <div class="count"><span>Midterm Election Day, 3 Nov</span><b>6</b></div>
+        <div class="count"><span>Vietnam decision exercise, 2 Nov</span><b>5</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>34</b></div>
       </section>
       <section>
         <h2>Daily Lineup</h2>
@@ -720,3 +740,6 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
   render();
 })();
 </script>
+
+</body>
+</html>
