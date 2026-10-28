@@ -1,9 +1,10 @@
-# Newsletter
+# The Long Game
 
-My daily newsletter. For now it's private and just for me.
+My daily newsletter: strategy, books, space, and politics.
 
 ## How it's organized
 
-- Each day's issue is its own file, named by date: `YYYY-MM-DD.md`
-  (for example, `2026-10-28.md`).
-- The newest issue has the latest date, so files sort in order automatically.
+- `index.html` is the newsletter page. It shows today's issue, with
+  yesterday's issue folded underneath.
+- To read it in a browser, open:
+  https://htmlpreview.github.io/?https://github.com/CodeWithEmberly/Fae/blob/main/newsletter/index.html
