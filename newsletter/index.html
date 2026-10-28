@@ -183,6 +183,12 @@ main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
 .qa > h2{color:var(--ok)}
 .qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
 .qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
 /* Sources stay, verification badges go */
 .chk{display:none}
 .tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
@@ -203,6 +209,12 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
     <span>628 paper due in <b>34</b> days</span>
   </div>
 
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 5½ minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-10-28.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-10-28.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
   <div class="cols">
     <main>
       <p class="dateline">Wednesday, October 28, 2026</p>
@@ -216,6 +228,7 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
           <li><a href="#a4">Whose Numbers Do You Trust? Michigan, Israel, and Zhang's Kill Ratios</a></li>
           <li><a href="#a5">You Can't Win an Air War You Can't Build: 850 Jets, a Million Drones, and Mao's Shopping List</a></li>
           <li><a href="#a6">Petraeus Wants a Revolution. Zhang Has Notes on Who Should Lead It.</a></li>
+          <li><a href="#a8">Up, Up, and Just Outside: The Army Rediscovers the Balloon</a></li>
         </ol>
         <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A and Comps Bank</a></p>
       </nav>
@@ -223,7 +236,7 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
       <article id="a1">
         <span class="kicker">Tomorrow's Reading · Thursday, October 29</span>
         <h3><a href="#a1">Zhang Flips the Map: The Korean Air War from North of the Yalu</a></h3>
-        <p>Tomorrow's seminar trades the view from the B-29 for the view from the MiG, which is the same war with the subtitles switched.Xiaoming Zhang's <i>Red Wings over the Yalu</i> tells the Korean air war from the Communist side, and mostly from the Chinese side, using newly opened Chinese and Russian archives and oral histories from the Chinese air force. He isn't shy about the goal. He says plainly that the book should significantly modify conventional wisdom about the Korean War. An author who announces that in the introduction is either very confident or about to be very interesting. Zhang manages both.</p>
+        <p>Tomorrow's seminar trades the view from the B-29 for the view from the MiG, which is the same war with the subtitles switched. Xiaoming Zhang's <i>Red Wings over the Yalu</i> tells the Korean air war from the Communist side, and mostly from the Chinese side, using newly opened Chinese and Russian archives and oral histories from the Chinese air force. He isn't shy about the goal. He says plainly that the book should significantly modify conventional wisdom about the Korean War. An author who announces that in the introduction is either very confident or about to be very interesting. Zhang manages both.</p>
         <p>He pulls three threads: China's ideas about airpower and its rush to build an air force from nothing, the odd shape of Soviet help, and how Chinese air operations actually went. Running under all three is an alliance that was less than it looked. Moscow and Beijing were allies, in roughly the way two strangers sharing a cab are traveling companions: each used the war for its own national interests, and the Soviets held back to avoid a direct clash with the United States.</p>
         <p>Here's the bridge from yesterday's book. Crane spent his pages showing Washington putting limits on American airmen. Zhang's twist is that the American and Soviet air operations were limited mainly by politics, while the Chinese air force was limited by inexperience. China had no aviation industry and depended on Soviet equipment, and its leaders were veterans of ground war with no real idea of air warfare. Opinion: that's the course's second theme in a single comparison. The Americans had the capability and were told not to use all of it. The Chinese had the permission and had to build the capability, at war, in a hurry, taught by Soviet advisers in a language the students didn't speak.</p>
         <p>Read for four things. First, whose numbers to trust. Zhang warns that the kill ratios he reports are official Chinese and Russian figures that may misrepresent what really happened, and that the two sides' combat reports rarely match. He's just as blunt about the American side, calling U.S. victory claims probably highly inflated. Second, Stalin. Zhang calls the Soviet offer of air support a cryptic promise, and the October telegram in which Stalin asked for Chinese troops said nothing about air support at all. Stalin, it seems, was a firm believer in reading the fine print, provided he was the one who got to leave it out. Meanwhile the Chinese 13th Army Group was telling Beijing that air support was a requirement, and proposed delaying the intervention if the Soviets couldn't guarantee it. Third, doctrine. Chinese air planners saw fighters as defensive weapons and bombers as aggressive ones, which fit China's defensive outlook and pushed them toward a fighter force. Fourth, the lesson China kept: by Zhang's account, the Korean War experience limited the Chinese air force to an air defense role.</p>
@@ -282,6 +295,14 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         <p>Retired General David Petraeus told an aluminum industry gathering in Washington on October 16 (the drone revolution, apparently, will be lightweight) that the United States and NATO need "urgent revolutionary institutional change" to prepare for modern war. He wants it to reach force structure, training, procurement, personnel policy, and bases. He would trade much of the heavily manned legacy force for cheaper, more numerous unmanned systems, and he wants production lines that can push software changes weekly. He called the new Autonomous Warfare Command, which requires each service to stand up its own component, a commendable step. Each service will now get to decide how revolutionary it would like to be, which is a bit like letting the defendants pick the jury.</p>
         <p>Zhang has a case study in exactly this kind of revolution, and it's not entirely encouraging. When Beijing decided to build an air force from scratch, Zhou Enlai handed the job to Liu Yalou, an army group commander. Money was no obstacle. Liu had Mao's personal attention and got what he asked for. But Zhang judges that Liu's limited knowledge of an air force's day-to-day workings may have stunted its development in the long run. Liu believed the air force should be tied to ground operations, doubted that aviation could be decisive in war, and declared that the air force should support the ground forces and take their victories as its own. The teachers had problems of their own. The Soviet advisers wore civilian clothes for secrecy, many had little teaching experience, and their students had little education and no Russian.</p>
         <p>Opinion, and the leadership lesson: revolutions in military affairs are usually led by people who did extremely well in the previous military affairs. Liu built a new service in the image of the old one, and the funding didn't fix it, because the problem was never money. If the Autonomous Warfare Command's component commanders all come from the platforms the drones are meant to replace, Zhang would recognize the pattern. So would Kennan, who would ask first what interest the revolution serves. Lead change with at least some people who are fluent in the new thing, and pay for good teachers. Otherwise the new service ends up taking the old service's victories as its own, and its old habits too. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a8">
+        <span class="kicker">Defense &amp; Conflict × Zhang · via Defense News</span>
+        <h3><a href="#a8">Up, Up, and Just Outside: The Army Rediscovers the Balloon</a></h3>
+        <p>The most forward-looking idea in the Pacific this week is a technology the Montgolfier brothers would recognize. Defense News reports that the Army is exploring high-altitude balloons that carry payloads to watch the battlefield, relay communications, and even launch strikes, all aimed at China's anti-access network. Major General Bernard Harrington, who commands the 7th Infantry Division and Multi-Domain Command-Pacific, pitched them at the Association of the U.S. Army's annual conference as cheaper and harder to spot than the alternatives, and launchable from dispersed sites. Balloons can now stay up for weeks or months. Above 60,000 feet, their sensors can see deep into a rival's territory while the balloon itself stays in international airspace. The Army has tested them in Guam and Japan, and the European command's commander would like to launch "200, 300 at a time." The flight paths, he notes, vary by season, which makes this the first weapon system whose deployment schedule is set by the jet stream.</p>
+        <p>Now go to tomorrow's reading. Zhang's Chinese air force wasn't born to project power. In early 1950, he writes, the Nationalist air force effectively owned the airspace over China and was raiding Shanghai and other coastal cities. Beijing's plan for its first year called for seven fighter regiments for air defense and four bomber regiments for the Taiwan campaign. The new air force's mission list, in order, was to win air superiority over the Nationalists, support the assault on Taiwan, and then defend China's airspace and waters, which is why fighters got priority. Korea, as we've covered, then left that air force in a defensive role for good.</p>
+        <p>Opinion: put those together and the balloon plan becomes a quiet test of the reflex Zhang describes. An air force forged by watching enemy aircraft over its own coast is being invited to watch American sensors hover just outside it. Note, too, where the Army is careful to park them: in international airspace, on the legal side of the line. Crane's airmen in 1950 were told to hit only the Korean half of the Yalu bridges. Seventy-six years later, the limited-war instinct is the same, and only the altitude has changed. The open question for seminar is whether a line that both sides can see is a limit or just a dare. <span class="by">(S)</span></p>
       </article>
 
       <p class="endmark">End of today's articles.</p>
@@ -351,6 +372,14 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
           <li>Petraeus remarks, including the venue (an American Primary Aluminum Association event): Katie Livingstone, "<a href="https://www.militarytimes.com/news/pentagon-congress/2026/10/23/us-military-needs-urgent-revolutionary-institutional-change-to-prepare-for-modern-war-petraeus-says/" target="_blank" rel="noopener">US military needs 'urgent revolutionary institutional change'</a>," <i>Military Times</i>, October 23, 2026.</li>
           <li>Liu Yalou given the job: Zhang, 33. Money no obstacle; limited knowledge of day-to-day workings: 39. Air force tied to ground operations; aviation not decisive; "take their victories as its own": 40. Soviet advisers in civilian clothes, teaching gaps, no Russian: 43.</li>
           <li>Interests before threats (Kennan): Gaddis, 31.</li>
+        </ul>
+
+        <h3>Up, Up, and Just Outside</h3>
+        <ul>
+          <li>Balloons for sensing, relay, and strikes against China's anti-access network; Harrington at AUSA; weeks or months aloft; above 60,000 feet in international airspace; Guam and Japan tests; "200, 300 at a time" (Brig. Gen. Steven Carpenter); seasonal flight paths: Christopher Woody, "<a href="https://www.defensenews.com/industry/techwatch/2026/10/27/us-army-looks-to-high-flying-balloons-to-help-see-strike-along-front-lines-with-china/" target="_blank" rel="noopener">US Army looks to high-flying balloons to help see, strike along front lines with China</a>," <i>Defense News</i>, October 27, 2026.</li>
+          <li>Nationalists owning the airspace and raiding Shanghai in early 1950; seven fighter and four bomber regiments: Zhang, 45. Mission order and fighter priority: 46. Air-defense role: 11.</li>
+          <li>Yalu spans limited to the Korean side: Crane, 49–50.</li>
+          <li>The Montgolfier line is a joke. The brothers flew the first hot-air balloons in 1783, which is common knowledge and not from these sources.</li>
         </ul>
       </section>
 
