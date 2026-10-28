@@ -169,6 +169,20 @@ aside{font-size:18px}
 .ledger td:first-child{font-size:14px}
 .tally{font-size:14px}
 .mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
 /* Sources stay, verification badges go */
 .chk{display:none}
 .tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
@@ -192,100 +206,177 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
   <div class="cols">
     <main>
       <p class="dateline">Wednesday, October 28, 2026</p>
-      <nav class="toc" aria-label="Today's items">
-        <h2>Today's Items</h2>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
         <ol>
-          <li><a href="#crane">Crane in Review: After the Seminar</a></li>
-          <li><a href="#shelf">The Shelf: What You've Read</a></li>
-          <li><a href="#zhang">Tomorrow: Zhang, Red Wings over the Yalu</a></li>
-          <li><a href="#comps">Comps Bank: 20 Questions, Cumulative</a></li>
-          <li><a href="#lab">Writing Lab: "This What?" and "How Many?"</a></li>
-          <li><a href="#t1">Nebraska Is Running the Strongpoint Play</a></li>
-          <li><a href="#t2">850 Jets, Millions of Drones, and the Perception of Means</a></li>
-          <li><a href="#t3">Change for What? Petraeus, Kennan, and the Order of Operations</a></li>
+          <li><a href="#a1">Zhang Flips the Map: The Korean Air War from North of the Yalu</a></li>
+          <li><a href="#a7">What Would Zhang Make of Your 628 Paper? Start with Taiwan</a></li>
+          <li><a href="#a2">The Story So Far: Gaddis Set the Budget, Crane Sent the Bill</a></li>
+          <li><a href="#a3">"This What?" and "How Many?": Two Questions That Fix Most Drafts</a></li>
+          <li><a href="#a4">Nebraska Is Running the Strongpoint Play</a></li>
+          <li><a href="#a5">850 Jets, Millions of Drones, and the Perception of Means</a></li>
+          <li><a href="#a6">Change for What? Petraeus, Kennan, and the Order of Operations</a></li>
         </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A and Comps Bank</a></p>
       </nav>
 
-      <section class="block" aria-label="Seminar prep">
-        <h2>Seminar Prep · Zhang is tomorrow</h2>
-        <article id="crane">
-          <span class="kicker">Review · Crane, <i>American Airpower Strategy in Korea</i> · seminar was yesterday</span>
-          <h3><a href="#crane">The Air Force Didn't Advertise Its Limits. Korea Did.</a></h3>
-          <p class="howto">Recall first: answer each question from memory, then open it to check. Trying before looking is what makes it stick.</p>
-          <ul class="recall">
-            <li><details><summary>1. Who limited airpower in Korea, and how?</summary><p>Washington, step by step. Truman first allowed air action only south of the 38th Parallel. On 29 June 1950 he approved strikes in the North, and the JCS's one restriction was to stay clear of the Soviet and Manchurian borders.<sup><a href="#cn1">1</a></sup> After FEAF bombed Rashin, about 20 miles from the Soviet border, State Department fears led the JCS to stop further attacks there in September 1950.<sup><a href="#cn2">2</a></sup> In November the JCS limited the Yalu bridge attacks to the Korean side of the spans.<sup><a href="#cn3">3</a></sup></p></details></li>
-            <li><details><summary>2. What was Truman afraid of?</summary><p>A wider, possibly global war. After a 30 November 1950 press conference on the atomic bomb, an alarmed Clement Attlee rushed to Washington.<sup><a href="#cn4">4</a></sup> In April 1951, with Chinese forces building up and Soviet forces massing in the Far East, Truman ordered nuclear weapons and more SAC bombers toward Okinawa. The bombers themselves stayed on Guam.<sup><a href="#cn5">5</a></sup></p></details></li>
-            <li><details><summary>3. Did airpower achieve its objectives?</summary><p>Partly, and less than promised. Interdiction disappointed. FEAF came to regret the name STRANGLE, and Communist repair crews of up to 500,000 kept the railways running.<sup><a href="#cn6">6</a></sup> An April 1952 FEAF study found the rail campaign had not worked despite more than 15,000 cuts. That study launched "air pressure."<sup><a href="#cn7">7</a></sup> The June 1952 hydroelectric strikes destroyed about 90 percent of North Korea's power.<sup><a href="#cn8">8</a></sup> Even air superiority was shaky: in September 1951, FEAF warned it was "in jeopardy."<sup><a href="#cn9">9</a></sup></p></details></li>
-            <li><details><summary>4. Why no atomic bomb?</summary><p>Partly practical. The 1951 HUDSON HARBOR test missions showed long delays and weak target evaluation, and the Air Staff concluded Korea offered no suitable atomic targets.<sup><a href="#cn10">10</a></sup> Later, Weyland told Clark he opposed atomic use. He wasn't sure the Manchurian airfields could be neutralized, and he expected the Soviets to learn from the strikes and use them for propaganda.<sup><a href="#cn11">11</a></sup></p></details></li>
-            <li><details><summary>5. What did airpower start fights about at home?</summary><p>Weyland said he fought the Navy as much as the Communists, and Smart spent 40 percent of his time answering Army and Navy proposals.<sup><a href="#cn12">12</a></sup> Close air support was the sorest point. Marines delivered bombs in about 10 minutes, against about 45 for the Air Force.<sup><a href="#cn13">13</a></sup></p></details></li>
-          </ul>
-          <p><b>The review.</b> Crane says his purpose is to examine "the image and reality of American airpower."<sup><a href="#cn14">14</a></sup> The gap between the two is the book. Leaders and the public expected too much, partly because the Air Force wasn't candid about its limits. FEAF's Gen. Smart admitted that "we certainly don't advertise our limitations."<sup><a href="#cn15">15</a></sup> The plan was to win the air quickly and then bomb the enemy's war-making capacity. Instead, the MiG-15 contested the air, the real sources of supply sat across a border airmen couldn't touch, and FEAF fell back on interdiction and then air pressure.<sup><a href="#cn16">16</a></sup></p>
-          <p>The sting is in the ending. The war's close was "ambiguous enough to allow the U.S. Air Force" to believe it had succeeded, so the service drew few lessons and went back to planning for general war under the New Look. Crane says that cost it in Vietnam.<sup><a href="#cn17">17</a></sup> Opinion: that's yesterday's Gaddis argument seen from the cockpit. When Eisenhower's New Look turned asymmetrical and nuclear, the Air Force had every budgetary reason to file Korea under "exception."<sup><a href="#cn18">18</a></sup></p>
-          <p><b>Bring to seminar:</b> Crane notes that whether the nuclear threat helped end the war "remains open to dispute."<sup><a href="#cn19">19</a></sup> A 1953 FEAF study blamed policy makers for never stating limited-war objectives "compatible with air force capabilities."<sup><a href="#cn20">20</a></sup> Whose job was it to close that gap: the politicians who set the limits, or the airmen who didn't advertise theirs? <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="cn1"><span class="chk">Checked</span>Crane, 23–24. Page numbers are from the book's running heads in your Drive copy.</li>
-            <li id="cn2"><span class="chk">Checked</span>Crane, 44–45.</li>
-            <li id="cn3"><span class="chk">Checked</span>Crane, 49–50.</li>
-            <li id="cn4"><span class="chk">Checked</span>Crane, 58–59.</li>
-            <li id="cn5"><span class="chk">Checked</span>Crane, 70.</li>
-            <li id="cn6"><span class="chk">Checked</span>Crane, 82–83.</li>
-            <li id="cn7"><span class="chk">Checked</span>Crane, 115–116.</li>
-            <li id="cn8"><span class="chk">Checked</span>Crane, 119–120.</li>
-            <li id="cn9"><span class="chk">Checked</span>Crane, 83–84.</li>
-            <li id="cn10"><span class="chk">Checked</span>Crane, 71.</li>
-            <li id="cn11"><span class="chk">Checked</span>Crane, 157–158. The passage breaks off mid-sentence in the Drive text.</li>
-            <li id="cn12"><span class="chk">Checked</span>Crane, 7.</li>
-            <li id="cn13"><span class="chk">Checked</span>Crane, 61–62.</li>
-            <li id="cn14"><span class="chk">Checked</span>Crane, 6.</li>
-            <li id="cn15"><span class="chk">Checked</span>Crane, 6.</li>
-            <li id="cn16"><span class="chk">Checked</span>Crane, 7–8.</li>
-            <li id="cn17"><span class="chk">Checked</span>Crane, 9; Preface, vii.</li>
-            <li id="cn18"><span class="tbc">To check</span>Gaddis, Ch. 5, "Eisenhower, Dulles, and the New Look" (125). The "every budgetary reason" line is my inference.</li>
-            <li id="cn19"><span class="chk">Checked</span>Crane, 8.</li>
-            <li id="cn20"><span class="chk">Checked</span>Crane, 155.</li>
-            <li><span class="tbc">Gap</span>The Drive text stops at p. 158, so Crane's Ch. 10, "Legacies and Conclusions," and the 1953 irrigation-dam strikes aren't covered here. If you have ten minutes before 1200, read his conclusion.</li>
-          </ol>
-        </article>
+      <article id="a1">
+        <span class="kicker">Tomorrow's Reading · Thursday, October 29</span>
+        <h3><a href="#a1">Zhang Flips the Map: The Korean Air War from North of the Yalu</a></h3>
+        <p>Tomorrow's seminar trades the view from the B-29 for the view from the MiG. Xiaoming Zhang's <i>Red Wings over the Yalu</i> tells the Korean air war from the Communist side, and mostly from the Chinese side, using newly opened Chinese and Russian archives and oral histories from the Chinese air force. He isn't shy about the goal. He says plainly that the book should significantly modify conventional wisdom about the Korean War. An author who announces that in the introduction is either very confident or about to be very interesting. Zhang manages both.</p>
+        <p>He pulls three threads: China's ideas about airpower and its rush to build an air force from nothing, the odd shape of Soviet help, and how Chinese air operations actually went. Running under all three is an alliance that was less than it looked. Moscow and Beijing were allies, but each used the war for its own national interests, and the Soviets held back to avoid a direct clash with the United States.</p>
+        <p>Here's the bridge from yesterday's book. Crane spent his pages showing Washington putting limits on American airmen. Zhang's twist is that the American and Soviet air operations were limited mainly by politics, while the Chinese air force was limited by inexperience. China had no aviation industry and depended on Soviet equipment, and its leaders were veterans of ground war with no real idea of air warfare. Opinion: that's the course's second theme in a single comparison. The Americans had the capability and were told not to use all of it. The Chinese had the permission and had to build the capability, at war, in a hurry.</p>
+        <p>Read for four things. First, whose numbers to trust. Zhang warns that the kill ratios he reports are official Chinese and Russian figures that may misrepresent what really happened, and that the two sides' combat reports rarely match. He's just as blunt about the American side, calling U.S. victory claims probably highly inflated. Second, Stalin. Zhang calls the Soviet offer of air support a cryptic promise, and the October telegram in which Stalin asked for Chinese troops said nothing about air support at all. Meanwhile the Chinese 13th Army Group was telling Beijing that air support was a requirement, and proposed delaying the intervention if the Soviets couldn't guarantee it. Third, doctrine. Chinese air planners saw fighters as defensive weapons and bombers as aggressive ones, which fit China's defensive outlook and pushed them toward a fighter force. Fourth, the lesson China kept: by Zhang's account, the Korean War experience limited the Chinese air force to an air defense role.</p>
+        <p>If time is short tonight, read the introduction and the conclusion first, then chapter three on Stalin, Mao, and the promise of air cover. Skim chapters six and seven for the covert Soviet air war and the Chinese air force in combat. Opinion: seminars are won in the conclusion more often than in chapter five. <span class="by">(S)</span></p>
+      </article>
 
-        <article id="shelf">
-          <span class="kicker">The Shelf · comps recall</span>
-          <h3><a href="#shelf">What You've Read So Far</a></h3>
-          <ul class="shelf">
-            <li><span class="t">Gaddis, <i>Strategies of Containment</i></span>
-              <p>Containment swung between symmetrical (meet every push) and asymmetrical (pick your ground), and how Washington saw its own means drove the swings.</p>
-              <ul class="recall"><li><details><summary>Recall: what did Kennan say mattered, and why did Truman like it?</summary><p>Five centers of industrial and military power, defended as strongpoints rather than a perimeter (29, 57). It fit an administration convinced its resources were limited (57–58).</p></details></li></ul></li>
-            <li><span class="t">Crane, <i>American Airpower Strategy in Korea</i></span>
-              <p>Airpower's image outran its reality in Korea, and an ambiguous ending let the Air Force skip the lessons (6, 9).</p>
-              <ul class="recall"><li><details><summary>Recall: name two Washington limits on airpower in 1950.</summary><p>No more attacks near Rashin after September 1950 (44–45), and Yalu bridges hit only on the Korean side (49–50).</p></details></li></ul></li>
-          </ul>
-        </article>
+      <article id="a7">
+        <span class="kicker">The 628 Paper · through tomorrow's author</span>
+        <h3><a href="#a7">What Would Zhang Make of Your 628 Paper? Start with Taiwan</a></h3>
+        <p>The prompt, for anyone who has been avoiding it: what is the most important potential strategic crisis facing the nation today, and, based on your historical understanding of the Age of Limited War, how should Airmen prepare to face it? One crisis only. The syllabus quotes <i>Highlander</i> on that point: there can be only one. Its examples are an Iranian nuclear test, a Chinese invasion of Taiwan, a Russian invasion of a NATO member, and the dissolution of an alliance. Ten pages, due December 1. What follows isn't an answer. It's a guess at how tomorrow's author would read the question.</p>
+        <p>Zhang would probably start where his own story starts, which is Taiwan. By his account, the Chinese Communists' urgent desire for an air force came primarily from Mao's plan to invade Taiwan. Mao asked Stalin's representative for Soviet air and naval support for the "liberation of Taiwan," and Zhou Enlai wrote of forming an offensive air unit to support the cross-strait campaign. The first operational mission assigned to the new air force was support for that projected campaign. Then Korea happened, and by Zhang's reckoning the war left the Chinese air force in an air-defense role.</p>
+        <p>Opinion from here, and an extrapolation rather than anything Zhang wrote. His lens suggests three cautions for an Airman writing about a Taiwan crisis. First, an air force carries its founding purpose. Taiwan isn't a new mission for the Chinese air force; it's the reason the service was created. Second, alliances. Zhang shows Moscow and Beijing each using Korea for its own national interests, with Stalin holding back from a direct clash with the United States. Any thesis about a future crisis should ask what each side's partners would actually risk, and the honest answer is rarely "everything." Third, numbers. If the two sides' combat reports in 1950 rarely matched, be wary of any force-ratio argument that rests on one side's figures.</p>
+        <p>There's a fourth caution, and it cuts closer to home. Zhang argues the Chinese air force of 1950 was limited mainly by inexperience, while the Americans were limited mainly by politics. Opinion: inexperience is the limit that time erodes. Political limits tend to persist. A paper that assumes the adversary is still the 1950 version, while Washington's restraints have somehow vanished, has the history backwards. The same alliance lesson applies if you pick Iran or a NATO crisis instead. Zhang won't write your paper, but he'd ask whose history your thesis quietly assumes. <span class="by">(S)</span></p>
+      </article>
 
-        <article id="zhang">
-          <span class="kicker">Tomorrow · Thursday 29 Oct</span>
-          <h3><a href="#zhang">Zhang: The Same Air War, from North of the Yalu</a></h3>
-          <p>Xiaoming Zhang's <i>Red Wings over the Yalu</i> tells the Korean air war from the Communist side, mostly the Chinese side, using newly opened Chinese and Russian archives and PLAAF oral histories.<sup><a href="#zn1">1</a></sup> It follows three threads: China's ideas about airpower and its rush to build an air force, the odd shape of Soviet help, and how Chinese air operations actually went.<sup><a href="#zn2">2</a></sup> Zhang's ambition is plain: "This book thus should significantly modify conventional wisdom about the Korean War."<sup><a href="#zn3">3</a></sup></p>
-          <p><b>The bridge from Crane.</b> Crane shows Washington limiting American airpower for political reasons. Zhang argues that the US and Soviet operations were limited mainly by politics, while the PLAAF was held back by inexperience.<sup><a href="#zn4">4</a></sup> Same war, different kinds of limits. That's the syllabus's second theme in one comparison.</p>
-          <p><b>Read for these:</b></p>
-          <ul class="qs">
-            <li>Whose numbers to trust. Zhang warns that his kill ratios are official Chinese and Russian figures that may misrepresent reality.<sup><a href="#zn5">5</a></sup> He calls American claims "probably highly inflated."<sup><a href="#zn6">6</a></sup> Crane's figures are on the other side of that ledger.</li>
-            <li>Stalin's "cryptic promise" of air support, and whether he reneged. Stalin's October telegram asking for Chinese troops never mentioned it.<sup><a href="#zn7">7</a></sup></li>
-            <li>Fighters as defensive weapons. PLAAF planners saw fighters as defensive and bombers as aggressive, and built a fighter force.<sup><a href="#zn8">8</a></sup></li>
-            <li>The lesson China kept: the war "limited the Chinese air force to an air defense role."<sup><a href="#zn9">9</a></sup></li>
-          </ul>
-          <p><b>If you only have three hours:</b> read the introduction (3–11) and Ch. 9, the conclusion (201–214), first. Then read Ch. 3 (55–77) on Stalin, Mao, and air support. Skim Ch. 6 (122–142) on the covert Soviet air role and Ch. 7 (143–171) on PLAAF combat.<sup><a href="#zn10">10</a></sup> <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="zn1"><span class="chk">Checked</span>Zhang, <i>Red Wings over the Yalu</i> (Texas A&amp;M, 2002), 8.</li>
-            <li id="zn2"><span class="chk">Checked</span>Zhang, 6.</li>
-            <li id="zn3"><span class="chk">Checked</span>Zhang, 8.</li>
-            <li id="zn4"><span class="chk">Checked</span>Zhang, 8.</li>
-            <li id="zn5"><span class="chk">Checked</span>Zhang, 10–11.</li>
-            <li id="zn6"><span class="chk">Checked</span>Zhang, 5.</li>
-            <li id="zn7"><span class="chk">Checked</span>Zhang, 60, 62, 65.</li>
-            <li id="zn8"><span class="chk">Checked</span>Zhang, 46.</li>
-            <li id="zn9"><span class="chk">Checked</span>Zhang, 11.</li>
-            <li id="zn10"><span class="tbc">To check</span>Chapter pages come from the table of contents. The Drive text stops at p. 65, so I picked chapters 6–9 by their titles only.</li>
-          </ol>
-        </article>
+      <article id="a2">
+        <span class="kicker">The Readings So Far · Gaddis and Crane</span>
+        <h3><a href="#a2">The Story So Far: Gaddis Set the Budget, Crane Sent the Bill</a></h3>
+        <p>Two books in, the course already has a plot. John Lewis Gaddis defines strategy as the process by which ends are related to means, and his history of containment swings between two approaches. The symmetrical version meets the adversary wherever it pushes. The asymmetrical version picks its own ground. George Kennan's original version was asymmetrical. He counted only five centers of industrial and military power that mattered: the United States, Great Britain, Germany and central Europe, the Soviet Union, and Japan. Only one was in hostile hands, so the job was to keep the other four from falling, defended as strongpoints rather than along a perimeter.</p>
+        <p>Truman's people liked that approach for a reason that had little to do with elegance. They were convinced the country had only limited resources, however dangerous the threat. Truman framed it as spending twenty or thirty billion dollars to keep the peace against a hundred billion to fight a war. Dean Acheson told the Senate that recovery was the first objective. The atomic monopoly made the bargain feel safe; James Forrestal called the years before anyone could strike back "our years of opportunity." Kennan's own first rule was that interests come first and threats are measured against them, never the reverse. He then managed to undercut himself in print. Arthur Krock revealed him as the author of the anonymous "X" article, Walter Lippmann took it apart at length, and careless drafting left Kennan agreeing in places more with Lippmann than with his own essay. The article's call for "unalterable counter-force at every point" reads like perimeter defense, from the man who invented the strongpoint.</p>
+        <p>Conrad Crane picks up where the money and the bomb meet Korea. His subject is "the image and reality of American airpower," and the gap between the two is the whole book. Leaders expected too much, partly because the Air Force didn't admit its limits. FEAF's General Smart put it bluntly: "we certainly don't advertise our limitations." Washington drew the lines anyway. Air action was held south of the 38th Parallel until Truman approved strikes in the North on June 29, 1950, with orders to stay clear of the Soviet and Manchurian borders. After FEAF bombed Rashin, about twenty miles from the Soviet border, the Joint Chiefs stopped further attacks there in September. In November, the Yalu bridge attacks were limited to the Korean side of the spans.</p>
+        <p>Interdiction didn't save the day. Fifth Air Force intelligence estimated that as many as 500,000 soldiers and civilians were working to keep enemy transportation routes open. An April 1952 FEAF study found the rail campaign had not worked despite more than 15,000 rail cuts, at a cost of 243 aircraft destroyed, and proposed "air pressure" instead. The June 1952 hydroelectric strikes then knocked out about ninety percent of North Korea's electric power. As for the bomb that made containment feel cheap: Attlee rushed to Washington after Truman's November 30 press conference, Truman sent nuclear weapons toward Okinawa in April 1951, and the HUDSON HARBOR test missions convinced the Air Staff that Korea offered no suitable atomic targets.</p>
+        <p>Opinion: put the two books side by side and the plot writes itself. Gaddis's planners counted on the bomb to make cheap containment safe. Crane's airmen found the bomb had nothing to hit and the war had limits nobody wrote down. A 1953 FEAF study blamed policy makers for never stating limited-war objectives "compatible with air force capabilities." Kennan would have called that skipping step one. And because the war ended ambiguously, Crane argues, the Air Force could believe it had succeeded, went back to planning for general war, and paid for it in Vietnam. Two books, one lesson: the side that never defines its interest ends up defending its budget. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">Technical Writing · Week 1, Day 3</span>
+        <h3><a href="#a3">"This What?" and "How Many?": Two Questions That Fix Most Drafts</a></h3>
+        <p>Col Hollon's editing handout has a search list that every SAASS draft should survive: this, these, those, that, many, most, some, several, would, and often. His point about "this" is simple. When it opens a sentence, it almost always points back at the sentence before. Either fold the two sentences together or put a noun after "this." His point about the rest is sharper. Words like "many" and "most" try to sound significant while committing to nothing. How many? Is most fifty-point-one percent? How do you know?</p>
+        <p>Here's a paragraph any of us could have written at eleven last night. "Many sorties were flown against the railways, but this did not stop the enemy. Some people thought interdiction was not working. This led to a new strategy." Three sentences, and not one fact an instructor could check. Now the same paragraph with the vague words replaced by the book. "FEAF's rail campaign produced more than 15,000 rail cuts at a cost of 243 aircraft destroyed, yet an April 1952 FEAF study concluded that interdiction had not worked. Fifth Air Force intelligence estimated that as many as 500,000 soldiers and civilians were working to keep enemy transportation routes open. The same study proposed a replacement: air pressure through selective destruction."</p>
+        <p>Look at what changed. "Many sorties" became two numbers. "Some people" became a named study with a date. Each "this" became the thing it was pointing at. The paragraph got more persuasive without getting any longer, which is the best trade in writing.</p>
+        <p>The pro tip: run Hollon's list with Ctrl+F on your next draft, and at every hit ask "which one?" or "how many?" If you can answer, write the answer in. If you can't, you haven't found a style problem. You've found a gap in your research, and the fix is back in the book. Opinion: vague words feel safe because nobody can prove them wrong. That's also why they never prove you right. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">From Tuesday's News</p>
+
+      <article id="a4">
+        <span class="kicker">Political Strategy · via electoral-vote.com</span>
+        <h3><a href="#a4">Nebraska Is Running the Strongpoint Play</a></h3>
+        <p>Electoral-vote.com's Senate table on Tuesday had an odd row for Nebraska. A Concord POP poll taken October 15 through 18 had Republican incumbent Pete Ricketts at 41 percent and independent Dan Osborn at 48, and the Democratic column read "No Democrat." EV's whole reaction was one word: "Wow."</p>
+        <p>Opinion from here. Whatever the reason for the empty column, the effect is Kennan's strongpoint defense in electoral form. A party that can't win a seat under its own label stops contesting it head-on and lets someone else hold the line. Nobody announces that kind of concession. It just shows up as an empty column in a poll table.</p>
+        <p>Compare Michigan on the same page. YouGov had Democrat Abdul El-Sayed at 48 percent and Republican Mike Rogers at 46, a race EV says has a very small margin for error. That's the symmetrical fight, with both parties all in and matching dollar for dollar. Kennan's rule was to define interests first and judge threats against them. For a party, the interest is the Senate majority, and which seats are worth defending follows from that, not from which ones it fought for last time. One empty row in a poll table can say more about party strategy than a week of press releases. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a5">
+        <span class="kicker">Acquisition · via Military Times</span>
+        <h3><a href="#a5">850 Jets, Millions of Drones, and the Perception of Means</a></h3>
+        <p>Last week the Pentagon and Lockheed Martin announced a ten-year framework for at least 850 F-35s. That's about 85 a year, which matches the fiscal 2027 request. Congress funded 47 in fiscal 2026. The deal depends on congressional approval and funding, and the stopgap law running through December 11 generally bars new multiyear buys. A week earlier, Defense Secretary Hegseth said the Pentagon wants fifty billion dollars to grow its stockpile of autonomous weapons from thousands of units to millions.</p>
+        <p>Opinion: put those side by side and the department is betting on both the exquisite fighter and the cheap swarm. That only works if the money grows to cover both. Gaddis found that Truman-era strategy rested on the opposite belief, that resources were limited no matter how dangerous the threat. The gap between 85 requested and 47 funded is the whole debate in two numbers. One more figure: GAO found the F-35's mission-capable rate fell from 67 percent in fiscal 2021 to 44 percent in fiscal 2025, and Lockheed argues steady multiyear orders will help. Buying predictability is a reasonable answer to a readiness problem. It's a weaker answer to a strategy that hasn't chosen between jets and drones. If the money grows, nobody will remember this item. If it doesn't, someone will have to choose, and Congress has already voted once: 47. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a6">
+        <span class="kicker">Leadership · via Military Times</span>
+        <h3><a href="#a6">Change for What? Petraeus, Kennan, and the Order of Operations</a></h3>
+        <p>Retired General David Petraeus told a Washington audience on October 16 that the United States and NATO need "urgent revolutionary institutional change" to prepare for modern war. He wants it to reach force structure, training, procurement, personnel policy, and bases. He would swap much of the heavily manned legacy force for cheaper, more numerous unmanned systems, and he wants production that can push software changes weekly. He called the new Autonomous Warfare Command a commendable step.</p>
+        <p>Opinion: he may well be right, and Ukraine is a strong body of evidence. The leadership lesson is in what the report leaves out. By Military Times' account, Petraeus named no specific adversary or interest the change should serve. Kennan's first rule ran the other way: threats only mean something when measured against your interests. For anyone leading change at any echelon, say what the change protects before you say what it replaces. People will put up with a revolution in "how" much longer if they can repeat the "why" from memory. Interest, then threat, then reorganization. Skip the first step and the reorganization becomes the goal. Kennan would add one more: say what the change does not require. He learned that one the hard way. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Organized by article, each keyed to the phrase it supports. Page numbers are from your Drive copies: Gaddis, <i>Strategies of Containment</i>, rev. ed. (Oxford, 2005); Crane, <i>American Airpower Strategy in Korea, 1950–1953</i> (Kansas, 2000); Zhang, <i>Red Wings over the Yalu</i> (Texas A&amp;M, 2002). Anything marked <i>unverified</i> still needs a look.</p>
+
+        <h3>Zhang Flips the Map</h3>
+        <ul>
+          <li>Communist side, archives and oral histories; "significantly modify conventional wisdom": Zhang, 8.</li>
+          <li>Three threads: Zhang, 6. Allies with separate interests; Soviets avoiding a direct clash: 7.</li>
+          <li>Politics versus inexperience: Zhang, 8. No aviation industry, Soviet equipment: 7. Ground-war leaders: 6.</li>
+          <li>Kill ratios and mismatched reports: Zhang, 10–11. U.S. claims "probably highly inflated": 5.</li>
+          <li>"Cryptic promise": Zhang, 60. Stalin's strategy: 62. The 13th Army Group: 63. Stalin's October telegram: 65.</li>
+          <li>Fighters defensive, bombers aggressive: Zhang, 46. Air-defense role: 11.</li>
+          <li>Reading plan: chapter pages from the table of contents. <i>Unverified:</i> the Drive text stops at p. 65, so chapters 6–9 were chosen by title only.</li>
+        </ul>
+
+        <h3>What Would Zhang Make of Your 628 Paper?</h3>
+        <ul>
+          <li>The prompt, the examples, "there can be only one," ten pages, due 1 December: SAASS 628 AY27 Syllabus, "Grading."</li>
+          <li>Air force born of the Taiwan plan: Zhang, 32 (also 6). Mao's request for Soviet air and naval support; Zhou's "offensive unit" for the cross-strait campaign: 33. First operational mission: 39–40.</li>
+          <li>Air-defense role: Zhang, 11. Allies with separate interests; Stalin avoiding a direct clash: 7. Mismatched combat reports: 10–11. Politics versus inexperience: 8.</li>
+          <li>The three cautions and the fourth are my extrapolation, not Zhang's claims.</li>
+        </ul>
+
+        <h3>The Story So Far</h3>
+        <ul>
+          <li>Strategy as ends and means: Gaddis, viii. Symmetrical and asymmetrical: xiii.</li>
+          <li>Five centers: Gaddis, 29. Strongpoint rather than perimeter: 57.</li>
+          <li>Limited resources: Gaddis, 57–58. Truman's figures, Acheson, Forrestal: 61.</li>
+          <li>Interests before threats: Gaddis, 31. The "X" article, Krock, Lippmann: 24–25. "Counter-force at every point": 57.</li>
+          <li>"Image and reality"; Smart's "we certainly don't advertise our limitations": Crane, 6.</li>
+          <li>June 29, 1950 and the border restriction: Crane, 23–24. Rashin: 44–45. Yalu spans: 49–50.</li>
+          <li>500,000 soldiers and civilians: Crane, 82–83. The April 1952 study, 15,000 cuts, 243 aircraft: 115–116. Hydroelectric strikes: 119–120.</li>
+          <li>Attlee: Crane, 58–59. Okinawa: 70. HUDSON HARBOR: 71.</li>
+          <li>"Compatible with air force capabilities": Crane, 155. Ambiguous ending and Vietnam: 9 and vii.</li>
+        </ul>
+
+        <h3>"This What?" and "How Many?"</h3>
+        <ul>
+          <li>Search list, bare "this," "how many": Col Hollon, "Keys to Editing Success," item 6a–c.</li>
+          <li>Rewrite facts: Crane, 115–116 and 82–83.</li>
+        </ul>
+
+        <h3>Nebraska Is Running the Strongpoint Play</h3>
+        <ul>
+          <li>Nebraska and Michigan polls: <a href="https://www.electoral-vote.com/" target="_blank" rel="noopener">electoral-vote.com</a>, October 27, 2026, "Today's Senate Polls." EV's text gives Osborn 48 percent, while its table omits him.</li>
+          <li>Strongpoint defense: Gaddis, 57. Interests first: 31.</li>
+        </ul>
+
+        <h3>850 Jets, Millions of Drones</h3>
+        <ul>
+          <li>F-35 framework, 85 versus 47, the stopgap, GAO rates: Michael Scanlon, "<a href="https://www.militarytimes.com/news/pentagon-congress/2026/10/22/pentagon-lockheed-agree-to-10-year-deal-for-850-f-35-jets/" target="_blank" rel="noopener">Pentagon, Lockheed agree to 10-year deal for 850 F-35 jets</a>," <i>Military Times</i>, October 22, 2026.</li>
+          <li>Fifty billion for drones: "<a href="https://www.militarytimes.com/video/2026/10/15/pentagon-looks-for-50b-for-mass-drone-production-hegseth-says/" target="_blank" rel="noopener">Pentagon looks for $50B for mass drone production</a>," <i>Military Times</i>, October 15, 2026 (paraphrase; no direct quote on the page).</li>
+          <li>Limited means: Gaddis, 57–58.</li>
+        </ul>
+
+        <h3>Change for What?</h3>
+        <ul>
+          <li>Petraeus remarks: Katie Livingstone, "<a href="https://www.militarytimes.com/news/pentagon-congress/2026/10/23/us-military-needs-urgent-revolutionary-institutional-change-to-prepare-for-modern-war-petraeus-says/" target="_blank" rel="noopener">US military needs 'urgent revolutionary institutional change'</a>," <i>Military Times</i>, October 23, 2026.</li>
+          <li>Interests before threats: Gaddis, 31.</li>
+        </ul>
+      </section>
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Crane: seminar recall</h3>
+        <ul class="recall">
+          <li><details><summary>Who limited airpower in Korea, and how?</summary><p>Washington, step by step: air action south of the 38th Parallel until June 29, 1950, then the North with the Soviet and Manchurian borders off-limits (23–24); no more attacks near Rashin after September 1950 (44–45); Yalu bridges hit only on the Korean side (49–50).</p></details></li>
+          <li><details><summary>What was Truman afraid of?</summary><p>A wider, possibly global war. Attlee rushed to Washington after the November 30, 1950 press conference (58–59). In April 1951 Truman sent nuclear weapons and SAC bombers toward Okinawa, though the bombers stayed on Guam (70).</p></details></li>
+          <li><details><summary>Did airpower achieve its objectives?</summary><p>Partly. Interdiction disappointed (82–83). The April 1952 study found more than 15,000 rail cuts hadn't worked, at a cost of 243 aircraft, and launched air pressure (115–116). The hydroelectric strikes cut about 90 percent of the North's power (119–120). Air superiority was "in jeopardy" in September 1951 (83–84).</p></details></li>
+          <li><details><summary>Why no atomic bomb?</summary><p>HUDSON HARBOR found long delays and no suitable targets (71). Weyland opposed atomic use over the Manchurian airfields and the propaganda risk (157–158).</p></details></li>
+          <li><details><summary>What interservice fights did airpower start?</summary><p>Weyland said he fought the Navy as much as the Communists, and Smart spent 40 percent of his time on Army and Navy proposals (7). Close air support: about 10 minutes for the Marines versus about 45 for the USAF (61–62).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: what did Kennan say mattered, and why did Truman like it?</summary><p>Five centers of industrial and military power, defended as strongpoints (29, 57). It fit an administration convinced its resources were limited (57–58).</p></details></li>
+          <li><details><summary>Crane: name two Washington limits on airpower in 1950.</summary><p>No more attacks near Rashin after September 1950 (44–45), and the Yalu bridges hit only on the Korean side (49–50).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Fix it: "Several restrictions often limited airmen."</summary><p>Name them and who imposed them: "The JCS barred strikes near the Soviet and Manchurian borders and limited the Yalu bridge attacks to the Korean side of the spans" (Crane, 23–24, 49–50).</p></details></li>
+          <li><details><summary>Fix it: "Most historians agree this was a failure."</summary><p>Which historians, and what failed? "Crane argues that rail interdiction failed despite more than 15,000 cuts" (115–116).</p></details></li>
+          <li><details><summary>Review: "It was decided that interdiction would continue."</summary><p>Passive voice with no actor (the "by an idiot" test). Name the decider your source identifies.</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: write one paragraph on Crane, then run Hollon's word list on it.</label>
+          <textarea id="mine-crane" placeholder="Crane argues…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
       </section>
 
       <section class="block bank" id="comps" aria-label="Comps question bank">
@@ -305,124 +396,124 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         </div>
         <ol class="qbank" id="qbank">
 
-          <li data-q="g1" data-t="gaddis"><details><summary><div class="qmeta"><span>Gaddis</span><span>Recall</span></div>How does Gaddis define strategy, and what distinction organizes the book?</summary><div class="ans">
+          <li data-q="g1" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Recall</span></span>How does Gaddis define strategy, and what distinction organizes the book?</summary><div class="ans">
             <ul><li>Strategy is "the process by which ends are related to means, intentions to capabilities, objectives to resources." <span class="pg">viii</span></li>
             <li>The organizing tool is the difference between symmetrical containment (respond wherever challenged) and asymmetrical containment (respond on chosen ground and terms). <span class="pg">xiii</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="g2" data-t="gaddis"><details><summary><div class="qmeta"><span>Gaddis</span><span>Recall</span></div>What were Kennan's five vital centers, and what did he want done about them?</summary><div class="ans">
+          <li data-q="g2" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Recall</span></span>What were Kennan's five vital centers, and what did he want done about them?</summary><div class="ans">
             <ul><li>The United States, Great Britain, Germany and central Europe, the Soviet Union, and Japan, which he presented to National War College students. <span class="pg">29</span></li>
             <li>Only one was in hostile hands, so the US aim was to keep the other four from falling under Soviet control. <span class="pg">29</span></li>
             <li>That led to "strongpoint" defense of particular regions and the access to them, rather than "perimeter" defense of fixed lines. <span class="pg">57</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="g3" data-t="gaddis"><details><summary><div class="qmeta"><span>Gaddis</span><span>Analyze</span></div>What logic connects Kennan's interests, threats, and means?</summary><div class="ans">
+          <li data-q="g3" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Analyze</span></span>What logic connects Kennan's interests, threats, and means?</summary><div class="ans">
             <ul><li>Because capabilities are finite, interests must be too, so you have to separate the vital from the peripheral. <span class="pg">31</span></li>
             <li>Means should serve ends, because indiscriminate methods can corrupt the objective. <span class="pg">31</span></li>
             <li>Interests are the standard for judging threats, never the reverse. A threat has no meaning except in relation to your interests. <span class="pg">31</span></li></ul>
             <p class="argue">Comps angle: most failures in limited war start when threats begin defining interests.</p></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="g4" data-t="gaddis"><details><summary><div class="qmeta"><span>Gaddis</span><span>Analyze</span></div>Why did the "X" article create confusion that lasted for decades?</summary><div class="ans">
+          <li data-q="g4" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Analyze</span></span>Why did the "X" article create confusion that lasted for decades?</summary><div class="ans">
             <ul><li>It ran anonymously in <i>Foreign Affairs</i> in 1947, but Arthur Krock revealed Kennan as the author. That made it read like official policy, and Walter Lippmann attacked it at length. <span class="pg">24–25</span></li>
             <li>Careless drafting contradicted positions Kennan held inside the government, so in places he agreed more with Lippmann than with his own article. He couldn't clarify publicly until his memoirs twenty years later. <span class="pg">25</span></li>
             <li>Its call for "unalterable counter-force at every point" reads like perimeter defense, even as Kennan was moving toward strongpoints. <span class="pg">57</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="g5" data-t="gaddis"><details><summary><div class="qmeta"><span>Gaddis</span><span>Analyze</span></div>Why did strongpoint defense appeal to the Truman administration before 1950?</summary><div class="ans">
+          <li data-q="g5" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Analyze</span></span>Why did strongpoint defense appeal to the Truman administration before 1950?</summary><div class="ans">
             <ul><li>It was consistent with the prevailing perception of means: the conviction that resources were limited no matter how dangerous the threat. <span class="pg">57–58</span></li>
             <li>Kennan partly articulated and rationalized moves the administration was already making. He wasn't its sole author. <span class="pg">57</span></li>
             <li>Economic aid looked cheaper than war: Truman compared spending $20–30 billion to keep the peace with $100 billion to fight a war. Acheson told Congress that "Recovery is the first objective." <span class="pg">61</span></li>
             <li>The atomic monopoly let officials accept risks. Forrestal called the years before an adversary could strike back "our years of opportunity." <span class="pg">61</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="c1" data-t="crane"><details><summary><div class="qmeta"><span>Crane</span><span>Recall</span></div>State Crane's thesis in three sentences.</summary><div class="ans">
+          <li data-q="c1" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Recall</span></span>State Crane's thesis in three sentences.</summary><div class="ans">
             <ul><li>The book examines "the image and reality of American airpower." Leaders and the public expected too much, partly because the USAF did not admit its limits. <span class="pg">6</span></li>
             <li>The USAF planned for quick air superiority followed by strategic bombing. It got the MiG-15, a sanctuary across the border, and a forced turn to interdiction and then "air pressure." <span class="pg">7–8</span></li>
             <li>The ambiguous ending let the Air Force believe it had succeeded. It drew few lessons and returned to planning for general war, which cost it in Vietnam. <span class="pg">9, vii</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="c2" data-t="crane"><details><summary><div class="qmeta"><span>Crane</span><span>Recall</span></div>Trace three Washington-imposed limits on airpower in 1950.</summary><div class="ans">
+          <li data-q="c2" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Recall</span></span>Trace three Washington-imposed limits on airpower in 1950.</summary><div class="ans">
             <ul><li>Air action was first limited to south of the 38th Parallel. On 29 June 1950 Truman approved strikes in the North, and the JCS restriction was to stay clear of the Soviet and Manchurian borders. <span class="pg">23–24</span></li>
             <li>After the bombing of Rashin, about 20 miles from the Soviet border, State Department fears led the JCS to bar further attacks there in September 1950. <span class="pg">44–45</span></li>
             <li>In November 1950 the Yalu bridge attacks were restricted to the Korean side of the spans. <span class="pg">49–50</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="c3" data-t="crane"><details><summary><div class="qmeta"><span>Crane</span><span>Analyze</span></div>Why did FEAF shift from interdiction to "air pressure"?</summary><div class="ans">
+          <li data-q="c3" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Analyze</span></span>Why did FEAF shift from interdiction to "air pressure"?</summary><div class="ans">
             <ul><li>Interdiction disappointed. FEAF regretted the name STRANGLE, and Communist repair crews of up to 500,000 kept the railways running. <span class="pg">82–83</span></li>
             <li>An April 1952 FEAF study concluded the rail campaign had not worked despite more than 15,000 rail cuts, at a cost of 243 aircraft destroyed. It proposed air pressure through selective destruction. <span class="pg">115–116</span></li>
             <li>The June 1952 hydroelectric strikes, run jointly by the Navy and Air Force, destroyed about 90 percent of North Korea's electric power. <span class="pg">119–120</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="c4" data-t="crane"><details><summary><div class="qmeta"><span>Crane</span><span>Analyze</span></div>Why wasn't the atomic bomb used in Korea?</summary><div class="ans">
+          <li data-q="c4" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Analyze</span></span>Why wasn't the atomic bomb used in Korea?</summary><div class="ans">
             <ul><li>Allied fear: after a 30 November 1950 press conference on the bomb, Attlee rushed to Washington. <span class="pg">58–59</span></li>
             <li>Escalation fear cut both ways. In April 1951 Truman ordered nuclear weapons and more SAC bombers toward Okinawa, fearing global war, but the bombers stayed on Guam. <span class="pg">70</span></li>
             <li>Practical limits: the 1951 HUDSON HARBOR tests found long delays and weak target evaluation, and the Air Staff concluded there were no suitable atomic targets. <span class="pg">71</span></li>
             <li>Weyland opposed atomic use. The Manchurian airfields might not be neutralized, and the Soviets would learn from the strikes and use them for propaganda. <span class="pg">157–158</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="c5" data-t="crane"><details><summary><div class="qmeta"><span>Crane</span><span>Recall</span></div>What were the main interservice fights, and was air superiority ever secure?</summary><div class="ans">
+          <li data-q="c5" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Recall</span></span>What were the main interservice fights, and was air superiority ever secure?</summary><div class="ans">
             <ul><li>Weyland said he fought the Navy as much as the Communists. Smart spent 40 percent of his time countering Army and Navy proposals. <span class="pg">7</span></li>
             <li>On close air support, Marines delivered bombs in about 10 minutes against about 45 for the USAF. Almond carried his complaints to General Collins. <span class="pg">61–62</span></li>
             <li>Air superiority was never secure: in September 1951 FEAF had about 90 F-86s against 500-plus MiGs and warned that superiority was "in jeopardy." <span class="pg">83–84</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="x1" data-t="cross"><details><summary><div class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></div>The atomic bomb was Truman's deterrent of choice in 1948 and unusable in Korea by 1951. Why?</summary><div class="ans">
+          <li data-q="x1" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></span>The atomic bomb was Truman's deterrent of choice in 1948 and unusable in Korea by 1951. Why?</summary><div class="ans">
             <ul><li>Gaddis: before 1950 the atomic monopoly underwrote the risks of a cheap, economy-first containment. <span class="pg">G 61</span></li>
             <li>Crane: in Korea, allied fears (Attlee), escalation fears, and a lack of suitable targets made the bomb a threat rather than a tool. <span class="pg">C 58–59, 70, 71</span></li></ul>
             <p class="argue">Argue it: a weapon designed for general war has little use in a limited war whose limits exist to prevent general war.</p></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="x2" data-t="cross"><details><summary><div class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></div>Kennan said interests should define threats. Who in Korea failed to define the interest that airpower served?</summary><div class="ans">
+          <li data-q="x2" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></span>Kennan said interests should define threats. Who in Korea failed to define the interest that airpower served?</summary><div class="ans">
             <ul><li>Kennan's standard: interests first, threats judged against them, and means subordinate to ends. <span class="pg">G 31</span></li>
             <li>A 1953 FEAF study blamed policy makers for never stating limited-war objectives "compatible with air force capabilities." <span class="pg">C 155</span></li>
             <li>Airmen weren't candid either: "we certainly don't advertise our limitations." <span class="pg">C 6</span></li></ul>
             <p class="argue">Argue it: the failure was mutual. Policy makers didn't state the end, and airmen didn't state the limits of their means.</p></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="x3" data-t="cross"><details><summary><div class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></div>Kennan's "X" article and Smart's candor problem: what do they share as leadership failures?</summary><div class="ans">
+          <li data-q="x3" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></span>Kennan's "X" article and Smart's candor problem: what do they share as leadership failures?</summary><div class="ans">
             <ul><li>Kennan wrote loosely enough that readers took a perimeter strategy from a strongpoint thinker. <span class="pg">G 25, 57</span></li>
             <li>Smart's Air Force didn't state its limits, so leaders expected more than airpower could deliver. <span class="pg">C 6</span></li></ul>
             <p class="argue">Argue it: in both cases, what the author left unsaid shaped policy more than what was said.</p></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="x4" data-t="cross"><details><summary><div class="qmeta"><span>Gaddis × Crane</span><span>Synthesize</span></div>Was Korea fought as symmetrical or asymmetrical containment?</summary><div class="ans">
+          <li data-q="x4" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Synthesize</span></span>Was Korea fought as symmetrical or asymmetrical containment?</summary><div class="ans">
             <ul><li>Commitment: defending South Korea at all reflects the expanded, symmetrical view that follows NSC-68. <span class="pg">G ch. 4, 87 · to check</span></li>
             <li>Conduct: Washington drew tight geographic limits on airpower (the 38th Parallel, borders, Rashin, the Yalu spans). <span class="pg">C 23–24, 44–45, 49–50</span></li></ul>
             <p class="argue">Argue it: a symmetrical commitment fought with asymmetrical restraint, and airpower was caught in the gap between the two.</p></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="x5" data-t="cross"><details><summary><div class="qmeta"><span>Gaddis × Crane</span><span>Synthesize</span></div>Why might the New Look have made Korea's lessons easy for the Air Force to ignore?</summary><div class="ans">
+          <li data-q="x5" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Synthesize</span></span>Why might the New Look have made Korea's lessons easy for the Air Force to ignore?</summary><div class="ans">
             <ul><li>Crane: the ambiguous ending let the USAF believe it had won, and it returned to planning for general war under the New Look. <span class="pg">C 9</span></li>
             <li>Gaddis: the New Look is asymmetrical and nuclear-centered. <span class="pg">G ch. 5, 125 · to check</span></li></ul>
             <p class="argue">Argue it: a strategy that rewards nuclear general-war forces gives an institution little budget reason to study limited war.</p></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="z1" data-t="zhang"><details><summary><div class="qmeta"><span>Crane × Zhang</span><span>Compare</span><span class="lock">After Thursday</span></div>Whose limits were political, and whose were self-imposed?</summary><div class="ans">
+          <li data-q="z1" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Compare</span><span class="lock">After Thursday</span></span>Whose limits were political, and whose were self-imposed?</summary><div class="ans">
             <ul><li>Crane: Washington imposed political and geographic limits on American airpower. <span class="pg">C 23–24, 44–45, 49–50</span></li>
             <li>Zhang: US and Soviet operations were limited mainly by politics, while the PLAAF was limited by inexperience. <span class="pg">Z 8</span></li>
             <li>China had no aviation industry and relied on Soviet equipment, and its leaders were ground-war veterans. <span class="pg">Z 6–7</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="z2" data-t="zhang"><details><summary><div class="qmeta"><span>Crane × Zhang</span><span>Compare</span><span class="lock">After Thursday</span></div>How should a strategist treat one side's combat statistics?</summary><div class="ans">
+          <li data-q="z2" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Compare</span><span class="lock">After Thursday</span></span>How should a strategist treat one side's combat statistics?</summary><div class="ans">
             <ul><li>Zhang warns that his kill ratios are official Chinese and Russian figures that may misrepresent reality, and that the two sides' reports rarely match. <span class="pg">Z 10–11</span></li>
             <li>He calls American victory claims "probably highly inflated" and criticizes the one-sided US official account. <span class="pg">Z 5</span></li>
             <li>Compare Crane's F-86-versus-MiG numbers. <span class="pg">C 83–84</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="z3" data-t="zhang"><details><summary><div class="qmeta"><span>Crane × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></div>Both superpowers feared a direct clash. How did that fear shape the air war on each side of the Yalu?</summary><div class="ans">
+          <li data-q="z3" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></span>Both superpowers feared a direct clash. How did that fear shape the air war on each side of the Yalu?</summary><div class="ans">
             <ul><li>US side: borders off-limits, Rashin halted, Yalu spans restricted, and the 1951 atomic deployment. <span class="pg">C 23–24, 44–45, 49–50, 70</span></li>
             <li>Communist side: the Soviets held back to avoid a direct clash with the US, and Moscow and Beijing each pursued their own national interests. <span class="pg">Z 7</span></li>
             <li>Stalin's "cryptic promise" of air support, and his October telegram asking for Chinese troops that didn't mention it. <span class="pg">Z 60, 62, 65</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="z4" data-t="zhang"><details><summary><div class="qmeta"><span>Crane × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></div>Is airpower inherently defensive? Answer with both books.</summary><div class="ans">
+          <li data-q="z4" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></span>Is airpower inherently defensive? Answer with both books.</summary><div class="ans">
             <ul><li>Zhang: PLAAF planners saw fighters as defensive and bombers as aggressive. The war left the PLAAF in an air-defense role. <span class="pg">Z 46, 11</span></li>
             <li>But China's first air-war concept came from planning to invade Taiwan. <span class="pg">Z 6, 53</span></li>
             <li>Crane: FEAF's ambitions were offensive (strategic bombing, then air pressure), but it spent the war fighting to hold air superiority. <span class="pg">C 7–8, 83–84</span></li></ul></div></details>
             <label class="nail"><input type="checkbox"> Nailed it</label></li>
 
-          <li data-q="z5" data-t="zhang"><details><summary><div class="qmeta"><span>Gaddis × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></div>Apply Kennan's five-centers logic from the other side. Why did Korea matter to Moscow and Beijing differently?</summary><div class="ans">
+          <li data-q="z5" data-t="zhang"><details><summary><span class="qmeta"><span>Gaddis × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></span>Apply Kennan's five-centers logic from the other side. Why did Korea matter to Moscow and Beijing differently?</summary><div class="ans">
             <ul><li>Kennan ranked regions by industrial and military power. Korea wasn't one of his five centers. <span class="pg">G 29</span></li>
             <li>Zhang: Moscow and Beijing each used the war for their own national interests, and Stalin pushed China in while staying out himself. <span class="pg">Z 7, 62</span></li></ul>
             <p class="argue">Argue it: a peripheral theater for one ally can be a vital one for another, and alliances fracture along that line.</p></div></details>
@@ -435,185 +526,7 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         </ol>
       </section>
 
-      <section class="block lab" id="lab" aria-label="Writing Lab">
-        <h2>Writing Lab · Week 1, Day 3</h2>
-        <h3>Precise Language: "This What?" and "How Many?"</h3>
-        <p><b>The rule.</b> Hollon says to search your draft for <i>this, these, those, that, many, most, some, several, would,</i> and <i>often</i>.<sup><a href="#ln1">1</a></sup> A sentence that opens with a bare "this" usually points back at the previous sentence. Either combine the two sentences or put a noun after "this." Words like "many" and "most" try to sound significant without committing to anything, so ask: how many, and how do you know?<sup><a href="#ln1">1</a></sup></p>
-
-        <h4>Before and after</h4>
-        <div class="ba">
-          <div class="before"><b>Before: vague</b>Many sorties were flown against the railways, but this did not stop the enemy. Some people thought interdiction was not working. This led to a new strategy.</div>
-          <div class="after"><b>After: precise</b>FEAF's rail campaign produced more than 15,000 rail cuts at a cost of 243 aircraft destroyed, yet an April 1952 FEAF study concluded that interdiction had not worked.<sup><a href="#ln2">2</a></sup> Fifth Air Force intelligence estimated that as many as 500,000 soldiers and civilians were working to keep enemy transportation routes open.<sup><a href="#ln3">3</a></sup> The same study proposed a replacement: "air pressure" through selective destruction.<sup><a href="#ln2">2</a></sup></div>
-        </div>
-        <p class="fine" style="margin-top:8px">What changed: "many sorties" became two numbers. "Some people" became a named study with a date. Each "this" became the thing it pointed to. The paragraph got more persuasive without getting longer.</p>
-
-        <h4>Pro tip</h4>
-        <p class="protip"><b>Run the list, then ask one question.</b> Use Ctrl+F for each word on Hollon's list. At every hit, ask "which one?" or "how many?" If you can answer, write the answer in. If you can't, you've found a gap in your research, not a style problem. Go back to the book.</p>
-
-        <h4>Model of the week</h4>
-        <p>Lamb and Grego's War on the Rocks piece "Golden Dome Is Technologically and Financially Infeasible" puts the thesis in its title. It gives one subheading per reason and evaluates the other side's best evidence: it takes on the Congressional Budget Office's lower cost estimate by naming the assumptions behind it.<sup><a href="#ln5">5</a></sup> That's the skeleton for the 628 paper: one crisis, one claim, a handful of reasons.<sup><a href="#ln6">6</a></sup></p>
-
-        <h4>Two-minute drill</h4>
-        <ul class="recall">
-          <li><details><summary>Fix it: "Several restrictions often limited airmen."</summary><p>"Several" and "often" hide the evidence. Name the restrictions and who imposed them: "The JCS barred strikes near the Soviet and Manchurian borders and limited the Yalu bridge attacks to the Korean side of the spans."<sup><a href="#ln4">4</a></sup></p></details></li>
-          <li><details><summary>Fix it: "Most historians agree this was a failure."</summary><p>Which historians, and what failed? Cite the one you can name: "Crane argues that rail interdiction failed despite more than 15,000 cuts."<sup><a href="#ln2">2</a></sup> "Most historians" is a claim you'd have to prove with a survey of the literature.</p></details></li>
-          <li><details><summary>Review from Tuesday: "It was decided that interdiction would continue."</summary><p>Passive voice with no actor (the "by an idiot" test). Name the decider your source identifies. If you don't know who decided, that's a research question.</p></details></li>
-        </ul>
-
-        <h4>Your turn</h4>
-        <div class="mine">
-          <label for="mine-crane">Write one paragraph on Crane, then run Hollon's word list on it.</label>
-          <textarea id="mine-crane" placeholder="[P] Crane argues… [E] … [Ev] … [R] …"></textarea>
-          <small>Saved only in this browser on this device. Writing it yourself is how it sticks.</small>
-        </div>
-
-        <h4>This week's rotation</h4>
-        <p class="fine">Mon: passive voice · Tue: Evaluation · Wed: precise language ("this," "many," "some") · Thu: the thesis is king · Fri: footnotes and Chicago style · Sat: one drill from each</p>
-
-        <ol class="notes">
-          <li id="ln1"><span class="chk">Checked</span>Col Hollon, "Keys to Editing Success," item 6a–c.</li>
-          <li id="ln2"><span class="chk">Checked</span>Crane, <i>American Airpower Strategy in Korea</i>, 115–116.</li>
-          <li id="ln3"><span class="chk">Checked</span>Crane, 82–83.</li>
-          <li id="ln4"><span class="chk">Checked</span>Crane, 23–24, 49–50.</li>
-          <li id="ln5"><span class="chk">Checked</span>Frederick Lamb and Laura Grego, "<a href="https://warontherocks.com/cogs-of-war/golden-dome-is-technologically-and-financially-infeasible/" target="_blank" rel="noopener">Golden Dome Is Technologically and Financially Infeasible</a>," <i>War on the Rocks</i>, Oct. 15, 2026.</li>
-          <li id="ln6"><span class="chk">Checked</span>SAASS 628 AY27 Syllabus, "Grading."</li>
-        </ol>
-      </section>
-
-      <p class="dateline" style="margin-top:8px">News × the Books · from Tuesday</p>
-
-      <article id="t1">
-        <span class="kicker">Political Strategy <span class="tie">× Gaddis</span></span>
-        <h3><a href="#t1">Nebraska Is Running the Strongpoint Play</a></h3>
-        <p>Electoral-vote.com's Senate table today has an odd row for Nebraska. A Concord POP poll (Oct. 15–18) has Republican incumbent Pete Ricketts at 41% and independent Dan Osborn at 48%, and the Democratic column reads "No Democrat."<sup><a href="#tn1-1">1</a></sup> EV's whole reaction was one word: "Wow."</p>
-        <p>Opinion from here. Whatever the reason for the empty column, the effect is Kennan's strongpoint defense in electoral form.<sup><a href="#tn1-2">2</a></sup> A party that can't win a seat under its own label stops contesting it head-on and lets someone else hold the line. Nobody announces that kind of concession. It shows up as an empty column in a poll table.</p>
-        <p>Compare Michigan on the same page. YouGov (Oct. 2–19) has Democrat Abdul El-Sayed at 48% and Republican Mike Rogers at 46%, a race EV says has "a very small margin for error."<sup><a href="#tn1-3">3</a></sup> That's the symmetrical fight: both parties all in, matching dollar for dollar. Kennan's rule was to define interests first and judge threats against them, never the reverse.<sup><a href="#tn1-4">4</a></sup> For a party, the interest is the Senate majority. Which seats are worth defending follows from that, not from which ones it fought for last time.</p>
-        <p>One empty row in a poll table can say more about party strategy than a week of press releases. <span class="by">(S)</span></p>
-        <ol class="notes">
-          <li id="tn1-1"><span class="chk">Checked</span><a href="https://www.electoral-vote.com/" target="_blank" rel="noopener">Electoral-vote.com</a>, Oct. 27, 2026, "Today's Senate Polls." The page's text gives Osborn 48% while its table omits him, so EV's two figures don't fully agree. Link to the dated archive page when this goes live.</li>
-          <li id="tn1-2"><span class="chk">Checked</span>Gaddis, <i>Strategies of Containment</i>, rev. ed. (Oxford, 2005), 57.</li>
-          <li id="tn1-3"><span class="chk">Checked</span>Electoral-vote.com, Oct. 27, 2026, "Today's Senate Polls."</li>
-          <li id="tn1-4"><span class="chk">Checked</span>Gaddis, 31.</li>
-        </ol>
-      </article>
-
-      <article id="t2">
-        <span class="kicker">Acquisition <span class="tie">× Gaddis</span></span>
-        <h3><a href="#t2">850 Jets, Millions of Drones, and the Perception of Means</a></h3>
-        <p>Last Thursday, the Pentagon and Lockheed Martin announced a 10-year framework for at least 850 F-35s. That's about 85 a year, which matches the fiscal 2027 request. Congress funded 47 in fiscal 2026.<sup><a href="#tn2-1">1</a></sup> The deal depends on congressional approval and funding, and the stopgap law running through Dec. 11 generally bars new multiyear buys.<sup><a href="#tn2-1">1</a></sup> A week earlier, Defense Secretary Hegseth said the Pentagon wants $50 billion to grow its stockpile of autonomous weapons from thousands of units to millions.<sup><a href="#tn2-2">2</a></sup></p>
-        <p>Opinion: put those side by side and the department is betting on both the exquisite fighter and the cheap swarm. That's coherent only if you believe the money will grow to cover both. Gaddis found that Truman-era strategy rested on the opposite belief: that resources were limited no matter how dangerous the threat.<sup><a href="#tn2-3">3</a></sup> The gap between 85 requested and 47 funded is the whole debate in two numbers.</p>
-        <p>One more figure. GAO found that the F-35's mission-capable rate fell from 67% in fiscal 2021 to 44% in fiscal 2025. Lockheed argues that steady multiyear orders will help fix that.<sup><a href="#tn2-1">1</a></sup> Opinion: buying predictability is a reasonable answer to a readiness problem. It's a weaker answer to a strategy question that hasn't yet chosen between jets and drones.</p>
-        <p>If the money grows, nobody will remember this item. If it doesn't, someone will have to choose, and Congress has already voted once: 47. <span class="by">(S)</span></p>
-        <ol class="notes">
-          <li id="tn2-1"><span class="chk">Checked</span>Michael Scanlon, "<a href="https://www.militarytimes.com/news/pentagon-congress/2026/10/22/pentagon-lockheed-agree-to-10-year-deal-for-850-f-35-jets/" target="_blank" rel="noopener">Pentagon, Lockheed agree to 10-year deal for 850 F-35 jets</a>," <i>Military Times</i>, Oct. 22, 2026.</li>
-          <li id="tn2-2"><span class="chk">Checked</span>"<a href="https://www.militarytimes.com/video/2026/10/15/pentagon-looks-for-50b-for-mass-drone-production-hegseth-says/" target="_blank" rel="noopener">Pentagon looks for $50B for mass drone production, Hegseth says</a>," <i>Military Times</i> (video), Oct. 15, 2026. The page gives no venue or direct quote, so this is a paraphrase.</li>
-          <li id="tn2-3"><span class="chk">Checked</span>Gaddis, 57–58.</li>
-        </ol>
-      </article>
-
-      <article id="t3">
-        <span class="kicker">Leadership <span class="tie">× Gaddis</span></span>
-        <h3><a href="#t3">Change for What? Petraeus, Kennan, and the Order of Operations</a></h3>
-        <p>Retired Gen. David Petraeus told a Washington audience on Oct. 16 that the US and NATO need "urgent revolutionary institutional change" to prepare for modern war. He wants that change to reach force structure, training, procurement, personnel policy, and bases. He would swap much of the heavily manned legacy force for cheaper, more numerous unmanned systems, and he wants production that can push software changes weekly. He called the new Autonomous Warfare Command a commendable step.<sup><a href="#tn3-1">1</a></sup></p>
-        <p>Opinion: he may well be right, and Ukraine is a strong body of evidence. The leadership lesson is in what the report leaves out. By <i>Military Times</i>' account, Petraeus named no specific adversary or interest the change should serve.<sup><a href="#tn3-1">1</a></sup> Kennan's first rule ran the other way: threats only mean something when measured against your interests.<sup><a href="#tn3-2">2</a></sup></p>
-        <p>For anyone leading change at any echelon: say what the change protects before you say what it replaces. People will put up with a revolution in "how" much longer if they can repeat the "why" from memory. The order of operations is interest, then threat, then reorganization. Skip the first step and the reorganization becomes the goal.</p>
-        <p>Kennan would add one more step: say what the change does <i>not</i> require. He learned that one the hard way (see yesterday's "X" item). <span class="by">(S)</span></p>
-        <ol class="notes">
-          <li id="tn3-1"><span class="chk">Checked</span>Katie Livingstone, "<a href="https://www.militarytimes.com/news/pentagon-congress/2026/10/23/us-military-needs-urgent-revolutionary-institutional-change-to-prepare-for-modern-war-petraeus-says/" target="_blank" rel="noopener">US military needs 'urgent revolutionary institutional change' to prepare for modern war, Petraeus says</a>," <i>Military Times</i>, Oct. 23, 2026. The article mentions Russia's drone innovation but names no adversary as the change's target.</li>
-          <li id="tn3-2"><span class="chk">Checked</span>Gaddis, 31.</li>
-        </ol>
-      </article>
-
-      <article id="t4">
-        <span class="kicker">The Writing Desk <span class="tie">× War on the Rocks</span></span>
-        <h3><a href="#t4">Steal This Skeleton</a></h3>
-        <p>Whatever you think of its conclusion, Frederick Lamb and Laura Grego's War on the Rocks piece "Golden Dome Is Technologically and Financially Infeasible" is a clean model of an argument paper.<sup><a href="#tn4-1">1</a></sup> The title is the thesis. The full thesis arrives in the fourth paragraph, after a short historical hook. Four subheaded sections follow, each a separate reason: current defenses are unproven, boost-phase timelines are brutal, space-based intercept needs enormous numbers of interceptors, and countermeasures can defeat it.<sup><a href="#tn4-1">1</a></sup></p>
-        <p>It also handles the hardest step in Hollon's PEER paragraph, Evaluation.<sup><a href="#tn4-2">2</a></sup> The authors grant that boost-phase defense has real appeal, then explain why it still fails. They take on the Congressional Budget Office's lower cost estimate by naming the assumptions behind it, and they reject the idea that adversaries won't adapt, calling it "the fallacy of the last move." The piece ends by restating the thesis and recommending something specific.<sup><a href="#tn4-1">1</a></sup></p>
-        <p>That's the shape of the 628 paper: one crisis, one claim, a handful of reasons, and a direct answer to the best objection.<sup><a href="#tn4-3">3</a></sup> Outline yours the same way, with the thesis in the title and one subheading per reason.</p>
-        <p>Space tie: Friday's McDougall reading covers the moment Americans realized an enemy could reach the heartland quickly from above.<sup><a href="#tn4-4">4</a></sup> Golden Dome is the latest answer to that 1957 fear. Opinion: it won't be the last. <span class="by">(S)</span></p>
-        <ol class="notes">
-          <li id="tn4-1"><span class="chk">Checked</span>Frederick Lamb and Laura Grego, "<a href="https://warontherocks.com/cogs-of-war/golden-dome-is-technologically-and-financially-infeasible/" target="_blank" rel="noopener">Golden Dome Is Technologically and Financially Infeasible</a>," <i>War on the Rocks</i>, Oct. 15, 2026. Structure and quotation checked against the article.</li>
-          <li id="tn4-2"><span class="chk">Checked</span>Col Hollon, "Keys to Editing Success," item 4c (Evaluation).</li>
-          <li id="tn4-3"><span class="chk">Checked</span>SAASS 628 AY27 Syllabus, "Grading": one crisis, ten pages, due 1 Dec.</li>
-          <li id="tn4-4"><span class="chk">Checked</span>SAASS 628 AY27 Syllabus, Seminar 4.</li>
-        </ol>
-      </article>
-
-
-      <details class="archive">
-        <summary>Previous issue <span>· Monday, October 26, 2026 · six items</span></summary>
-
-        <article id="m1">
-          <span class="kicker">Book of the Day</span>
-          <h3><a href="#m1">Kennan Wrote the Memo. Everyone Else Wrote the Budget.</a></h3>
-          <p>John Lewis Gaddis's <i>Strategies of Containment</i> tours forty years of American grand strategy, from Kennan and NSC-68 through the New Look, Flexible Response, détente, and Reagan.<sup><a href="#mn1-1">1</a></sup> It looks like a history of ideas, but it turns out to be about money. Gaddis defines strategy as "the process by which ends are related to means," and he keeps coming back to the means.<sup><a href="#mn1-2">2</a></sup></p>
-          <p>His organizing tool is the difference between symmetrical and asymmetrical containment.<sup><a href="#mn1-3">3</a></sup> The symmetrical version meets the adversary wherever it pushes. The asymmetrical version picks its own ground. Kennan's own instinct was asymmetrical. He named five centers of industrial and military power that mattered (the United States, Britain, Germany and central Europe, the Soviet Union, and Japan) and argued for "strongpoint" rather than "perimeter" defense.<sup><a href="#mn1-4">4</a></sup> Gaddis says much of that approach's appeal in the Truman years came from "the prevailing perception of means available," the conviction that the country had only limited resources.<sup><a href="#mn1-5">5</a></sup> The later chapters follow what happened when that perception changed. As Washington came to believe it could afford more, the list of places worth defending grew.<sup><a href="#mn1-6">6</a></sup></p>
-          <p>The next part is my extrapolation for airmen, not a claim Gaddis makes. Seen this way, Korea and Vietnam look less like separate wars and more like two outputs of the same symmetrical logic. That's worth carrying into this week's airpower readings.</p>
-          <p>Opinion: it's long and slow in the middle, and essential. Read the introduction and the epilogue first, then decide how many administrations you need in between. Required reading for anyone who has ever briefed a "resource-constrained environment" with a straight face. <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="mn1-1"><span class="chk">Checked</span>Gaddis, table of contents: Kennan (24), NSC-68 and Korea (87), New Look (125), Flexible Response (197), détente (272), Reagan (342).</li>
-            <li id="mn1-2"><span class="chk">Checked</span>Gaddis, Preface, viii.</li>
-            <li id="mn1-3"><span class="chk">Checked</span>Gaddis, Preface to the Revised and Expanded Edition, xiii.</li>
-            <li id="mn1-4"><span class="chk">Checked</span>Gaddis, 29 (five centers) and 57 ("strongpoint" rather than "perimeter").</li>
-            <li id="mn1-5"><span class="chk">Checked</span>Gaddis, 57–58.</li>
-            <li id="mn1-6"><span class="tbc">To check</span>Ch. 4, "NSC-68 and the Korean War" (87), and Ch. 7, "Kennedy, Johnson, and Flexible Response" (197). The Drive text of your copy stops around page 61.</li>
-          </ol>
-        </article>
-
-        <article id="m2">
-          <span class="kicker">Political Strategy</span>
-          <h3><a href="#m2">Eight Days Out, Both Parties Face Gaddis's Question</a></h3>
-          <p>Electoral-vote.com reported that early voting is running well ahead of 2022.<sup><a href="#mn2-1">1</a></sup> That's a turnout story. It's also an allocation story, and allocation is where every campaign committee is living this week.</p>
-          <p>Opinion from here on. The symmetrical move is to match the other side's money in every competitive race. The asymmetrical move is Kennan's strongpoint defense:<sup><a href="#mn2-2">2</a></sup> a short list of races where an extra dollar changes the outcome, and polite silence everywhere else. The symmetrical risk is money spread thin across seats that were never in play. The asymmetrical risk is spending election night explaining why you "abandoned" a candidate who lost by two points.</p>
-          <p>Nobody has ever won a news cycle by announcing a strongpoint defense. Plenty have won elections that way. <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="mn2-1"><span class="chk">Checked</span>Electoral-vote.com, Oct. 26, 2026, "Early Voting Is Way Up Compared to 2022."</li>
-            <li id="mn2-2"><span class="chk">Checked</span>Gaddis, 57.</li>
-          </ol>
-        </article>
-
-        <article id="m3">
-          <span class="kicker">Leadership</span>
-          <h3><a href="#m3">The "X" Problem: Your Intent Will Be Read by Strangers</a></h3>
-          <p>In the summer of 1947, George Kennan published "The Sources of Soviet Conduct" in <i>Foreign Affairs</i> under the name "Mr. X." Arthur Krock soon revealed who wrote it, and Walter Lippmann took it apart in a series of columns longer than the original.<sup><a href="#mn3-1">1</a></sup> Careless drafting left Kennan agreeing in places more with Lippmann's critique than with his own article, and he couldn't say so publicly until his memoirs twenty years later.<sup><a href="#mn3-2">2</a></sup> The article called for "unalterable counter-force at every point," which reads like perimeter defense.<sup><a href="#mn3-3">3</a></sup></p>
-          <p>Opinion: every commander's intent has the same problem. Say what you are <i>not</i> asking for. It's only obvious to the author. <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="mn3-1"><span class="chk">Checked</span>Gaddis, 24–25.</li>
-            <li id="mn3-2"><span class="chk">Checked</span>Gaddis, 25.</li>
-            <li id="mn3-3"><span class="chk">Checked</span>Gaddis, 57.</li>
-          </ol>
-        </article>
-
-        <article id="m4">
-          <span class="kicker">The Writing Desk</span>
-          <h3><a href="#m4">Mistakes Were Made (By an Idiot)</a></h3>
-          <p>The best passive-voice test in circulation: put "by an idiot" right after the verb.<sup><a href="#mn4-1">1</a></sup> "The bridge was struck (by an idiot)" reads fine, so it's passive. "The wing struck the bridge (by an idiot)" is nonsense, so it's active. The same handout goes after the bare "this": ask "this <i>what</i>?" and name the noun.<sup><a href="#mn4-2">2</a></sup> <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="mn4-1"><span class="chk">Checked</span>Col Hollon, "Keys to Editing Success," item 5a. Internal SAASS handout; ask before quoting publicly.</li>
-            <li id="mn4-2"><span class="chk">Checked</span>Hollon, item 6b.</li>
-          </ol>
-        </article>
-
-        <article id="m5">
-          <span class="kicker">Space &amp; Next on the Shelf</span>
-          <h3><a href="#m5">Next on the Shelf: Sputnik Was Also a Press Release</a></h3>
-          <p>Friday's book is Walter McDougall's <i>…The Heavens and the Earth</i>, winner of the 1986 Pulitzer Prize for History.<sup><a href="#mn5-1">1</a></sup> The syllabus pitch: after Sputnik the Soviets won the information contest without holding the technical lead, and an Eisenhower administration "generally excellent at propaganda" failed to counter it.<sup><a href="#mn5-2">2</a></sup> <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="mn5-1"><span class="chk">Checked</span>Cover of the Basic Books edition in your Drive.</li>
-            <li id="mn5-2"><span class="chk">Checked</span>SAASS 628 AY27 Syllabus, Seminar 4.</li>
-          </ol>
-        </article>
-
-        <article id="m6">
-          <span class="kicker">On the Nightstand</span>
-          <h3><a href="#m6">On the Nightstand: Crane, and Tomorrow's Questions</a></h3>
-          <p>No review before reading. The syllabus's questions: who limited airpower in Korea and why, what Truman feared, whether airpower met its objectives, and why the atomic bomb went unused.<sup><a href="#mn6-1">1</a></sup> <span class="by">(S)</span></p>
-          <ol class="notes">
-            <li id="mn6-1"><span class="chk">Checked</span>SAASS 628 AY27 Syllabus, Seminar 2 (paraphrased).</li>
-          </ol>
-        </article>
-      </details>
-    </main>
+      </main>
 
     <aside>
       <section>
@@ -643,16 +556,16 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
       <section>
         <h2>Daily Lineup</h2>
         <ol class="lineup">
-          <li>Seminar prep: today's book in review</li>
-          <li>The Shelf: one recall question per book read</li>
-          <li>Next Up: preview of the next book</li>
-          <li>Writing Lab: one rule, an example, a drill</li>
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
           <li>News × the books: politics, defense, leadership</li>
+          <li>Sources, then Q&amp;A and the Comps Bank</li>
         </ol>
       </section>
       <section>
         <h2>How This Page Teaches</h2>
-        <p class="fine"><b>Recall before reading.</b> Questions come first and answers stay hidden. Pulling an answer from memory builds it better than rereading does.</p>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
         <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
         <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
         <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
