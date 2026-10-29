@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Red Orbits over the Strait</title>
+<meta name="description" content="Zhang's Red Wings over the Yalu, fast-forwarded to 2051: the same argument, the same record, applied to American space power.">
+<meta name="author" content="🎯">
+<style>
+:root{
+  --void:#070a12;
+  --panel:#0e1422;
+  --panel-2:#131b2d;
+  --ink:#e6e9f2;
+  --muted:#9aa3b8;
+  --rule:#253049;
+  --red:#ff6b5b;
+  --red-soft:rgba(255,107,91,.12);
+  --cyan:#7fd6e8;
+  --cyan-soft:rgba(127,214,232,.10);
+  --ok:#8fcf9d;
+  --warn:#e3b56f;
+  --font-body:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --font-head:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-data:"SF Mono",Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--void);color:var(--ink);
+  font-family:var(--font-body);font-size:19px;line-height:1.65;
+  background-image:
+    radial-gradient(1px 1px at 12% 8%,rgba(255,255,255,.55) 50%,transparent 51%),
+    radial-gradient(1px 1px at 78% 14%,rgba(255,255,255,.4) 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 44% 22%,rgba(255,255,255,.35) 50%,transparent 51%),
+    radial-gradient(1px 1px at 90% 38%,rgba(255,255,255,.3) 50%,transparent 51%),
+    radial-gradient(1px 1px at 6% 46%,rgba(255,255,255,.3) 50%,transparent 51%),
+    radial-gradient(900px 500px at 85% -10%,rgba(255,107,91,.10),transparent 70%),
+    radial-gradient(800px 600px at -10% 30%,rgba(127,214,232,.06),transparent 70%);
+  background-attachment:fixed;
+}
+.wrap{max-width:720px;margin:0 auto;padding:28px 16px 72px}
+a{color:var(--cyan);text-underline-offset:3px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+/* Masthead */
+.series{font-family:var(--font-data);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:0 0 18px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.series .dot{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}
+h1{font-family:var(--font-head);font-weight:700;font-size:clamp(36px,8vw,58px);line-height:1.02;letter-spacing:-.02em;margin:0 0 12px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--red)}
+.dek{font-size:20px;color:var(--muted);margin:0 0 18px;max-width:58ch}
+.meta{font-family:var(--font-data);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 18px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:10px 0;margin-bottom:22px}
+.meta b{color:var(--ink);font-weight:600}
+.notice{font-family:var(--font-head);font-size:14.5px;line-height:1.5;background:var(--panel);border-left:3px solid var(--cyan);padding:12px 14px;margin:0 0 34px;color:var(--muted)}
+.notice strong{color:var(--ink)}
+.legend{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--red)}
+
+/* Story */
+.part{margin:0 0 40px}
+.part-head{display:flex;align-items:baseline;gap:12px;margin:0 0 14px;flex-wrap:wrap}
+.part-num{font-family:var(--font-data);font-size:13px;color:var(--red);letter-spacing:.12em}
+.part h2{font-family:var(--font-head);font-size:26px;line-height:1.15;margin:0;text-wrap:balance}
+.part-map{font-family:var(--font-data);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;width:100%}
+.part p{margin:0 0 16px}
+.part p.lead::first-letter{font-family:var(--font-head);float:left;font-size:3.1em;line-height:.9;padding:6px 8px 0 0;color:var(--red);font-weight:700}
+
+/* Real-record callouts */
+.record{margin:22px 0 22px;background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--red);padding:14px 16px 12px;font-size:16.5px;line-height:1.55}
+.record .tag{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-family:var(--font-data);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.record p{margin:0 0 8px}
+.record p:last-child{margin-bottom:0}
+.src{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;border:1px solid currentColor;border-radius:3px;padding:0 5px;white-space:nowrap}
+.src.pdf{color:var(--ok)}
+.src.notes{color:var(--warn)}
+
+.cable{font-family:var(--font-data);font-size:15px;line-height:1.6;background:var(--panel-2);border:1px dashed var(--rule);padding:12px 16px;margin:18px 0;color:var(--cyan)}
+.cable span{display:block;color:var(--muted);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+
+.end{font-family:var(--font-data);color:var(--muted);text-align:center;letter-spacing:.4em;margin:8px 0 48px}
+
+/* Back matter */
+.back{border-top:2px solid var(--red);padding-top:22px;margin-top:8px}
+.back h2{font-family:var(--font-head);font-size:24px;margin:0 0 6px}
+.back .sub{color:var(--muted);margin:0 0 18px;font-size:16.5px}
+.section{margin:0 0 42px}
+.thesis{margin:0;padding-left:1.3em}
+.thesis li{margin-bottom:10px}
+
+.decoder{width:100%;border-collapse:collapse;font-size:15.5px;line-height:1.45}
+.decoder th{font-family:var(--font-data);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--muted);padding:6px 10px 6px 0;border-bottom:1px solid var(--rule)}
+.decoder td{padding:10px 10px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.decoder td:first-child{color:var(--cyan);width:42%}
+@media (max-width:560px){
+  .decoder thead{display:none}
+  .decoder tr{display:block;border-bottom:1px solid var(--rule);padding:8px 0}
+  .decoder td{display:block;border:0;padding:2px 0;width:auto!important}
+  .decoder td:last-child::before{content:"→ ";color:var(--red)}
+}
+
+.breaks{display:grid;gap:14px}
+.break{background:var(--panel);border:1px solid var(--rule);padding:12px 14px;font-size:16.5px;line-height:1.55}
+.break h3{font-family:var(--font-head);font-size:17px;margin:0 0 4px}
+.break p{margin:0}
+
+.qs{display:grid;gap:10px}
+details{background:var(--panel);border:1px solid var(--rule);padding:10px 14px}
+details summary{cursor:pointer;font-family:var(--font-head);font-size:16.5px;line-height:1.45;list-style:none;display:flex;gap:10px}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";font-family:var(--font-data);color:var(--red);flex:none}
+details[open] summary::before{content:"−"}
+details .ans{margin:10px 0 2px;padding-top:10px;border-top:1px solid var(--rule);font-size:16px;line-height:1.55;color:var(--muted)}
+details .ans b{color:var(--ink)}
+.kind{font-family:var(--font-data);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);border:1px solid currentColor;border-radius:3px;padding:0 5px;margin-right:4px;white-space:nowrap;align-self:flex-start;position:relative;top:3px}
+
+.foot{font-family:var(--font-data);font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="series"><span class="dot" aria-hidden="true"></span>Distant Early Warning <span>· Course books, fast-forwarded</span> <span>· No. 1</span></p>
+  <h1>Red Orbits over the <em>Strait</em></h1>
+  <p class="dek">Xiaoming Zhang's <i>Red Wings over the Yalu</i>, carried a century forward. The argument is Zhang's and the record is real. The war is set in 2050.</p>
+  <div class="meta">
+    <span>By <b>🎯</b></span>
+    <span>Story <b>~8 min</b></span>
+    <span>Covers <b>Intro · Ch. 3 · Ch. 6 · Ch. 9</b></span>
+  </div>
+  <p class="notice"><strong>How to read this.</strong> The people and the 2050 events are invented. Everything in a <span class="legend"><span class="swatch" aria-hidden="true"></span><strong>Record</strong></span> box is from Zhang: real quotes from the people who said them, real figures, real dates. Each box notes whether it was <span class="src pdf">checked against the PDF</span> or taken from <span class="src notes">Long Game notes</span>. After the story you'll find Zhang's argument, a key mapping the story to the history, where the comparison fails, and recall questions.</p>
+</header>
+
+<main>
+
+<section class="part" aria-labelledby="p1">
+  <div class="part-head">
+    <span class="part-num">I</span>
+    <h2 id="p1">Overnight</h2>
+    <span class="part-map">Introduction · Chapter 1 opening</span>
+  </div>
+
+  <p class="lead">The Chief of Space Operations said it on a Tuesday, eleven days after the shooting stopped.</p>
+
+  <p>"China has become a first-rank space power," Gen. Adaeze Vance told the Pentagon press pool, "and it has done it almost overnight." The clip ran all afternoon. By evening Congress had chartered a Joint Claims Board to settle what had happened in orbit during the twelve days of August 2050, and the staff had already nicknamed it the Recount.</p>
+
+  <p>Lt. Col. Ines Calloway, a Space Force historian, watched the clip twice in her office at Maxwell. Then she took a paperback off the shelf. Its spine had gone white along a crease from a seminar twenty-five years earlier.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 1, p. 12 <span class="src pdf">PDF</span></div>
+    <p>On November 21, 1951, Gen. Hoyt S. Vandenberg, Air Force chief of staff, just back from the Far East, told the press that Communist China "has become one of the major air powers of the world," seemingly overnight. Air Force intelligence counted fourteen hundred Communist planes in Korea, seven hundred of them MiGs.</p>
+  </aside>
+
+  <p>The general had nearly quoted him. Calloway doubted she knew it.</p>
+
+  <p>The Board wanted a scoreboard. Nobody had died in orbit, and both sides had already published numbers. The American number was nine to one: nine hostile spacecraft disabled for every American satellite lost. Beijing's number ran almost the other way. Calloway was writing the official history, and she knew how official histories went. Robert Futrell had written the authoritative account of the air war in Korea from the Air Force's own files, and Zhang spent his introduction showing what that had cost.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, Introduction, pp. 4–5 <span class="src pdf">PDF</span></div>
+    <p>Futrell "had little access to Soviet or Chinese sources," and his depiction of Communist air involvement "is one-sided, even misleading." Newer scholarship acknowledged that there was no "walkover" in the skies of Korea, and that American pilots "probably highly inflated" their victories.</p>
+  </aside>
+
+  <p>So she asked for the other side's paper. It came in the usual ways: intercepted traffic, a defector's drive, and a shelf of memoirs already in print in Beijing celebrating the heroes of the Strait. She remembered what Zhang had said about sources like that and wrote it on a sticky note above her monitor.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, Introduction, p. 10 <span class="src pdf">PDF</span></div>
+    <p>What his interview subjects told him "may not be an honest recollection, but a memory shaped through repeated telling of the same story."</p>
+  </aside>
+</section>
+
+<section class="part" aria-labelledby="p2">
+  <div class="part-head">
+    <span class="part-num">II</span>
+    <h2 id="p2">Who Will Be in Charge?</h2>
+    <span class="part-map">Chapter 3 · Promise, Decision, and the Airpower Factor</span>
+  </div>
+
+  <p class="lead">The defector's drive held the first surprise. In May 2050, three months before the exercises around Taiwan hardened into a quarantine, the commander of the landing force had been promised orbital cover. Moscow would lend its jammers and its inspector satellites to blind the American constellations over the Strait. Gen. Lu Qiming had the promise in writing. He did not have the rest of it.</p>
+
+  <p>His cable to Beijing ran four lines.</p>
+
+  <div class="cable"><span>Eastern Theater · Landing Force HQ · 14 May 2050 · fiction</span>How many satellites. When. Over which waters. Who will be in charge.</div>
+
+  <p>Calloway read it at her kitchen table after midnight and laughed out loud, because she had read it before.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 3 <span class="src pdf">PDF</span> <span class="src notes">Notes</span></div>
+    <p>On July 5, 1950, Stalin urged Beijing to deploy "nine divisions on the Chinese-Korean border," and offered air cover to persuade Mao. <span class="src pdf">PDF</span></p>
+    <p>He later named a MiG division of 124 planes but never said how it would work with Chinese troops. When Zhou Enlai pinned him down at his Black Sea villa on October 11, the answer was that Soviet air units needed two to two and a half months. On October 14 Moscow ordered 208 jet fighters to China, with their pilots "strictly forbidden" to fly at the front. <span class="src notes">Notes</span></p>
+    <p>On October 9, Peng Dehuai ordered his commanders ready for battle in ten days, then learned his troops had thirty-six antiaircraft guns. He cabled Mao in the middle of the meeting: how many bombers and fighters, when, and "who will be in charge?" Mao answered on October 11 that "the air force cannot set off for the time being." Mao sent the troops across anyway on October 19. <span class="src notes">Notes</span></p>
+  </aside>
+
+  <p>Beijing's reply to Lu had been warmer than Mao's and just as empty. The Russian satellites arrived in August, two weeks late, with orders to guard Chinese ground stations and never maneuver over the Strait itself. Lu's ships sailed without the umbrella.</p>
+
+  <p>That, Calloway wrote in her first chapter, was the pattern. The cover was a condition for going until the day it wasn't. And the side that believed it had been promised something learned the limits of the promise from the enemy.</p>
+</section>
+
+<section class="part" aria-labelledby="p3">
+  <div class="part-head">
+    <span class="part-num">III</span>
+    <h2 id="p3">The Operators Who Spoke Russian</h2>
+    <span class="part-map">Chapter 6 · Soviet Air Operations in Korea</span>
+  </div>
+
+  <p class="lead">By the second week, Space Command knew who was flying the inspectors. Their maneuvers were too clean and their timing too practiced, and on day four one crew forgot itself and called a burn in Russian on an open link. The spacecraft carried Chinese registry. The crews had orders to use Chinese call signs. Few did.</p>
+
+  <p>Washington said nothing, and neither did Moscow or Beijing. At the Board's third session, a congressional staffer asked why the President had never said out loud that Russian crews were attacking American satellites. Calloway answered from her notes.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 6 <span class="src notes">Notes</span></div>
+    <p>Soviet MiGs wore North Korean markings. Their pilots wore Chinese uniforms, used Chinese pseudonyms, and were ordered to speak Chinese on the radio. They could not fly over enemy territory or the sea. Col. Ivan Kozhedub called it "two regiments against all of imperialism."</p>
+    <p>USAF leaders knew the MiGs were Soviet, Zhang writes, yet credited the Chinese to avoid stirring up public demand for war with Russia.</p>
+  </aside>
+
+  <p>"Everyone kept the secret," she said, "because the secret kept the war small." The staffer wrote that down. She hoped he'd write down the rest. The secret also kept the scoreboard wrong. If you spend a war giving the Chinese credit, you come out of it believing you beat the Chinese.</p>
+
+  <p>On day nine, Russian crews reported fourteen American reconnaissance satellites disabled in a single pass. The National Reconnaissance Office had eleven over the Strait that hour, and two of them were decoys. Calloway laid the two documents side by side, then a third.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 6 · Black Tuesday <span class="src notes">Notes</span></div>
+    <p>On October 23, 1951, over Namsi, Soviet pilots reported twenty-one B-29s and more than two hundred fighters, and claimed twelve bombers. FEAF had sent nine B-29s, and one turned back. The Americans admitted losing three bombers; two more were written off after crash-landing. Within days, daylight B-29 operations were suspended.</p>
+  </aside>
+
+  <p>"So everyone overcounts," the staffer said.</p>
+
+  <p>"Everyone," Calloway said. "Us too."</p>
+</section>
+
+<section class="part" aria-labelledby="p4">
+  <div class="part-head">
+    <span class="part-num">IV</span>
+    <h2 id="p4">Everybody Won</h2>
+    <span class="part-map">Chapter 9 · Conclusion</span>
+  </div>
+
+  <p class="lead">The Board's draft came back in January with the number on the cover: 9 to 1.</p>
+
+  <p>Calloway had spent a month on the nine. An American kill counted when a hostile spacecraft went dark on American sensors after an engagement. It was the gun-camera rule of 2050: nobody had to see the satellite die. Of forty-four credited kills, nineteen were back on line within a month, rebooted, reoriented, or simply drifted out of the shadow they had been hiding in. The Chinese memoirs counted every American satellite that had dropped into safe mode. The Russians, she found, cut their own claims by a quarter as a matter of policy.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 9 <span class="src notes">Notes</span></div>
+    <p>American pilots claimed 8 or 10 to 1, and some later American accounts cut that to 2 to 1. Zhang concludes the Americans overcounted, because a gun-camera hit earned credit even if nobody saw the MiG go down, while the Soviets figured only 75 percent of filmed hits were real kills. The Soviets claimed 1,309 UN aircraft for 335 MiGs. The PLAAF claimed about 1.42 kills per loss.</p>
+  </aside>
+
+  <p>Then there were the ferries. By the Board's own count, American constellations held the high ground every hour of the twelve days. The quarantine held anyway. The cargo inspections went on, and Taipei's ports stayed half empty for six weeks. American superiority in orbit was real, and it did not decide the outcome.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 9 <span class="src notes">Notes</span></div>
+    <p>Even by Chinese reckoning, the USAF held air superiority the whole war. The UN flew 1.04 million sorties, and the Chinese counted roughly 190,000 bombs dropped on railroads, one for every seven meters of track. Zhang still holds that the Communist air effort was essential to keeping the supply lines open.</p>
+  </aside>
+
+  <p>She wrote a dissent. It was short, and she built it on the end of Zhang's book, where the myth comes due.</p>
+
+  <aside class="record" aria-label="Record">
+    <div class="tag">Record · Zhang, ch. 9 <span class="src notes">Notes</span></div>
+    <p>Korea veteran Lin Hu recalled that pilots who believed they had beaten the Americans saw the Nationalists as little threat. In 1954 the PLAAF failed to spot 70 percent of intruding Nationalist aircraft. Zhang calls it self-delusion that lasted more than forty years.</p>
+    <p>One man tried. Duan Suquan, the CPV Air Force deputy commander, warned Peng Dehuai that even a 1-to-1 ratio against Sabres was hard and told leaders to stop exaggerating. The myth won anyway.</p>
+  </aside>
+
+  <p>In 1953 the myth had belonged to Beijing. In 2051, Calloway argued, it belonged to whoever wanted it most, and Washington wanted it badly. A nine-to-one scoreboard would let the Board call the twelve days a demonstration of American space dominance. Congress would buy more of what had worked, and nobody would ask why the ferries kept sailing.</p>
+
+  <p>Her last paragraph was Zhang's, close to word for word, with a footnote. Washington, he had warned, paid scant attention to Chinese strategic thinking in 1950, and the will of the Chinese people, more than China's military capability, would likely drive Beijing's decisions.</p>
+
+  <p>The Board voted seven to one to keep the number on the cover, and the dissent went into an annex. Calloway put the paperback back on the shelf with the spine facing out, where the next historian would see it.</p>
+</section>
+
+<p class="end" aria-hidden="true">· · ·</p>
+
+<div class="back">
+
+  <section class="section" aria-labelledby="b1">
+    <h2 id="b1">Zhang's argument</h2>
+    <p class="sub">What the story has to keep intact. If you can say these five points without looking, you know the book.</p>
+    <ol class="thesis">
+      <li><b>The air war looks different from the Communist side.</b> The standard American account, built from American files, is "one-sided, even misleading." Zhang rebuilds it from Russian and Chinese archives and oral histories, and treats the memoirs with caution.</li>
+      <li><b>China's idea of airpower came from a Taiwan invasion plan,</b> drawn up by ground-war veterans with no concept of air warfare. Entering Korea without air cover forced a hasty effort to build an air force.</li>
+      <li><b>Soviet help was real, limited and self-interested.</b> Stalin promised air cover without defining it. Soviet pilots fought most of the MiG war under tight political restraints and had little effect on the ground war.</li>
+      <li><b>Chinese pilots were held back by inexperience more than by politics.</b> They flew advanced jets with little training, sustained by morale and the Party's political oversight.</li>
+      <li><b>Every side's kill ratio is unreliable, and none explains the outcome.</b> The USAF held air superiority throughout, yet the supply lines stayed open. The myths each side built afterward shaped its later doctrine.</li>
+    </ol>
+  </section>
+
+  <section class="section" aria-labelledby="b2">
+    <h2 id="b2">The key</h2>
+    <p class="sub">Try matching these yourself before reading the right-hand column.</p>
+    <table class="decoder">
+      <thead><tr><th>In the story (2050–51)</th><th>In Zhang (1950–53)</th></tr></thead>
+      <tbody>
+        <tr><td>Gen. Vance: China a space power "almost overnight"</td><td>Vandenberg, Nov. 21, 1951: China "one of the major air powers of the world"</td></tr>
+        <tr><td>The Board's official history, written from US data</td><td>Futrell's USAF history and its one-sided kill ratio</td></tr>
+        <tr><td>Beijing's memoirs of the "heroes of the Strait"</td><td>PLAAF internal reminiscences, with "much bravado and political cant"</td></tr>
+        <tr><td>Gen. Lu's four-line cable</td><td>Peng's cable to Mao, Oct. 1950: "who will be in charge?"</td></tr>
+        <tr><td>Moscow's promised cover, late and kept over Chinese ground stations</td><td>Stalin's undefined air cover; 208 jets "strictly forbidden" at the front; Soviets kept on the Chinese side of the Yalu</td></tr>
+        <tr><td>Russian crews flying Chinese-registered inspectors</td><td>Soviet MiG pilots in Chinese uniforms and North Korean markings</td></tr>
+        <tr><td>Washington's silence about the Russians</td><td>USAF crediting the Chinese to avoid public demand for war with Russia</td></tr>
+        <tr><td>Fourteen satellites claimed, eleven present</td><td>Black Tuesday: twelve B-29s claimed, nine sent</td></tr>
+        <tr><td>"Went dark on sensors" counts as a kill</td><td>Gun-camera hit counts even if nobody saw the MiG go down</td></tr>
+        <tr><td>Orbital superiority, but the ferries kept sailing</td><td>Air superiority all war, but the rail lines stayed open</td></tr>
+        <tr><td>Calloway's dissent</td><td>Duan Suquan's warning to stop exaggerating</td></tr>
+        <tr><td>Nine-to-one on the cover; dissent in an annex</td><td>The PLAAF's myth of victory, and the 1954 failure to spot 70% of intruders</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section" aria-labelledby="b3">
+    <h2 id="b3">Where the comparison fails</h2>
+    <p class="sub">Your seminar argument is in these gaps.</p>
+    <div class="breaks">
+      <div class="break"><h3>The patron is reversed</h3><p>In 1950 China depended on Moscow for jets, training and loans. A 2050 China has its own space industry, and Russia is more likely the junior partner. Part II is the weakest link in the story. What would an undefined promise look like when the client is the stronger party?</p></div>
+      <div class="break"><h3>Space has no Yalu</h3><p>Korea stayed limited partly because each side respected a line on a map. Orbits cross over everyone. There may be no sanctuary to agree on, which makes the shared secrecy of Part III harder to keep.</p></div>
+      <div class="break"><h3>Some kills don't go away</h3><p>A destroyed satellite leaves debris that threatens everyone's satellites, including the attacker's. Most counterspace effects, like jamming and dazzling, can be undone. Both push in the same direction as Zhang: in orbit, "kill" is even harder to count than it was over MiG Alley.</p></div>
+      <div class="break"><h3>Third parties are in the fight</h3><p>Commercial constellations would carry military traffic and could be targets. Korea had no equivalent of a private company whose satellites both sides depend on.</p></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="b4">
+    <h2 id="b4">Recall</h2>
+    <p class="sub">Answer out loud before you open each one.</p>
+    <div class="qs">
+      <details><summary><span class="kind">Thesis</span>What three elements does Zhang say make up China's role in the air war?</summary><div class="ans"><b>(1)</b> China's notions of airpower and its effort to build an air force; <b>(2)</b> the peculiar nature of Soviet assistance and involvement; <b>(3)</b> the character of Chinese air operations. (Introduction, p. 6)</div></details>
+      <details><summary><span class="kind">Evidence</span>What did Peng ask Mao in his October 1950 cable, and what was the answer?</summary><div class="ans">How many bombers and fighters, when, and "who will be in charge?" Mao replied on October 11 that "the air force cannot set off for the time being." He sent the troops across on October 19 anyway.</div></details>
+      <details><summary><span class="kind">Evidence</span>Why did USAF leaders credit the Chinese for MiGs they knew were Soviet?</summary><div class="ans">To avoid stirring up public demand for war with Russia. Both superpowers kept the secret, which helped keep the war limited.</div></details>
+      <details><summary><span class="kind">Evidence</span>Why does Zhang think the American kill ratio was inflated?</summary><div class="ans">A gun-camera hit earned credit even if nobody saw the MiG go down. The Soviets counted only 75 percent of filmed hits as kills. American claims of 8 or 10 to 1 have since been revised by some to about 2 to 1.</div></details>
+      <details><summary><span class="kind">Transfer</span>If the USAF held air superiority all war, why doesn't Zhang treat that as decisive?</summary><div class="ans">Chinese supply lines stayed open despite about 190,000 bombs on the railroads, and the war ended near where it began. Zhang credits Stalin's death more than air pressure with ending it. Superiority did not produce the political result. Ask whether orbital superiority would be any different.</div></details>
+      <details><summary><span class="kind">Transfer</span>What was the cost of the PLAAF's myth of victory, and who is most at risk of that myth today?</summary><div class="ans">Pilots who believed they had beaten the Americans underrated the Nationalists, and in 1954 the PLAAF missed 70 percent of Nationalist intruders. Zhang calls it self-delusion lasting more than forty years. The story argues that a dominant power that trusts its own scoreboard is just as exposed.</div></details>
+    </div>
+  </section>
+
+  <p class="foot">Sources: Xiaoming Zhang, <i>Red Wings over the Yalu: China, the Soviet Union, and the Air War in Korea</i> (College Station: Texas A&amp;M University Press, 2002). Items marked PDF were checked against the course PDF (introduction through p. 65). Items marked Notes come from the chapter-by-chapter summaries in <a href="../newsletter/index.html">The Long Game</a>, Oct. 29, 2026, and should be checked against the book before you cite them. Characters, dialogue and all events after 2026 are fiction.</p>
+</div>
+
+</main>
+</div>
+</body>
+</html>
