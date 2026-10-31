@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="author" content="🎯">
+<meta name="theme-color" content="#0b1220">
+<title>Iron Front: Theater Command</title>
+<style>
+  :root { --bg:#0b1220; --panel:#131c2e; --line:#26344f; --text:#e6edf7; --mute:#8fa1bd; --accent:#4cc38a; --warn:#e0453a; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--text);
+    font:14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; user-select:none; -webkit-user-select:none; }
+  #cv { position:fixed; inset:0; width:100%; height:100%; touch-action:none; display:block; }
+  #panel canvas { vertical-align:middle; }
+  #top { position:fixed; left:0; right:0; top:0; display:flex; gap:6px; align-items:center;
+    padding:calc(env(safe-area-inset-top) + 6px) 8px 6px; background:rgba(11,18,32,.92); border-bottom:1px solid var(--line); z-index:5; }
+  #top .stat { font-weight:600; white-space:nowrap; }
+  #top .grow { flex:1; }
+  button { font:inherit; color:var(--text); background:#1e2a42; border:1px solid #31425f; border-radius:9px; padding:7px 10px; cursor:pointer; }
+  button:active { transform:translateY(1px); }
+  button.primary { background:#1f7a52; border-color:#2a9b69; font-weight:600; }
+  button.danger { background:#7a2420; border-color:#a5332d; }
+  button:disabled { opacity:.45; }
+  #panel { position:fixed; left:0; right:0; bottom:0; max-height:46vh; overflow:auto; z-index:5;
+    background:rgba(19,28,46,.96); border-top:1px solid var(--line); padding:10px 10px calc(env(safe-area-inset-bottom) + 10px); }
+  #panel:empty { display:none; }
+  #panel h3 { margin:0 0 4px; font-size:16px; display:flex; align-items:center; gap:8px; }
+  #panel .sub { color:var(--mute); font-size:12.5px; margin-bottom:6px; }
+  .row { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:6px; margin-top:6px; }
+  .bcard { display:flex; flex-direction:column; align-items:flex-start; gap:1px; padding:6px 8px; text-align:left; }
+  .bcard small { color:var(--mute); font-size:11px; }
+  .dot { width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #0008; }
+  .pill { display:inline-block; padding:1px 7px; border-radius:99px; background:#24324d; font-size:12px; color:var(--mute); margin-right:4px; }
+  .preview { margin-top:8px; padding:8px; border:1px solid #6b2a26; background:#2a1414; border-radius:9px; }
+  #modal { position:fixed; inset:0; z-index:10; background:rgba(5,9,18,.82); display:flex; align-items:center; justify-content:center; padding:14px; }
+  #modal.hidden { display:none; }
+  #modal .box { background:var(--panel); border:1px solid var(--line); border-radius:14px; width:min(520px,100%); max-height:92vh; overflow:auto; padding:16px; }
+  #modal h1 { margin:0 0 4px; font-size:24px; letter-spacing:.5px; }
+  #modal h2 { margin:14px 0 6px; font-size:15px; color:var(--mute); text-transform:uppercase; letter-spacing:1px; }
+  .seg { display:flex; gap:6px; flex-wrap:wrap; }
+  .seg button.on { background:#2a4f86; border-color:#4a7cc4; }
+  .tech { border:1px solid var(--line); border-radius:10px; padding:8px 10px; margin-bottom:6px; display:flex; gap:10px; align-items:center; }
+  .tech .info { flex:1; }
+  .tech .info b { display:block; }
+  .tech .info small { color:var(--mute); }
+  .tech.owned { border-color:#2a9b69; background:#12261d; }
+  #toast { position:fixed; left:50%; top:calc(env(safe-area-inset-top) + 56px); transform:translateX(-50%); z-index:8; pointer-events:none;
+    display:flex; flex-direction:column; gap:4px; align-items:center; width:92%; }
+  #toast div { background:rgba(19,28,46,.95); border:1px solid var(--line); padding:6px 12px; border-radius:99px; font-size:13px; animation:fade 3.2s forwards; text-align:center; }
+  @keyframes fade { 0%{opacity:0;transform:translateY(-6px)} 8%{opacity:1;transform:none} 80%{opacity:1} 100%{opacity:0} }
+  #zoom { position:fixed; right:8px; z-index:4; display:flex; flex-direction:column; gap:6px; top:calc(env(safe-area-inset-top) + 58px); }
+  #zoom button { width:38px; height:38px; padding:0; font-size:18px; }
+  #busy { position:fixed; left:8px; top:calc(env(safe-area-inset-top) + 58px); z-index:4; padding:5px 10px; border-radius:99px; background:#2a1414; border:1px solid #6b2a26; font-size:12.5px; display:none; }
+  p { margin:6px 0; }
+  ul { margin:6px 0; padding-left:20px; }
+  li { margin:3px 0; }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="top">
+  <span class="stat" id="tTurn">Turn 1</span>
+  <span class="stat" id="tSupply">⛽ 0</span>
+  <span class="grow"></span>
+  <button id="bTech">🔬 Research</button>
+  <button id="bNext" title="Next ready unit">⏭</button>
+  <button id="bEnd" class="primary">End Turn</button>
+  <button id="bMenu">☰</button>
+</div>
+<div id="zoom"><button id="zIn">+</button><button id="zOut">−</button></div>
+<div id="busy"></div>
+<div id="panel"></div>
+<div id="toast"></div>
+<div id="modal" class="hidden"><div class="box" id="mbox"></div></div>
+
+<script>
+'use strict';
+/* =========================================================
+   IRON FRONT: THEATER COMMAND
+   An original turn-based modern-warfare strategy game.
+   Author: 🎯
+   ========================================================= */
+
+const HEX = 30, SQ3 = Math.sqrt(3);
+const PCOL = ['#2f7de1', '#e0453a', '#e8a317', '#9b4fd6'];
+const PNAME = ['Blue Coalition', 'Red Pact', 'Gold Union', 'Violet Bloc'];
+const TOWN_NAMES = ['Kessel','Ardena','Vostrel','Marrow','Halden','Tarsk','Bresk','Olvan','Corva','Dunmere','Esker','Fallow',
+  'Garnet','Hollis','Iver','Jarrow','Kirin','Lomax','Mirov','Norrland','Osk','Pell','Quorin','Rask','Sable','Tamsin','Ulric',
+  'Varga','Wexley','Yarrow','Zenda','Arlo','Brennan','Calder','Drava','Elgin','Ferris','Grosvald','Harlan','Istra','Juno',
+  'Kestrel','Linden','Morrow','Nessa','Orrin','Pavla','Ridge','Stellan','Torvik'];
+
+const TERRAIN = {
+  plain:    { name:'Plains',        color:'#7fae62', def:1,    land:true  },
+  forest:   { name:'Forest',        color:'#4f8042', def:1.25, land:true  },
+  hill:     { name:'Hills',         color:'#a99d62', def:1.5,  land:true  },
+  mountain: { name:'Mountains',     color:'#8c8f94', def:2,    land:true  },
+  shallow:  { name:'Coastal Water', color:'#4c9fc6', def:1,    land:false },
+  ocean:    { name:'Deep Ocean',    color:'#215f8f', def:1,    land:false },
+};
+
+// air: damage multiplier vs aircraft (0 = cannot hit air). ground: multiplier vs surface targets (default 1).
+const UNITS = {
+  infantry:  { name:'Infantry',        cost:2,  hp:10, atk:2,   def:2,   mv:1, rng:1, vis:2, dom:'land',  req:null,        cap:true, air:0.5,
+               desc:'Cheap and steady. Captures cities. Can fire at low aircraft.' },
+  recon:     { name:'Recon Jeep',      cost:3,  hp:10, atk:1.5, def:1,   mv:3, rng:1, vis:3, dom:'land',  req:'motor',     cap:true,
+               desc:'Fast scout with wide vision. Captures cities.' },
+  tank:      { name:'Battle Tank',     cost:8,  hp:20, atk:4,   def:3.5, mv:2, rng:1, vis:2, dom:'land',  req:'armor',     cap:true, heavy:true,
+               desc:'Heavy armor. Cannot cross mountains or hit aircraft.' },
+  artillery: { name:'Artillery',       cost:7,  hp:10, atk:4,   def:1,   mv:1, rng:3, minr:2, vis:2, dom:'land', req:'artillery', heavy:true,
+               desc:'Shells targets 2–3 tiles away. Helpless up close.' },
+  aa:        { name:'AA Battery',      cost:6,  hp:14, atk:2,   def:2.5, mv:1, rng:2, vis:3, dom:'land',  req:'artillery', heavy:true, air:2.5,
+               desc:'Shreds aircraft within 2 tiles.' },
+  destroyer: { name:'Destroyer',       cost:8,  hp:18, atk:3,   def:3,   mv:3, rng:2, vis:3, dom:'naval', req:'naval',     air:1, sonar:true,
+               desc:'Fires 2 tiles. Sonar reveals subs within 2.' },
+  submarine: { name:'Submarine',       cost:9,  hp:12, atk:5,   def:1.5, mv:3, rng:1, vis:2, dom:'naval', req:'subs',      stealth:true,
+               desc:'Invisible unless an enemy is adjacent or a destroyer is near.' },
+  fighter:   { name:'Fighter Jet',     cost:10, hp:14, atk:3,   def:3,   mv:5, rng:1, vis:3, dom:'air',   req:'aviation',  air:2, ground:0.5,
+               desc:'Air superiority. Flies over anything. Weak vs ground.' },
+  bomber:    { name:'Bomber',          cost:12, hp:14, atk:5,   def:1,   mv:4, rng:1, vis:2, dom:'air',   req:'bombing',   air:0,
+               desc:'Devastating vs ground and ships. Defenseless vs fighters.' },
+  satellite: { name:'Recon Satellite', cost:14, hp:1,  atk:0,   def:0,   mv:4, rng:0, vis:5, dom:'orbit', req:'space',
+               desc:'In orbit: cannot be attacked. Huge vision. After 2 turns it can be upgraded.' },
+  strikesat: { name:'Strike Satellite',cost:8,  hp:1,  atk:5,   def:0,   mv:3, rng:1, minr:0, vis:5, dom:'orbit', req:'orbital', noBuild:true,
+               desc:'Orbital strike on a tile at or next to it. Recharges for 2 turns.' },
+};
+
+const TECH = {
+  motor:     { name:'Motor Pool',        base:4,  req:[],                     unlock:'Recon Jeep' },
+  armor:     { name:'Armored Warfare',   base:7,  req:['motor'],              unlock:'Battle Tank' },
+  artillery: { name:'Fire Support',      base:6,  req:[],                     unlock:'Artillery, AA Battery' },
+  industry:  { name:'Oil Industry',      base:5,  req:[],                     unlock:'Oil Derricks (+2 ⛽/turn)' },
+  naval:     { name:'Naval Command',     base:5,  req:[],                     unlock:'Destroyer (coastal cities)' },
+  subs:      { name:'Submarine Warfare', base:7,  req:['naval'],              unlock:'Submarine' },
+  aviation:  { name:'Air Force',         base:8,  req:['motor'],              unlock:'Fighter Jet' },
+  bombing:   { name:'Strategic Bombing', base:9,  req:['aviation'],           unlock:'Bomber' },
+  space:     { name:'Space Program',     base:12, req:['aviation','industry'],unlock:'Recon Satellite' },
+  orbital:   { name:'Orbital Weapons',   base:10, req:['space'],              unlock:'Upgrade satellites to Strike Satellites' },
+};
+
+const DIRS = [[1,0],[0,1],[-1,1],[-1,0],[0,-1],[1,-1]]; // axial, pointy-top: E, SE, SW, W, NW, NE
+const DERRICK_COST = 5, UPGRADE_COST = 8, MAX_SATS = 2, MAX_LEVEL = 5;
+
+/* ---------------- state ---------------- */
+let S = null;               // full game state (serialisable)
+let visCache = {}, fieldCache = new Map();
+let sel = null;             // {kind:'unit'|'city'|'tile', id, i}
+let reach = new Map(), tgts = [], pending = null;
+let busy = false, dirty = true;
+const floats = [];
+const cam = { x:0, y:0, z:1 };
+
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------------- hex helpers ---------------- */
+const idx = (c, r) => r * S.w + c;
+const tileAt = (c, r) => (c < 0 || r < 0 || c >= S.w || r >= S.h) ? null : S.tiles[idx(c, r)];
+const toAxial = (c, r) => [c - ((r - (r & 1)) >> 1), r];
+const fromAxial = (q, r) => [q + ((r - (r & 1)) >> 1), r];
+function neighbors(t) {
+  const [q, r] = toAxial(t.c, t.r), out = [];
+  for (const [dq, dr] of DIRS) { const [nc, nr] = fromAxial(q + dq, r + dr); out.push(tileAt(nc, nr)); }
+  return out;
+}
+function dist(a, b) {
+  const [q1, r1] = toAxial(a.c, a.r), [q2, r2] = toAxial(b.c, b.r);
+  const dq = q1 - q2, dr = r1 - r2;
+  return (Math.abs(dq) + Math.abs(dr) + Math.abs(dq + dr)) / 2;
+}
+function within(t, rad) {
+  const out = [];
+  for (let r = Math.max(0, t.r - rad); r <= Math.min(S.h - 1, t.r + rad); r++)
+    for (let c = Math.max(0, t.c - rad - 1); c <= Math.min(S.w - 1, t.c + rad + 1); c++) {
+      const x = S.tiles[idx(c, r)]; if (dist(t, x) <= rad) out.push(x);
+    }
+  return out;
+}
+const hexPos = (c, r) => [HEX * SQ3 * (c + 0.5 * (r & 1)) + HEX, HEX * 1.5 * r + HEX];
+
+/* ---------------- lookups ---------------- */
+const tileOf = o => S.tiles[idx(o.c, o.r)];
+const layerOf = u => UNITS[u.type].dom === 'orbit' ? 'orbit' : 'surface';
+const unitById = id => S.units.find(u => u.id === id);
+function unitAt(t, layer = 'surface') { return S.units.find(u => u.c === t.c && u.r === t.r && layerOf(u) === layer) || null; }
+const cityAt = t => t.city >= 0 ? S.cities[t.city] : null;
+const citiesOf = p => S.cities.filter(c => c.owner === p);
+const unitsOf = p => S.units.filter(u => u.owner === p);
+const ownerOf = t => t.claim >= 0 ? S.cities[t.claim].owner : -1;
+const isWater = t => !TERRAIN[t.t].land;
+const isCoastal = city => neighbors(tileOf(city)).some(n => n && isWater(n));
+const has = (p, k) => S.players[p].tech.includes(k);
+const bump = () => { S.ver++; dirty = true; };
+
+function income(p) {
+  let s = 0;
+  for (const c of citiesOf(p)) s += 1 + c.level + (c.capital ? 2 : 0);
+  for (const t of S.tiles) if (t.derrick && ownerOf(t) === p) s += 2;
+  if (S.players[p].ai) s += S.aiBonus;
+  return s;
+}
+const unitCap = p => citiesOf(p).reduce((a, c) => a + c.level + 1, 0);
+const unitCount = p => unitsOf(p).filter(u => UNITS[u.type].dom !== 'orbit').length;
+const techCost = (p, k) => TECH[k].base + 2 * Math.max(0, citiesOf(p).length - 1);
+const expandCost = c => 4 * c.level;
+const techReady = (p, k) => TECH[k].req.every(r => has(p, r));
+
+/* ---------------- map generation ---------------- */
+function makeNoise(w, h, cell) {
+  const gw = Math.ceil(w / cell) + 3, gh = Math.ceil(h / cell) + 3, g = [];
+  for (let i = 0; i < gw * gh; i++) g.push(Math.random());
+  return (x, y) => {
+    const fx = x / cell, fy = y / cell, x0 = Math.floor(fx), y0 = Math.floor(fy);
+    const tx = fx - x0, ty = fy - y0, sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+    const v = (a, b) => g[b * gw + a];
+    const a = v(x0, y0) * (1 - sx) + v(x0 + 1, y0) * sx, b = v(x0, y0 + 1) * (1 - sx) + v(x0 + 1, y0 + 1) * sx;
+    return a * (1 - sy) + b * sy;
+  };
+}
+
+function generate(w, h, nPlayers) {
+  for (let attempt = 0; attempt < 60; attempt++) {
+    S.tiles = []; S.cities = [];
+    const n1 = makeNoise(w, h, 5), n2 = makeNoise(w, h, 2.2), n3 = makeNoise(w, h, 3);
+    const elev = [];
+    for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) {
+      const x = c + 0.5 * (r & 1), y = r * 0.866;
+      let e = n1(x, y) * 0.65 + n2(x, y) * 0.35;
+      const edge = Math.min(1, Math.min(c + 1, w - c, r + 1, h - r) / 3);
+      e *= 0.5 + 0.5 * edge;
+      elev.push(e);
+      S.tiles.push({ c, r, i: r * w + c, t:'plain', oil:false, derrick:false, city:-1, claim:-1, f: n3(x, y) });
+    }
+    const sorted = [...elev].sort((a, b) => a - b), N = elev.length;
+    const water = sorted[Math.floor(N * 0.38)], hill = sorted[Math.floor(N * 0.85)], mtn = sorted[Math.floor(N * 0.95)];
+    for (const t of S.tiles) {
+      const e = elev[t.i];
+      t.t = e < water ? 'ocean' : e >= mtn ? 'mountain' : e >= hill ? 'hill' : t.f > 0.6 ? 'forest' : 'plain';
+    }
+    for (const t of S.tiles) if (t.t === 'ocean' && neighbors(t).some(n => n && TERRAIN[n.t].land)) t.t = 'shallow';
+    // largest land mass
+    const seen = new Uint8Array(N); let best = [];
+    for (const t of S.tiles) {
+      if (seen[t.i] || !TERRAIN[t.t].land) continue;
+      const comp = [], st = [t]; seen[t.i] = 1;
+      while (st.length) { const x = st.pop(); comp.push(x); for (const n of neighbors(x)) if (n && !seen[n.i] && TERRAIN[n.t].land) { seen[n.i] = 1; st.push(n); } }
+      if (comp.length > best.length) best = comp;
+    }
+    const landCount = S.tiles.filter(t => TERRAIN[t.t].land).length;
+    if (best.length < landCount * 0.55 || best.length < nPlayers * 14) continue;
+    // capitals: farthest-point sampling
+    const cand = best.filter(t => t.t !== 'mountain');
+    const caps = [pick(cand)];
+    while (caps.length < nPlayers) {
+      let bt = null, bd = -1;
+      for (const t of cand) { const d = Math.min(...caps.map(c => dist(c, t))); if (d > bd) { bd = d; bt = t; } }
+      caps.push(bt);
+    }
+    // re-pick the first one farthest from others too
+    const minSep = Math.min(...caps.flatMap((a, i) => caps.slice(i + 1).map(b => dist(a, b))));
+    if (minSep < Math.max(4, Math.floor(Math.min(w, h) / 3))) continue;
+    const names = shuffle([...TOWN_NAMES]);
+    const addCity = (t, owner, capital) => {
+      const id = S.cities.length;
+      S.cities.push({ id, c:t.c, r:t.r, name:names[id % names.length], owner, level: capital ? 2 : 1, capital, built:false });
+      t.city = id; if (t.t === 'mountain' || t.t === 'forest') t.t = 'plain';
+    };
+    shuffle(caps).forEach((t, p) => addCity(t, p, true));
+    const target = Math.round(landCount / 12);
+    for (const t of shuffle(S.tiles.filter(t => TERRAIN[t.t].land && t.t !== 'mountain'))) {
+      if (S.cities.length >= nPlayers + target) break;
+      if (S.cities.every(c => dist(c, t) >= 3)) addCity(t, -1, false);
+    }
+    for (const t of S.tiles) if ((t.t === 'plain' || t.t === 'hill') && t.city < 0 && Math.random() < 0.09) t.oil = true;
+    for (const t of S.tiles) delete t.f;
+    return true;
+  }
+  return false;
+}
+
+function recomputeTerritory() {
+  for (const t of S.tiles) t.claim = -1;
+  const order = [...S.cities].sort((a, b) => (b.capital - a.capital) || (b.level - a.level));
+  for (const c of order) for (const t of within(tileOf(c), c.level >= 3 ? 2 : 1)) if (t.claim < 0 && (t.city < 0 || t.city === c.id)) t.claim = c.id;
+}
+
+/* ---------------- new game / save ---------------- */
+function newGame(opts) {
+  const n = opts.ai + 1, size = opts.size;
+  S = { w:size, h:size, tiles:[], cities:[], units:[], players:[], turn:1, cur:0, ver:1, nextId:1,
+        explored:[], spectate: !!opts.spectate, aiBonus: [0, 1, 3][opts.diff], over:false, log:[] };
+  if (!generate(size, size, n)) { alert('Map generation failed, try again'); return; }
+  for (let p = 0; p < n; p++) {
+    S.players.push({ id:p, name:PNAME[p], color:PCOL[p], ai: p > 0 || !!opts.spectate, supply:5, tech:[], alive:true,
+                     order: shuffle(Object.keys(TECH)).sort((a, b) => TECH[a].base - TECH[b].base + rand(-4, 4)) });
+  }
+  S.explored = new Array(S.tiles.length).fill(0);
+  recomputeTerritory();
+  for (const c of S.cities) if (c.capital) {
+    const spot = neighbors(tileOf(c)).find(n => n && TERRAIN[n.t].land && n.t !== 'mountain' && n.city < 0) || tileOf(c);
+    spawn('infantry', c.owner, spot, false);
+  }
+  visCache = {}; sel = null; clearSel();
+  centerOn(tileOf(S.cities.find(c => c.capital && c.owner === 0)));
+  closeModal();
+  startTurn(0);
+  if (S.players[0].ai) runAI();
+}
+
+function save() { if (!S || S.over || S.spectate) return; try { localStorage.setItem('ironfront_save', JSON.stringify(S)); } catch (e) {} }
+function load() {
+  try { const s = JSON.parse(localStorage.getItem('ironfront_save')); if (!s) return false;
+    S = s; visCache = {}; fieldCache.clear(); clearSel();
+    centerOn(tileOf(S.cities.find(c => c.owner === 0) || S.cities[0])); closeModal(); refreshUI(); return true;
+  } catch (e) { return false; }
+}
+
+/* ---------------- visibility ---------------- */
+function getVis(p) {
+  const c = visCache[p]; if (c && c.ver === S.ver) return c.set;
+  const set = new Set();
+  for (const u of S.units) if (u.owner === p) {
+    const t = tileOf(u), U = UNITS[u.type];
+    for (const x of within(t, U.vis + (U.dom === 'land' && t.t === 'mountain' ? 1 : 0))) set.add(x.i);
+  }
+  for (const ct of S.cities) if (ct.owner === p) for (const x of within(tileOf(ct), ct.level >= 3 ? 3 : 2)) set.add(x.i);
+  visCache[p] = { ver:S.ver, set }; return set;
+}
+function seesUnit(p, u) {
+  if (u.owner === p) return true;
+  if (S.spectate && p === 0) return true;
+  if (!getVis(p).has(idx(u.c, u.r))) return false;
+  if (UNITS[u.type].stealth && !cityAt(tileOf(u))) {
+    return S.units.some(o => o.owner === p && layerOf(o) === 'surface' &&
+      (dist(o, u) <= 1 || (UNITS[o.type].sonar && dist(o, u) <= 2)));
+  }
+  return true;
+}
+function updateExplored() {
+  if (S.spectate) return;
+  for (const i of getVis(0)) S.explored[i] = 1;
+}
+
+/* ---------------- movement ---------------- */
+function moveCost(u, t) {
+  const U = UNITS[u.type];
+  if (U.dom === 'air' || U.dom === 'orbit') return 1;
+  const city = cityAt(t);
+  if (U.dom === 'naval') return (isWater(t) || (city && city.owner === u.owner)) ? 1 : Infinity;
+  if (isWater(t)) return Infinity;
+  if (city) return 1;
+  if (t.t === 'mountain') return U.heavy ? Infinity : 3;
+  return (t.t === 'forest' || t.t === 'hill') ? 2 : 1;
+}
+function zocAt(t, p) {
+  return neighbors(t).some(n => { if (!n) return false; const e = unitAt(n);
+    return e && e.owner !== p && UNITS[e.type].dom !== 'air' && seesUnit(p, e); });
+}
+function reachable(u) {
+  const res = new Map(); if (u.moved) return res;
+  const U = UNITS[u.type], layer = layerOf(u), start = tileOf(u);
+  const zoc = U.dom === 'land' || U.dom === 'naval';
+  const best = new Map([[start.i, U.mv]]), pq = [[U.mv, start]];
+  while (pq.length) {
+    pq.sort((a, b) => a[0] - b[0]);
+    const [rem, t] = pq.pop();
+    if (best.get(t.i) > rem) continue;
+    if (t !== start && zoc && zocAt(t, u.owner)) continue;
+    if (rem <= 0) continue;
+    for (const n of neighbors(t)) {
+      if (!n) continue;
+      const cost = moveCost(u, n); if (cost === Infinity) continue;
+      if (rem < cost && rem !== U.mv) continue;
+      const occ = unitAt(n, layer);
+      if (occ && occ.owner !== u.owner) continue;
+      const nr = Math.max(0, rem - cost);
+      if (!best.has(n.i) || best.get(n.i) < nr) { best.set(n.i, nr); pq.push([nr, n]); }
+    }
+  }
+  for (const [i, rem] of best) {
+    if (i === start.i || unitAt(S.tiles[i], layer)) continue;
+    const c = cityAt(S.tiles[i]);
+    if (c && c.owner !== u.owner && !U.cap && layer === 'surface') continue; // only capturers may stop on foreign cities
+    res.set(i, rem);
+  }
+  return res;
+}
+function moveUnit(u, t) {
+  const [fx, fy] = hexPos(u.c, u.r);
+  u.anim = { fx, fy, t0: performance.now() };
+  u.c = t.c; u.r = t.r; u.moved = true; bump();
+  if (u.owner === 0) updateExplored();
+}
+
+/* ---------------- combat ---------------- */
+function targetMult(A, D, aType, docked) {
+  if (A.atk <= 0 || D.dom === 'orbit') return 0;
+  if (D.dom === 'air') return A.air ?? 0;
+  if (D.stealth && !docked) return (A.dom === 'naval' || A.dom === 'orbit') ? (A.sonar ? 1.5 : 1) : (aType === 'bomber' ? 0.75 : 0);
+  return A.ground ?? 1;
+}
+function defBonus(u, t) {
+  t = t || tileOf(u);
+  if (UNITS[u.type].dom !== 'land') return 1;
+  const c = cityAt(t);
+  if (c && c.owner === u.owner) return c.capital ? 1.75 : 1.5;
+  return TERRAIN[t.t].def;
+}
+function hpF(hp, max) { return 0.5 + 0.5 * Math.max(0, hp) / max; }
+function dmgFormula(atkEff, defEff) { return Math.max(1, Math.round((atkEff + 2) * 2 * atkEff / (atkEff + defEff))); }
+function calcCombat(a, d, from) {
+  from = from || tileOf(a);
+  const A = UNITS[a.type], D = UNITS[d.type];
+  const m = targetMult(A, D, a.type, !!cityAt(tileOf(d)));
+  const aEff = A.atk * m * hpF(a.hp, A.hp);
+  const dEff = Math.max(0.3, D.def * defBonus(d) * hpF(d.hp, D.hp));
+  const dmg = dmgFormula(aEff, dEff);
+  let counter = 0;
+  if (dmg < d.hp && A.dom !== 'orbit') {
+    const cm = targetMult(D, A, d.type, !!cityAt(from)), dd = dist(from, d);
+    if (cm > 0 && dd <= D.rng && dd >= (D.minr ?? 1)) {
+      const cEff = D.atk * cm * hpF(d.hp - dmg, D.hp);
+      const aDef = Math.max(0.3, A.def * defBonus(a, from) * hpF(a.hp, A.hp));
+      counter = Math.max(1, Math.round(dmgFormula(cEff, aDef) * 0.7));
+    }
+  }
+  return { dmg, counter };
+}
+function targetsFrom(u, from) {
+  const U = UNITS[u.type]; from = from || tileOf(u);
+  if (u.attacked || U.atk <= 0 || (u.type === 'strikesat' && u.cd > 0)) return [];
+  const out = [];
+  for (const e of S.units) {
+    if (e.owner === u.owner || !seesUnit(u.owner, e)) continue;
+    const d = dist(from, e); if (d > U.rng || d < (U.minr ?? 1)) continue;
+    if (targetMult(U, UNITS[e.type], u.type, !!cityAt(tileOf(e))) <= 0) continue;
+    out.push(e);
+  }
+  return out;
+}
+function doAttack(a, d) {
+  const r = calcCombat(a, d);
+  const [dx, dy] = hexPos(d.c, d.r), [ax, ay] = hexPos(a.c, a.r);
+  if (a.type === 'strikesat') addFloat(dx, dy - 20, '☄️', '#fff');
+  d.hp -= r.dmg; addFloat(dx, dy, '-' + r.dmg, '#ff6b5e');
+  a.attacked = true; a.moved = true; if (a.type === 'strikesat') a.cd = 2;
+  if (d.hp <= 0) kill(d);
+  else if (r.counter > 0) { a.hp -= r.counter; addFloat(ax, ay, '-' + r.counter, '#ffb35e'); if (a.hp <= 0) kill(a); }
+  bump();
+}
+function kill(u) {
+  const [x, y] = hexPos(u.c, u.r); addFloat(x, y - 14, '💥', '#fff');
+  S.units = S.units.filter(o => o !== u);
+  if (sel && sel.kind === 'unit' && sel.id === u.id) clearSel();
+  bump();
+}
+
+/* ---------------- actions ---------------- */
+function canCapture(u) {
+  const U = UNITS[u.type]; if (!U.cap || u.attacked) return false;
+  const c = cityAt(tileOf(u)); if (!c || c.owner === u.owner) return false;
+  return c.owner === -1 || (u.sc === u.c && u.sr === u.r);
+}
+function capture(u) {
+  const c = cityAt(tileOf(u)), prev = c.owner;
+  c.owner = u.owner; c.built = true; if (prev >= 0) c.capital = false;
+  u.moved = u.attacked = true;
+  recomputeTerritory(); bump();
+  const [x, y] = hexPos(c.c, c.r); addFloat(x, y - 18, '🚩', '#fff');
+  const msg = prev < 0 ? `${S.players[u.owner].name} secured ${c.name}` : `${S.players[u.owner].name} captured ${c.name} from ${S.players[prev].name}!`;
+  if (u.owner === 0 || prev === 0 || seesTile(0, tileOf(c))) toast(msg);
+  if (prev >= 0) checkElimination(prev);
+}
+function seesTile(p, t) { return S.spectate || getVis(p).has(t.i); }
+function checkElimination(p) {
+  const P = S.players[p];
+  if (P.alive && citiesOf(p).length === 0) {
+    P.alive = false; S.units = S.units.filter(u => u.owner !== p); bump();
+    toast(`${P.name} has been eliminated`);
+  }
+  checkGameOver();
+}
+function checkGameOver() {
+  if (S.over) return;
+  const alive = S.players.filter(p => p.alive);
+  if (!S.spectate && !S.players[0].alive) return gameOver(false);
+  if (alive.length === 1) return gameOver(alive[0].id === 0, alive[0]);
+}
+function buildReason(p, city, k) {
+  const U = UNITS[k], P = S.players[p];
+  if (U.noBuild) return 'Upgrade only';
+  if (U.req && !has(p, U.req)) return 'Needs ' + TECH[U.req].name;
+  if (U.dom === 'naval' && !isCoastal(city)) return 'Needs coast';
+  if (city.built) return 'Built this turn';
+  if (unitAt(tileOf(city), U.dom === 'orbit' ? 'orbit' : 'surface')) return 'Tile occupied';
+  if (U.dom === 'orbit') { if (unitsOf(p).filter(u => UNITS[u.type].dom === 'orbit').length >= MAX_SATS) return 'Max ' + MAX_SATS + ' sats'; }
+  else if (unitCount(p) >= unitCap(p)) return 'Unit cap';
+  if (P.supply < U.cost) return 'Need ' + U.cost + ' ⛽';
+  return null;
+}
+function spawn(k, p, t, ready) {
+  const U = UNITS[k];
+  const u = { id:S.nextId++, type:k, owner:p, c:t.c, r:t.r, hp:U.hp, moved:!ready, attacked:!ready, sc:t.c, sr:t.r, age:0, cd:0 };
+  S.units.push(u); bump(); return u;
+}
+function build(p, city, k) {
+  if (buildReason(p, city, k)) return null;
+  S.players[p].supply -= UNITS[k].cost; city.built = true;
+  const u = spawn(k, p, tileOf(city), false);
+  if (p === 0) updateExplored();
+  return u;
+}
+function research(p, k) {
+  const P = S.players[p], cost = techCost(p, k);
+  if (has(p, k) || !techReady(p, k) || P.supply < cost) return false;
+  P.supply -= cost; P.tech.push(k); dirty = true; return true;
+}
+function expand(p, c) {
+  const cost = expandCost(c), P = S.players[p];
+  if (c.owner !== p || c.level >= MAX_LEVEL || P.supply < cost) return false;
+  P.supply -= cost; c.level++; recomputeTerritory(); bump(); return true;
+}
+function canDerrick(p, t) { return t.oil && !t.derrick && ownerOf(t) === p && has(p, 'industry') && S.players[p].supply >= DERRICK_COST; }
+function buildDerrick(p, t) { if (!canDerrick(p, t)) return false; S.players[p].supply -= DERRICK_COST; t.derrick = true; dirty = true; return true; }
+function canUpgrade(u) { return u.type === 'satellite' && u.age >= 2 && has(u.owner, 'orbital') && S.players[u.owner].supply >= UPGRADE_COST; }
+function upgrade(u) {
+  if (!canUpgrade(u)) return false;
+  S.players[u.owner].supply -= UPGRADE_COST; u.type = 'strikesat'; u.hp = 1; u.moved = u.attacked = true; u.cd = 0; bump(); return true;
+}
+
+/* ---------------- turn flow ---------------- */
+function startTurn(p) {
+  const P = S.players[p];
+  P.supply += income(p);
+  for (const u of unitsOf(p)) {
+    const U = UNITS[u.type];
+    if (!u.moved && !u.attacked && u.hp < U.hp && U.dom !== 'orbit') {
+      const c = cityAt(tileOf(u));
+      const heal = c && c.owner === p ? 5 : ownerOf(tileOf(u)) === p ? 3 : 2;
+      u.hp = Math.min(U.hp, u.hp + heal);
+    }
+    u.moved = u.attacked = false; u.sc = u.c; u.sr = u.r;
+    if (U.dom === 'orbit') { u.age++; u.cd = Math.max(0, u.cd - 1); }
+  }
+  for (const c of citiesOf(p)) c.built = false;
+  bump();
+  if (p === 0) { updateExplored(); save(); }
+  refreshUI();
+}
+async function endTurn() {
+  if (busy || S.over) return;
+  busy = true; clearSel(); refreshUI();
+  await advance();
+}
+async function advance() {
+  // loop through AI players until it's the human's turn again
+  for (;;) {
+    let n = S.cur;
+    do { n = (n + 1) % S.players.length; if (n === 0) S.turn++; } while (!S.players[n].alive);
+    S.cur = n; fieldCache.clear();
+    startTurn(n);
+    if (!S.players[n].ai) break;
+    showBusy(`${S.players[n].name} is moving…`);
+    await aiTurn(n);
+    if (S.over) break;
+    if (S.spectate && S.turn > 400) { gameOver(false); break; }
+  }
+  showBusy(''); busy = false; refreshUI();
+}
+function runAI() { busy = true; (async () => { showBusy(`${S.players[0].name} is moving…`); await aiTurn(0); await advance(); })(); }
+
+/* ---------------- AI ---------------- */
+function distField(goal, u) {
+  const U = UNITS[u.type], key = `${goal.i}|${U.dom}|${U.heavy ? 1 : 0}|${u.owner}`;
+  if (fieldCache.has(key)) return fieldCache.get(key);
+  const f = new Float32Array(S.tiles.length).fill(Infinity);
+  const pq = [];
+  if (moveCost(u, goal) < Infinity) { f[goal.i] = 0; pq.push([0, goal]); }
+  else for (const n of neighbors(goal)) if (n && moveCost(u, n) < Infinity) { f[n.i] = 1; pq.push([1, n]); }
+  while (pq.length) {
+    pq.sort((a, b) => b[0] - a[0]);
+    const [d, t] = pq.pop(); if (d > f[t.i]) continue;
+    for (const n of neighbors(t)) {
+      if (!n) continue; const c = moveCost(u, t); if (c === Infinity) continue;
+      const nd = d + Math.min(c, 3); if (nd < f[n.i] && moveCost(u, n) < Infinity) { f[n.i] = nd; pq.push([nd, n]); }
+    }
+  }
+  fieldCache.set(key, f); return f;
+}
+function attackScore(a, d, from) {
+  const r = calcCombat(a, d, from), A = UNITS[a.type], D = UNITS[d.type];
+  let s = r.dmg / D.hp * D.cost;
+  if (r.dmg >= d.hp) s += D.cost;
+  s -= r.counter / A.hp * A.cost;
+  if (r.counter >= a.hp) s -= A.cost * 1.5;
+  if (cityAt(tileOf(d)) && cityAt(tileOf(d)).owner === a.owner) s += 3;
+  return s;
+}
+function bestTarget(u, from) {
+  let best = null, bs = -0.5;
+  for (const e of targetsFrom(u, from)) { const s = attackScore(u, e, from); if (s > bs) { bs = s; best = e; } }
+  return best ? { e:best, s:bs } : null;
+}
+function aiGoal(u) {
+  const U = UNITS[u.type], p = u.owner, t0 = tileOf(u), goals = [];
+  const hurt = U.dom !== 'orbit' && u.hp < U.hp * 0.35;
+  if (hurt) for (const c of citiesOf(p)) if (!unitAt(tileOf(c)) || unitAt(tileOf(c)) === u) goals.push({ t:tileOf(c), w:-4 });
+  if (!hurt) {
+    if (U.cap) for (const c of S.cities) if (c.owner !== p) goals.push({ t:tileOf(c), w: c.owner < 0 ? -2 : -1 });
+    for (const e of S.units) if (e.owner !== p && seesUnit(p, e) && targetMult(U, UNITS[e.type], u.type, !!cityAt(tileOf(e))) > 0) goals.push({ t:tileOf(e), w:0 });
+    for (const c of S.cities) if (c.owner >= 0 && c.owner !== p) goals.push({ t:tileOf(c), w:2 });
+  }
+  if (!goals.length) return null;
+  goals.sort((a, b) => dist(t0, a.t) - dist(t0, b.t));
+  let best = null, bv = Infinity;
+  for (const g of goals.slice(0, 6)) {
+    const f = distField(g.t, u); const v = f[t0.i] + g.w * 2;
+    if (f[t0.i] < Infinity && v < bv) { bv = v; best = g.t; }
+  }
+  return best;
+}
+async function aiUnit(u) {
+  const U = UNITS[u.type], p = u.owner, here = tileOf(u);
+  if (canCapture(u) && cityAt(here).owner >= 0) { capture(u); return; }
+  const bt0 = bestTarget(u);
+  if (bt0 && bt0.s > 0.5) { doAttack(u, bt0.e); await pause(u); return; }
+  if (canCapture(u)) { capture(u); return; }
+  // defend own city if enemies near
+  const c = cityAt(here);
+  const threat = S.units.some(e => e.owner !== p && seesUnit(p, e) && dist(e, here) <= 2 && UNITS[e.type].dom !== 'orbit');
+  if (c && c.owner === p && threat && U.dom === 'land') { if (bt0 && bt0.s > -1) { doAttack(u, bt0.e); await pause(u); } return; }
+  if (c && c.owner === p && U.dom !== 'orbit' && u.hp < U.hp * 0.6 && !threat) return; // heal
+  const goal = aiGoal(u);
+  const options = reachable(u); options.set(here.i, 0);
+  let bestT = here, bs = -Infinity;
+  const f = goal ? distField(goal, u) : null;
+  for (const [i] of options) {
+    const t = S.tiles[i];
+    let s = f ? -(f[i] === Infinity ? 999 : f[i]) * 3 : 0;
+    s += (defBonus(u, t) - 1) * 2;
+    const bt = bestTarget(u, t); if (bt) s += bt.s * 1.5 + 2;
+    const ct = cityAt(t);
+    if (ct && ct.owner !== p && U.cap) s += ct.owner < 0 ? 25 : 10;
+    if (ct && ct.owner === p && U.dom === 'land' && i !== here.i && !threat) s -= 1; // don't clog cities
+    // avoid parking next to strong enemies when weak
+    if (u.hp < U.hp * 0.5) s -= S.units.filter(e => e.owner !== p && dist(e, t) <= 1).length * 3;
+    s += Math.random() * 0.5;
+    if (s > bs) { bs = s; bestT = t; }
+  }
+  if (bestT !== here) { moveUnit(u, bestT); await pause(u); }
+  const bt = bestTarget(u);
+  if (bt && bt.s > -0.5) { doAttack(u, bt.e); await pause(u); return; }
+  if (canCapture(u) && cityAt(tileOf(u)).owner < 0) capture(u);
+}
+async function pause(u) {
+  dirty = true;
+  if (S.fastAI) return;
+  if (S.spectate || seesTile(0, tileOf(u))) await sleep(140);
+}
+function aiChooseBuild(p, city) {
+  const enemyAir = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'air');
+  const enemyNaval = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'naval');
+  const sats = unitsOf(p).filter(u => UNITS[u.type].dom === 'orbit').length;
+  const islands = S.players[p].islands;
+  const W = { infantry: S.turn < 8 ? 6 : 2, recon: 1.5, tank: 5, artillery: 2.5, aa: enemyAir ? 4 : 0.4,
+              destroyer: (islands ? 4 : 1) + (enemyNaval ? 2 : 0), submarine: islands ? 2.5 : 0.8,
+              fighter: enemyAir ? 4 : 1.5, bomber: 3, satellite: sats < 1 ? 1.5 : 0 };
+  const opts = Object.keys(W).filter(k => W[k] > 0 && !buildReason(p, city, k));
+  if (!opts.length) return null;
+  let tot = opts.reduce((a, k) => a + W[k], 0), r = Math.random() * tot;
+  for (const k of opts) { r -= W[k]; if (r <= 0) return k; }
+  return opts[opts.length - 1];
+}
+async function aiTurn(p) {
+  const P = S.players[p];
+  // island check: can our infantry walk to an enemy city?
+  const cap = citiesOf(p)[0];
+  if (cap) {
+    const probe = { type:'infantry', owner:p, c:cap.c, r:cap.r };
+    const enemies = S.cities.filter(c => c.owner >= 0 && c.owner !== p);
+    P.islands = enemies.length > 0 && enemies.every(e => distField(tileOf(e), probe)[tileOf(cap).i] === Infinity);
+  }
+  // research (save some supply for units early)
+  if (S.turn > 2 || P.supply > 10) {
+    for (const k of P.order) {
+      if (has(p, k) || !techReady(p, k)) continue;
+      if ((k === 'naval' || k === 'subs') && !P.islands && Math.random() < 0.6) continue;
+      if (P.supply >= techCost(p, k) + 2 && Math.random() < 0.65) research(p, k);
+      break;
+    }
+  }
+  // derricks
+  for (const t of S.tiles) if (canDerrick(p, t) && Math.random() < 0.7) buildDerrick(p, t);
+  // expand cities
+  const cs = citiesOf(p).sort((a, b) => a.level - b.level);
+  if (cs.length && unitCount(p) >= unitCap(p) - 1 && Math.random() < 0.6) expand(p, cs[0]);
+  else if (cs.length && P.supply > expandCost(cs[0]) + 10 && Math.random() < 0.3) expand(p, cs[0]);
+  // units: ranged first, then the rest
+  const order = unitsOf(p).sort((a, b) => (UNITS[b.type].rng - UNITS[a.type].rng));
+  for (const u of order) {
+    if (S.over) return;
+    if (!S.units.includes(u)) continue;
+    await aiUnit(u);
+  }
+  // production
+  for (const c of shuffle(citiesOf(p))) {
+    if (P.supply < 2) break;
+    const k = aiChooseBuild(p, c); if (k) build(p, c, k);
+  }
+  dirty = true;
+}
+
+/* ---------------- rendering ---------------- */
+const cv = document.getElementById('cv');
+let ctx = cv.getContext('2d');
+let dpr = 1;
+function resize() {
+  dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(innerWidth * dpr); cv.height = Math.round(innerHeight * dpr); dirty = true;
+}
+addEventListener('resize', resize); resize();
+
+function hexPath(x, y, s) {
+  ctx.beginPath();
+  for (let i = 0; i < 6; i++) { const a = Math.PI / 180 * (60 * i - 30); const px = x + s * Math.cos(a), py = y + s * Math.sin(a); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+  ctx.closePath();
+}
+function corner(x, y, s, i) { const a = Math.PI / 180 * (60 * i - 30); return [x + s * Math.cos(a), y + s * Math.sin(a)]; }
+const toScreen = (wx, wy) => [(wx - cam.x) * cam.z + innerWidth / 2, (wy - cam.y) * cam.z + innerHeight / 2];
+
+function drawTerrainDetail(t, x, y, s) {
+  const k = s / HEX;
+  if (t.t === 'forest') {
+    ctx.fillStyle = '#2f5a2a';
+    for (const [dx, dy] of [[-9, 4], [8, 5], [0, -6]]) {
+      ctx.beginPath(); ctx.moveTo(x + dx * k, y + (dy - 9) * k); ctx.lineTo(x + (dx + 6) * k, y + (dy + 4) * k); ctx.lineTo(x + (dx - 6) * k, y + (dy + 4) * k); ctx.fill();
+    }
+  } else if (t.t === 'hill') {
+    ctx.strokeStyle = '#7d7444'; ctx.lineWidth = 2 * k;
+    ctx.beginPath(); ctx.arc(x - 6 * k, y + 6 * k, 8 * k, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x + 7 * k, y + 2 * k, 7 * k, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+  } else if (t.t === 'mountain') {
+    ctx.fillStyle = '#6b6e73';
+    ctx.beginPath(); ctx.moveTo(x - 15 * k, y + 10 * k); ctx.lineTo(x - 2 * k, y - 13 * k); ctx.lineTo(x + 12 * k, y + 10 * k); ctx.fill();
+    ctx.fillStyle = '#eef2f6';
+    ctx.beginPath(); ctx.moveTo(x - 6 * k, y - 6 * k); ctx.lineTo(x - 2 * k, y - 13 * k); ctx.lineTo(x + 3 * k, y - 5 * k); ctx.fill();
+    ctx.fillStyle = '#787b80';
+    ctx.beginPath(); ctx.moveTo(x + 2 * k, y + 10 * k); ctx.lineTo(x + 10 * k, y - 3 * k); ctx.lineTo(x + 17 * k, y + 10 * k); ctx.fill();
+  } else if (t.t === 'ocean' || t.t === 'shallow') {
+    ctx.strokeStyle = t.t === 'ocean' ? '#2c74a8' : '#6db7d9'; ctx.lineWidth = 1.4 * k;
+    ctx.beginPath(); ctx.moveTo(x - 9 * k, y + 2 * k); ctx.quadraticCurveTo(x - 5 * k, y - 2 * k, x - 1 * k, y + 2 * k); ctx.quadraticCurveTo(x + 3 * k, y + 6 * k, x + 7 * k, y + 2 * k); ctx.stroke();
+  }
+  if (t.oil) {
+    if (t.derrick) {
+      ctx.strokeStyle = '#1b1b1b'; ctx.lineWidth = 2 * k;
+      ctx.beginPath(); ctx.moveTo(x + 6 * k, y + 14 * k); ctx.lineTo(x + 11 * k, y - 2 * k); ctx.lineTo(x + 16 * k, y + 14 * k);
+      ctx.moveTo(x + 7 * k, y + 8 * k); ctx.lineTo(x + 15 * k, y + 8 * k); ctx.stroke();
+      ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(x + 11 * k, y - 3 * k, 2 * k, 0, 7); ctx.fill();
+    } else {
+      ctx.fillStyle = '#141414';
+      ctx.beginPath(); ctx.moveTo(x + 11 * k, y - 1 * k); ctx.quadraticCurveTo(x + 17 * k, y + 8 * k, x + 11 * k, y + 11 * k); ctx.quadraticCurveTo(x + 5 * k, y + 8 * k, x + 11 * k, y - 1 * k); ctx.fill();
+    }
+  }
+}
+
+function drawCity(c, x, y, s) {
+  const k = s / HEX, col = c.owner >= 0 ? S.players[c.owner].color : '#9aa3ad';
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + 9 * k, 17 * k, 6 * k, 0, 0, 7); ctx.fill();
+  const bl = [[-13, 4, 8, 11], [-4, -2, 9, 17], [6, 2, 8, 13]];
+  if (c.level >= 3) bl.push([-9, -8, 6, 10]);
+  if (c.level >= 4) bl.push([3, -10, 6, 14]);
+  for (const [bx, by, bw, bh] of bl) {
+    ctx.fillStyle = '#d9dde3'; ctx.fillRect(x + bx * k, y + (by - bh + 10) * k, bw * k, bh * k);
+    ctx.fillStyle = col; ctx.fillRect(x + bx * k, y + (by - bh + 10) * k, bw * k, 2.5 * k);
+  }
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
+  for (const [bx, by, bw, bh] of bl) ctx.strokeRect(x + bx * k, y + (by - bh + 10) * k, bw * k, bh * k);
+  if (c.capital) { ctx.font = `${12 * k}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText('⭐', x, y - 16 * k); }
+  if (cam.z > 0.55) {
+    ctx.font = `600 ${Math.max(9, 10 * k)}px sans-serif`; ctx.textAlign = 'center';
+    const label = `${c.name} ${'•'.repeat(c.level)}`;
+    const w = ctx.measureText(label).width + 8;
+    ctx.fillStyle = 'rgba(10,15,28,.75)'; ctx.fillRect(x - w / 2, y + 16 * k, w, 13 * k);
+    ctx.fillStyle = col === '#9aa3ad' ? '#d6dbe2' : col; ctx.fillText(label, x, y + 26 * k);
+  }
+}
+
+function drawIcon(type, x, y, s) {
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#fff'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const L = (a, b, c2, d, w) => { ctx.lineWidth = w * s; ctx.beginPath(); ctx.moveTo(x + a * s, y + b * s); ctx.lineTo(x + c2 * s, y + d * s); ctx.stroke(); };
+  const R = (a, b, w, h) => ctx.fillRect(x + a * s, y + b * s, w * s, h * s);
+  const C = (a, b, r) => { ctx.beginPath(); ctx.arc(x + a * s, y + b * s, r * s, 0, 7); ctx.fill(); };
+  const P = pts => { ctx.beginPath(); pts.forEach(([a, b], i) => i ? ctx.lineTo(x + a * s, y + b * s) : ctx.moveTo(x + a * s, y + b * s)); ctx.closePath(); ctx.fill(); };
+  switch (type) {
+    case 'infantry':
+      ctx.beginPath(); ctx.arc(x, y + 0.12 * s, 0.42 * s, Math.PI, 0); ctx.fill();
+      R(-0.6, 0.1, 1.2, 0.12); L(-0.25, 0.25, -0.15, 0.45, 0.07); L(0.25, 0.25, 0.15, 0.45, 0.07); break;
+    case 'recon':
+      P([[-0.6, 0.15], [-0.45, -0.1], [-0.1, -0.12], [0.05, -0.38], [0.35, -0.38], [0.45, -0.1], [0.62, -0.05], [0.62, 0.15]]);
+      ctx.fillStyle = '#222'; C(-0.33, 0.22, 0.17); C(0.38, 0.22, 0.17); ctx.fillStyle = '#fff'; C(-0.33, 0.22, 0.07); C(0.38, 0.22, 0.07); break;
+    case 'tank':
+      P([[-0.7, 0.05], [0.7, 0.05], [0.55, 0.38], [-0.55, 0.38]]);
+      R(-0.32, -0.28, 0.55, 0.3); L(0.2, -0.15, 0.78, -0.22, 0.11);
+      ctx.fillStyle = '#333'; for (let i = -2; i <= 2; i++) C(i * 0.22, 0.24, 0.07); break;
+    case 'artillery':
+      L(-0.5, 0.3, 0.6, -0.5, 0.16); L(-0.2, 0.25, -0.75, 0.42, 0.08);
+      ctx.fillStyle = '#fff'; C(-0.1, 0.25, 0.25); ctx.fillStyle = '#333'; C(-0.1, 0.25, 0.1); break;
+    case 'aa':
+      R(-0.55, 0.12, 1.1, 0.3); R(-0.25, -0.1, 0.5, 0.25);
+      L(-0.08, -0.05, 0.42, -0.62, 0.09); L(0.12, 0, 0.62, -0.52, 0.09); break;
+    case 'destroyer':
+      P([[-0.8, 0.05], [0.85, 0.05], [0.55, 0.35], [-0.6, 0.35]]);
+      R(-0.3, -0.22, 0.45, 0.28); R(-0.15, -0.45, 0.15, 0.25); L(0.25, -0.05, 0.6, -0.15, 0.08); break;
+    case 'submarine':
+      ctx.beginPath(); ctx.ellipse(x, y + 0.12 * s, 0.75 * s, 0.22 * s, 0, 0, 7); ctx.fill();
+      R(-0.15, -0.3, 0.3, 0.3); L(0.05, -0.3, 0.05, -0.52, 0.06); L(0.05, -0.52, 0.2, -0.52, 0.06); break;
+    case 'fighter':
+      P([[0, -0.75], [0.12, -0.3], [0.65, 0.2], [0.65, 0.32], [0.12, 0.2], [0.28, 0.6], [-0.28, 0.6], [-0.12, 0.2], [-0.65, 0.32], [-0.65, 0.2], [-0.12, -0.3]]); break;
+    case 'bomber':
+      P([[-0.85, -0.05], [0.85, -0.05], [0.85, 0.12], [-0.85, 0.12]]);
+      ctx.beginPath(); ctx.ellipse(x, y, 0.13 * s, 0.68 * s, 0, 0, 7); ctx.fill();
+      P([[-0.35, 0.48], [0.35, 0.48], [0.35, 0.6], [-0.35, 0.6]]);
+      ctx.fillStyle = '#333'; C(-0.45, 0.16, 0.07); C(0.45, 0.16, 0.07); break;
+    case 'satellite':
+    case 'strikesat':
+      ctx.save(); ctx.translate(x, y); ctx.rotate(-0.5);
+      ctx.fillStyle = '#fff'; ctx.fillRect(-0.2 * s, -0.2 * s, 0.4 * s, 0.4 * s);
+      ctx.fillStyle = '#7fc8ff'; ctx.fillRect(-0.85 * s, -0.15 * s, 0.55 * s, 0.3 * s); ctx.fillRect(0.3 * s, -0.15 * s, 0.55 * s, 0.3 * s);
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 0.05 * s;
+      ctx.beginPath(); ctx.moveTo(-0.3 * s, 0); ctx.lineTo(-0.2 * s, 0); ctx.moveTo(0.2 * s, 0); ctx.lineTo(0.3 * s, 0); ctx.stroke();
+      if (type === 'strikesat') { ctx.fillStyle = '#ff4d3d'; ctx.beginPath(); ctx.arc(0, 0, 0.12 * s, 0, 7); ctx.fill(); }
+      ctx.restore(); break;
+  }
+}
+
+function drawUnit(u, now) {
+  const U = UNITS[u.type];
+  let [wx, wy] = hexPos(u.c, u.r);
+  if (u.anim) {
+    const t = Math.min(1, (now - u.anim.t0) / 220);
+    wx = u.anim.fx + (wx - u.anim.fx) * t; wy = u.anim.fy + (wy - u.anim.fy) * t;
+    if (t >= 1) delete u.anim; else dirty = true;
+  }
+  let [x, y] = toScreen(wx, wy);
+  const s = HEX * cam.z, orbit = U.dom === 'orbit';
+  if (orbit) { x += s * 0.5; y -= s * 0.55; }
+  if (U.dom === 'air') y -= s * 0.12;
+  const r = s * (orbit ? 0.3 : 0.47);
+  const col = S.players[u.owner].color;
+  const spent = u.owner === S.cur && !S.players[u.owner].ai && u.moved && (u.attacked || !targetsFrom(u).length);
+  ctx.globalAlpha = spent ? 0.6 : 1;
+  if (U.dom === 'air') { ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + s * 0.5, r * 0.8, r * 0.3, 0, 0, 7); ctx.fill(); }
+  if (orbit) { ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(x, y, r * 1.45, r * 0.7, -0.3, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+  ctx.fillStyle = col; ctx.beginPath();
+  if (U.dom === 'naval') { ctx.ellipse(x, y, r * 1.08, r * 0.86, 0, 0, 7); } else if (U.dom === 'air') { ctx.moveTo(x, y - r * 1.1); ctx.lineTo(x + r * 1.05, y); ctx.lineTo(x, y + r * 1.1); ctx.lineTo(x - r * 1.05, y); ctx.closePath(); } else ctx.arc(x, y, r, 0, 7);
+  ctx.fill(); ctx.lineWidth = Math.max(1.5, 2 * cam.z); ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.stroke();
+  if (UNITS[u.type].stealth && u.owner === 0) { ctx.globalAlpha *= 0.85; }
+  drawIcon(u.type, x, y, r * 0.75);
+  ctx.globalAlpha = 1;
+  if (!orbit) {
+    const bw = s * 0.8, frac = Math.max(0, u.hp) / U.hp;
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(x - bw / 2, y + r + 2, bw, 4);
+    ctx.fillStyle = frac > 0.6 ? '#4cd17a' : frac > 0.3 ? '#f2c230' : '#ef4a3a'; ctx.fillRect(x - bw / 2, y + r + 2, bw * frac, 4);
+  } else if (u.type === 'strikesat' && u.cd > 0) {
+    ctx.fillStyle = '#fff'; ctx.font = `700 ${10 * cam.z}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText(u.cd, x, y - r - 2);
+  }
+}
+
+function render() {
+  dirty = false;
+  const now = performance.now();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = '#0b1220'; ctx.fillRect(0, 0, innerWidth, innerHeight);
+  if (!S) return;
+  const s = HEX * cam.z, vis = S.spectate ? null : getVis(0);
+  const onScreen = (x, y) => x > -s * 2 && y > -s * 2 && x < innerWidth + s * 2 && y < innerHeight + s * 2;
+  const known = t => S.spectate || S.explored[t.i];
+  // terrain
+  for (const t of S.tiles) {
+    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
+    hexPath(x, y, s + 0.6);
+    if (!known(t)) { ctx.fillStyle = '#141d30'; ctx.fill(); ctx.strokeStyle = '#1a2440'; ctx.lineWidth = 1; ctx.stroke(); continue; }
+    ctx.fillStyle = TERRAIN[t.t].color; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.lineWidth = 1; ctx.stroke();
+    drawTerrainDetail(t, x, y, s);
+  }
+  // borders
+  ctx.lineWidth = Math.max(2, 3 * cam.z);
+  for (const t of S.tiles) {
+    const o = ownerOf(t); if (o < 0 || !known(t)) continue;
+    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
+    const ns = neighbors(t);
+    ctx.strokeStyle = S.players[o].color;
+    for (let d = 0; d < 6; d++) {
+      const n = ns[d]; if (n && ownerOf(n) === o) continue;
+      const [ax, ay] = corner(x, y, s * 0.92, d), [bx, by] = corner(x, y, s * 0.92, (d + 1) % 6);
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+    }
+  }
+  // territory tint
+  for (const t of S.tiles) {
+    const o = ownerOf(t); if (o < 0 || !known(t)) continue;
+    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
+    hexPath(x, y, s); ctx.globalAlpha = 0.12; ctx.fillStyle = S.players[o].color; ctx.fill(); ctx.globalAlpha = 1;
+  }
+  for (const c of S.cities) {
+    const t = tileOf(c); if (!known(t)) continue;
+    const [x, y] = toScreen(...hexPos(c.c, c.r)); if (onScreen(x, y)) drawCity(c, x, y, s);
+  }
+  // fog
+  if (vis) for (const t of S.tiles) {
+    if (!S.explored[t.i] || vis.has(t.i)) continue;
+    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
+    hexPath(x, y, s + 0.6); ctx.fillStyle = 'rgba(8,12,24,.45)'; ctx.fill();
+  }
+  // highlights
+  for (const [i] of reach) {
+    const t = S.tiles[i], [x, y] = toScreen(...hexPos(t.c, t.r));
+    hexPath(x, y, s * 0.86); ctx.fillStyle = 'rgba(255,255,255,.26)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+  if (sel) {
+    const t = S.tiles[sel.i], [x, y] = toScreen(...hexPos(t.c, t.r));
+    hexPath(x, y, s * 0.93); ctx.strokeStyle = '#ffe14d'; ctx.lineWidth = 3; ctx.stroke();
+  }
+  // units
+  const surf = S.units.filter(u => layerOf(u) === 'surface' && seesUnit(0, u));
+  const orb = S.units.filter(u => layerOf(u) === 'orbit' && seesUnit(0, u));
+  for (const u of surf) { const [x, y] = toScreen(...hexPos(u.c, u.r)); if (onScreen(x, y)) drawUnit(u, now); }
+  for (const u of orb) { const [x, y] = toScreen(...hexPos(u.c, u.r)); if (onScreen(x, y)) drawUnit(u, now); }
+  for (const e of tgts) {
+    const [x, y] = toScreen(...hexPos(e.c, e.r));
+    ctx.strokeStyle = pending === e ? '#ff2d2d' : '#ff6b5e'; ctx.lineWidth = pending === e ? 4 : 2.5;
+    ctx.beginPath(); ctx.arc(x, y, s * 0.62, 0, 7); ctx.stroke();
+    if (pending !== e) { ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, s * 0.74, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+  }
+  // floats
+  for (let i = floats.length - 1; i >= 0; i--) {
+    const f = floats[i], t = (now - f.t0) / 1100;
+    if (t >= 1) { floats.splice(i, 1); continue; }
+    const [x, y] = toScreen(f.x, f.y);
+    ctx.globalAlpha = 1 - t; ctx.font = `800 ${16 * Math.max(0.8, cam.z)}px sans-serif`; ctx.textAlign = 'center';
+    ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.strokeText(f.text, x, y - t * 30); ctx.fillStyle = f.color; ctx.fillText(f.text, x, y - t * 30);
+    ctx.globalAlpha = 1; dirty = true;
+  }
+}
+function addFloat(x, y, text, color) { floats.push({ x, y, text, color, t0: performance.now() }); dirty = true; }
+(function loop() { if (dirty) render(); requestAnimationFrame(loop); })();
+
+/* ---------------- camera & input ---------------- */
+function clampCam() {
+  if (!S) return;
+  const [mx, my] = hexPos(S.w, S.h);
+  cam.x = Math.max(0, Math.min(mx, cam.x)); cam.y = Math.max(0, Math.min(my, cam.y));
+}
+function centerOn(t) { if (!t) return; [cam.x, cam.y] = hexPos(t.c, t.r); cam.y += 40 / cam.z; clampCam(); dirty = true; }
+function screenToTile(sx, sy) {
+  const wx = (sx - innerWidth / 2) / cam.z + cam.x - HEX, wy = (sy - innerHeight / 2) / cam.z + cam.y - HEX;
+  const q = (SQ3 / 3 * wx - wy / 3) / HEX, r = (2 / 3 * wy) / HEX;
+  let x = q, z = r, y = -x - z, rx = Math.round(x), ry = Math.round(y), rz = Math.round(z);
+  const dx = Math.abs(rx - x), dy = Math.abs(ry - y), dz = Math.abs(rz - z);
+  if (dx > dy && dx > dz) rx = -ry - rz; else if (dy > dz) ry = -rx - rz; else rz = -rx - ry;
+  const [c, rr] = fromAxial(rx, rz); return tileAt(c, rr);
+}
+function setZoom(z, fx = innerWidth / 2, fy = innerHeight / 2) {
+  z = Math.max(0.4, Math.min(2.2, z));
+  const wx = (fx - innerWidth / 2) / cam.z + cam.x, wy = (fy - innerHeight / 2) / cam.z + cam.y;
+  cam.z = z; cam.x = wx - (fx - innerWidth / 2) / z; cam.y = wy - (fy - innerHeight / 2) / z; clampCam(); dirty = true;
+}
+const ptrs = new Map(); let drag = null, pinch = null, suppress = false;
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (ptrs.size === 1) { drag = { sx:e.clientX, sy:e.clientY, cx:cam.x, cy:cam.y, moved:false }; suppress = false; }
+  else if (ptrs.size === 2) {
+    const [a, b] = [...ptrs.values()];
+    pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y), z0: cam.z }; drag = null; suppress = true;
+  }
+});
+cv.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (pinch && ptrs.size >= 2) {
+    const [a, b] = [...ptrs.values()];
+    setZoom(pinch.z0 * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d0, (a.x + b.x) / 2, (a.y + b.y) / 2);
+  } else if (drag) {
+    const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+    if (Math.abs(dx) + Math.abs(dy) > 9) drag.moved = true;
+    if (drag.moved) { cam.x = drag.cx - dx / cam.z; cam.y = drag.cy - dy / cam.z; clampCam(); dirty = true; }
+  }
+});
+function ptrEnd(e) {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.delete(e.pointerId);
+  if (ptrs.size < 2) pinch = null;
+  if (ptrs.size === 0) {
+    if (drag && !drag.moved && !suppress && e.type === 'pointerup') onTap(screenToTile(e.clientX, e.clientY));
+    drag = null;
+  }
+}
+cv.addEventListener('pointerup', ptrEnd); cv.addEventListener('pointercancel', ptrEnd);
+cv.addEventListener('wheel', e => { e.preventDefault(); setZoom(cam.z * (e.deltaY < 0 ? 1.12 : 0.89), e.clientX, e.clientY); }, { passive:false });
+document.getElementById('zIn').onclick = () => setZoom(cam.z * 1.2);
+document.getElementById('zOut').onclick = () => setZoom(cam.z / 1.2);
+
+/* ---------------- selection & taps ---------------- */
+function clearSel() { sel = null; reach = new Map(); tgts = []; pending = null; dirty = true; }
+function selectUnit(u) {
+  sel = { kind:'unit', id:u.id, i:idx(u.c, u.r) }; pending = null;
+  const mine = u.owner === 0 && S.cur === 0 && !busy;
+  reach = mine ? reachable(u) : new Map();
+  tgts = mine ? targetsFrom(u) : [];
+  dirty = true; refreshPanel();
+}
+function onTap(t) {
+  if (!S || busy || S.over) return;
+  if (!t || (!S.spectate && !S.explored[t.i])) { clearSel(); refreshPanel(); return; }
+  if (sel && sel.kind === 'unit') {
+    const u = unitById(sel.id);
+    if (u && u.owner === 0) {
+      const tg = tgts.find(e => e.c === t.c && e.r === t.r);
+      if (tg) {
+        if (pending === tg) { doAttack(u, tg); afterAction(u); return; }
+        pending = tg; dirty = true; refreshPanel(); return;
+      }
+      if (reach.has(t.i)) { moveUnit(u, t); afterAction(u); return; }
+    }
+  }
+  // cycle through things on this tile
+  const opts = [];
+  const su = unitAt(t), ou = unitAt(t, 'orbit'), c = cityAt(t);
+  if (su && seesUnit(0, su)) opts.push({ kind:'unit', id:su.id });
+  if (ou && seesUnit(0, ou)) opts.push({ kind:'unit', id:ou.id });
+  if (c) opts.push({ kind:'city', id:c.id });
+  opts.push({ kind:'tile', id:t.i });
+  let k = 0;
+  if (sel && sel.i === t.i) { const j = opts.findIndex(o => o.kind === sel.kind && o.id === sel.id); if (j >= 0) k = (j + 1) % opts.length; }
+  const o = opts[k];
+  if (o.kind === 'unit') selectUnit(unitById(o.id));
+  else { clearSel(); sel = { kind:o.kind, id:o.id, i:t.i }; refreshPanel(); }
+}
+function afterAction(u) {
+  if (S.units.includes(u)) selectUnit(u); else clearSel();
+  refreshUI();
+}
+
+/* ---------------- UI ---------------- */
+const $ = id => document.getElementById(id);
+const panel = $('panel');
+function toast(msg) { const d = document.createElement('div'); d.textContent = msg; $('toast').appendChild(d); setTimeout(() => d.remove(), 3300); while ($('toast').children.length > 3) $('toast').firstChild.remove(); }
+function showBusy(msg) { const b = $('busy'); b.textContent = msg; b.style.display = msg ? 'block' : 'none'; }
+function refreshUI() {
+  if (!S) return;
+  const P = S.players[0];
+  $('tTurn').textContent = `Turn ${S.turn}`;
+  $('tSupply').textContent = `⛽ ${P.supply} (+${income(0)})`;
+  $('tSupply').title = 'Supply: spend it on units, research and city upgrades';
+  $('bEnd').disabled = busy || S.cur !== 0 || S.over;
+  $('bTech').disabled = busy || S.spectate;
+  $('bNext').disabled = busy || S.spectate;
+  refreshPanel(); dirty = true;
+}
+function iconCanvas(type, color, size = 30) {
+  const c = document.createElement('canvas'); c.width = c.height = size * 2; c.style.width = c.style.height = size + 'px';
+  const g = c.getContext('2d');
+  g.scale(2, 2); g.fillStyle = color; g.beginPath(); g.arc(size / 2, size / 2, size / 2 - 1, 0, 7); g.fill();
+  withCtx(g, () => drawIcon(type, size / 2, size / 2, size * 0.33));
+  return c;
+}
+function withCtx(g, fn) { const saved = ctx; ctx = g; try { fn(); } finally { ctx = saved; } }
+function statLine(U) { return `<span class="pill">ATK ${U.atk}</span><span class="pill">DEF ${U.def}</span><span class="pill">MOVE ${U.mv}</span><span class="pill">RANGE ${U.minr === 2 ? '2–' : ''}${U.rng}</span>`; }
+
+function refreshPanel() {
+  if (!S || !sel) { panel.innerHTML = ''; return; }
+  const myTurn = S.cur === 0 && !busy && !S.spectate;
+  let h = '';
+  if (sel.kind === 'unit') {
+    const u = unitById(sel.id); if (!u) { panel.innerHTML = ''; return; }
+    const U = UNITS[u.type], P = S.players[u.owner];
+    h += `<h3><span id="picon"></span>${U.name} <small style="color:${P.color}">${P.name}</small></h3>`;
+    h += `<div class="sub">${U.desc}</div>`;
+    if (U.dom !== 'orbit') h += `<span class="pill">HP ${u.hp}/${U.hp}</span>`;
+    h += statLine(U);
+    if (u.type === 'strikesat' && u.cd) h += `<span class="pill">Recharging ${u.cd}</span>`;
+    if (u.owner === 0 && myTurn) {
+      const status = u.attacked ? 'Done for this turn' : u.moved ? (tgts.length ? 'Moved — can still attack' : 'Moved') : 'Ready';
+      h += `<div class="sub" style="margin-top:6px">${status}${!u.moved && reach.size ? ' · tap a highlighted tile to move' : ''}${tgts.length ? ' · tap a red ring to target' : ''}</div>`;
+      h += '<div class="row">';
+      if (canCapture(u)) h += `<button class="primary" data-a="capture">🚩 Capture ${cityAt(tileOf(u)).name}</button>`;
+      else { const c = cityAt(tileOf(u)); if (c && c.owner !== 0 && UNITS[u.type].cap && !u.attacked && c.owner >= 0) h += `<span class="sub">Hold this city until next turn to capture it.</span>`; }
+      if (u.type === 'satellite') h += `<button data-a="upgrade" ${canUpgrade(u) ? '' : 'disabled'}>☄️ Arm satellite (${UPGRADE_COST} ⛽)${!has(0, 'orbital') ? ' — needs Orbital Weapons' : u.age < 2 ? ' — after 2 turns in orbit' : ''}</button>`;
+      if (!u.attacked) h += `<button data-a="hold">💤 Hold</button>`;
+      h += '</div>';
+      if (pending) {
+        const r = calcCombat(u, pending), E = UNITS[pending.type];
+        h += `<div class="preview"><b>Attack ${S.players[pending.owner].name} ${E.name}</b><br>
+              Deal <b style="color:#ff6b5e">${r.dmg}</b> (enemy HP ${pending.hp}${r.dmg >= pending.hp ? ' → destroyed' : ''}) · Take <b style="color:#ffb35e">${r.counter}</b>
+              <div class="row"><button class="danger" data-a="attack">💥 Confirm attack</button><button data-a="cancel">Cancel</button></div>
+              <div class="sub">Tip: tap the target again to fire.</div></div>`;
+      }
+    }
+  } else if (sel.kind === 'city') {
+    const c = S.cities[sel.id], own = c.owner === 0;
+    const P = c.owner >= 0 ? S.players[c.owner] : null;
+    h += `<h3>${c.capital ? '⭐ ' : '🏙 '}${c.name} <small style="color:${P ? P.color : '#aaa'}">${P ? P.name : 'Neutral'}</small></h3>`;
+    h += `<span class="pill">Level ${c.level}</span><span class="pill">+${1 + c.level + (c.capital ? 2 : 0)} ⛽/turn</span>`;
+    if (isCoastal(c)) h += `<span class="pill">⚓ Port</span>`;
+    if (own) {
+      h += `<span class="pill">Units ${unitCount(0)}/${unitCap(0)}</span>`;
+      if (myTurn) {
+        h += `<div class="row">${c.level < MAX_LEVEL ? `<button data-a="expand" ${S.players[0].supply >= expandCost(c) ? '' : 'disabled'}>🏗 Expand city (${expandCost(c)} ⛽) — +1 ⛽, +1 unit cap${c.level === 2 ? ', bigger territory' : ''}</button>` : '<span class="sub">Max level</span>'}</div>`;
+        h += `<div class="sub" style="margin-top:8px">Build (one per city per turn):</div><div class="grid">`;
+        for (const k of Object.keys(UNITS)) {
+          const U = UNITS[k]; if (U.noBuild) continue;
+          if (U.dom === 'naval' && !isCoastal(c)) continue;
+          const why = buildReason(0, c, k);
+          h += `<button class="bcard" data-a="build" data-k="${k}" ${why ? 'disabled' : ''}><span>${U.name}</span><small>${U.cost} ⛽ · ${why || 'Ready'}</small></button>`;
+        }
+        h += '</div>';
+      }
+    } else h += `<div class="sub" style="margin-top:6px">Move a capturing unit (Infantry, Recon, Tank) here to take it. Neutral towns are captured right away; enemy cities must be held for a turn.</div>`;
+  } else {
+    const t = S.tiles[sel.id], o = ownerOf(t);
+    h += `<h3>${TERRAIN[t.t].name}</h3>`;
+    h += `<span class="pill">Defense ×${TERRAIN[t.t].def}</span>`;
+    h += `<span class="pill">${o >= 0 ? S.players[o].name + ' territory' : 'Unclaimed'}</span>`;
+    if (t.oil) h += `<span class="pill">${t.derrick ? '🛢 Derrick (+2 ⛽)' : '🛢 Oil field'}</span>`;
+    if (t.oil && !t.derrick && o === 0 && myTurn)
+      h += `<div class="row"><button data-a="derrick" ${canDerrick(0, t) ? '' : 'disabled'}>🛢 Build derrick (${DERRICK_COST} ⛽)${has(0, 'industry') ? '' : ' — needs Oil Industry'}</button></div>`;
+    const moveInfo = { plain:'Move cost 1', forest:'Move cost 2', hill:'Move cost 2', mountain:'Move cost 3 · no heavy vehicles', shallow:'Ships only', ocean:'Ships only' };
+    h += `<div class="sub" style="margin-top:6px">${moveInfo[t.t]}. Aircraft and satellites ignore terrain.</div>`;
+  }
+  panel.innerHTML = h;
+  if (sel.kind === 'unit') { const u = unitById(sel.id); const pi = $('picon'); if (u && pi) pi.replaceWith(iconCanvas(u.type, S.players[u.owner].color, 30)); }
+}
+panel.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.disabled || busy) return;
+  const a = b.dataset.a;
+  if (sel.kind === 'unit') {
+    const u = unitById(sel.id); if (!u) return;
+    if (a === 'capture') { capture(u); afterAction(u); }
+    else if (a === 'upgrade') { upgrade(u); afterAction(u); }
+    else if (a === 'hold') { u.moved = u.attacked = true; afterAction(u); nextUnit(); }
+    else if (a === 'attack' && pending) { doAttack(u, pending); afterAction(u); }
+    else if (a === 'cancel') { pending = null; dirty = true; refreshPanel(); }
+  } else if (sel.kind === 'city') {
+    const c = S.cities[sel.id];
+    if (a === 'expand') { expand(0, c); refreshUI(); }
+    if (a === 'build') { const u = build(0, c, b.dataset.k); if (u) toast(`${UNITS[u.type].name} deployed in ${c.name} — ready next turn`); refreshUI(); }
+  } else if (a === 'derrick') { buildDerrick(0, S.tiles[sel.id]); refreshUI(); }
+});
+function nextUnit() {
+  const ready = unitsOf(0).filter(u => !u.moved || (!u.attacked && targetsFrom(u).length));
+  if (!ready.length) { toast('All units have acted — end your turn when ready'); return; }
+  let i = 0;
+  if (sel && sel.kind === 'unit') { const j = ready.findIndex(u => u.id === sel.id); if (j >= 0) i = (j + 1) % ready.length; }
+  selectUnit(ready[i]); centerOn(tileOf(ready[i]));
+}
+$('bEnd').onclick = endTurn;
+$('bNext').onclick = () => { if (!busy) nextUnit(); };
+$('bTech').onclick = () => { if (!busy) showTech(); };
+$('bMenu').onclick = () => showMenu();
+
+/* ---------------- modals ---------------- */
+const modal = $('modal'), mbox = $('mbox');
+function openModal(html) { mbox.innerHTML = html; modal.classList.remove('hidden'); }
+function closeModal() { modal.classList.add('hidden'); }
+modal.addEventListener('click', e => { if (e.target === modal && S && !S.over) closeModal(); });
+
+function showTech() {
+  const P = S.players[0];
+  let h = `<h1>🔬 Research</h1><div class="sub">You have ⛽ ${P.supply}. Costs rise as your empire grows.</div><h2>Doctrines</h2>`;
+  for (const k of Object.keys(TECH)) {
+    const T = TECH[k], owned = has(0, k), ready = techReady(0, k), cost = techCost(0, k);
+    h += `<div class="tech ${owned ? 'owned' : ''}"><div class="info"><b>${T.name}</b><small>Unlocks: ${T.unlock}${T.req.length ? ' · Requires ' + T.req.map(r => TECH[r].name).join(' + ') : ''}</small></div>`;
+    h += owned ? '✅' : `<button data-t="${k}" ${ready && P.supply >= cost && S.cur === 0 ? '' : 'disabled'}>${ready ? cost + ' ⛽' : '🔒'}</button>`;
+    h += '</div>';
+  }
+  h += `<div class="row"><button id="mClose">Close</button></div>`;
+  openModal(h);
+  mbox.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { if (research(0, b.dataset.t)) { toast(`${TECH[b.dataset.t].name} researched`); refreshUI(); showTech(); } });
+  $('mClose').onclick = closeModal;
+}
+
+const HELP = `
+<h2>Goal</h2><p>Capture every enemy city. A faction with no cities is out.</p>
+<h2>Each turn</h2><ul>
+<li>You earn <b>⛽ Supply</b> from your cities (and oil derricks).</li>
+<li>Tap a <b>unit</b>: white tiles show where it can move, red rings show what it can hit. Tap a ring to preview, tap again to fire.</li>
+<li>A unit can move then attack. Attacking ends its turn.</li>
+<li>Tap a <b>city</b> to build units (one per city per turn) or expand it.</li>
+<li>Tap 🔬 to research new doctrines: tanks, artillery, navy, air force and space.</li></ul>
+<h2>Combat</h2><ul>
+<li>Damage depends on attack vs defense and remaining HP. Survivors fire back if they can reach.</li>
+<li>Forest ×1.25, hills ×1.5, mountains ×2, own city ×1.5 defense.</li>
+<li>Only Infantry, AA, Fighters and Destroyers can hit aircraft.</li>
+<li>Submarines are invisible until an enemy is adjacent or a Destroyer is within 2 tiles.</li>
+<li>Satellites sit in orbit: nothing can shoot them. Research Orbital Weapons to arm them.</li>
+<li>Moving next to an enemy ground or naval unit stops your movement.</li>
+<li>Units that don't act heal next turn (most in your own cities).</li></ul>
+<h2>Capturing</h2><p>Infantry, Recon and Tanks capture. Neutral towns fall at once; enemy cities must be held into your next turn.</p>
+<h2>Controls</h2><p>Drag to pan, pinch or +/− to zoom. Tap a tile again to cycle between unit, satellite, city and terrain.</p>`;
+
+let setup = { ai:2, size:16, diff:1 };
+function showStart() {
+  const hasSave = !!localStorage.getItem('ironfront_save');
+  const seg = (key, vals) => `<div class="seg">${vals.map(([v, l]) => `<button data-s="${key}" data-v="${v}" class="${setup[key] === v ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+  openModal(`<h1>🪖 Iron Front</h1><div class="sub">Theater Command — a turn-based modern warfare strategy game.</div>
+    <p>Build an army of infantry, tanks, artillery, destroyers, submarines, jets and bombers. Race to space and put a satellite in orbit. Take every enemy city to win.</p>
+    <h2>Opponents</h2>${seg('ai', [[1, '1'], [2, '2'], [3, '3']])}
+    <h2>Map size</h2>${seg('size', [[12, 'Small'], [16, 'Medium'], [22, 'Large']])}
+    <h2>Difficulty</h2>${seg('diff', [[0, 'Recruit'], [1, 'Veteran'], [2, 'General']])}
+    <div class="row" style="margin-top:16px"><button class="primary" id="mStart">▶ New game</button>${hasSave ? '<button id="mCont">Continue saved game</button>' : ''}<button id="mHelp">How to play</button><button id="mWatch">Watch AIs fight</button></div>`);
+  mbox.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { setup[b.dataset.s] = +b.dataset.v; showStart(); });
+  $('mStart').onclick = () => newGame(setup);
+  if (hasSave) $('mCont').onclick = () => { if (!load()) toast('Could not load save'); };
+  $('mHelp').onclick = () => { openModal(`<h1>How to play</h1>${HELP}<div class="row"><button id="mBack">Back</button></div>`); $('mBack').onclick = S && !S.over ? closeModal : showStart; };
+  $('mWatch').onclick = () => newGame({ ...setup, ai: Math.max(1, setup.ai), spectate:true });
+}
+function showMenu() {
+  if (!S) return showStart();
+  openModal(`<h1>Menu</h1><div class="sub">Turn ${S.turn} · ${S.players.filter(p => p.alive).length} factions remain</div>
+    ${S.players.map(p => `<div class="tech"><span class="dot" style="background:${p.color}"></span><div class="info"><b>${p.name}${p.id === 0 && !S.spectate ? ' (you)' : ''}</b><small>${p.alive ? `${citiesOf(p.id).length} cities · ${unitsOf(p.id).length} units · ${p.tech.length} doctrines` : 'Eliminated'}</small></div></div>`).join('')}
+    <div class="row"><button id="mResume" class="primary">Resume</button><button id="mHelp2">How to play</button><button id="mNew" class="danger">New game</button></div>`);
+  $('mResume').onclick = closeModal;
+  $('mHelp2').onclick = () => { openModal(`<h1>How to play</h1>${HELP}<div class="row"><button id="mBack">Back</button></div>`); $('mBack').onclick = closeModal; };
+  $('mNew').onclick = () => { if (!S.over && !S.spectate && !confirm('Abandon this game?')) return; S.over = true; showStart(); };
+}
+function gameOver(win, winner) {
+  S.over = true; busy = false; showBusy(''); localStorage.removeItem('ironfront_save'); refreshUI();
+  const title = S.spectate ? `${winner ? winner.name + ' wins' : 'Stalemate'}` : win ? '🏆 Victory!' : '☠️ Defeat';
+  const msg = S.spectate ? `The war ended on turn ${S.turn}.` : win ? `You conquered the theater in ${S.turn} turns.` : 'Your last city has fallen.';
+  openModal(`<h1>${title}</h1><p>${msg}</p><div class="row"><button class="primary" id="mAgain">New game</button><button id="mLook">View map</button></div>`);
+  $('mAgain').onclick = showStart; $('mLook').onclick = closeModal;
+}
+
+// expose for testing
+window.__game = { get S() { return S; }, newGame, endTurn, UNITS, TECH, setFast: v => { if (S) S.fastAI = v; } };
+
+showStart();
+</script>
+</body>
+</html>
