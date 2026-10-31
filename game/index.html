@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b1a2e">
+<title>Tradewinds 1522</title>
+<style>
+  :root{
+    --bg:#0b1a2e; --panel:#15263d; --panel2:#1d3350; --ink:#eadfc4; --dim:#a79f8a;
+    --gold:#e4b94a; --good:#6fcf7a; --bad:#e46a5a; --line:#2d4a6e;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:ui-monospace,Menlo,Consolas,"Courier New",monospace;overflow:hidden;
+    touch-action:none;overscroll-behavior:none;}
+  #map{position:fixed;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;}
+  #hud{position:fixed;top:0;left:0;right:0;padding:6px 8px;display:flex;flex-wrap:wrap;gap:4px 10px;
+    background:linear-gradient(#0b1a2ee6,#0b1a2e00);font-size:13px;pointer-events:none;}
+  #hud span b{color:var(--gold);font-weight:600}
+  #hud .warn b{color:var(--bad)}
+  #log{position:fixed;left:0;right:0;bottom:calc(58px + var(--safe-b));padding:4px 8px;font-size:12px;
+    color:#d8d0ba;text-shadow:0 1px 2px #000;pointer-events:none;max-height:72px;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;}
+  #log div{opacity:.75}#log div:last-child{opacity:1}
+  #bar{position:fixed;left:0;right:0;bottom:0;height:calc(58px + var(--safe-b));padding:6px 8px var(--safe-b);
+    background:var(--panel);border-top:2px solid var(--line);display:flex;gap:6px;align-items:center;}
+  button{font:inherit;color:var(--ink);background:var(--panel2);border:2px solid var(--line);
+    border-radius:8px;padding:10px 12px;font-size:14px;cursor:pointer;min-height:44px;}
+  button:active{background:#2a4668}
+  button.primary{background:#8a5a1e;border-color:#c48a3a}
+  button.small{min-height:36px;padding:6px 10px;font-size:13px}
+  button:disabled{opacity:.45}
+  #bar button{flex:1}
+  /* bottom sheet */
+  #sheet{position:fixed;left:0;right:0;bottom:0;max-height:82%;background:var(--panel);
+    border-top:3px solid #c48a3a;border-radius:14px 14px 0 0;transform:translateY(105%);
+    transition:transform .2s ease;display:flex;flex-direction:column;padding-bottom:var(--safe-b);}
+  #sheet.open{transform:none}
+  #sheet header{display:flex;align-items:center;gap:8px;padding:10px 12px 6px;}
+  #sheet header h2{margin:0;font-size:17px;flex:1;color:var(--gold);font-weight:600}
+  #tabs{display:flex;gap:4px;padding:0 10px 6px;}
+  #tabs button{flex:1;min-height:38px;padding:6px 4px;font-size:13px;border-radius:8px}
+  #tabs button.on{background:#8a5a1e;border-color:#c48a3a}
+  #content{overflow-y:auto;padding:4px 12px 12px;font-size:14px;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+  .row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .row .name{flex:1}
+  .row .name small{display:block;color:var(--dim);font-size:12px}
+  .row .price{color:var(--gold);min-width:64px;text-align:right}
+  .row .price.lo{color:var(--good)} .row .price.hi{color:var(--bad)}
+  .qty{display:flex;gap:4px}
+  .qty button{min-height:36px;padding:4px 8px;font-size:13px}
+  p{margin:8px 0;line-height:1.4}
+  .dim{color:var(--dim)} .gold{color:var(--gold)} .good{color:var(--good)} .bad{color:var(--bad)}
+  /* modal */
+  #modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:16px}
+  #modal.open{display:flex}
+  #modal .box{background:var(--panel);border:2px solid #c48a3a;border-radius:12px;padding:16px;max-width:420px;width:100%;
+    max-height:90%;overflow-y:auto}
+  #modal h3{margin:0 0 8px;color:var(--gold);font-size:17px}
+  #modal .btns{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  #zoom{position:fixed;right:8px;bottom:calc(140px + var(--safe-b));display:flex;flex-direction:column;gap:6px}
+  #zoom button{width:44px;padding:0;font-size:20px}
+</style>
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="hud"></div>
+<div id="zoom"><button id="zin">+</button><button id="zout">−</button><button id="center">◎</button></div>
+<div id="log"></div>
+<div id="bar">
+  <button id="btnPort" class="primary">Enter port</button>
+  <button id="btnShip">Ship</button>
+  <button id="btnMenu">Menu</button>
+</div>
+<div id="sheet">
+  <header><h2 id="sheetTitle">Port</h2><button class="small" id="sheetClose">Close</button></header>
+  <div id="tabs"></div>
+  <div id="content"></div>
+</div>
+<div id="modal"><div class="box"><h3 id="mTitle"></h3><div id="mBody"></div><div class="btns" id="mBtns"></div></div></div>
+
+<script>
+'use strict';
+// ------------------------------------------------------------------
+// WORLD: the Atlantic and Mediterranean, 1522. Coastlines are rough
+// polygons in longitude/latitude, rasterised to a half-degree grid.
+// ------------------------------------------------------------------
+const LON0=-100, LON1=45, LAT0=-10, LAT1=66, RES=0.5;
+const W=Math.round((LON1-LON0)/RES), H=Math.round((LAT1-LAT0)/RES);
+const LAND=[
+ // Europe (Iberia, France, Low Countries, Germany, Italy, Balkans, Russia)
+ [[-5.5,36],[-9,37],[-9.5,39],[-9,43],[-2,43.5],[-1.5,46.5],[-4.5,48.5],[-1.5,49.5],[1.5,51],[4,52],[8,54],[10,54],[14,54],[20,54.5],[21,56.5],[24,59],[28,60.5],[45,60.5],[45,46],[38,47],[33,46],[30,46],[28,44],[28,41],[26,40],[24,38],[22,37],[21,38],[19,40],[18,42],[14,45],[12.5,44],[14,42],[16,41.5],[18.5,40],[17,39.5],[16,38],[15.5,38],[15.5,40],[13,41],[11,42.5],[10,44],[8,44.5],[7,43.7],[5,43.3],[3,43],[3,42],[1,41],[0,39],[-0.5,38],[-2,36.8]],
+ // Scandinavia
+ [[5.5,58],[4.5,62],[13,66],[45,66],[45,60],[28,60],[22,59],[22,56],[12,56],[10,59]],
+ // Anatolia and the Levant
+ [[29,41],[32,42],[36,42],[41,41.5],[45,40],[45,30],[35,30],[34.5,31],[35,33],[36,36],[34,36.5],[30,36.5],[27,37],[26,39.5]],
+ // Africa
+ [[-5.5,35.8],[-2,35],[0,36],[5,36.8],[10,37],[11,35],[10,33],[15,32.5],[20,31],[25,32],[30,31.5],[32,31],[34,30],[36,22],[40,15],[44,11],[45,11],[45,-10],[13,-10],[12,-6],[9,-1],[9,4],[5,5],[2,6],[-2,5],[-7,5],[-12,8],[-15,11],[-17,14.5],[-16.5,20],[-13,27],[-9.5,32],[-6,34]],
+ // Britain, Ireland, Iceland, Greenland
+ [[-5.5,50],[-3,50.5],[1.5,51],[1.5,53],[0,54],[-1.5,56],[-2,58],[-3.5,58.5],[-5.5,58],[-6,56],[-5,55],[-3,54.5],[-4.5,53],[-3,51.5]],
+ [[-10,51.5],[-6,52],[-6,54],[-7.5,55.2],[-10,54]],
+ [[-24,64],[-14,65.5],[-13.5,66.5],[-22,66.5]],
+ [[-45,60],[-43,60],[-35,66],[-55,66],[-50,62]],
+ // North America
+ [[-60,66],[-62,55],[-55,52],[-58,50],[-60,47],[-66,44],[-70,42],[-74,40.5],[-76,38],[-76,35],[-81,32],[-80,27],[-80.5,25],[-82,27],[-84,30],[-88,30],[-90,29],[-95,29],[-97,26],[-100,26],[-100,66]],
+ [[-59,47.5],[-53,46.5],[-52.5,48.5],[-55.5,51.5],[-59,50]],
+ // Mexico, Central and South America
+ [[-97,26],[-97,20],[-90,21],[-87,21],[-88,16],[-84,15],[-83,10],[-80,9],[-77,8],[-72,12],[-68,11],[-62,10.5],[-60,8],[-55,6],[-50,2],[-44,-2],[-35,-5],[-35,-10],[-100,-10]],
+ // Caribbean islands
+ [[-85,22],[-82,23],[-78,22.5],[-74,20],[-77,19.8],[-84,21.5]],
+ [[-74.5,19],[-68.5,19.5],[-68.5,18],[-74.5,18.3]],
+ [[-78.3,18.5],[-76.2,18.5],[-76.2,17.8],[-78.3,17.8]],
+ [[-67.2,18.5],[-65.6,18.5],[-65.6,17.9],[-67.2,17.9]],
+ // Mediterranean islands
+ [[12.5,38],[15.5,38.2],[15,36.7],[12.5,37.5]],
+ [[8.2,41],[9.7,41],[9.7,39],[8.3,39]],
+ [[8.5,43],[9.5,43],[9.3,41.4],[8.6,41.5]],
+ [[23.5,35.5],[26.3,35.3],[26.2,35],[23.6,35]],
+ [[32.3,35.2],[34.5,35.6],[33.5,34.6],[32.4,34.7]],
+ [[1.2,39.2],[3.5,40],[4.3,40],[4.3,39.5],[1.2,38.8]],
+];
+// small islands as single tiles
+const ISLES=[[-28,38.5],[-17,32.7],[-15.5,28],[-23.5,15],[-25,17],[-13.5,16.5]];
+// straits forced open so ships can pass: each is a line of sea tiles
+const CHANNELS=[[[-6.2,36],[-4.8,36]],[[25.8,39.8],[28.2,40.8]],[[28.4,40.8],[29.2,41.6]],[[12.4,56.4],[12.4,54.8]],[[10.8,57],[10.8,55.4]],[[15.6,38.5],[15.6,37.8]],[[-6.2,51.2],[-6.2,54.5]]];
+function pip(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const [xi,yi]=poly[i],[xj,yj]=poly[j];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c;}return c;}
+const tiles=new Uint8Array(W*H); // 0 sea, 1 land, 2 sand(coast land), 3 port
+function ll2t(lon,lat){return [Math.floor((lon-LON0)/RES),Math.floor((LAT1-lat)/RES)];}
+for(let y=0;y<H;y++)for(let x=0;x<W;x++){const lon=LON0+(x+.5)*RES,lat=LAT1-(y+.5)*RES;
+  for(const p of LAND)if(pip(lon,lat,p)){tiles[y*W+x]=1;break;}}
+for(const [lo,la] of ISLES){const [x,y]=ll2t(lo,la);tiles[y*W+x]=1;}
+for(const [[a,b],[c,d]] of CHANNELS){const n=Math.ceil(Math.max(Math.abs(c-a),Math.abs(d-b))/(RES/2));
+  let px=-1;for(let i=0;i<=n;i++){const [x,y]=ll2t(a+(c-a)*i/n,b+(d-b)*i/n);if(x<0||y<0||x>=W||y>=H)continue;
+    tiles[y*W+x]=0;if(px>=0&&px!==x)tiles[y*W+px]=0;px=x;}}
+const isSea=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&tiles[y*W+x]===0;
+for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(tiles[y*W+x]===1){
+  if(isSea(x-1,y)||isSea(x+1,y)||isSea(x,y-1)||isSea(x,y+1))tiles[y*W+x]=2;}
+
+// ------------------------------------------------------------------
+// GOODS and PORTS
+// ------------------------------------------------------------------
+const GOODS={
+  wheat:{n:'Wheat',p:40},fish:{n:'Salt fish',p:55},wine:{n:'Wine',p:120},oil:{n:'Olive oil',p:110},
+  salt:{n:'Salt',p:60},cloth:{n:'Wool cloth',p:200},timber:{n:'Timber',p:70},fur:{n:'Furs',p:260},
+  glass:{n:'Venetian glass',p:420},sugar:{n:'Sugar',p:300},dye:{n:'Brazilwood dye',p:350},
+  gold:{n:'Gold dust',p:900},ivory:{n:'Ivory',p:700},pepper:{n:'Pepper',p:800},silk:{n:'Silk',p:950},
+};
+// sells = cheap here, wants = pays well here
+const PORTS=[
+ {id:'lisbon',n:'Lisbon',lon:-9.1,lat:38.7,sells:['wine','salt','fish'],wants:['gold','pepper','sugar'],big:1},
+ {id:'cadiz',n:'Cádiz',lon:-6.3,lat:36.5,sells:['wine','oil','salt'],wants:['sugar','dye','cloth'],big:1},
+ {id:'london',n:'London',lon:0.3,lat:51.4,sells:['cloth','wheat'],wants:['wine','pepper','glass','silk'],big:1},
+ {id:'antwerp',n:'Antwerp',lon:3.9,lat:51.5,sells:['cloth','fish'],wants:['pepper','sugar','wine','silk'],big:1},
+ {id:'bordeaux',n:'Bordeaux',lon:-1.2,lat:45.2,sells:['wine','wheat'],wants:['cloth','fish','salt']},
+ {id:'bergen',n:'Bergen',lon:5,lat:60.3,sells:['fish','timber','fur'],wants:['wheat','wine','cloth','salt']},
+ {id:'lubeck',n:'Lübeck',lon:10.8,lat:54.3,sells:['timber','fur','wheat'],wants:['cloth','wine','salt','silk']},
+ {id:'genoa',n:'Genoa',lon:8.9,lat:44.3,sells:['oil','cloth'],wants:['pepper','fur','timber','gold'],big:1},
+ {id:'venice',n:'Venice',lon:12.4,lat:45.3,sells:['glass','silk','pepper'],wants:['timber','fur','wheat','gold'],big:1},
+ {id:'naples',n:'Naples',lon:14.2,lat:40.7,sells:['oil','wine','wheat'],wants:['cloth','fur','glass']},
+ {id:'tunis',n:'Tunis',lon:10.3,lat:37,sells:['oil','salt','gold'],wants:['cloth','timber','wine']},
+ {id:'algiers',n:'Algiers',lon:3,lat:36.9,sells:['wheat','oil','ivory'],wants:['cloth','timber','glass']},
+ {id:'athens',n:'Athens',lon:23.7,lat:37.8,sells:['oil','wine'],wants:['wheat','cloth','fur']},
+ {id:'istanbul',n:'Constantinople',lon:29,lat:40.9,sells:['silk','pepper','salt'],wants:['fur','timber','glass','cloth'],big:1},
+ {id:'alex',n:'Alexandria',lon:29.8,lat:31.3,sells:['pepper','silk','wheat'],wants:['timber','fur','glass','wine'],big:1},
+ {id:'laspalmas',n:'Las Palmas',lon:-15.5,lat:28,sells:['sugar','wine'],wants:['cloth','wheat','timber']},
+ {id:'mina',n:'São Jorge da Mina',lon:-1.6,lat:5.1,sells:['gold','ivory','pepper'],wants:['cloth','wheat','wine','salt']},
+ {id:'havana',n:'Havana',lon:-82.4,lat:23.2,sells:['sugar','dye'],wants:['cloth','wine','oil','wheat']},
+ {id:'santo',n:'Santo Domingo',lon:-69.9,lat:18.4,sells:['sugar','gold'],wants:['cloth','wine','oil','wheat']},
+ {id:'nombre',n:'Nombre de Dios',lon:-79.6,lat:9.6,sells:['gold','dye'],wants:['cloth','wine','oil','glass']},
+ {id:'recife',n:'Pernambuco',lon:-34.9,lat:-8,sells:['dye','sugar','timber'],wants:['cloth','wine','wheat','salt']},
+];
+// snap each port to the nearest coastal land tile
+for(const p of PORTS){let [x,y]=ll2t(p.lon,p.lat);let best=null,bd=1e9;
+  for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const tx=x+dx,ty=y+dy;
+    if(tx<0||ty<0||tx>=W||ty>=H)continue;if(tiles[ty*W+tx]!==2)continue;const d=dx*dx+dy*dy;if(d<bd){bd=d;best=[tx,ty];}}
+  if(!best)best=[x,y];p.x=best[0];p.y=best[1];tiles[p.y*W+p.x]=3;
+  // the sea tile you dock at
+  const dirs=[[0,1],[1,0],[-1,0],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
+  for(const [dx,dy] of dirs)if(isSea(p.x+dx,p.y+dy)){p.dx=p.x+dx;p.dy=p.y+dy;break;}
+  if(p.dx===undefined){p.dx=p.x;p.dy=p.y+1;tiles[p.dy*W+p.dx]=0;}
+}
+const portAt=(x,y)=>PORTS.find(p=>p.x===x&&p.y===y);
+const portDock=(x,y)=>PORTS.find(p=>p.dx===x&&p.dy===y);
+
+const SHIPS={
+  caravel:{n:'Caravel',cargo:60,hull:100,speed:3,crewMax:30,cannons:4,price:0},
+  carrack:{n:'Carrack',cargo:140,hull:180,speed:2.6,crewMax:80,cannons:10,price:14000},
+  galleon:{n:'Galleon',cargo:220,hull:300,speed:2.4,crewMax:140,cannons:24,price:42000},
+};
+const WIN_GOLD=200000;
+
+// ------------------------------------------------------------------
+// STATE
+// ------------------------------------------------------------------
+let S=null;
+function newGame(){
+  const home=PORTS.find(p=>p.id==='lisbon');
+  S={v:1,gold:3000,day:0,x:home.dx,y:home.dy,ship:'caravel',hull:100,crew:20,food:40,water:40,
+     cargo:{},path:[],prices:{},visited:['lisbon'],inPort:'lisbon',won:false,log:[]};
+  for(const p of PORTS)S.prices[p.id]=basePrices(p);
+  say('Lisbon, March 1522. Your late father left you a caravel, 3,000 gold and a map. Make your fortune.');
+  save();
+}
+function basePrices(p){const o={};for(const g in GOODS){let m=1;if(p.sells.includes(g))m=0.6;else if(p.wants.includes(g))m=1.6;
+  o[g]=Math.round(GOODS[g].p*m*(0.85+Math.random()*0.3));}return o;}
+function save(){try{localStorage.setItem('tradewinds',JSON.stringify(S));}catch(e){}}
+function load(){try{const j=localStorage.getItem('tradewinds');if(j){S=JSON.parse(j);if(S.v===1)return true;}}catch(e){}return false;}
+const ship=()=>SHIPS[S.ship];
+const cargoUsed=()=>Object.values(S.cargo).reduce((a,b)=>a+b,0);
+function dateStr(){const d=new Date(1522,2,1);d.setDate(d.getDate()+S.day);
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function say(t){S.log.push(t);if(S.log.length>40)S.log.shift();renderLog();}
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+
+// ------------------------------------------------------------------
+// PATHFINDING (BFS over sea tiles, 8 directions)
+// ------------------------------------------------------------------
+function findPath(sx,sy,tx,ty){
+  if(!isSea(tx,ty))return null;
+  const prev=new Int32Array(W*H).fill(-1);const q=[sy*W+sx];prev[sy*W+sx]=sy*W+sx;let qi=0;
+  const D=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+  while(qi<q.length){const c=q[qi++];const cx=c%W,cy=(c/W)|0;if(cx===tx&&cy===ty)break;
+    for(const [dx,dy] of D){const nx=cx+dx,ny=cy+dy;if(!isSea(nx,ny))continue;
+      if(dx&&dy&&!isSea(cx+dx,cy)&&!isSea(cx,cy+dy))continue; // no squeezing through corners
+      const n=ny*W+nx;if(prev[n]!==-1)continue;prev[n]=c;q.push(n);}}
+  const end=ty*W+tx;if(prev[end]===-1)return null;
+  const path=[];let c=end;while(c!==sy*W+sx){path.push([c%W,(c/W)|0]);c=prev[c];}
+  return path.reverse();
+}
+
+// ------------------------------------------------------------------
+// SAILING: one tile per tick, days pass, events happen
+// ------------------------------------------------------------------
+let sailTimer=null, stepAcc=0;
+function setSail(tx,ty){
+  const path=findPath(S.x,S.y,tx,ty);
+  if(!path){say('No sea route there.');return;}
+  S.path=path;S.inPort=null;closeSheet();
+  if(!sailTimer)sailTimer=setInterval(tick,220);
+}
+function stopSailing(){S.path=[];if(sailTimer){clearInterval(sailTimer);sailTimer=null;}save();renderHud();}
+function tick(){
+  if(!S.path.length||modalOpen){if(!S.path.length)stopSailing();return;}
+  const [nx,ny]=S.path.shift();S.x=nx;S.y=ny;
+  stepAcc+=1/ship().speed;
+  while(stepAcc>=1){stepAcc-=1;if(!passDay())return;}
+  const p=portDock(S.x,S.y);
+  if(p&&!S.path.length){arrive(p);}
+  else if(!S.path.length){say('You drop anchor at sea.');stopSailing();}
+  renderHud();
+}
+function passDay(){
+  S.day++;
+  const eat=Math.max(1,Math.round(S.crew/10));
+  S.food=Math.max(0,S.food-eat);S.water=Math.max(0,S.water-eat);
+  if(S.food===0||S.water===0){const lost=Math.max(1,Math.round(S.crew*0.08));S.crew-=lost;
+    say(`${S.food===0?'No food':'No water'}. ${lost} sailors die.`);
+    if(S.crew<=0){gameOver('Your crew is gone. The caravel drifts, silent, under an empty sky.');return false;}}
+  const r=Math.random();
+  if(r<0.05){const dmg=5+Math.floor(Math.random()*20);S.hull-=dmg;
+    let t=`A storm tears at the rigging. Hull -${dmg}.`;
+    const keys=Object.keys(S.cargo).filter(k=>S.cargo[k]>0);
+    if(keys.length&&Math.random()<0.4){const k=keys[Math.floor(Math.random()*keys.length)];const l=Math.min(S.cargo[k],Math.ceil(S.cargo[k]*0.3));S.cargo[k]-=l;t+=` ${l} ${GOODS[k].n} washed overboard.`;}
+    say(t);
+    if(S.hull<=0){gameOver('The hull gives way. The sea takes everything.');return false;}
+  }else if(r<0.08){say('Dead calm. The sails hang limp for a day.');S.day++;S.food=Math.max(0,S.food-eat);S.water=Math.max(0,S.water-eat);}
+  else if(r<0.10&&S.day>10){pirates();return false;}
+  else if(r<0.12){say('A fair wind fills the sails.');stepAcc+=0.6;}
+  if(S.day%7===0)driftPrices();
+  if(S.day%5===0)save();
+  return true;
+}
+function driftPrices(){for(const p of PORTS){const base=basePrices(p);for(const g in GOODS){
+  S.prices[p.id][g]=Math.round(S.prices[p.id][g]*0.7+base[g]*0.3);}}}
+function arrive(p){
+  stopSailing();S.inPort=p.id;
+  if(!S.visited.includes(p.id)){S.visited.push(p.id);say(`You make landfall at ${p.n} for the first time.`);}
+  else say(`You dock at ${p.n}.`);
+  if(S.gold>=WIN_GOLD&&!S.won){S.won=true;modal('Admiral of the Ocean Sea',
+    `<p>With ${fmt(S.gold)} gold in your coffers, the Crown names you Admiral. Every harbor from Bergen to Pernambuco knows your flag.</p><p class="dim">You can keep sailing as long as you like.</p>`,[['Carry on',()=>{}]]);}
+  save();openPort();
+}
+function gameOver(t){stopSailing();modal('Lost at sea',`<p>${t}</p><p class="dim">${dateStr()}, after ${S.day} days.</p>`,[['Start again',()=>{newGame();centerOnShip();renderHud();}]]);}
+
+// ------------------------------------------------------------------
+// PIRATES
+// ------------------------------------------------------------------
+function pirates(){
+  const str=20+S.day*0.5+Math.random()*40;
+  const mine=S.crew*0.6+ship().cannons*5;
+  const stepsLeft=S.path.length;
+  modal('Pirates!',`<p>A black-flagged ship bears down on you. ${Math.round(str)} cutthroats, by the look of it. You have ${S.crew} crew and ${ship().cannons} guns.</p>`,[
+    ['Fight',()=>{const roll=mine*(0.6+Math.random()*0.8)-str*(0.6+Math.random()*0.8);
+      if(roll>0){const loot=Math.round(300+Math.random()*1200+S.day*5);S.gold+=loot;const lost=Math.floor(Math.random()*4);S.crew=Math.max(1,S.crew-lost);
+        say(`Boarded and beaten! You take ${fmt(loot)} gold. ${lost} sailors lost.`);}
+      else{const lost=Math.max(1,Math.round(S.crew*0.25));S.crew-=lost;const dmg=20+Math.floor(Math.random()*30);S.hull-=dmg;const g=Math.round(S.gold*0.4);S.gold-=g;
+        say(`Overrun. ${lost} crew dead, hull -${dmg}, ${fmt(g)} gold stolen.`);
+        if(S.crew<=0||S.hull<=0){gameOver('The pirates leave nothing but splinters.');return;}}
+      resume(stepsLeft);}],
+    ['Flee',()=>{if(Math.random()<0.35+ship().speed*0.12){say('You outrun them in the dusk.');}
+      else{const dmg=10+Math.floor(Math.random()*20);S.hull-=dmg;const g=Math.round(S.gold*0.3);S.gold-=g;say(`They catch you. Hull -${dmg}, ${fmt(g)} gold taken.`);
+        if(S.hull<=0){gameOver('Shot to pieces while running.');return;}}
+      resume(stepsLeft);}],
+    [`Pay them off (${fmt(S.gold*0.15)} gold)`,()=>{S.gold-=Math.round(S.gold*0.15);say('You hand over a chest and they sail on, laughing.');resume(stepsLeft);}],
+  ]);
+}
+function resume(){renderHud();if(S.path.length&&!sailTimer)sailTimer=setInterval(tick,220);}
+
+// ------------------------------------------------------------------
+// PORT UI (bottom sheet)
+// ------------------------------------------------------------------
+const sheet=document.getElementById('sheet'),content=document.getElementById('content'),tabsEl=document.getElementById('tabs');
+let curTab='market';
+function openPort(){const p=PORTS.find(q=>q.id===S.inPort);if(!p)return;
+  document.getElementById('sheetTitle').textContent=p.n;
+  tabsEl.innerHTML='';
+  for(const [k,n] of [['market','Market'],['harbor','Harbor'],['shipyard','Shipyard'],['tavern','Tavern']]){
+    const b=document.createElement('button');b.textContent=n;b.className=k===curTab?'on':'';b.onclick=()=>{curTab=k;openPort();};tabsEl.appendChild(b);}
+  content.innerHTML='';
+  ({market:tabMarket,harbor:tabHarbor,shipyard:tabShipyard,tavern:tabTavern})[curTab](p);
+  sheet.classList.add('open');
+}
+function closeSheet(){sheet.classList.remove('open');}
+function el(html){const d=document.createElement('div');d.innerHTML=html;return d.firstElementChild;}
+
+function tabMarket(p){
+  const pr=S.prices[p.id];
+  content.appendChild(el(`<p class="dim">Gold <span class="gold">${fmt(S.gold)}</span> · Hold ${cargoUsed()}/${ship().cargo}. <span class="good">Green</span> is cheap here, <span class="bad">red</span> is dear.</p>`));
+  const keys=Object.keys(GOODS).sort((a,b)=>(pr[a]/GOODS[a].p)-(pr[b]/GOODS[b].p));
+  for(const g of keys){const price=pr[g];const have=S.cargo[g]||0;const ratio=price/GOODS[g].p;
+    const cls=ratio<0.8?'lo':ratio>1.3?'hi':'';
+    const row=el(`<div class="row"><div class="name">${GOODS[g].n}<small>You hold ${have}</small></div><div class="price ${cls}">${fmt(price)}</div><div class="qty"></div></div>`);
+    const q=row.querySelector('.qty');
+    const mk=(t,fn,dis)=>{const b=document.createElement('button');b.textContent=t;b.disabled=dis;b.onclick=()=>{fn();openPort();};q.appendChild(b);};
+    const canBuy=Math.min(Math.floor(S.gold/price),ship().cargo-cargoUsed());
+    mk('Sell',()=>sell(p,g,have),have<=0);
+    mk('Buy 10',()=>buy(p,g,Math.min(10,canBuy)),canBuy<=0);
+    mk('Max',()=>buy(p,g,canBuy),canBuy<=0);
+    content.appendChild(row);}
+}
+function buy(p,g,n){if(n<=0)return;const price=S.prices[p.id][g];S.gold-=price*n;S.cargo[g]=(S.cargo[g]||0)+n;
+  S.prices[p.id][g]=Math.round(price*(1+n/150));say(`Bought ${n} ${GOODS[g].n} for ${fmt(price*n)}.`);save();}
+function sell(p,g,n){if(n<=0)return;const price=S.prices[p.id][g];S.gold+=price*n;S.cargo[g]-=n;
+  S.prices[p.id][g]=Math.max(5,Math.round(price*(1-n/150)));say(`Sold ${n} ${GOODS[g].n} for ${fmt(price*n)}.`);save();}
+
+function tabHarbor(p){
+  const eat=Math.max(1,Math.round(S.crew/10));
+  content.appendChild(el(`<p>Food <b class="gold">${S.food}</b> · Water <b class="gold">${S.water}</b> · Crew ${S.crew} eats <b>${eat}</b> of each per day. That's about <b>${Math.floor(Math.min(S.food,S.water)/eat)} days</b> of sailing.</p>`));
+  const add=(what,n,cost)=>{const b=document.createElement('button');b.style.marginRight='6px';b.style.marginBottom='6px';
+    b.textContent=`+${n} ${what} (${fmt(cost)})`;b.disabled=S.gold<cost;b.onclick=()=>{S.gold-=cost;S[what]+=n;save();openPort();};content.appendChild(b);};
+  add('food',20,100);add('food',100,450);add('water',20,60);add('water',100,250);
+  content.appendChild(el(`<p class="dim" style="margin-top:14px">Close this panel and tap any sea tile to set a course. Tap a port's dock to sail straight there.</p>`));
+  const known=PORTS.filter(q=>q.id!==p.id);
+  content.appendChild(el(`<p><b>Set course for:</b></p>`));
+  const wrap=el('<div></div>');
+  for(const q of known){const b=document.createElement('button');b.className='small';b.style.margin='0 6px 6px 0';
+    b.textContent=(S.visited.includes(q.id)?'':'? ')+q.n;b.onclick=()=>setSail(q.dx,q.dy);wrap.appendChild(b);}
+  content.appendChild(wrap);
+}
+function tabShipyard(p){
+  const sh=ship();const dmg=sh.hull-S.hull;const cost=dmg*12;
+  content.appendChild(el(`<p>${sh.n}: hull <b class="${S.hull<sh.hull*0.4?'bad':'gold'}">${S.hull}/${sh.hull}</b>, hold ${sh.cargo}, ${sh.cannons} guns, speed ${sh.speed}.</p>`));
+  const r=document.createElement('button');r.textContent=dmg>0?`Repair all (${fmt(cost)})`:'Hull is sound';r.disabled=dmg<=0||S.gold<cost;
+  r.onclick=()=>{S.gold-=cost;S.hull=sh.hull;say('Hull repaired.');save();openPort();};content.appendChild(r);
+  if(p.big){content.appendChild(el('<p style="margin-top:14px"><b>Ships for sale</b> <span class="dim">(your old ship is traded in)</span></p>'));
+    for(const k in SHIPS){if(k===S.ship||SHIPS[k].price<=sh.price)continue;const s=SHIPS[k];const price=s.price-Math.round(sh.price*0.5);
+      const row=el(`<div class="row"><div class="name">${s.n}<small>hold ${s.cargo} · hull ${s.hull} · ${s.cannons} guns · crew ${s.crewMax} · speed ${s.speed}</small></div><div class="price">${fmt(price)}</div><div class="qty"></div></div>`);
+      const b=document.createElement('button');b.textContent='Buy';b.disabled=S.gold<price||cargoUsed()>s.cargo;
+      b.onclick=()=>{S.gold-=price;S.ship=k;S.hull=s.hull;say(`You take command of a ${s.n}.`);save();openPort();};row.querySelector('.qty').appendChild(b);content.appendChild(row);}}
+  else content.appendChild(el('<p class="dim" style="margin-top:14px">Only the great ports sell ships.</p>'));
+}
+function tabTavern(p){
+  const sh=ship();const wage=25;
+  content.appendChild(el(`<p>Crew <b class="gold">${S.crew}/${sh.crewMax}</b>. More hands fight better but eat more. Hiring costs ${wage} gold a head.</p>`));
+  const hire=n=>{const b=document.createElement('button');b.style.marginRight='6px';n=Math.min(n,sh.crewMax-S.crew);b.textContent=`Hire ${n} (${fmt(n*wage)})`;b.disabled=n<=0||S.gold<n*wage;
+    b.onclick=()=>{S.gold-=n*wage;S.crew+=n;save();openPort();};content.appendChild(b);};
+  hire(5);hire(20);
+  const d=document.createElement('button');d.textContent='Dismiss 5';d.disabled=S.crew<=5;d.onclick=()=>{S.crew-=5;save();openPort();};content.appendChild(d);
+  // rumours: the best price gap among visited ports for things sold here
+  content.appendChild(el('<p style="margin-top:14px"><b>Talk of the harbor</b></p>'));
+  let tips=[];
+  for(const g of p.sells){let best=null;for(const q of PORTS){if(q.id===p.id)continue;const gain=S.prices[q.id][g]-S.prices[p.id][g];if(!best||gain>best.gain)best={q,gain};}
+    if(best&&best.gain>0)tips.push(`"${GOODS[g].n} fetches about ${fmt(S.prices[best.q.id][g])} in ${best.q.n}." <span class="dim">(buy here at ${fmt(S.prices[p.id][g])})</span>`);}
+  for(const g of p.wants){let best=null;for(const q of PORTS){if(q.id===p.id)continue;const c=S.prices[q.id][g];if(!best||c<best.c)best={q,c};}
+    if(best)tips.push(`"They want ${GOODS[g].n} here, pays ${fmt(S.prices[p.id][g])}. ${best.q.n} sells it near ${fmt(best.c)}."`);}
+  for(const t of tips.slice(0,5))content.appendChild(el(`<p>${t}</p>`));
+}
+
+// ship panel at sea
+function openShip(){const sh=ship();document.getElementById('sheetTitle').textContent=sh.n;tabsEl.innerHTML='';content.innerHTML='';
+  content.appendChild(el(`<p>${dateStr()} · day ${S.day}<br>Hull ${S.hull}/${sh.hull} · Crew ${S.crew}/${sh.crewMax} · Guns ${sh.cannons}<br>Food ${S.food} · Water ${S.water} · Gold <span class="gold">${fmt(S.gold)}</span></p>`));
+  const c=Object.keys(S.cargo).filter(k=>S.cargo[k]>0);
+  content.appendChild(el(`<p><b>Hold</b> ${cargoUsed()}/${sh.cargo}: ${c.length?c.map(k=>`${S.cargo[k]} ${GOODS[k].n}`).join(', '):'empty'}</p>`));
+  content.appendChild(el(`<p class="dim">Ports visited: ${S.visited.length}/${PORTS.length}. Goal: ${fmt(WIN_GOLD)} gold.</p>`));
+  if(S.path.length){const b=document.createElement('button');b.textContent='Drop anchor (stop)';b.onclick=()=>{stopSailing();closeSheet();};content.appendChild(b);}
+  sheet.classList.add('open');}
+function openMenu(){document.getElementById('sheetTitle').textContent='Tradewinds 1522';tabsEl.innerHTML='';content.innerHTML='';
+  content.appendChild(el(`<p>An age of sail trading game. Buy cheap, sail far, sell dear. Watch your food and water, keep the hull patched, and pray the pirates pass you by.</p>
+  <p class="dim">Tap the sea to sail. Drag to look around. Your game saves itself.</p>`));
+  const b=document.createElement('button');b.textContent='New game (erases save)';b.onclick=()=>{modal('Start over?','<p>Your current voyage will be lost.</p>',[['Yes, new game',()=>{stopSailing();newGame();centerOnShip();closeSheet();renderHud();}],['Cancel',()=>{}]]);};
+  content.appendChild(b);sheet.classList.add('open');}
+
+// modal
+let modalOpen=false;
+function modal(title,html,btns){modalOpen=true;document.getElementById('mTitle').textContent=title;document.getElementById('mBody').innerHTML=html;
+  const b=document.getElementById('mBtns');b.innerHTML='';
+  for(const [t,fn] of btns){const x=document.createElement('button');x.textContent=t;x.onclick=()=>{document.getElementById('modal').classList.remove('open');modalOpen=false;fn();renderHud();};b.appendChild(x);}
+  document.getElementById('modal').classList.add('open');}
+
+// ------------------------------------------------------------------
+// RENDERING
+// ------------------------------------------------------------------
+const cv=document.getElementById('map'),ctx=cv.getContext('2d');
+let T=14, camX=0, camY=0, dpr=1;
+function resize(){dpr=Math.min(2,window.devicePixelRatio||1);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';draw();}
+addEventListener('resize',resize);
+function centerOnShip(){camX=S.x*T-innerWidth/2+T/2;camY=S.y*T-innerHeight/2+T/2;clampCam();}
+function clampCam(){camX=Math.max(-innerWidth/2,Math.min(W*T-innerWidth/2,camX));camY=Math.max(-innerHeight/2,Math.min(H*T-innerHeight/2,camY));}
+const SHIP_PX=[ // 7x7 pixel ship sprite
+ '...W...','..WW...','..WWW..','...B...','HHHHHHH','.HHHHH.','..HHH..'];
+function draw(){
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.fillStyle='#163b63';ctx.fillRect(0,0,innerWidth,innerHeight);
+  const x0=Math.max(0,Math.floor(camX/T)),y0=Math.max(0,Math.floor(camY/T));
+  const x1=Math.min(W-1,Math.ceil((camX+innerWidth)/T)),y1=Math.min(H-1,Math.ceil((camY+innerHeight)/T));
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const t=tiles[y*W+x];const sx=x*T-camX,sy=y*T-camY;
+    if(t===0){ctx.fillStyle=((x*7+y*13)%5===0)?'#1a4571':'#163b63';}
+    else if(t===1){ctx.fillStyle=((x+y)%3===0)?'#4f7a3a':'#557f3f';}
+    else if(t===2){ctx.fillStyle='#c9b27a';}
+    else ctx.fillStyle='#c9b27a';
+    ctx.fillRect(sx,sy,T+0.5,T+0.5);
+    if(t===3){ // port: little house + flag
+      ctx.fillStyle='#8a3b2a';ctx.fillRect(sx+T*0.2,sy+T*0.45,T*0.6,T*0.45);
+      ctx.fillStyle='#e4b94a';ctx.fillRect(sx+T*0.1,sy+T*0.3,T*0.8,T*0.2);
+      ctx.fillStyle='#e46a5a';ctx.fillRect(sx+T*0.45,sy,T*0.1,T*0.35);ctx.fillRect(sx+T*0.55,sy,T*0.3,T*0.18);}
+  }
+  // path
+  if(S.path.length){ctx.fillStyle='#ffffff66';for(const [px,py] of S.path){const sx=px*T-camX+T/2,sy=py*T-camY+T/2;if(sx<-T||sy<-T||sx>innerWidth+T||sy>innerHeight+T)continue;ctx.fillRect(sx-1.5,sy-1.5,3,3);}}
+  // port names
+  if(T>=10){ctx.font=`${Math.max(10,T*0.8)}px ui-monospace,Menlo,monospace`;ctx.textAlign='center';
+    for(const p of PORTS){const sx=p.x*T-camX+T/2,sy=p.y*T-camY-3;if(sx<-100||sx>innerWidth+100||sy<-20||sy>innerHeight+20)continue;
+      const seen=S.visited.includes(p.id);ctx.fillStyle='#000a';ctx.fillText(p.n,sx+1,sy+1);ctx.fillStyle=seen?'#f3e9cf':'#f3e9cf99';ctx.fillText(seen?p.n:'?',sx,sy);}}
+  // ship
+  const sx=S.x*T-camX,sy=S.y*T-camY,px=T/7;
+  for(let r=0;r<7;r++)for(let c=0;c<7;c++){const ch=SHIP_PX[r][c];if(ch==='.')continue;
+    ctx.fillStyle=ch==='W'?'#f6f1e1':ch==='B'?'#6b4423':'#5a3a1e';ctx.fillRect(sx+c*px,sy+r*px,px+0.3,px+0.3);}
+}
+// input: drag to pan, tap to set a course
+let pt=null,dragged=false;
+cv.addEventListener('pointerdown',e=>{pt={x:e.clientX,y:e.clientY,cx:camX,cy:camY};dragged=false;cv.setPointerCapture(e.pointerId);});
+cv.addEventListener('pointermove',e=>{if(!pt)return;const dx=e.clientX-pt.x,dy=e.clientY-pt.y;if(Math.abs(dx)+Math.abs(dy)>8)dragged=true;
+  if(dragged){camX=pt.cx-dx;camY=pt.cy-dy;clampCam();}});
+cv.addEventListener('pointerup',e=>{if(!pt)return;const wasDrag=dragged;pt=null;if(wasDrag||modalOpen)return;
+  if(sheet.classList.contains('open')){closeSheet();return;}
+  const tx=Math.floor((e.clientX+camX)/T),ty=Math.floor((e.clientY+camY)/T);
+  const p=portAt(tx,ty);if(p){setSail(p.dx,p.dy);return;}
+  if(isSea(tx,ty)){if(tx===S.x&&ty===S.y)return;setSail(tx,ty);}else say('That is land, captain.');});
+cv.addEventListener('pointercancel',()=>{pt=null;});
+document.getElementById('zin').onclick=()=>{zoom(T*1.5);};
+document.getElementById('zout').onclick=()=>{zoom(T/1.5);};
+function zoom(nt){nt=Math.max(4,Math.min(40,nt));const cxw=(camX+innerWidth/2)/T,cyw=(camY+innerHeight/2)/T;T=nt;camX=cxw*T-innerWidth/2;camY=cyw*T-innerHeight/2;clampCam();}
+document.getElementById('center').onclick=centerOnShip;
+document.getElementById('btnPort').onclick=()=>{if(S.inPort){curTab='market';openPort();}else{const p=portDock(S.x,S.y);if(p)arrive(p);else say('No port here. Sail to a harbor first.');}};
+document.getElementById('btnShip').onclick=openShip;
+document.getElementById('btnMenu').onclick=openMenu;
+document.getElementById('sheetClose').onclick=closeSheet;
+
+function renderHud(){const sh=ship();
+  const lowF=S.food<10,lowW=S.water<10,lowH=S.hull<sh.hull*0.3;
+  document.getElementById('hud').innerHTML=
+    `<span>Gold <b>${fmt(S.gold)}</b></span><span>${dateStr()}</span><span class="${lowF?'warn':''}">Food <b>${S.food}</b></span><span class="${lowW?'warn':''}">Water <b>${S.water}</b></span><span class="${lowH?'warn':''}">Hull <b>${S.hull}</b>/${sh.hull}</span><span>Crew <b>${S.crew}</b></span><span>Hold <b>${cargoUsed()}</b>/${sh.cargo}</span>`;
+  document.getElementById('btnPort').textContent=S.inPort?'Port':(portDock(S.x,S.y)?'Enter port':'At sea');
+  document.getElementById('btnPort').disabled=!S.inPort&&!portDock(S.x,S.y);
+}
+function renderLog(){document.getElementById('log').innerHTML=S.log.slice(-3).map(t=>`<div>${t}</div>`).join('');}
+
+// follow the ship while sailing
+function frame(){if(S.path.length&&sailTimer){const tx=S.x*T-innerWidth/2+T/2,ty=S.y*T-innerHeight/2+T/2;camX+=(tx-camX)*0.15;camY+=(ty-camY)*0.15;clampCam();}
+  draw();requestAnimationFrame(frame);}
+
+// ------------------------------------------------------------------
+if(!load())newGame();
+resize();centerOnShip();renderHud();renderLog();
+if(S.inPort)openPort();else if(S.path.length)sailTimer=setInterval(tick,220);
+frame();
+</script>
+</body>
+</html>
