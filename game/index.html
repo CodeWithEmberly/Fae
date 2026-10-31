@@ -292,7 +292,7 @@ function newGame(opts) {
   const n = opts.ai + 1, size = opts.size;
   S = { w:size, h:size, tiles:[], cities:[], units:[], players:[], turn:1, cur:0, ver:1, nextId:1,
         explored:[], spectate: !!opts.spectate, aiBonus: [0, 1, 3][opts.diff], over:false, log:[] };
-  if (!generate(size, size, n)) { alert('Map generation failed, try again'); return; }
+  if (!generate(size, size, n)) { toast('Map generation failed, try again'); return; }
   for (let p = 0; p < n; p++) {
     S.players.push({ id:p, name:PNAME[p], color:PCOL[p], ai: p > 0 || !!opts.spectate, supply:5, tech:[], alive:true,
                      order: shuffle(Object.keys(TECH)).sort((a, b) => TECH[a].base - TECH[b].base + rand(-4, 4)) });
@@ -1205,7 +1205,7 @@ const HELP = `
 
 let setup = { ai:2, size:16, diff:1 };
 function showStart() {
-  const hasSave = !!localStorage.getItem('ironfront_save');
+  let hasSave = false; try { hasSave = !!localStorage.getItem('ironfront_save'); } catch (e) {}
   const seg = (key, vals) => `<div class="seg">${vals.map(([v, l]) => `<button data-s="${key}" data-v="${v}" class="${setup[key] === v ? 'on' : ''}">${l}</button>`).join('')}</div>`;
   openModal(`<h1>🪖 Iron Front</h1><div class="sub">Theater Command — a turn-based modern warfare strategy game.</div>
     <p>Build an army of infantry, tanks, artillery, destroyers, submarines, jets and bombers. Race to space and put a satellite in orbit. Take every enemy city to win.</p>
@@ -1226,10 +1226,15 @@ function showMenu() {
     <div class="row"><button id="mResume" class="primary">Resume</button><button id="mHelp2">How to play</button><button id="mNew" class="danger">New game</button></div>`);
   $('mResume').onclick = closeModal;
   $('mHelp2').onclick = () => { openModal(`<h1>How to play</h1>${HELP}<div class="row"><button id="mBack">Back</button></div>`); $('mBack').onclick = closeModal; };
-  $('mNew').onclick = () => { if (!S.over && !S.spectate && !confirm('Abandon this game?')) return; S.over = true; showStart(); };
+  $('mNew').onclick = () => {
+    if (S.over || S.spectate) { S.over = true; return showStart(); }
+    openModal(`<h1>Abandon this game?</h1><p>Your current war will be lost.</p><div class="row"><button id="mYes" class="danger">Abandon</button><button id="mNo">Keep playing</button></div>`);
+    $('mYes').onclick = () => { S.over = true; try { localStorage.removeItem('ironfront_save'); } catch (e) {} showStart(); };
+    $('mNo').onclick = closeModal;
+  };
 }
 function gameOver(win, winner) {
-  S.over = true; busy = false; showBusy(''); localStorage.removeItem('ironfront_save'); refreshUI();
+  S.over = true; busy = false; showBusy(''); try { localStorage.removeItem('ironfront_save'); } catch (e) {} refreshUI();
   const title = S.spectate ? `${winner ? winner.name + ' wins' : 'Stalemate'}` : win ? '🏆 Victory!' : '☠️ Defeat';
   const msg = S.spectate ? `The war ended on turn ${S.turn}.` : win ? `You conquered the theater in ${S.turn} turns.` : 'Your last city has fallen.';
   openModal(`<h1>${title}</h1><p>${msg}</p><div class="row"><button class="primary" id="mAgain">New game</button><button id="mLook">View map</button></div>`);
