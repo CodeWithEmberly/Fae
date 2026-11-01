@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="author" content="🎯">
 <meta name="theme-color" content="#0b1220">
-<title>Iron Front: Theater Command</title>
+<title>Iron Front</title>
 <style>
-  :root { --bg:#0b1220; --panel:#131c2e; --line:#26344f; --text:#e6edf7; --mute:#8fa1bd; --accent:#4cc38a; --warn:#e0453a; }
+  :root { --bg:#0b1220; --panel:#131c2e; --line:#26344f; --text:#e6edf7; --mute:#8fa1bd; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { margin:0; height:100%; background:var(--bg); color:var(--text);
     font:14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; user-select:none; -webkit-user-select:none; }
@@ -15,7 +15,7 @@
   #panel canvas { vertical-align:middle; }
   #top { position:fixed; left:0; right:0; top:0; display:flex; gap:6px; align-items:center;
     padding:calc(env(safe-area-inset-top) + 6px) 8px 6px; background:rgba(11,18,32,.92); border-bottom:1px solid var(--line); z-index:5; }
-  #top .stat { font-weight:600; white-space:nowrap; }
+  #top .stat { font-weight:600; white-space:nowrap; font-size:13px; }
   #top .grow { flex:1; }
   button { font:inherit; color:var(--text); background:#1e2a42; border:1px solid #31425f; border-radius:9px; padding:7px 10px; cursor:pointer; }
   button:active { transform:translateY(1px); }
@@ -23,22 +23,24 @@
   button.danger { background:#7a2420; border-color:#a5332d; }
   button:disabled { opacity:.45; }
   #panel { position:fixed; left:0; right:0; bottom:0; max-height:46vh; overflow:auto; z-index:5;
-    background:rgba(19,28,46,.96); border-top:1px solid var(--line); padding:10px 10px calc(env(safe-area-inset-bottom) + 10px); }
+    background:rgba(19,28,46,.96); border-top:1px solid var(--line); padding:10px 12px calc(env(safe-area-inset-bottom) + 10px); }
   #panel:empty { display:none; }
-  #panel h3 { margin:0 0 4px; font-size:16px; display:flex; align-items:center; gap:8px; }
+  #panel h3 { margin:0 0 4px; font-size:16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   #panel .sub { color:var(--mute); font-size:12.5px; margin-bottom:6px; }
   .row { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:6px; margin-top:6px; }
   .bcard { display:flex; flex-direction:column; align-items:flex-start; gap:1px; padding:6px 8px; text-align:left; }
   .bcard small { color:var(--mute); font-size:11px; }
   .dot { width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #0008; }
-  .pill { display:inline-block; padding:1px 7px; border-radius:99px; background:#24324d; font-size:12px; color:var(--mute); margin-right:4px; }
+  .pill { display:inline-block; padding:1px 7px; border-radius:99px; background:#24324d; font-size:12px; color:var(--mute); margin:0 4px 3px 0; }
+  .bar { height:6px; background:#0b1220; border-radius:9px; overflow:hidden; margin:4px 0 2px; }
+  .bar i { display:block; height:100%; background:#7fcf5a; }
   .preview { margin-top:8px; padding:8px; border:1px solid #6b2a26; background:#2a1414; border-radius:9px; }
   #modal { position:fixed; inset:0; z-index:10; background:rgba(5,9,18,.82); display:flex; align-items:center; justify-content:center; padding:14px; }
   #modal.hidden { display:none; }
   #modal .box { background:var(--panel); border:1px solid var(--line); border-radius:14px; width:min(520px,100%); max-height:92vh; overflow:auto; padding:16px; }
   #modal h1 { margin:0 0 4px; font-size:24px; letter-spacing:.5px; }
-  #modal h2 { margin:14px 0 6px; font-size:15px; color:var(--mute); text-transform:uppercase; letter-spacing:1px; }
+  #modal h2 { margin:14px 0 6px; font-size:13px; color:var(--mute); text-transform:uppercase; letter-spacing:1px; }
   .seg { display:flex; gap:6px; flex-wrap:wrap; }
   .seg button.on { background:#2a4f86; border-color:#4a7cc4; }
   .tech { border:1px solid var(--line); border-radius:10px; padding:8px 10px; margin-bottom:6px; display:flex; gap:10px; align-items:center; }
@@ -64,7 +66,7 @@
   <span class="stat" id="tTurn">Turn 1</span>
   <span class="stat" id="tSupply">⛽ 0</span>
   <span class="grow"></span>
-  <button id="bTech">🔬 Research</button>
+  <button id="bTech">🔬</button>
   <button id="bNext" title="Next ready unit">⏭</button>
   <button id="bEnd" class="primary">End Turn</button>
   <button id="bMenu">☰</button>
@@ -93,60 +95,94 @@ const TOWN_NAMES = ['Kessel','Ardena','Vostrel','Marrow','Halden','Tarsk','Bresk
 
 const TERRAIN = {
   plain:    { name:'Plains',        color:'#7fae62', def:1,    land:true  },
+  desert:   { name:'Desert',        color:'#d6c189', def:1,    land:true  },
   forest:   { name:'Forest',        color:'#4f8042', def:1.25, land:true  },
   hill:     { name:'Hills',         color:'#a99d62', def:1.5,  land:true  },
   mountain: { name:'Mountains',     color:'#8c8f94', def:2,    land:true  },
   shallow:  { name:'Coastal Water', color:'#4c9fc6', def:1,    land:false },
   ocean:    { name:'Deep Ocean',    color:'#215f8f', def:1,    land:false },
 };
+const RES = {
+  wheat: { name:'Wheat', icon:'🌾' },
+  iron:  { name:'Iron',  icon:'🔩' },
+  gold:  { name:'Gold',  icon:'🪙' },
+  oil:   { name:'Oil',   icon:'🛢️' },
+  fish:  { name:'Fish',  icon:'🐟' },
+};
 
-// air: damage multiplier vs aircraft (0 = cannot hit air). ground: multiplier vs surface targets (default 1).
+// air/orbit: damage multiplier vs aircraft / satellites (0 = cannot hit). ground: multiplier vs surface targets (default 1).
 const UNITS = {
-  infantry:  { name:'Infantry',        cost:2,  hp:10, atk:2,   def:2,   mv:1, rng:1, vis:2, dom:'land',  req:null,        cap:true, air:0.5,
+  infantry:  { name:'Infantry',        cost:3,  hp:10, atk:2,   def:2,   mv:1, rng:1, vis:2, dom:'land',  req:null,        cap:true, air:0.5,
                desc:'Cheap and steady. Captures cities. Can fire at low aircraft.' },
-  recon:     { name:'Recon Jeep',      cost:3,  hp:10, atk:1.5, def:1,   mv:3, rng:1, vis:3, dom:'land',  req:'motor',     cap:true,
+  worker:    { name:'Engineers',       cost:3,  hp:6,  atk:0,   def:1,   mv:2, rng:0, vis:2, dom:'land',  req:null,
+               desc:'Build roads, farms, mines, lumber camps, derricks, fisheries and bridges.' },
+  recon:     { name:'Recon Jeep',      cost:4,  hp:10, atk:1.5, def:1,   mv:3, rng:1, vis:3, dom:'land',  req:'motor',     cap:true,
                desc:'Fast scout with wide vision. Captures cities.' },
-  tank:      { name:'Battle Tank',     cost:8,  hp:20, atk:4,   def:3.5, mv:2, rng:1, vis:2, dom:'land',  req:'armor',     cap:true, heavy:true,
+  tank:      { name:'Battle Tank',     cost:10, hp:20, atk:4,   def:3.5, mv:2, rng:1, vis:2, dom:'land',  req:'armor',     cap:true, heavy:true,
                desc:'Heavy armor. Cannot cross mountains or hit aircraft.' },
-  artillery: { name:'Artillery',       cost:7,  hp:10, atk:4,   def:1,   mv:1, rng:3, minr:2, vis:2, dom:'land', req:'artillery', heavy:true,
+  artillery: { name:'Artillery',       cost:8,  hp:10, atk:4,   def:1,   mv:1, rng:3, minr:2, vis:2, dom:'land', req:'artillery', heavy:true,
                desc:'Shells targets 2–3 tiles away. Helpless up close.' },
-  aa:        { name:'AA Battery',      cost:6,  hp:14, atk:2,   def:2.5, mv:1, rng:2, vis:3, dom:'land',  req:'artillery', heavy:true, air:2.5,
+  aa:        { name:'AA Battery',      cost:7,  hp:14, atk:2,   def:2.5, mv:1, rng:2, vis:3, dom:'land',  req:'artillery', heavy:true, air:2.5,
                desc:'Shreds aircraft within 2 tiles.' },
-  destroyer: { name:'Destroyer',       cost:8,  hp:18, atk:3,   def:3,   mv:3, rng:2, vis:3, dom:'naval', req:'naval',     air:1, sonar:true,
+  transport: { name:'Transport Ship',  cost:5,  hp:10, atk:0,   def:1,   mv:3, rng:0, vis:2, dom:'naval', req:'seafaring', carry:2,
+               desc:'Carries 2 land units. Move a unit next to it to board; select the ship to unload.' },
+  destroyer: { name:'Destroyer',       cost:9,  hp:18, atk:3,   def:3,   mv:3, rng:2, vis:3, dom:'naval', req:'naval',     air:1, sonar:true,
                desc:'Fires 2 tiles. Sonar reveals subs within 2.' },
-  submarine: { name:'Submarine',       cost:9,  hp:12, atk:5,   def:1.5, mv:3, rng:1, vis:2, dom:'naval', req:'subs',      stealth:true,
+  submarine: { name:'Submarine',       cost:10, hp:12, atk:5,   def:1.5, mv:3, rng:1, vis:2, dom:'naval', req:'subs',      stealth:true,
                desc:'Invisible unless an enemy is adjacent or a destroyer is near.' },
-  fighter:   { name:'Fighter Jet',     cost:10, hp:14, atk:3,   def:3,   mv:5, rng:1, vis:3, dom:'air',   req:'aviation',  air:2, ground:0.5,
+  fighter:   { name:'Fighter Jet',     cost:12, hp:14, atk:3,   def:3,   mv:5, rng:1, vis:3, dom:'air',   req:'aviation',  air:2, ground:0.5,
                desc:'Air superiority. Flies over anything. Weak vs ground.' },
-  bomber:    { name:'Bomber',          cost:12, hp:14, atk:5,   def:1,   mv:4, rng:1, vis:2, dom:'air',   req:'bombing',   air:0,
+  bomber:    { name:'Bomber',          cost:14, hp:14, atk:5,   def:1,   mv:4, rng:1, vis:2, dom:'air',   req:'bombing',   air:0,
                desc:'Devastating vs ground and ships. Defenseless vs fighters.' },
-  satellite: { name:'Recon Satellite', cost:14, hp:1,  atk:0,   def:0,   mv:4, rng:0, vis:5, dom:'orbit', req:'space',
-               desc:'In orbit: cannot be attacked. Huge vision. After 2 turns it can be upgraded.' },
-  strikesat: { name:'Strike Satellite',cost:8,  hp:1,  atk:5,   def:0,   mv:3, rng:1, minr:0, vis:5, dom:'orbit', req:'orbital', noBuild:true,
-               desc:'Orbital strike on a tile at or next to it. Recharges for 2 turns.' },
+  satellite: { name:'Recon Satellite', cost:16, hp:6,  atk:0,   def:1,   mv:4, rng:0, vis:5, dom:'orbit', req:'space',
+               desc:'Launch reveals the whole map. Only Killer Satellites can hit it.' },
+  strikesat: { name:'Orbital Cannon',  cost:10, hp:8,  atk:5,   def:1.5, mv:3, rng:1, minr:0, vis:5, dom:'orbit', req:'orbital', noBuild:true,
+               desc:'Strikes ground or sea at or next to it. Recharges for 2 turns.' },
+  killersat: { name:'Killer Satellite',cost:18, hp:10, atk:4,   def:2,   mv:4, rng:1, minr:0, vis:4, dom:'orbit', req:'spacecontrol', orbit:1.5, ground:0,
+               desc:'Space control: hunts enemy satellites. Cannot hit the ground.' },
 };
 
 const TECH = {
-  motor:     { name:'Motor Pool',        base:4,  req:[],                     unlock:'Recon Jeep' },
-  armor:     { name:'Armored Warfare',   base:7,  req:['motor'],              unlock:'Battle Tank' },
-  artillery: { name:'Fire Support',      base:6,  req:[],                     unlock:'Artillery, AA Battery' },
-  industry:  { name:'Oil Industry',      base:5,  req:[],                     unlock:'Oil Derricks (+2 ⛽/turn)' },
-  naval:     { name:'Naval Command',     base:5,  req:[],                     unlock:'Destroyer (coastal cities)' },
-  subs:      { name:'Submarine Warfare', base:7,  req:['naval'],              unlock:'Submarine' },
-  aviation:  { name:'Air Force',         base:8,  req:['motor'],              unlock:'Fighter Jet' },
-  bombing:   { name:'Strategic Bombing', base:9,  req:['aviation'],           unlock:'Bomber' },
-  space:     { name:'Space Program',     base:12, req:['aviation','industry'],unlock:'Recon Satellite' },
-  orbital:   { name:'Orbital Weapons',   base:10, req:['space'],              unlock:'Upgrade satellites to Strike Satellites' },
+  mining:      { name:'Mining',             base:5,  req:[],                      unlock:'Mines on hills (more ⛽ on iron and gold)' },
+  motor:       { name:'Motor Pool',         base:6,  req:[],                      unlock:'Recon Jeep' },
+  seafaring:   { name:'Seafaring',          base:5,  req:[],                      unlock:'Transport Ship, Fisheries' },
+  artillery:   { name:'Fire Support',       base:8,  req:[],                      unlock:'Artillery, AA Battery' },
+  engineering: { name:'Engineering',        base:7,  req:['mining'],              unlock:'Bridges over coastal water' },
+  armor:       { name:'Armored Warfare',    base:10, req:['motor'],               unlock:'Battle Tank' },
+  industry:    { name:'Oil Industry',       base:8,  req:['mining'],              unlock:'Oil Derricks (+3 ⛽)' },
+  naval:       { name:'Naval Command',      base:8,  req:['seafaring'],           unlock:'Destroyer' },
+  subs:        { name:'Submarine Warfare',  base:10, req:['naval'],               unlock:'Submarine' },
+  aviation:    { name:'Air Force',          base:12, req:['motor','industry'],    unlock:'Fighter Jet' },
+  bombing:     { name:'Strategic Bombing',  base:13, req:['aviation'],            unlock:'Bomber' },
+  space:       { name:'Space Program',      base:18, req:['aviation'],            unlock:'Recon Satellite (reveals the map)' },
+  orbital:     { name:'Orbital Cannon',     base:14, req:['space'],               unlock:'Upgrade satellites into Orbital Cannons' },
+  spacecontrol:{ name:'Space Control',      base:16, req:['orbital'],             unlock:'Killer Satellites that destroy enemy satellites' },
 };
 
+const JOBS = {
+  road:    { name:'Road',        turns:1, icon:'🛣️' },
+  farm:    { name:'Farm',        turns:2, icon:'🌱' },
+  lumber:  { name:'Lumber Camp', turns:2, icon:'🪓' },
+  mine:    { name:'Mine',        turns:3, icon:'⛏️', tech:'mining' },
+  derrick: { name:'Oil Derrick', turns:3, icon:'🛢️', tech:'industry' },
+  fishery: { name:'Fishery',     turns:3, icon:'🎣', tech:'seafaring', adj:true },
+  bridge:  { name:'Bridge',      turns:4, icon:'🌉', tech:'engineering', adj:true },
+};
+
+const DIFF = [
+  { name:'Recruit', bonus:-1, attackMin:2.5, builds:1, research:0.35, peace:15 },
+  { name:'Veteran', bonus:0,  attackMin:0.8, builds:2, research:0.55, peace:8 },
+  { name:'General', bonus:2,  attackMin:0,   builds:99, research:0.8, peace:0 },
+];
+
 const DIRS = [[1,0],[0,1],[-1,1],[-1,0],[0,-1],[1,-1]]; // axial, pointy-top: E, SE, SW, W, NW, NE
-const DERRICK_COST = 5, UPGRADE_COST = 8, MAX_SATS = 2, MAX_LEVEL = 5;
+const UPGRADE_COST = 10, MAX_SATS = 3, MAX_LEVEL = 6;
 
 /* ---------------- state ---------------- */
-let S = null;               // full game state (serialisable)
-let visCache = {}, fieldCache = new Map();
-let sel = null;             // {kind:'unit'|'city'|'tile', id, i}
-let reach = new Map(), tgts = [], pending = null;
+let S = null;
+let visCache = {}, fieldCache = new Map(), occVer = -1;
+const occMap = new Map();
+let sel = null, reach = new Map(), tgts = [], pending = null, mode = null;
 let busy = false, dirty = true;
 const floats = [];
 const cam = { x:0, y:0, z:1 };
@@ -155,6 +191,19 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+class Heap { // min-heap on [key, value]
+  constructor() { this.a = []; }
+  get size() { return this.a.length; }
+  push(k, v) { const a = this.a; a.push([k, v]); let i = a.length - 1;
+    while (i > 0) { const p = (i - 1) >> 1; if (a[p][0] <= a[i][0]) break; [a[p], a[i]] = [a[i], a[p]]; i = p; } }
+  pop() { const a = this.a, top = a[0], last = a.pop();
+    if (a.length) { a[0] = last; let i = 0;
+      for (;;) { const l = 2 * i + 1, r = l + 1; let m = i;
+        if (l < a.length && a[l][0] < a[m][0]) m = l; if (r < a.length && a[r][0] < a[m][0]) m = r;
+        if (m === i) break; [a[m], a[i]] = [a[i], a[m]]; i = m; } }
+    return top; }
+}
 
 /* ---------------- hex helpers ---------------- */
 const idx = (c, r) => r * S.w + c;
@@ -185,27 +234,45 @@ const hexPos = (c, r) => [HEX * SQ3 * (c + 0.5 * (r & 1)) + HEX, HEX * 1.5 * r +
 const tileOf = o => S.tiles[idx(o.c, o.r)];
 const layerOf = u => UNITS[u.type].dom === 'orbit' ? 'orbit' : 'surface';
 const unitById = id => S.units.find(u => u.id === id);
-function unitAt(t, layer = 'surface') { return S.units.find(u => u.c === t.c && u.r === t.r && layerOf(u) === layer) || null; }
+function unitAt(t, layer = 'surface') {
+  if (occVer !== S.ver) { occMap.clear(); for (const u of S.units) occMap.set((layerOf(u) === 'orbit' ? 'o' : 's') + idx(u.c, u.r), u); occVer = S.ver; }
+  return occMap.get((layer === 'orbit' ? 'o' : 's') + t.i) || null;
+}
 const cityAt = t => t.city >= 0 ? S.cities[t.city] : null;
 const citiesOf = p => S.cities.filter(c => c.owner === p);
 const unitsOf = p => S.units.filter(u => u.owner === p);
 const ownerOf = t => t.claim >= 0 ? S.cities[t.claim].owner : -1;
 const isWater = t => !TERRAIN[t.t].land;
+const isLand = t => TERRAIN[t.t].land;
+const hasRoad = t => t.road || t.bridge || t.city >= 0;
 const isCoastal = city => neighbors(tileOf(city)).some(n => n && isWater(n));
 const has = (p, k) => S.players[p].tech.includes(k);
 const bump = () => { S.ver++; dirty = true; };
+const diff = () => DIFF[S.diff];
 
+function tileYield(t) {
+  const y = { food:0, supply:0 };
+  if (t.imp === 'farm') y.food = 1 + (t.res === 'wheat' ? 1 : 0);
+  if (t.imp === 'fishery') y.food = 2;
+  if (t.imp === 'lumber') y.supply = 1;
+  if (t.imp === 'mine') y.supply = 1 + (t.res === 'iron' ? 1 : 0) + (t.res === 'gold' ? 2 : 0);
+  if (t.imp === 'derrick') y.supply = 3;
+  return y;
+}
+function foodRate(c) { let f = 1; for (const t of S.tiles) if (t.claim === c.id) f += tileYield(t).food; return f; }
+const growNeed = c => 2 + 3 * c.level;
+function cityIncome(c) { return 1 + c.level + (c.capital ? 2 : 0); }
 function income(p) {
   let s = 0;
-  for (const c of citiesOf(p)) s += 1 + c.level + (c.capital ? 2 : 0);
-  for (const t of S.tiles) if (t.derrick && ownerOf(t) === p) s += 2;
-  if (S.players[p].ai) s += S.aiBonus;
-  return s;
+  for (const c of citiesOf(p)) s += cityIncome(c);
+  for (const t of S.tiles) if (t.imp && ownerOf(t) === p) s += tileYield(t).supply;
+  if (S.players[p].ai) s += diff().bonus;
+  return Math.max(1, s);
 }
-const unitCap = p => citiesOf(p).reduce((a, c) => a + c.level + 1, 0);
-const unitCount = p => unitsOf(p).filter(u => UNITS[u.type].dom !== 'orbit').length;
-const techCost = (p, k) => TECH[k].base + 2 * Math.max(0, citiesOf(p).length - 1);
-const expandCost = c => 4 * c.level;
+const unitCap = p => citiesOf(p).reduce((a, c) => a + c.level + 2, 0);
+const unitCount = p => unitsOf(p).reduce((a, u) => a + (UNITS[u.type].dom === 'orbit' ? 0 : 1 + (u.cargo ? u.cargo.length : 0)), 0);
+const satCount = p => unitsOf(p).filter(u => UNITS[u.type].dom === 'orbit').length;
+const techCost = (p, k) => TECH[k].base + 3 * Math.max(0, citiesOf(p).length - 1);
 const techReady = (p, k) => TECH[k].req.every(r => has(p, r));
 
 /* ---------------- map generation ---------------- */
@@ -220,38 +287,57 @@ function makeNoise(w, h, cell) {
     return a * (1 - sy) + b * sy;
   };
 }
+function blankTile(c, r, w) { return { c, r, i: r * w + c, t:'ocean', res:null, imp:null, road:false, bridge:false, city:-1, claim:-1 }; }
+function addShallows() { for (const t of S.tiles) if (t.t === 'ocean' && neighbors(t).some(n => n && isLand(n))) t.t = 'shallow'; }
+function sprinkleResources() {
+  for (const t of S.tiles) {
+    if (t.city >= 0) continue;
+    const r = Math.random();
+    if (t.t === 'plain') t.res = r < 0.12 ? 'wheat' : r < 0.16 ? 'oil' : null;
+    else if (t.t === 'desert') t.res = r < 0.16 ? 'oil' : null;
+    else if (t.t === 'hill') t.res = r < 0.16 ? 'iron' : r < 0.22 ? 'gold' : r < 0.26 ? 'oil' : null;
+    else if (t.t === 'mountain') t.res = r < 0.12 ? 'gold' : null;
+    else if (t.t === 'shallow') t.res = r < 0.14 ? 'fish' : null;
+  }
+}
+function addCity(t, owner, capital, name) {
+  const id = S.cities.length;
+  S.cities.push({ id, c:t.c, r:t.r, name, owner, level: capital ? 2 : 1, capital, built:false, food:0 });
+  t.city = id; t.res = null; if (t.t === 'mountain' || t.t === 'forest') t.t = 'plain';
+}
+function landComponents() {
+  const seen = new Uint8Array(S.tiles.length), comps = [];
+  for (const t of S.tiles) {
+    if (seen[t.i] || !isLand(t)) continue;
+    const comp = [], st = [t]; seen[t.i] = 1;
+    while (st.length) { const x = st.pop(); comp.push(x); for (const n of neighbors(x)) if (n && !seen[n.i] && isLand(n)) { seen[n.i] = 1; st.push(n); } }
+    comps.push(comp);
+  }
+  return comps.sort((a, b) => b.length - a.length);
+}
 
-function generate(w, h, nPlayers) {
+function generateRandom(w, h, nPlayers) {
   for (let attempt = 0; attempt < 60; attempt++) {
-    S.tiles = []; S.cities = [];
-    const n1 = makeNoise(w, h, 5), n2 = makeNoise(w, h, 2.2), n3 = makeNoise(w, h, 3);
-    const elev = [];
+    S.w = w; S.h = h; S.tiles = []; S.cities = [];
+    const n1 = makeNoise(w, h, 5), n2 = makeNoise(w, h, 2.2), n3 = makeNoise(w, h, 3), n4 = makeNoise(w, h, 4);
+    const elev = [], fv = [], dv = [];
     for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) {
       const x = c + 0.5 * (r & 1), y = r * 0.866;
       let e = n1(x, y) * 0.65 + n2(x, y) * 0.35;
       const edge = Math.min(1, Math.min(c + 1, w - c, r + 1, h - r) / 3);
-      e *= 0.5 + 0.5 * edge;
-      elev.push(e);
-      S.tiles.push({ c, r, i: r * w + c, t:'plain', oil:false, derrick:false, city:-1, claim:-1, f: n3(x, y) });
+      elev.push(e * (0.5 + 0.5 * edge)); fv.push(n3(x, y)); dv.push(n4(x, y));
+      S.tiles.push(blankTile(c, r, w));
     }
     const sorted = [...elev].sort((a, b) => a - b), N = elev.length;
     const water = sorted[Math.floor(N * 0.38)], hill = sorted[Math.floor(N * 0.85)], mtn = sorted[Math.floor(N * 0.95)];
     for (const t of S.tiles) {
       const e = elev[t.i];
-      t.t = e < water ? 'ocean' : e >= mtn ? 'mountain' : e >= hill ? 'hill' : t.f > 0.6 ? 'forest' : 'plain';
+      t.t = e < water ? 'ocean' : e >= mtn ? 'mountain' : e >= hill ? 'hill' : fv[t.i] > 0.6 ? 'forest' : dv[t.i] > 0.72 ? 'desert' : 'plain';
     }
-    for (const t of S.tiles) if (t.t === 'ocean' && neighbors(t).some(n => n && TERRAIN[n.t].land)) t.t = 'shallow';
-    // largest land mass
-    const seen = new Uint8Array(N); let best = [];
-    for (const t of S.tiles) {
-      if (seen[t.i] || !TERRAIN[t.t].land) continue;
-      const comp = [], st = [t]; seen[t.i] = 1;
-      while (st.length) { const x = st.pop(); comp.push(x); for (const n of neighbors(x)) if (n && !seen[n.i] && TERRAIN[n.t].land) { seen[n.i] = 1; st.push(n); } }
-      if (comp.length > best.length) best = comp;
-    }
-    const landCount = S.tiles.filter(t => TERRAIN[t.t].land).length;
+    addShallows();
+    const comps = landComponents(), best = comps[0] || [];
+    const landCount = S.tiles.filter(isLand).length;
     if (best.length < landCount * 0.55 || best.length < nPlayers * 14) continue;
-    // capitals: farthest-point sampling
     const cand = best.filter(t => t.t !== 'mountain');
     const caps = [pick(cand)];
     while (caps.length < nPlayers) {
@@ -259,26 +345,170 @@ function generate(w, h, nPlayers) {
       for (const t of cand) { const d = Math.min(...caps.map(c => dist(c, t))); if (d > bd) { bd = d; bt = t; } }
       caps.push(bt);
     }
-    // re-pick the first one farthest from others too
     const minSep = Math.min(...caps.flatMap((a, i) => caps.slice(i + 1).map(b => dist(a, b))));
     if (minSep < Math.max(4, Math.floor(Math.min(w, h) / 3))) continue;
     const names = shuffle([...TOWN_NAMES]);
-    const addCity = (t, owner, capital) => {
-      const id = S.cities.length;
-      S.cities.push({ id, c:t.c, r:t.r, name:names[id % names.length], owner, level: capital ? 2 : 1, capital, built:false });
-      t.city = id; if (t.t === 'mountain' || t.t === 'forest') t.t = 'plain';
-    };
-    shuffle(caps).forEach((t, p) => addCity(t, p, true));
+    shuffle(caps).forEach((t, p) => addCity(t, p, true, names.pop()));
     const target = Math.round(landCount / 12);
-    for (const t of shuffle(S.tiles.filter(t => TERRAIN[t.t].land && t.t !== 'mountain'))) {
+    for (const t of shuffle(S.tiles.filter(t => isLand(t) && t.t !== 'mountain'))) {
       if (S.cities.length >= nPlayers + target) break;
-      if (S.cities.every(c => dist(c, t) >= 3)) addCity(t, -1, false);
+      if (S.cities.every(c => dist(c, t) >= 3)) addCity(t, -1, false, names.pop() || 'Outpost');
     }
-    for (const t of S.tiles) if ((t.t === 'plain' || t.t === 'hill') && t.city < 0 && Math.random() < 0.09) t.oil = true;
-    for (const t of S.tiles) delete t.f;
+    sprinkleResources();
     return true;
   }
   return false;
+}
+
+/* ----- Earth maps: coarse coastlines (lon, lat) and terrain rules ----- */
+function inPoly(x, y, poly) {
+  let ins = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) ins = !ins;
+  }
+  return ins;
+}
+function segDist(px, py, pts) {
+  let best = Infinity;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [ax, ay] = pts[i], [bx, by] = pts[i + 1], dx = bx - ax, dy = by - ay;
+    const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)));
+    best = Math.min(best, Math.hypot(px - ax - t * dx, py - ay - t * dy));
+  }
+  return best;
+}
+const EARTH = {
+  usa: {
+    name:'North America', w:36, h:22, lon:[-125, -66], lat:[24, 50],
+    land: [[
+      [-124,50],[-124.7,48.4],[-124,46],[-124.1,43],[-124.4,40.4],[-123.8,39],[-122.5,37.8],[-121.9,36.6],[-120.6,34.6],[-118.5,34],
+      [-117.1,32.5],[-116,30],[-114,27.5],[-112,25],[-110,23],[-110.5,24.5],[-112,27],[-114.5,30.5],[-114.8,31.8],[-113,31.3],
+      [-111,29],[-109.5,26.5],[-107,24.5],[-105.7,22.5],[-97.8,22.5],[-97.7,24],[-97.2,26],[-97.4,27.8],[-95,29.3],[-93.8,29.7],
+      [-91.5,29.3],[-89.5,29],[-89.4,30.2],[-88,30.4],[-86,30.3],[-84.3,30],[-83,29],[-82.7,27.5],[-81.8,26],[-81,25.1],[-80.4,25.2],
+      [-80,26.5],[-80.6,28.5],[-81.4,30.5],[-81,32],[-79,33.3],[-77.9,34],[-76,35.2],[-75.5,35.6],[-76,37],[-75,38.5],[-74,39.5],
+      [-74,40.6],[-72,41],[-70,41.6],[-70.8,42.6],[-70.2,43.7],[-68,44.4],[-67,44.8],[-65,45],[-65,50]
+    ]],
+    water: [
+      [[-92,46.7],[-89,48.2],[-85,47.2],[-84.5,46.5],[-87,46.4]],                 // Superior
+      [[-87.9,41.8],[-87.6,45.6],[-85,45.9],[-86.4,42.4]],                         // Michigan
+      [[-84.6,45.9],[-82,45.6],[-82.4,43.1],[-81.6,44.4],[-80.4,45.4]],           // Huron
+      [[-83.4,41.5],[-78.9,42.9],[-79.2,42.6],[-82.5,41.4]],                       // Erie
+      [[-79.9,43.3],[-76.2,43.5],[-76.4,44.2],[-79.4,43.8]],                       // Ontario
+    ],
+    terrain(lon, lat, n, m) {
+      const rockies = -105.5 - (lat - 36) * 0.6;
+      if (lat > 35 && Math.abs(lon - rockies) < 2.4) return n > 0.42 ? 'mountain' : 'hill';
+      const sierra = -119.5 - (lat - 36.5) * 0.18;
+      if (lat > 35.5 && Math.abs(lon - sierra) < 0.9) return n > 0.45 ? 'mountain' : 'hill';
+      if (segDist(lon, lat, [[-85.5, 33.6], [-80, 38], [-75, 42], [-72, 44.5]]) < 1.3) return n > 0.78 ? 'mountain' : 'hill';
+      if (lat < 30 && lon > -108.5 && lon < -103.5) return n > 0.5 ? 'mountain' : 'hill';
+      if (lat < 37 && lon > -118 && lon < -102.5) return n > 0.72 ? 'hill' : 'desert';
+      if (lat >= 37 && lat < 43.5 && lon > -120 && lon < -110.5) return n > 0.6 ? 'hill' : 'desert';
+      if (lon < -120 && lat > 41) return 'forest';
+      if (lon >= -104 && lon < -95) return m > 0.82 ? 'forest' : 'plain';
+      if (lat > 47.5 && lon > -95) return m > 0.3 ? 'forest' : 'plain';
+      if (lon >= -95) return m > 0.48 ? 'forest' : 'plain';
+      return m > 0.7 ? 'forest' : 'plain';
+    },
+    cities: [['Seattle',-122.3,47.6],['Portland',-122.7,45.5],['San Francisco',-122.4,37.8],['Los Angeles',-118.2,34],['Las Vegas',-115.1,36.2],
+      ['Phoenix',-112,33.4],['Salt Lake City',-111.9,40.8],['Boise',-116.2,43.6],['Billings',-108.5,45.8],['Denver',-105,39.7],
+      ['Albuquerque',-106.6,35.1],['El Paso',-106.5,31.8],['Dallas',-96.8,32.8],['Houston',-95.4,29.8],['Kansas City',-94.6,39.1],
+      ['Omaha',-96,41.3],['Minneapolis',-93.3,45],['Winnipeg',-97.1,49.4],['Chicago',-87.6,41.9],['St. Louis',-90.2,38.6],
+      ['New Orleans',-90,30],['Nashville',-86.8,36.2],['Atlanta',-84.4,33.7],['Miami',-80.2,25.8],['Charlotte',-80.8,35.2],
+      ['Washington',-77,38.9],['Pittsburgh',-80,40.4],['Detroit',-83,42.3],['New York',-74,40.7],['Boston',-71,42.4],
+      ['Toronto',-79.4,43.7],['Montreal',-73.6,45.5],['Monterrey',-100.3,25.7],['Chihuahua',-106.1,28.6],['Hermosillo',-111,29.1]],
+    caps: { 2:['Los Angeles','New York'], 3:['Seattle','Houston','New York'], 4:['Los Angeles','New York','Chicago','Houston'] },
+  },
+  europe: {
+    name:'Europe', w:36, h:26, lon:[-11, 45], lat:[35, 61],
+    land: [
+      [ // mainland
+        [21.5,61],[45,61],[45,35],[36,35],[36,36.5],[34,36.2],[32,36.2],[30.5,36.6],[28,36.8],[27.2,37.5],[26.3,38.5],[26.6,39.5],[26.2,40],
+        [26.5,40.6],[25,40.9],[23.5,40.3],[22.6,40.5],[22.9,39.4],[23.5,38],[22.9,37.5],[22.5,36.4],[21.7,36.8],[21.3,38],[20.7,39],
+        [20,39.8],[19.4,40.5],[19.5,41.8],[18.5,42.5],[17,43.2],[15.9,43.7],[15.2,44.3],[14,44.9],[13.6,45.6],[12.4,45.4],[12.2,44.5],
+        [13.5,43.6],[14.2,42.4],[16,41.5],[17,41],[18.5,40.2],[18.4,39.8],[17,40.4],[16.6,38.9],[16,38],[15.6,38],[15.7,39.4],[15.6,40],
+        [14.5,40.7],[13,41.3],[12,41.9],[11,42.5],[10.5,43.3],[9.8,44.1],[8.8,44.4],[7.5,43.8],[6.5,43.1],[5,43.3],[4,43.5],[3.1,43],
+        [3.2,42],[2,41.2],[0.8,40.7],[0,39.8],[-0.3,39],[0.2,38.7],[-0.6,37.6],[-2.1,36.7],[-4.4,36.7],[-5.6,36],[-6.3,36.7],[-7.4,37.2],
+        [-8.9,37],[-8.8,38.7],[-9.4,39.4],[-8.9,40.5],[-8.8,42],[-9.3,43],[-8,43.7],[-5.8,43.6],[-3.8,43.4],[-1.8,43.4],[-1.2,44.6],
+        [-1.2,46],[-2.2,47.1],[-4.5,47.9],[-4.7,48.5],[-3,48.8],[-1.6,48.6],[-1.4,49.7],[0.2,49.5],[1.6,50.2],[2.5,51.1],[3.6,51.4],
+        [4.5,52.5],[5,53.2],[7,53.5],[8.6,53.9],[8.7,55.5],[8.2,56.8],[10.5,57.7],[10.6,56.5],[10.2,55.6],[10.9,54.4],[12,54.2],[14,54],
+        [16,54.5],[18.5,54.8],[19.5,54.4],[21,55.3],[21,56.5],[21.6,57.5],[23,57.2],[24.3,57.2],[24,58.3],[23.5,59.2],[25,59.5],[28,59.5],
+        [29.5,60],[27,60.5],[23,59.9],[22.2,60.3],[21.4,60.7]
+      ],
+      [[5,61],[5,60],[5.5,59],[6,58.2],[8,58],[10,59],[11.2,58.8],[12,57.6],[12.8,56.2],[14,55.4],[16,56.2],[16.6,57.5],[18,59],[18.5,60],[17.3,61]], // Scandinavia
+      [[-5.7,50],[-3,50.6],[-1,50.7],[1.4,51.2],[1.7,52.6],[0.3,53.4],[-0.1,54.1],[-1.3,54.8],[-1.6,55.6],[-2,56],[-2.8,56.5],[-1.8,57.6],
+       [-3.3,58.6],[-5,58.6],[-6.2,57.5],[-5.6,56.3],[-5,55.3],[-3.2,54.8],[-3.2,54],[-3,53.3],[-4.6,53.3],[-4.2,52.2],[-5.2,51.7],[-3.2,51.4],[-4.2,51.2]], // Britain
+      [[-6,52.2],[-6.1,53.8],[-5.5,54.6],[-6.2,55.2],[-7.5,55.3],[-8.5,54.4],[-10,54.2],[-9.5,53],[-10.4,52],[-9.8,51.5],[-8.2,51.8]], // Ireland
+      [[12.4,38.1],[15.6,38.3],[15.1,36.7],[12.4,37.6]],          // Sicily
+      [[8.3,38.9],[9.8,39.1],[9.7,41.2],[8.2,41]],                // Sardinia
+      [[8.6,41.4],[9.5,42.6],[9.3,43.1],[8.5,42.4]],              // Corsica
+      [[-11,35],[-6,35.8],[-5.5,35.9],[-2,35.2],[1,36.5],[5,36.9],[8,36.9],[10,37.4],[11.2,37],[11,35]], // North Africa
+    ],
+    water: [
+      [[28.9,41.2],[31,41.1],[33,42],[35,42.1],[36.5,41.4],[38,41],[40,41],[41.5,41.5],[41.6,42.6],[40,43.4],[38,44.5],[37.5,45.3],
+       [36.5,45.4],[35,45],[33.5,44.5],[32.5,45.4],[33.6,46],[31,46.6],[30,46],[29.6,45.2],[28.7,44.3],[28,43],[27.9,42]], // Black Sea
+      [[35,45.6],[39.2,47.2],[38,47.1],[35.5,46.5]],              // Azov
+    ],
+    terrain(lon, lat, n, m) {
+      if (lat > 45.6 && lat < 47.8 && lon > 6 && lon < 15.5) return n > 0.35 ? 'mountain' : 'hill';
+      if (lat > 42.4 && lat < 43.2 && lon > -1.8 && lon < 3) return 'mountain';
+      if (segDist(lon, lat, [[17.5, 49.3], [22, 49], [25, 47.8], [26, 46], [24, 45.4], [22.5, 45.2]]) < 1) return n > 0.55 ? 'mountain' : 'hill';
+      if (lat > 41.8 && lat < 44 && lon > 39.5) return 'mountain';
+      if (lat < 37.3 && lon < 12) return n > 0.6 ? 'hill' : 'desert';
+      if (lat < 37 && lon > 36) return 'desert';
+      if (lat < 41.6 && lon > 26) return lon > 38 ? (n > 0.45 ? 'mountain' : 'hill') : (n > 0.55 ? 'hill' : 'plain');
+      if (lon > 17 && lon < 27 && lat > 40.5 && lat < 44.6) return n > 0.65 ? 'mountain' : n > 0.35 ? 'hill' : 'forest';
+      if (lon > 10.5 && lon < 18.6 && lat > 37.9 && lat < 44.3) return n > 0.5 ? 'hill' : 'plain';
+      if (lat > 58 && lon > 4.5 && lon < 12.8) return n > 0.5 ? 'mountain' : 'hill';
+      if (lat > 56 && lon < -3) return n > 0.4 ? 'hill' : 'plain';
+      if (lat < 43.5 && lon < 3.3) return n > 0.55 ? 'hill' : (n < 0.2 && lat < 39 ? 'desert' : 'plain');
+      if (lat > 55 && lon > 12) return m > 0.35 ? 'forest' : 'plain';
+      if (lat < 50 && lon > 30) return m > 0.85 ? 'forest' : 'plain';
+      return m > 0.58 ? 'forest' : 'plain';
+    },
+    cities: [['London',-0.1,51.5],['Edinburgh',-3.2,56],['Dublin',-6.3,53.35],['Paris',2.35,48.85],['Marseille',5.4,43.3],['Bordeaux',-0.6,44.8],
+      ['Madrid',-3.7,40.4],['Lisbon',-9.1,38.7],['Barcelona',2.2,41.4],['Seville',-6,37.4],['Brussels',4.35,50.85],['Amsterdam',4.9,52.4],
+      ['Hamburg',10,53.55],['Berlin',13.4,52.5],['Munich',11.6,48.1],['Copenhagen',12.6,55.7],['Oslo',10.7,59.9],['Stockholm',18,59.3],
+      ['Helsinki',24.9,60.2],['Milan',9.2,45.5],['Rome',12.5,41.9],['Naples',14.3,40.85],['Vienna',16.4,48.2],['Prague',14.4,50.1],
+      ['Warsaw',21,52.2],['Budapest',19,47.5],['Belgrade',20.5,44.8],['Bucharest',26.1,44.4],['Sofia',23.3,42.7],['Athens',23.7,38],
+      ['Istanbul',29,41],['Ankara',32.9,39.9],['Riga',24.1,56.95],['Minsk',27.6,53.9],['Kyiv',30.5,50.45],['Odesa',30.7,46.5],
+      ['St. Petersburg',30.3,59.9],['Moscow',37.6,55.75],['Smolensk',32,54.8],['Kharkiv',36.2,50],['Volgograd',44.5,48.7],
+      ['Kazan',44,56.3],['Algiers',3,36.7],['Tunis',10.2,36.8],['Palermo',13.4,38.1]],
+    caps: { 2:['Paris','Moscow'], 3:['Paris','Moscow','Istanbul'], 4:['Paris','Moscow','Rome','Berlin'] },
+  },
+};
+
+function generateEarth(key, nPlayers) {
+  const E = EARTH[key], w = E.w, h = E.h;
+  S.w = w; S.h = h; S.tiles = []; S.cities = [];
+  const n1 = makeNoise(w, h, 2.5), n2 = makeNoise(w, h, 3);
+  const lonOf = (c, r) => E.lon[0] + (c + 0.5 + 0.5 * (r & 1)) / (w + 0.5) * (E.lon[1] - E.lon[0]);
+  const latOf = r => E.lat[1] - (r + 0.5) / h * (E.lat[1] - E.lat[0]);
+  for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) {
+    const t = blankTile(c, r, w), lon = lonOf(c, r), lat = latOf(r);
+    const land = E.land.some(p => inPoly(lon, lat, p)) && !E.water.some(p => inPoly(lon, lat, p));
+    const x = c + 0.5 * (r & 1), y = r * 0.866;
+    t.t = land ? E.terrain(lon, lat, n1(x, y), n2(x, y)) : 'ocean';
+    S.tiles.push(t);
+  }
+  addShallows();
+  const tileFor = (lon, lat) => {
+    const r = Math.max(0, Math.min(h - 1, Math.round((E.lat[1] - lat) / (E.lat[1] - E.lat[0]) * h - 0.5)));
+    const c = Math.max(0, Math.min(w - 1, Math.round((lon - E.lon[0]) / (E.lon[1] - E.lon[0]) * (w + 0.5) - 0.5 - 0.5 * (r & 1))));
+    const t0 = S.tiles[idx(c, r)];
+    const opts = within(t0, 1).filter(t => isLand(t) && t.city < 0 && S.cities.every(ct => dist(ct, t) >= 2))
+      .sort((a, b) => dist(a, t0) - dist(b, t0) || (a.t === 'mountain') - (b.t === 'mountain'));
+    return opts[0] || null;
+  };
+  const capNames = E.caps[nPlayers];
+  capNames.forEach((nm, p) => { const d = E.cities.find(x => x[0] === nm); const t = tileFor(d[1], d[2]); addCity(t, p, true, nm); });
+  for (const [nm, lon, lat] of E.cities) {
+    if (capNames.includes(nm)) continue;
+    const t = tileFor(lon, lat); if (t) addCity(t, -1, false, nm);
+  }
+  sprinkleResources();
+  return true;
 }
 
 function recomputeTerritory() {
@@ -288,32 +518,36 @@ function recomputeTerritory() {
 }
 
 /* ---------------- new game / save ---------------- */
+const SAVE_KEY = 'ironfront_save_v2';
 function newGame(opts) {
-  const n = opts.ai + 1, size = opts.size;
-  S = { w:size, h:size, tiles:[], cities:[], units:[], players:[], turn:1, cur:0, ver:1, nextId:1,
-        explored:[], spectate: !!opts.spectate, aiBonus: [0, 1, 3][opts.diff], over:false, log:[] };
-  if (!generate(size, size, n)) { toast('Map generation failed, try again'); return; }
+  const n = opts.ai + 1;
+  S = { w:0, h:0, tiles:[], cities:[], units:[], players:[], turn:1, cur:0, ver:1, nextId:1, map: opts.map || 'random',
+        explored:[], spectate: !!opts.spectate, diff: opts.diff, over:false };
+  occVer = -1; visCache = {}; fieldCache.clear();
+  const ok = S.map === 'random' ? generateRandom(opts.size, opts.size, n) : generateEarth(S.map, n);
+  if (!ok) { toast('Map generation failed, try again'); return; }
   for (let p = 0; p < n; p++) {
-    S.players.push({ id:p, name:PNAME[p], color:PCOL[p], ai: p > 0 || !!opts.spectate, supply:5, tech:[], alive:true,
+    S.players.push({ id:p, name:PNAME[p], color:PCOL[p], ai: p > 0 || !!opts.spectate, supply:4, tech:[], alive:true,
                      order: shuffle(Object.keys(TECH)).sort((a, b) => TECH[a].base - TECH[b].base + rand(-4, 4)) });
   }
   S.explored = new Array(S.tiles.length).fill(0);
   recomputeTerritory();
   for (const c of S.cities) if (c.capital) {
-    const spot = neighbors(tileOf(c)).find(n => n && TERRAIN[n.t].land && n.t !== 'mountain' && n.city < 0) || tileOf(c);
-    spawn('infantry', c.owner, spot, false);
+    const spots = neighbors(tileOf(c)).filter(n => n && isLand(n) && n.t !== 'mountain' && n.city < 0);
+    spawn('infantry', c.owner, spots[0] || tileOf(c), false);
+    if (spots[1]) spawn('worker', c.owner, spots[1], false);
   }
-  visCache = {}; sel = null; clearSel();
+  sel = null; clearSel();
+  cam.z = S.map === 'random' ? 1 : 0.85;
   centerOn(tileOf(S.cities.find(c => c.capital && c.owner === 0)));
   closeModal();
   startTurn(0);
   if (S.players[0].ai) runAI();
 }
-
-function save() { if (!S || S.over || S.spectate) return; try { localStorage.setItem('ironfront_save', JSON.stringify(S)); } catch (e) {} }
+function save() { if (!S || S.over || S.spectate) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
 function load() {
-  try { const s = JSON.parse(localStorage.getItem('ironfront_save')); if (!s) return false;
-    S = s; visCache = {}; fieldCache.clear(); clearSel();
+  try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (!s) return false;
+    S = s; occVer = -1; visCache = {}; fieldCache.clear(); clearSel();
     centerOn(tileOf(S.cities.find(c => c.owner === 0) || S.cities[0])); closeModal(); refreshUI(); return true;
   } catch (e) { return false; }
 }
@@ -339,45 +573,47 @@ function seesUnit(p, u) {
   }
   return true;
 }
-function updateExplored() {
-  if (S.spectate) return;
-  for (const i of getVis(0)) S.explored[i] = 1;
-}
+const seesTile = (p, t) => S.spectate || getVis(p).has(t.i);
+function updateExplored() { if (S.spectate) return; for (const i of getVis(0)) S.explored[i] = 1; }
 
 /* ---------------- movement ---------------- */
-function moveCost(u, t) {
+function moveCost(u, t, from) {
   const U = UNITS[u.type];
   if (U.dom === 'air' || U.dom === 'orbit') return 1;
   const city = cityAt(t);
   if (U.dom === 'naval') return (isWater(t) || (city && city.owner === u.owner)) ? 1 : Infinity;
-  if (isWater(t)) return Infinity;
+  const roadHop = from && hasRoad(from) && hasRoad(t);
+  if (isWater(t)) return t.bridge ? (roadHop ? 0.5 : 1) : Infinity;
+  if (roadHop) return 0.5;
   if (city) return 1;
   if (t.t === 'mountain') return U.heavy ? Infinity : 3;
   return (t.t === 'forest' || t.t === 'hill') ? 2 : 1;
 }
 function zocAt(t, p) {
   return neighbors(t).some(n => { if (!n) return false; const e = unitAt(n);
-    return e && e.owner !== p && UNITS[e.type].dom !== 'air' && seesUnit(p, e); });
+    return e && e.owner !== p && UNITS[e.type].dom !== 'air' && UNITS[e.type].atk > 0 && seesUnit(p, e); });
 }
+const canBoard = (u, t) => { const tr = unitAt(t); return UNITS[u.type].dom === 'land' && tr && tr.owner === u.owner && tr.type === 'transport' && (tr.cargo || []).length < UNITS.transport.carry; };
 function reachable(u) {
   const res = new Map(); if (u.moved) return res;
   const U = UNITS[u.type], layer = layerOf(u), start = tileOf(u);
   const zoc = U.dom === 'land' || U.dom === 'naval';
-  const best = new Map([[start.i, U.mv]]), pq = [[U.mv, start]];
-  while (pq.length) {
-    pq.sort((a, b) => a[0] - b[0]);
-    const [rem, t] = pq.pop();
+  const best = new Map([[start.i, U.mv]]), pq = new Heap(); pq.push(-U.mv, start);
+  const board = new Set();
+  while (pq.size) {
+    const [nk, t] = pq.pop(), rem = -nk;
     if (best.get(t.i) > rem) continue;
     if (t !== start && zoc && zocAt(t, u.owner)) continue;
     if (rem <= 0) continue;
     for (const n of neighbors(t)) {
       if (!n) continue;
-      const cost = moveCost(u, n); if (cost === Infinity) continue;
+      if (U.dom === 'land' && isWater(n) && !n.bridge) { if (canBoard(u, n)) board.add(n.i); continue; }
+      const cost = moveCost(u, n, t); if (cost === Infinity) continue;
       if (rem < cost && rem !== U.mv) continue;
       const occ = unitAt(n, layer);
       if (occ && occ.owner !== u.owner) continue;
       const nr = Math.max(0, rem - cost);
-      if (!best.has(n.i) || best.get(n.i) < nr) { best.set(n.i, nr); pq.push([nr, n]); }
+      if (!best.has(n.i) || best.get(n.i) < nr) { best.set(n.i, nr); pq.push(-nr, n); }
     }
   }
   for (const [i, rem] of best) {
@@ -386,20 +622,42 @@ function reachable(u) {
     if (c && c.owner !== u.owner && !U.cap && layer === 'surface') continue; // only capturers may stop on foreign cities
     res.set(i, rem);
   }
+  for (const i of board) res.set(i, -1);
   return res;
 }
 function moveUnit(u, t) {
   const [fx, fy] = hexPos(u.c, u.r);
+  u.job = null;
+  if (UNITS[u.type].dom === 'land' && isWater(t) && !t.bridge) { // board a transport
+    const tr = unitAt(t);
+    S.units = S.units.filter(o => o !== u);
+    u.moved = u.attacked = true; tr.cargo = tr.cargo || []; tr.cargo.push(u);
+    bump(); if (sel && sel.id === u.id) clearSel();
+    if (u.owner === 0) toast(`${UNITS[u.type].name} boarded the transport`);
+    return;
+  }
   u.anim = { fx, fy, t0: performance.now() };
   u.c = t.c; u.r = t.r; u.moved = true; bump();
   if (u.owner === 0) updateExplored();
 }
+function unloadTiles(tr) {
+  return neighbors(tileOf(tr)).filter(n => n && (isLand(n) || n.bridge) && !unitAt(n));
+}
+function unload(tr, k, t) {
+  const u = tr.cargo.splice(k, 1)[0];
+  u.c = t.c; u.r = t.r; u.moved = true; u.attacked = true; u.sc = -1; u.sr = -1;
+  const [fx, fy] = hexPos(tr.c, tr.r); u.anim = { fx, fy, t0: performance.now() };
+  S.units.push(u); bump();
+  if (u.owner === 0) updateExplored();
+  return u;
+}
 
 /* ---------------- combat ---------------- */
 function targetMult(A, D, aType, docked) {
-  if (A.atk <= 0 || D.dom === 'orbit') return 0;
+  if (A.atk <= 0) return 0;
+  if (D.dom === 'orbit') return A.orbit ?? 0;
   if (D.dom === 'air') return A.air ?? 0;
-  if (D.stealth && !docked) return (A.dom === 'naval' || A.dom === 'orbit') ? (A.sonar ? 1.5 : 1) : (aType === 'bomber' ? 0.75 : 0);
+  if (D.stealth && !docked) return A.dom === 'naval' ? (A.sonar ? 1.5 : 1) : aType === 'strikesat' ? 1 : aType === 'bomber' ? 0.75 : 0;
   return A.ground ?? 1;
 }
 function defBonus(u, t) {
@@ -409,8 +667,8 @@ function defBonus(u, t) {
   if (c && c.owner === u.owner) return c.capital ? 1.75 : 1.5;
   return TERRAIN[t.t].def;
 }
-function hpF(hp, max) { return 0.5 + 0.5 * Math.max(0, hp) / max; }
-function dmgFormula(atkEff, defEff) { return Math.max(1, Math.round((atkEff + 2) * 2 * atkEff / (atkEff + defEff))); }
+const hpF = (hp, max) => 0.5 + 0.5 * Math.max(0, hp) / max;
+const dmgFormula = (atkEff, defEff) => Math.max(1, Math.round((atkEff + 2) * 2 * atkEff / (atkEff + defEff)));
 function calcCombat(a, d, from) {
   from = from || tileOf(a);
   const A = UNITS[a.type], D = UNITS[d.type];
@@ -419,7 +677,7 @@ function calcCombat(a, d, from) {
   const dEff = Math.max(0.3, D.def * defBonus(d) * hpF(d.hp, D.hp));
   const dmg = dmgFormula(aEff, dEff);
   let counter = 0;
-  if (dmg < d.hp && A.dom !== 'orbit') {
+  if (dmg < d.hp) {
     const cm = targetMult(D, A, d.type, !!cityAt(from)), dd = dist(from, d);
     if (cm > 0 && dd <= D.rng && dd >= (D.minr ?? 1)) {
       const cEff = D.atk * cm * hpF(d.hp - dmg, D.hp);
@@ -445,14 +703,16 @@ function doAttack(a, d) {
   const r = calcCombat(a, d);
   const [dx, dy] = hexPos(d.c, d.r), [ax, ay] = hexPos(a.c, a.r);
   if (a.type === 'strikesat') addFloat(dx, dy - 20, '☄️', '#fff');
+  if (a.type === 'killersat') addFloat(dx, dy - 20, '⚡', '#fff');
   d.hp -= r.dmg; addFloat(dx, dy, '-' + r.dmg, '#ff6b5e');
-  a.attacked = true; a.moved = true; if (a.type === 'strikesat') a.cd = 2;
+  a.attacked = true; a.moved = true; a.job = null; if (a.type === 'strikesat') a.cd = 2;
   if (d.hp <= 0) kill(d);
   else if (r.counter > 0) { a.hp -= r.counter; addFloat(ax, ay, '-' + r.counter, '#ffb35e'); if (a.hp <= 0) kill(a); }
   bump();
 }
 function kill(u) {
   const [x, y] = hexPos(u.c, u.r); addFloat(x, y - 14, '💥', '#fff');
+  if (u.cargo && u.cargo.length && (u.owner === 0 || seesTile(0, tileOf(u)))) toast(`Transport sunk with ${u.cargo.length} unit(s) aboard`);
   S.units = S.units.filter(o => o !== u);
   if (sel && sel.kind === 'unit' && sel.id === u.id) clearSel();
   bump();
@@ -466,7 +726,7 @@ function canCapture(u) {
 }
 function capture(u) {
   const c = cityAt(tileOf(u)), prev = c.owner;
-  c.owner = u.owner; c.built = true; if (prev >= 0) c.capital = false;
+  c.owner = u.owner; c.built = true; c.food = 0; if (prev >= 0) c.capital = false;
   u.moved = u.attacked = true;
   recomputeTerritory(); bump();
   const [x, y] = hexPos(c.c, c.r); addFloat(x, y - 18, '🚩', '#fff');
@@ -474,7 +734,6 @@ function capture(u) {
   if (u.owner === 0 || prev === 0 || seesTile(0, tileOf(c))) toast(msg);
   if (prev >= 0) checkElimination(prev);
 }
-function seesTile(p, t) { return S.spectate || getVis(p).has(t.i); }
 function checkElimination(p) {
   const P = S.players[p];
   if (P.alive && citiesOf(p).length === 0) {
@@ -496,20 +755,22 @@ function buildReason(p, city, k) {
   if (U.dom === 'naval' && !isCoastal(city)) return 'Needs coast';
   if (city.built) return 'Built this turn';
   if (unitAt(tileOf(city), U.dom === 'orbit' ? 'orbit' : 'surface')) return 'Tile occupied';
-  if (U.dom === 'orbit') { if (unitsOf(p).filter(u => UNITS[u.type].dom === 'orbit').length >= MAX_SATS) return 'Max ' + MAX_SATS + ' sats'; }
-  else if (unitCount(p) >= unitCap(p)) return 'Unit cap';
+  if (U.dom === 'orbit') { if (satCount(p) >= MAX_SATS) return 'Max ' + MAX_SATS + ' sats'; }
+  else if (unitCount(p) >= unitCap(p)) return 'Unit cap — grow cities';
   if (P.supply < U.cost) return 'Need ' + U.cost + ' ⛽';
   return null;
 }
 function spawn(k, p, t, ready) {
   const U = UNITS[k];
   const u = { id:S.nextId++, type:k, owner:p, c:t.c, r:t.r, hp:U.hp, moved:!ready, attacked:!ready, sc:t.c, sr:t.r, age:0, cd:0 };
+  if (U.carry) u.cargo = [];
   S.units.push(u); bump(); return u;
 }
 function build(p, city, k) {
   if (buildReason(p, city, k)) return null;
   S.players[p].supply -= UNITS[k].cost; city.built = true;
   const u = spawn(k, p, tileOf(city), false);
+  if (k === 'satellite' && p === 0 && !S.spectate) { S.explored.fill(1); toast('🛰 Satellite in orbit — the whole map is revealed'); }
   if (p === 0) updateExplored();
   return u;
 }
@@ -518,34 +779,78 @@ function research(p, k) {
   if (has(p, k) || !techReady(p, k) || P.supply < cost) return false;
   P.supply -= cost; P.tech.push(k); dirty = true; return true;
 }
-function expand(p, c) {
-  const cost = expandCost(c), P = S.players[p];
-  if (c.owner !== p || c.level >= MAX_LEVEL || P.supply < cost) return false;
-  P.supply -= cost; c.level++; recomputeTerritory(); bump(); return true;
+function upgradeOptions(u) {
+  if (u.type !== 'satellite') return [];
+  return [['strikesat', 'orbital'], ['killersat', 'spacecontrol']].map(([to, tech]) => ({
+    to, tech, ok: u.age >= 2 && has(u.owner, tech) && S.players[u.owner].supply >= UPGRADE_COST }));
 }
-function canDerrick(p, t) { return t.oil && !t.derrick && ownerOf(t) === p && has(p, 'industry') && S.players[p].supply >= DERRICK_COST; }
-function buildDerrick(p, t) { if (!canDerrick(p, t)) return false; S.players[p].supply -= DERRICK_COST; t.derrick = true; dirty = true; return true; }
-function canUpgrade(u) { return u.type === 'satellite' && u.age >= 2 && has(u.owner, 'orbital') && S.players[u.owner].supply >= UPGRADE_COST; }
-function upgrade(u) {
-  if (!canUpgrade(u)) return false;
-  S.players[u.owner].supply -= UPGRADE_COST; u.type = 'strikesat'; u.hp = 1; u.moved = u.attacked = true; u.cd = 0; bump(); return true;
+function upgrade(u, to) {
+  const o = upgradeOptions(u).find(x => x.to === to); if (!o || !o.ok) return false;
+  S.players[u.owner].supply -= UPGRADE_COST; u.type = to; u.hp = UNITS[to].hp; u.moved = u.attacked = true; u.cd = 0; bump(); return true;
+}
+
+/* ----- engineers ----- */
+function jobOk(p, k, t, from) {
+  const J = JOBS[k];
+  if (J.tech && !has(p, J.tech)) return false;
+  if (J.adj) { if (!from || dist(from, t) !== 1) return false; }
+  else if (from && from !== t) return false;
+  if (S.units.some(w => w.job && w.job.i === t.i && w.job.k === k)) return false;
+  switch (k) {
+    case 'road':    return isLand(t) && !t.road && t.city < 0;
+    case 'farm':    return t.t === 'plain' && !t.imp && t.city < 0 && ownerOf(t) === p;
+    case 'lumber':  return t.t === 'forest' && !t.imp && ownerOf(t) === p;
+    case 'mine':    return (t.t === 'hill' || (t.t === 'mountain' && t.res === 'gold')) && !t.imp && ownerOf(t) === p;
+    case 'derrick': return t.res === 'oil' && !t.imp && t.city < 0 && ownerOf(t) === p;
+    case 'fishery': return t.res === 'fish' && !t.imp && ownerOf(t) === p && !t.bridge;
+    case 'bridge':  return t.t === 'shallow' && !t.bridge && !t.imp && !unitAt(t);
+  }
+  return false;
+}
+function jobLockedReason(p, k) { const J = JOBS[k]; return J.tech && !has(p, J.tech) ? 'Needs ' + TECH[J.tech].name : null; }
+function startJob(u, k, t) {
+  u.job = { k, i:t.i, left:JOBS[k].turns }; u.moved = u.attacked = true; bump();
+}
+function finishJob(u) {
+  const t = S.tiles[u.job.i], k = u.job.k;
+  if (k === 'road') t.road = true;
+  else if (k === 'bridge') { if (!unitAt(t)) { t.bridge = true; t.road = true; } }
+  else if (!t.imp) t.imp = k;
+  if (u.owner === 0) { toast(`${JOBS[k].icon} ${JOBS[k].name} completed`); }
+  u.job = null; dirty = true;
+}
+function jobValue(k, t) {
+  if (k === 'farm') return t.res === 'wheat' ? 3 : 1.6;
+  if (k === 'fishery') return 3;
+  if (k === 'mine') return 1 + (t.res === 'iron' ? 1 : 0) + (t.res === 'gold' ? 2 : 0);
+  if (k === 'derrick') return 3.2;
+  if (k === 'lumber') return 1;
+  return 0;
 }
 
 /* ---------------- turn flow ---------------- */
 function startTurn(p) {
   const P = S.players[p];
+  for (const c of citiesOf(p)) {
+    c.built = false;
+    c.food = (c.food || 0) + foodRate(c);
+    if (c.level < MAX_LEVEL && c.food >= growNeed(c)) {
+      c.food -= growNeed(c); c.level++; recomputeTerritory();
+      if (p === 0 && !S.spectate) toast(`🏙 ${c.name} grew to level ${c.level}`);
+    } else if (c.level >= MAX_LEVEL) c.food = Math.min(c.food, growNeed(c));
+  }
   P.supply += income(p);
   for (const u of unitsOf(p)) {
     const U = UNITS[u.type];
-    if (!u.moved && !u.attacked && u.hp < U.hp && U.dom !== 'orbit') {
+    if (!u.moved && !u.attacked && u.hp < U.hp) {
       const c = cityAt(tileOf(u));
-      const heal = c && c.owner === p ? 5 : ownerOf(tileOf(u)) === p ? 3 : 2;
+      const heal = U.dom === 'orbit' ? 1 : c && c.owner === p ? 5 : ownerOf(tileOf(u)) === p ? 3 : 2;
       u.hp = Math.min(U.hp, u.hp + heal);
     }
     u.moved = u.attacked = false; u.sc = u.c; u.sr = u.r;
     if (U.dom === 'orbit') { u.age++; u.cd = Math.max(0, u.cd - 1); }
+    if (u.job) { u.job.left--; if (u.job.left <= 0) finishJob(u); }
   }
-  for (const c of citiesOf(p)) c.built = false;
   bump();
   if (p === 0) { updateExplored(); save(); }
   refreshUI();
@@ -556,7 +861,6 @@ async function endTurn() {
   await advance();
 }
 async function advance() {
-  // loop through AI players until it's the human's turn again
   for (;;) {
     let n = S.cur;
     do { n = (n + 1) % S.players.length; if (n === 0) S.turn++; } while (!S.players[n].alive);
@@ -576,19 +880,22 @@ function runAI() { busy = true; (async () => { showBusy(`${S.players[0].name} is
 function distField(goal, u) {
   const U = UNITS[u.type], key = `${goal.i}|${U.dom}|${U.heavy ? 1 : 0}|${u.owner}`;
   if (fieldCache.has(key)) return fieldCache.get(key);
-  const f = new Float32Array(S.tiles.length).fill(Infinity);
-  const pq = [];
-  if (moveCost(u, goal) < Infinity) { f[goal.i] = 0; pq.push([0, goal]); }
-  else for (const n of neighbors(goal)) if (n && moveCost(u, n) < Infinity) { f[n.i] = 1; pq.push([1, n]); }
-  while (pq.length) {
-    pq.sort((a, b) => b[0] - a[0]);
+  const f = new Float32Array(S.tiles.length).fill(Infinity), pq = new Heap();
+  if (moveCost(u, goal) < Infinity) { f[goal.i] = 0; pq.push(0, goal); }
+  else for (const n of neighbors(goal)) if (n && moveCost(u, n) < Infinity) { f[n.i] = 1; pq.push(1, n); }
+  while (pq.size) {
     const [d, t] = pq.pop(); if (d > f[t.i]) continue;
     for (const n of neighbors(t)) {
-      if (!n) continue; const c = moveCost(u, t); if (c === Infinity) continue;
-      const nd = d + Math.min(c, 3); if (nd < f[n.i] && moveCost(u, n) < Infinity) { f[n.i] = nd; pq.push([nd, n]); }
+      if (!n) continue; const c = moveCost(u, t, n); if (c === Infinity || moveCost(u, n) === Infinity) continue;
+      const nd = d + Math.min(c, 3); if (nd < f[n.i]) { f[n.i] = nd; pq.push(nd, n); }
     }
   }
   fieldCache.set(key, f); return f;
+}
+// early on, easier AIs leave the human alone unless the human is inside their borders
+function aiMayTarget(p, owner, t) {
+  if (owner !== 0 || S.spectate || S.turn >= diff().peace) return true;
+  return t && ownerOf(t) === p;
 }
 function attackScore(a, d, from) {
   const r = calcCombat(a, d, from), A = UNITS[a.type], D = UNITS[d.type];
@@ -601,7 +908,10 @@ function attackScore(a, d, from) {
 }
 function bestTarget(u, from) {
   let best = null, bs = -0.5;
-  for (const e of targetsFrom(u, from)) { const s = attackScore(u, e, from); if (s > bs) { bs = s; best = e; } }
+  for (const e of targetsFrom(u, from)) {
+    if (!aiMayTarget(u.owner, e.owner, tileOf(e))) continue;
+    const s = attackScore(u, e, from); if (s > bs) { bs = s; best = e; }
+  }
   return best ? { e:best, s:bs } : null;
 }
 function aiGoal(u) {
@@ -609,51 +919,125 @@ function aiGoal(u) {
   const hurt = U.dom !== 'orbit' && u.hp < U.hp * 0.35;
   if (hurt) for (const c of citiesOf(p)) if (!unitAt(tileOf(c)) || unitAt(tileOf(c)) === u) goals.push({ t:tileOf(c), w:-4 });
   if (!hurt) {
-    if (U.cap) for (const c of S.cities) if (c.owner !== p) goals.push({ t:tileOf(c), w: c.owner < 0 ? -2 : -1 });
-    for (const e of S.units) if (e.owner !== p && seesUnit(p, e) && targetMult(U, UNITS[e.type], u.type, !!cityAt(tileOf(e))) > 0) goals.push({ t:tileOf(e), w:0 });
-    for (const c of S.cities) if (c.owner >= 0 && c.owner !== p) goals.push({ t:tileOf(c), w:2 });
+    if (U.cap) for (const c of S.cities) if (c.owner !== p && aiMayTarget(p, c.owner, null)) goals.push({ t:tileOf(c), w: c.owner < 0 ? -2 : -1 });
+    for (const e of S.units) if (e.owner !== p && seesUnit(p, e) && aiMayTarget(p, e.owner, tileOf(e)) &&
+      targetMult(U, UNITS[e.type], u.type, !!cityAt(tileOf(e))) > 0) goals.push({ t:tileOf(e), w:0 });
+    if (U.dom !== 'orbit' || u.type === 'satellite')
+      for (const c of S.cities) if (c.owner >= 0 && c.owner !== p && aiMayTarget(p, c.owner, null)) goals.push({ t:tileOf(c), w:2 });
   }
   if (!goals.length) return null;
   goals.sort((a, b) => dist(t0, a.t) - dist(t0, b.t));
   let best = null, bv = Infinity;
-  for (const g of goals.slice(0, 6)) {
+  for (const g of goals.slice(0, 4)) {
     const f = distField(g.t, u); const v = f[t0.i] + g.w * 2;
     if (f[t0.i] < Infinity && v < bv) { bv = v; best = g.t; }
   }
   return best;
 }
+async function aiWorker(u) {
+  if (u.job) return;
+  const p = u.owner;
+  const bestAt = (t) => {
+    let b = null;
+    const consider = (k, x) => { if (jobOk(p, k, x, t)) { const v = jobValue(k, x); if (!b || v > b.v) b = { k, t:x, v }; } };
+    for (const k of ['farm', 'lumber', 'mine', 'derrick']) consider(k, t);
+    for (const n of neighbors(t)) if (n) consider('fishery', n);
+    return b;
+  };
+  let j = bestAt(tileOf(u));
+  if (j) { startJob(u, j.k, j.t); return; }
+  const here = tileOf(u); let goal = null, gs = 0;
+  for (const t of within(here, 6)) {
+    if (unitAt(t) && unitAt(t) !== u) continue;
+    if (!isLand(t)) continue;
+    if (S.units.some(w => w !== u && w.owner === p && w.tgt === t.i)) continue;
+    const b = bestAt(t); if (!b) continue;
+    const s = b.v / (1 + dist(here, t)); if (s > gs) { gs = s; goal = t; }
+  }
+  if (!goal) return;
+  u.tgt = goal.i;
+  let bt = null, bd = dist(here, goal);
+  for (const [i, rem] of reachable(u)) { if (rem < 0) continue; const t = S.tiles[i]; const d = dist(t, goal); if (d < bd) { bd = d; bt = t; } }
+  if (bt) { moveUnit(u, bt); await pause(u); }
+  j = bestAt(tileOf(u)); if (j) startJob(u, j.k, j.t);
+}
 async function aiUnit(u) {
-  const U = UNITS[u.type], p = u.owner, here = tileOf(u);
+  const U = UNITS[u.type], p = u.owner, here = tileOf(u), cfg = diff();
+  if (u.type === 'worker') return aiWorker(u);
+  if (u.type === 'transport') return aiTransport(u);
+  if (U.atk <= 0 && U.dom !== 'orbit') return;
   if (canCapture(u) && cityAt(here).owner >= 0) { capture(u); return; }
   const bt0 = bestTarget(u);
-  if (bt0 && bt0.s > 0.5) { doAttack(u, bt0.e); await pause(u); return; }
+  if (bt0 && bt0.s > cfg.attackMin) { doAttack(u, bt0.e); await pause(u); return; }
   if (canCapture(u)) { capture(u); return; }
-  // defend own city if enemies near
   const c = cityAt(here);
-  const threat = S.units.some(e => e.owner !== p && seesUnit(p, e) && dist(e, here) <= 2 && UNITS[e.type].dom !== 'orbit');
+  const threat = S.units.some(e => e.owner !== p && seesUnit(p, e) && dist(e, here) <= 2 && UNITS[e.type].dom !== 'orbit' && UNITS[e.type].atk > 0);
   if (c && c.owner === p && threat && U.dom === 'land') { if (bt0 && bt0.s > -1) { doAttack(u, bt0.e); await pause(u); } return; }
-  if (c && c.owner === p && U.dom !== 'orbit' && u.hp < U.hp * 0.6 && !threat) return; // heal
+  if (c && c.owner === p && U.dom !== 'orbit' && u.hp < U.hp * 0.6 && !threat) return;
   const goal = aiGoal(u);
+  if (!goal && U.cap && U.dom === 'land' && S.players[p].seaTargets.length) { await aiSeekShip(u); return; }
   const options = reachable(u); options.set(here.i, 0);
   let bestT = here, bs = -Infinity;
   const f = goal ? distField(goal, u) : null;
-  for (const [i] of options) {
+  for (const [i, rem] of options) {
+    if (rem < 0) continue;
     const t = S.tiles[i];
     let s = f ? -(f[i] === Infinity ? 999 : f[i]) * 3 : 0;
     s += (defBonus(u, t) - 1) * 2;
     const bt = bestTarget(u, t); if (bt) s += bt.s * 1.5 + 2;
     const ct = cityAt(t);
-    if (ct && ct.owner !== p && U.cap) s += ct.owner < 0 ? 25 : 10;
-    if (ct && ct.owner === p && U.dom === 'land' && i !== here.i && !threat) s -= 1; // don't clog cities
-    // avoid parking next to strong enemies when weak
+    if (ct && ct.owner !== p && U.cap && aiMayTarget(p, ct.owner, null)) s += ct.owner < 0 ? 25 : 10;
+    if (ct && ct.owner === p && U.dom === 'land' && i !== here.i && !threat) s -= 1;
     if (u.hp < U.hp * 0.5) s -= S.units.filter(e => e.owner !== p && dist(e, t) <= 1).length * 3;
     s += Math.random() * 0.5;
     if (s > bs) { bs = s; bestT = t; }
   }
   if (bestT !== here) { moveUnit(u, bestT); await pause(u); }
   const bt = bestTarget(u);
-  if (bt && bt.s > -0.5) { doAttack(u, bt.e); await pause(u); return; }
+  if (bt && bt.s > cfg.attackMin - 1) { doAttack(u, bt.e); await pause(u); return; }
   if (canCapture(u) && cityAt(tileOf(u)).owner < 0) capture(u);
+}
+const landProbe = p => ({ type:'infantry', owner:p, c:0, r:0 });
+async function aiSeekShip(u) {
+  u.wantsShip = true;
+  const ships = unitsOf(u.owner).filter(x => x.type === 'transport' && x.cargo.length < UNITS.transport.carry);
+  if (!ships.length) return;
+  const here = tileOf(u);
+  ships.sort((a, b) => dist(a, here) - dist(b, here));
+  const tr = ships[0], f = distField(tileOf(tr), u), opts = reachable(u);
+  for (const [i, rem] of opts) if (rem < 0 && i === idx(tr.c, tr.r)) { moveUnit(u, S.tiles[i]); await pause(u); return; }
+  let bt = null, bv = f[here.i];
+  for (const [i, rem] of opts) if (rem >= 0 && f[i] < bv) { bv = f[i]; bt = S.tiles[i]; }
+  if (bt) { moveUnit(u, bt); await pause(u); }
+}
+async function aiTransport(u) {
+  const p = u.owner, P = S.players[p];
+  const tryUnload = () => {
+    if (!u.cargo.length || !P.seaTargets.length) return false;
+    const here = tileOf(u);
+    const goal = P.seaTargets.slice().sort((a, b) => dist(a, here) - dist(b, here))[0];
+    const lf = distField(tileOf(goal), landProbe(p));
+    const spots = unloadTiles(u).filter(t => lf[t.i] < Infinity).sort((a, b) => lf[a.i] - lf[b.i]);
+    let done = false;
+    while (u.cargo.length && spots.length) { unload(u, 0, spots.shift()); done = true; }
+    return done;
+  };
+  if (tryUnload()) { await pause(u); return; }
+  const here = tileOf(u);
+  const waiting = unitsOf(p).filter(x => x.wantsShip && dist(x, here) <= 4);
+  let goalT = null;
+  if (u.cargo.length && (u.cargo.length >= UNITS.transport.carry || !waiting.length) && P.seaTargets.length)
+    goalT = tileOf(P.seaTargets.slice().sort((a, b) => dist(a, here) - dist(b, here))[0]);
+  else {
+    const wanters = unitsOf(p).filter(x => x.wantsShip);
+    if (wanters.length) goalT = tileOf(wanters.sort((a, b) => dist(a, here) - dist(b, here))[0]);
+  }
+  if (!goalT) return;
+  const f = distField(goalT, u);
+  let bt = null, bv = f[here.i];
+  for (const [i, rem] of reachable(u)) if (rem >= 0 && f[i] < bv) { bv = f[i]; bt = S.tiles[i]; }
+  if (bt) { moveUnit(u, bt); await pause(u); }
+  if (tryUnload()) await pause(u);
 }
 async function pause(u) {
   dirty = true;
@@ -663,52 +1047,61 @@ async function pause(u) {
 function aiChooseBuild(p, city) {
   const enemyAir = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'air');
   const enemyNaval = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'naval');
-  const sats = unitsOf(p).filter(u => UNITS[u.type].dom === 'orbit').length;
+  const enemySats = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'orbit');
+  const workers = unitsOf(p).filter(u => u.type === 'worker').length;
   const islands = S.players[p].islands;
-  const W = { infantry: S.turn < 8 ? 6 : 2, recon: 1.5, tank: 5, artillery: 2.5, aa: enemyAir ? 4 : 0.4,
-              destroyer: (islands ? 4 : 1) + (enemyNaval ? 2 : 0), submarine: islands ? 2.5 : 0.8,
-              fighter: enemyAir ? 4 : 1.5, bomber: 3, satellite: sats < 1 ? 1.5 : 0 };
+  const ships = unitsOf(p).filter(u => u.type === 'transport').length;
+  const W = { transport: S.players[p].seaTargets.length && S.turn > 25 && ships < 2 ? 5 : 0,
+              worker: workers < Math.min(6, citiesOf(p).length) ? 6 : 0,
+              infantry: S.turn < 10 ? 6 : 2, recon: 1.5, tank: 5, artillery: 2.5, aa: enemyAir ? 4 : 0.4,
+              destroyer: (islands ? 4 : 0.6) + (enemyNaval ? 2 : 0), submarine: islands ? 2.5 : 0.4,
+              fighter: enemyAir ? 4 : 1.5, bomber: 3, satellite: satCount(p) < 1 ? 1.5 : 0, killersat: enemySats ? 3 : 0 };
   const opts = Object.keys(W).filter(k => W[k] > 0 && !buildReason(p, city, k));
   if (!opts.length) return null;
-  let tot = opts.reduce((a, k) => a + W[k], 0), r = Math.random() * tot;
+  let r = Math.random() * opts.reduce((a, k) => a + W[k], 0);
   for (const k of opts) { r -= W[k]; if (r <= 0) return k; }
   return opts[opts.length - 1];
 }
 async function aiTurn(p) {
-  const P = S.players[p];
-  // island check: can our infantry walk to an enemy city?
+  const P = S.players[p], cfg = diff();
   const cap = citiesOf(p)[0];
   if (cap) {
     const probe = { type:'infantry', owner:p, c:cap.c, r:cap.r };
     const enemies = S.cities.filter(c => c.owner >= 0 && c.owner !== p);
     P.islands = enemies.length > 0 && enemies.every(e => distField(tileOf(e), probe)[tileOf(cap).i] === Infinity);
   }
-  // research (save some supply for units early)
-  if (S.turn > 2 || P.supply > 10) {
+  for (const u of unitsOf(p)) u.wantsShip = false;
+  P.seaTargets = [];
+  const mine = citiesOf(p);
+  if (mine.length) for (const c of S.cities) {
+    if (c.owner === p || !aiMayTarget(p, c.owner, null)) continue;
+    const f = distField(tileOf(c), landProbe(p));
+    if (mine.every(m => f[tileOf(m).i] === Infinity)) P.seaTargets.push(c);
+  }
+  if (P.seaTargets.length && !has(p, 'seafaring') && S.turn > 25) research(p, 'seafaring');
+  if (S.turn > 3 || P.supply > 12) {
     for (const k of P.order) {
       if (has(p, k) || !techReady(p, k)) continue;
       if ((k === 'naval' || k === 'subs') && !P.islands && Math.random() < 0.6) continue;
-      if (P.supply >= techCost(p, k) + 2 && Math.random() < 0.65) research(p, k);
+      if (P.supply >= techCost(p, k) + 2 && Math.random() < cfg.research) research(p, k);
       break;
     }
   }
-  // derricks
-  for (const t of S.tiles) if (canDerrick(p, t) && Math.random() < 0.7) buildDerrick(p, t);
-  // expand cities
-  const cs = citiesOf(p).sort((a, b) => a.level - b.level);
-  if (cs.length && unitCount(p) >= unitCap(p) - 1 && Math.random() < 0.6) expand(p, cs[0]);
-  else if (cs.length && P.supply > expandCost(cs[0]) + 10 && Math.random() < 0.3) expand(p, cs[0]);
-  // units: ranged first, then the rest
+  for (const u of unitsOf(p)) {
+    if (u.type !== 'satellite' || u.age < 2) continue;
+    const enemySats = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'orbit');
+    upgrade(u, enemySats && has(p, 'spacecontrol') ? 'killersat' : 'strikesat');
+  }
   const order = unitsOf(p).sort((a, b) => (UNITS[b.type].rng - UNITS[a.type].rng));
   for (const u of order) {
     if (S.over) return;
     if (!S.units.includes(u)) continue;
     await aiUnit(u);
   }
-  // production
+  let builds = 0;
   for (const c of shuffle(citiesOf(p))) {
-    if (P.supply < 2) break;
-    const k = aiChooseBuild(p, c); if (k) build(p, c, k);
+    if (P.supply < 3 || builds >= cfg.builds) break;
+    const k = aiChooseBuild(p, c); if (k && build(p, c, k)) builds++;
   }
   dirty = true;
 }
@@ -749,21 +1142,47 @@ function drawTerrainDetail(t, x, y, s) {
     ctx.beginPath(); ctx.moveTo(x - 6 * k, y - 6 * k); ctx.lineTo(x - 2 * k, y - 13 * k); ctx.lineTo(x + 3 * k, y - 5 * k); ctx.fill();
     ctx.fillStyle = '#787b80';
     ctx.beginPath(); ctx.moveTo(x + 2 * k, y + 10 * k); ctx.lineTo(x + 10 * k, y - 3 * k); ctx.lineTo(x + 17 * k, y + 10 * k); ctx.fill();
+  } else if (t.t === 'desert') {
+    ctx.strokeStyle = '#bfa66a'; ctx.lineWidth = 1.5 * k;
+    ctx.beginPath(); ctx.moveTo(x - 12 * k, y + 4 * k); ctx.quadraticCurveTo(x - 4 * k, y - 3 * k, x + 4 * k, y + 4 * k); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - 2 * k, y + 10 * k); ctx.quadraticCurveTo(x + 5 * k, y + 4 * k, x + 12 * k, y + 10 * k); ctx.stroke();
   } else if (t.t === 'ocean' || t.t === 'shallow') {
     ctx.strokeStyle = t.t === 'ocean' ? '#2c74a8' : '#6db7d9'; ctx.lineWidth = 1.4 * k;
     ctx.beginPath(); ctx.moveTo(x - 9 * k, y + 2 * k); ctx.quadraticCurveTo(x - 5 * k, y - 2 * k, x - 1 * k, y + 2 * k); ctx.quadraticCurveTo(x + 3 * k, y + 6 * k, x + 7 * k, y + 2 * k); ctx.stroke();
   }
-  if (t.oil) {
-    if (t.derrick) {
-      ctx.strokeStyle = '#1b1b1b'; ctx.lineWidth = 2 * k;
-      ctx.beginPath(); ctx.moveTo(x + 6 * k, y + 14 * k); ctx.lineTo(x + 11 * k, y - 2 * k); ctx.lineTo(x + 16 * k, y + 14 * k);
-      ctx.moveTo(x + 7 * k, y + 8 * k); ctx.lineTo(x + 15 * k, y + 8 * k); ctx.stroke();
-      ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(x + 11 * k, y - 3 * k, 2 * k, 0, 7); ctx.fill();
-    } else {
-      ctx.fillStyle = '#141414';
-      ctx.beginPath(); ctx.moveTo(x + 11 * k, y - 1 * k); ctx.quadraticCurveTo(x + 17 * k, y + 8 * k, x + 11 * k, y + 11 * k); ctx.quadraticCurveTo(x + 5 * k, y + 8 * k, x + 11 * k, y - 1 * k); ctx.fill();
-    }
+  if (t.imp === 'farm') {
+    ctx.strokeStyle = '#e9d36a'; ctx.lineWidth = 2.2 * k;
+    for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(x - 13 * k, y + (i * 5 + 3) * k); ctx.lineTo(x + 13 * k, y + (i * 5 - 1) * k); ctx.stroke(); }
   }
+}
+function drawRoadsBridges(t, x, y, s, known) {
+  if (!hasRoad(t)) return;
+  const ns = neighbors(t);
+  if (t.bridge) {
+    ctx.fillStyle = '#8a6a43'; hexPath(x, y, s * 0.42); ctx.fill();
+    ctx.strokeStyle = '#5c4329'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+  ctx.strokeStyle = t.bridge ? '#8a6a43' : '#9b7b52'; ctx.lineWidth = Math.max(2, (t.bridge ? 7 : 3.5) * cam.z); ctx.lineCap = 'round';
+  let any = false;
+  for (let d = 0; d < 6; d++) {
+    const n = ns[d]; if (!n || !hasRoad(n) || !known(n)) continue;
+    if (t.city >= 0 && n.city >= 0) continue;
+    if (!(t.road || t.bridge) && !(n.road || n.bridge)) continue;
+    const [nx, ny] = toScreen(...hexPos(n.c, n.r));
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo((x + nx) / 2, (y + ny) / 2); ctx.stroke(); any = true;
+  }
+  if (!any && t.road && t.city < 0) { ctx.fillStyle = '#9b7b52'; ctx.beginPath(); ctx.arc(x, y, 3 * cam.z, 0, 7); ctx.fill(); }
+}
+function drawMarks(t, x, y, s) {
+  if (cam.z < 0.5) return;
+  const k = s / HEX;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  if (t.res) { ctx.font = `${11 * k}px sans-serif`; ctx.fillText(RES[t.res].icon, x - 11 * k, y + 12 * k); }
+  if (t.imp && t.imp !== 'farm') {
+    ctx.fillStyle = 'rgba(10,15,28,.55)'; ctx.beginPath(); ctx.arc(x + 11 * k, y + 11 * k, 7.5 * k, 0, 7); ctx.fill();
+    ctx.font = `${10 * k}px sans-serif`; ctx.fillText(JOBS[t.imp].icon, x + 11 * k, y + 11.5 * k);
+  }
+  ctx.textBaseline = 'alphabetic';
 }
 
 function drawCity(c, x, y, s) {
@@ -772,6 +1191,7 @@ function drawCity(c, x, y, s) {
   const bl = [[-13, 4, 8, 11], [-4, -2, 9, 17], [6, 2, 8, 13]];
   if (c.level >= 3) bl.push([-9, -8, 6, 10]);
   if (c.level >= 4) bl.push([3, -10, 6, 14]);
+  if (c.level >= 6) bl.push([-2, -14, 5, 18]);
   for (const [bx, by, bw, bh] of bl) {
     ctx.fillStyle = '#d9dde3'; ctx.fillRect(x + bx * k, y + (by - bh + 10) * k, bw * k, bh * k);
     ctx.fillStyle = col; ctx.fillRect(x + bx * k, y + (by - bh + 10) * k, bw * k, 2.5 * k);
@@ -779,11 +1199,11 @@ function drawCity(c, x, y, s) {
   ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
   for (const [bx, by, bw, bh] of bl) ctx.strokeRect(x + bx * k, y + (by - bh + 10) * k, bw * k, bh * k);
   if (c.capital) { ctx.font = `${12 * k}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText('⭐', x, y - 16 * k); }
-  if (cam.z > 0.55) {
+  if (cam.z > 0.5) {
     ctx.font = `600 ${Math.max(9, 10 * k)}px sans-serif`; ctx.textAlign = 'center';
-    const label = `${c.name} ${'•'.repeat(c.level)}`;
+    const label = `${c.name} ${c.level}`;
     const w = ctx.measureText(label).width + 8;
-    ctx.fillStyle = 'rgba(10,15,28,.75)'; ctx.fillRect(x - w / 2, y + 16 * k, w, 13 * k);
+    ctx.fillStyle = 'rgba(10,15,28,.78)'; ctx.fillRect(x - w / 2, y + 16 * k, w, 13 * k);
     ctx.fillStyle = col === '#9aa3ad' ? '#d6dbe2' : col; ctx.fillText(label, x, y + 26 * k);
   }
 }
@@ -798,6 +1218,9 @@ function drawIcon(type, x, y, s) {
     case 'infantry':
       ctx.beginPath(); ctx.arc(x, y + 0.12 * s, 0.42 * s, Math.PI, 0); ctx.fill();
       R(-0.6, 0.1, 1.2, 0.12); L(-0.25, 0.25, -0.15, 0.45, 0.07); L(0.25, 0.25, 0.15, 0.45, 0.07); break;
+    case 'worker':
+      ctx.beginPath(); ctx.arc(x, y - 0.02 * s, 0.38 * s, Math.PI, 0); ctx.fill(); R(-0.55, -0.05, 1.1, 0.12);
+      L(-0.45, 0.6, 0.35, 0.15, 0.1); P([[0.25, 0.05], [0.6, 0.25], [0.45, 0.45], [0.18, 0.28]]); break;
     case 'recon':
       P([[-0.6, 0.15], [-0.45, -0.1], [-0.1, -0.12], [0.05, -0.38], [0.35, -0.38], [0.45, -0.1], [0.62, -0.05], [0.62, 0.15]]);
       ctx.fillStyle = '#222'; C(-0.33, 0.22, 0.17); C(0.38, 0.22, 0.17); ctx.fillStyle = '#fff'; C(-0.33, 0.22, 0.07); C(0.38, 0.22, 0.07); break;
@@ -811,6 +1234,9 @@ function drawIcon(type, x, y, s) {
     case 'aa':
       R(-0.55, 0.12, 1.1, 0.3); R(-0.25, -0.1, 0.5, 0.25);
       L(-0.08, -0.05, 0.42, -0.62, 0.09); L(0.12, 0, 0.62, -0.52, 0.09); break;
+    case 'transport':
+      P([[-0.8, 0.1], [0.85, 0.1], [0.6, 0.4], [-0.65, 0.4]]);
+      R(-0.55, -0.25, 0.42, 0.32); R(-0.05, -0.25, 0.42, 0.32); R(0.45, -0.45, 0.18, 0.55); break;
     case 'destroyer':
       P([[-0.8, 0.05], [0.85, 0.05], [0.55, 0.35], [-0.6, 0.35]]);
       R(-0.3, -0.22, 0.45, 0.28); R(-0.15, -0.45, 0.15, 0.25); L(0.25, -0.05, 0.6, -0.15, 0.08); break;
@@ -824,14 +1250,15 @@ function drawIcon(type, x, y, s) {
       ctx.beginPath(); ctx.ellipse(x, y, 0.13 * s, 0.68 * s, 0, 0, 7); ctx.fill();
       P([[-0.35, 0.48], [0.35, 0.48], [0.35, 0.6], [-0.35, 0.6]]);
       ctx.fillStyle = '#333'; C(-0.45, 0.16, 0.07); C(0.45, 0.16, 0.07); break;
-    case 'satellite':
-    case 'strikesat':
+    case 'satellite': case 'strikesat': case 'killersat':
       ctx.save(); ctx.translate(x, y); ctx.rotate(-0.5);
       ctx.fillStyle = '#fff'; ctx.fillRect(-0.2 * s, -0.2 * s, 0.4 * s, 0.4 * s);
-      ctx.fillStyle = '#7fc8ff'; ctx.fillRect(-0.85 * s, -0.15 * s, 0.55 * s, 0.3 * s); ctx.fillRect(0.3 * s, -0.15 * s, 0.55 * s, 0.3 * s);
+      ctx.fillStyle = type === 'killersat' ? '#ff9a3d' : '#7fc8ff';
+      ctx.fillRect(-0.85 * s, -0.15 * s, 0.55 * s, 0.3 * s); ctx.fillRect(0.3 * s, -0.15 * s, 0.55 * s, 0.3 * s);
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 0.05 * s;
       ctx.beginPath(); ctx.moveTo(-0.3 * s, 0); ctx.lineTo(-0.2 * s, 0); ctx.moveTo(0.2 * s, 0); ctx.lineTo(0.3 * s, 0); ctx.stroke();
       if (type === 'strikesat') { ctx.fillStyle = '#ff4d3d'; ctx.beginPath(); ctx.arc(0, 0, 0.12 * s, 0, 7); ctx.fill(); }
+      if (type === 'killersat') { ctx.strokeStyle = '#ff4d3d'; ctx.lineWidth = 0.07 * s; ctx.beginPath(); ctx.arc(0, 0, 0.13 * s, 0, 7); ctx.moveTo(0, -0.28 * s); ctx.lineTo(0, 0.28 * s); ctx.stroke(); }
       ctx.restore(); break;
   }
 }
@@ -851,22 +1278,28 @@ function drawUnit(u, now) {
   const r = s * (orbit ? 0.3 : 0.47);
   const col = S.players[u.owner].color;
   const spent = u.owner === S.cur && !S.players[u.owner].ai && u.moved && (u.attacked || !targetsFrom(u).length);
-  ctx.globalAlpha = spent ? 0.6 : 1;
+  ctx.globalAlpha = spent || u.job ? 0.6 : 1;
   if (U.dom === 'air') { ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + s * 0.5, r * 0.8, r * 0.3, 0, 0, 7); ctx.fill(); }
   if (orbit) { ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(x, y, r * 1.45, r * 0.7, -0.3, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
   ctx.fillStyle = col; ctx.beginPath();
-  if (U.dom === 'naval') { ctx.ellipse(x, y, r * 1.08, r * 0.86, 0, 0, 7); } else if (U.dom === 'air') { ctx.moveTo(x, y - r * 1.1); ctx.lineTo(x + r * 1.05, y); ctx.lineTo(x, y + r * 1.1); ctx.lineTo(x - r * 1.05, y); ctx.closePath(); } else ctx.arc(x, y, r, 0, 7);
+  if (U.dom === 'naval') ctx.ellipse(x, y, r * 1.08, r * 0.86, 0, 0, 7);
+  else if (U.dom === 'air') { ctx.moveTo(x, y - r * 1.1); ctx.lineTo(x + r * 1.05, y); ctx.lineTo(x, y + r * 1.1); ctx.lineTo(x - r * 1.05, y); ctx.closePath(); }
+  else ctx.arc(x, y, r, 0, 7);
   ctx.fill(); ctx.lineWidth = Math.max(1.5, 2 * cam.z); ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.stroke();
-  if (UNITS[u.type].stealth && u.owner === 0) { ctx.globalAlpha *= 0.85; }
   drawIcon(u.type, x, y, r * 0.75);
   ctx.globalAlpha = 1;
-  if (!orbit) {
-    const bw = s * 0.8, frac = Math.max(0, u.hp) / U.hp;
-    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(x - bw / 2, y + r + 2, bw, 4);
-    ctx.fillStyle = frac > 0.6 ? '#4cd17a' : frac > 0.3 ? '#f2c230' : '#ef4a3a'; ctx.fillRect(x - bw / 2, y + r + 2, bw * frac, 4);
-  } else if (u.type === 'strikesat' && u.cd > 0) {
-    ctx.fillStyle = '#fff'; ctx.font = `700 ${10 * cam.z}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText(u.cd, x, y - r - 2);
+  const bw = orbit ? s * 0.5 : s * 0.8, frac = Math.max(0, u.hp) / U.hp, by = y + r + 2;
+  if (!orbit || frac < 1) {
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(x - bw / 2, by, bw, 4);
+    ctx.fillStyle = frac > 0.6 ? '#4cd17a' : frac > 0.3 ? '#f2c230' : '#ef4a3a'; ctx.fillRect(x - bw / 2, by, bw * frac, 4);
   }
+  ctx.textAlign = 'center';
+  if (u.type === 'strikesat' && u.cd > 0) { ctx.fillStyle = '#fff'; ctx.font = `700 ${10 * cam.z}px sans-serif`; ctx.fillText(u.cd, x, y - r - 2); }
+  if (u.cargo && u.cargo.length) {
+    ctx.fillStyle = '#ffe14d'; ctx.beginPath(); ctx.arc(x + r * 0.9, y - r * 0.8, 6 * Math.max(0.8, cam.z), 0, 7); ctx.fill();
+    ctx.fillStyle = '#000'; ctx.font = `800 ${9 * Math.max(0.8, cam.z)}px sans-serif`; ctx.fillText(u.cargo.length, x + r * 0.9, y - r * 0.8 + 3 * Math.max(0.8, cam.z));
+  }
+  if (u.job && cam.z > 0.5) { ctx.font = `${11 * cam.z}px sans-serif`; ctx.fillText(JOBS[u.job.k].icon, x + r * 0.9, y - r * 0.7); }
 }
 
 function render() {
@@ -878,20 +1311,23 @@ function render() {
   const s = HEX * cam.z, vis = S.spectate ? null : getVis(0);
   const onScreen = (x, y) => x > -s * 2 && y > -s * 2 && x < innerWidth + s * 2 && y < innerHeight + s * 2;
   const known = t => S.spectate || S.explored[t.i];
-  // terrain
+  const earth = S.map !== 'random';
+  const pos = S.tiles.map(t => toScreen(...hexPos(t.c, t.r)));
   for (const t of S.tiles) {
-    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
+    const [x, y] = pos[t.i]; if (!onScreen(x, y)) continue;
     hexPath(x, y, s + 0.6);
-    if (!known(t)) { ctx.fillStyle = '#141d30'; ctx.fill(); ctx.strokeStyle = '#1a2440'; ctx.lineWidth = 1; ctx.stroke(); continue; }
+    if (!known(t)) { ctx.fillStyle = earth && isLand(t) ? '#2b3b57' : '#141d30'; ctx.fill(); ctx.strokeStyle = '#1a2440'; ctx.lineWidth = 1; ctx.stroke(); continue; }
     ctx.fillStyle = TERRAIN[t.t].color; ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.lineWidth = 1; ctx.stroke();
     drawTerrainDetail(t, x, y, s);
   }
-  // borders
+  for (const t of S.tiles) { if (!known(t)) continue; const [x, y] = pos[t.i]; if (onScreen(x, y)) drawRoadsBridges(t, x, y, s, known); }
+  for (const t of S.tiles) { if (!known(t)) continue; const [x, y] = pos[t.i]; if (onScreen(x, y)) drawMarks(t, x, y, s); }
   ctx.lineWidth = Math.max(2, 3 * cam.z);
   for (const t of S.tiles) {
     const o = ownerOf(t); if (o < 0 || !known(t)) continue;
-    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
+    const [x, y] = pos[t.i]; if (!onScreen(x, y)) continue;
+    hexPath(x, y, s); ctx.globalAlpha = 0.12; ctx.fillStyle = S.players[o].color; ctx.fill(); ctx.globalAlpha = 1;
     const ns = neighbors(t);
     ctx.strokeStyle = S.players[o].color;
     for (let d = 0; d < 6; d++) {
@@ -900,44 +1336,41 @@ function render() {
       ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
     }
   }
-  // territory tint
-  for (const t of S.tiles) {
-    const o = ownerOf(t); if (o < 0 || !known(t)) continue;
-    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
-    hexPath(x, y, s); ctx.globalAlpha = 0.12; ctx.fillStyle = S.players[o].color; ctx.fill(); ctx.globalAlpha = 1;
-  }
   for (const c of S.cities) {
     const t = tileOf(c); if (!known(t)) continue;
-    const [x, y] = toScreen(...hexPos(c.c, c.r)); if (onScreen(x, y)) drawCity(c, x, y, s);
+    const [x, y] = pos[t.i]; if (onScreen(x, y)) drawCity(c, x, y, s);
   }
-  // fog
   if (vis) for (const t of S.tiles) {
     if (!S.explored[t.i] || vis.has(t.i)) continue;
-    const [x, y] = toScreen(...hexPos(t.c, t.r)); if (!onScreen(x, y)) continue;
-    hexPath(x, y, s + 0.6); ctx.fillStyle = 'rgba(8,12,24,.45)'; ctx.fill();
+    const [x, y] = pos[t.i]; if (!onScreen(x, y)) continue;
+    hexPath(x, y, s + 0.6); ctx.fillStyle = 'rgba(8,12,24,.42)'; ctx.fill();
   }
-  // highlights
-  for (const [i] of reach) {
-    const t = S.tiles[i], [x, y] = toScreen(...hexPos(t.c, t.r));
-    hexPath(x, y, s * 0.86); ctx.fillStyle = 'rgba(255,255,255,.26)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+  for (const [i, rem] of reach) {
+    const [x, y] = pos[i];
+    hexPath(x, y, s * 0.86); ctx.fillStyle = rem < 0 ? 'rgba(255,225,77,.35)' : 'rgba(255,255,255,.26)'; ctx.fill();
+    ctx.strokeStyle = rem < 0 ? '#ffe14d' : 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+  if (mode) for (const i of mode.tiles) {
+    const [x, y] = pos[i];
+    hexPath(x, y, s * 0.86); ctx.fillStyle = 'rgba(80,220,255,.32)'; ctx.fill(); ctx.strokeStyle = '#5fe0ff'; ctx.lineWidth = 2; ctx.stroke();
   }
   if (sel) {
-    const t = S.tiles[sel.i], [x, y] = toScreen(...hexPos(t.c, t.r));
+    const [x, y] = pos[sel.i];
     hexPath(x, y, s * 0.93); ctx.strokeStyle = '#ffe14d'; ctx.lineWidth = 3; ctx.stroke();
   }
-  // units
-  const surf = S.units.filter(u => layerOf(u) === 'surface' && seesUnit(0, u));
-  const orb = S.units.filter(u => layerOf(u) === 'orbit' && seesUnit(0, u));
-  for (const u of surf) { const [x, y] = toScreen(...hexPos(u.c, u.r)); if (onScreen(x, y)) drawUnit(u, now); }
-  for (const u of orb) { const [x, y] = toScreen(...hexPos(u.c, u.r)); if (onScreen(x, y)) drawUnit(u, now); }
+  for (const layer of ['surface', 'orbit'])
+    for (const u of S.units) {
+      if (layerOf(u) !== layer || !seesUnit(0, u)) continue;
+      const [x, y] = pos[idx(u.c, u.r)]; if (onScreen(x, y)) drawUnit(u, now);
+    }
   for (const e of tgts) {
-    const [x, y] = toScreen(...hexPos(e.c, e.r));
+    let [x, y] = pos[idx(e.c, e.r)];
+    if (layerOf(e) === 'orbit') { x += s * 0.5; y -= s * 0.55; }
     ctx.strokeStyle = pending === e ? '#ff2d2d' : '#ff6b5e'; ctx.lineWidth = pending === e ? 4 : 2.5;
-    ctx.beginPath(); ctx.arc(x, y, s * 0.62, 0, 7); ctx.stroke();
-    if (pending !== e) { ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, s * 0.74, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+    const rr = layerOf(e) === 'orbit' ? s * 0.42 : s * 0.62;
+    ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.stroke();
+    if (pending !== e) { ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, rr + s * 0.12, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
   }
-  // floats
   for (let i = floats.length - 1; i >= 0; i--) {
     const f = floats[i], t = (now - f.t0) / 1100;
     if (t >= 1) { floats.splice(i, 1); continue; }
@@ -966,7 +1399,7 @@ function screenToTile(sx, sy) {
   const [c, rr] = fromAxial(rx, rz); return tileAt(c, rr);
 }
 function setZoom(z, fx = innerWidth / 2, fy = innerHeight / 2) {
-  z = Math.max(0.4, Math.min(2.2, z));
+  z = Math.max(0.35, Math.min(2.2, z));
   const wx = (fx - innerWidth / 2) / cam.z + cam.x, wy = (fy - innerHeight / 2) / cam.z + cam.y;
   cam.z = z; cam.x = wx - (fx - innerWidth / 2) / z; cam.y = wy - (fy - innerHeight / 2) / z; clampCam(); dirty = true;
 }
@@ -1006,10 +1439,10 @@ document.getElementById('zIn').onclick = () => setZoom(cam.z * 1.2);
 document.getElementById('zOut').onclick = () => setZoom(cam.z / 1.2);
 
 /* ---------------- selection & taps ---------------- */
-function clearSel() { sel = null; reach = new Map(); tgts = []; pending = null; dirty = true; }
+function clearSel() { sel = null; reach = new Map(); tgts = []; pending = null; mode = null; dirty = true; }
 function selectUnit(u) {
-  sel = { kind:'unit', id:u.id, i:idx(u.c, u.r) }; pending = null;
-  const mine = u.owner === 0 && S.cur === 0 && !busy;
+  sel = { kind:'unit', id:u.id, i:idx(u.c, u.r) }; pending = null; mode = null;
+  const mine = u.owner === 0 && S.cur === 0 && !busy && !S.spectate;
   reach = mine ? reachable(u) : new Map();
   tgts = mine ? targetsFrom(u) : [];
   dirty = true; refreshPanel();
@@ -1017,6 +1450,10 @@ function selectUnit(u) {
 function onTap(t) {
   if (!S || busy || S.over) return;
   if (!t || (!S.spectate && !S.explored[t.i])) { clearSel(); refreshPanel(); return; }
+  if (mode && mode.tiles.has(t.i)) {
+    if (mode.kind === 'unload') { const tr = unitById(mode.tr); const u = unload(tr, mode.k, t); selectUnit(tr); toast(`${UNITS[u.type].name} landed`); refreshUI(); return; }
+    if (mode.kind === 'job') { const w = unitById(mode.w); startJob(w, mode.job, t); afterAction(w); return; }
+  }
   if (sel && sel.kind === 'unit') {
     const u = unitById(sel.id);
     if (u && u.owner === 0) {
@@ -1025,10 +1462,9 @@ function onTap(t) {
         if (pending === tg) { doAttack(u, tg); afterAction(u); return; }
         pending = tg; dirty = true; refreshPanel(); return;
       }
-      if (reach.has(t.i)) { moveUnit(u, t); afterAction(u); return; }
+      if (reach.has(t.i)) { moveUnit(u, t); if (S.units.includes(u)) afterAction(u); else { const tr = unitAt(t); selectUnit(tr); refreshUI(); } return; }
     }
   }
-  // cycle through things on this tile
   const opts = [];
   const su = unitAt(t), ou = unitAt(t, 'orbit'), c = cityAt(t);
   if (su && seesUnit(0, su)) opts.push({ kind:'unit', id:su.id });
@@ -1055,9 +1491,8 @@ function refreshUI() {
   if (!S) return;
   const P = S.players[0];
   $('tTurn').textContent = `Turn ${S.turn}`;
-  $('tSupply').textContent = `⛽ ${P.supply} (+${income(0)})`;
-  $('tSupply').title = 'Supply: spend it on units, research and city upgrades';
-  $('bEnd').disabled = busy || S.cur !== 0 || S.over;
+  $('tSupply').textContent = S.spectate ? '👁 Spectating' : `⛽ ${P.supply} (+${income(0)})`;
+  $('bEnd').disabled = busy || S.cur !== 0 || S.over || S.spectate;
   $('bTech').disabled = busy || S.spectate;
   $('bNext').disabled = busy || S.spectate;
   refreshPanel(); dirty = true;
@@ -1070,7 +1505,45 @@ function iconCanvas(type, color, size = 30) {
   return c;
 }
 function withCtx(g, fn) { const saved = ctx; ctx = g; try { fn(); } finally { ctx = saved; } }
-function statLine(U) { return `<span class="pill">ATK ${U.atk}</span><span class="pill">DEF ${U.def}</span><span class="pill">MOVE ${U.mv}</span><span class="pill">RANGE ${U.minr === 2 ? '2–' : ''}${U.rng}</span>`; }
+function statLine(U) {
+  if (U.atk <= 0) return `<span class="pill">DEF ${U.def}</span><span class="pill">MOVE ${U.mv}</span>`;
+  return `<span class="pill">ATK ${U.atk}</span><span class="pill">DEF ${U.def}</span><span class="pill">MOVE ${U.mv}</span><span class="pill">RANGE ${U.minr === 2 ? '2–' : ''}${U.rng}</span>`;
+}
+
+function workerPanel(u) {
+  let h = '';
+  if (u.job) {
+    h += `<div class="sub" style="margin-top:6px">Working on: <b>${JOBS[u.job.k].icon} ${JOBS[u.job.k].name}</b> — ${u.job.left} turn(s) left. Moving cancels it.</div>`;
+    return h;
+  }
+  if (u.moved) return '<div class="sub" style="margin-top:6px">Already acted this turn.</div>';
+  const here = tileOf(u);
+  h += '<div class="sub" style="margin-top:8px">Build here (Engineers stay on the job until it\'s done):</div><div class="grid">';
+  for (const k of Object.keys(JOBS)) {
+    const J = JOBS[k];
+    let ok, why;
+    if (J.adj) {
+      const tiles = neighbors(here).filter(n => n && jobOk(0, k, n, here));
+      ok = tiles.length > 0; why = jobLockedReason(0, k) || (ok ? `${tiles.length} spot(s) nearby` : k === 'bridge' ? 'Needs coastal water next to you' : 'Needs 🐟 in your waters next to you');
+    } else {
+      ok = jobOk(0, k, here, here);
+      why = jobLockedReason(0, k) || (ok ? 'Ready' : jobHint(k, here));
+    }
+    h += `<button class="bcard" data-a="job" data-k="${k}" ${ok ? '' : 'disabled'}><span>${J.icon} ${J.name}</span><small>${J.turns} turn${J.turns > 1 ? 's' : ''} · ${why}</small></button>`;
+  }
+  return h + '</div>';
+}
+function jobHint(k, t) {
+  const own = ownerOf(t) === 0;
+  switch (k) {
+    case 'road': return t.road ? 'Already a road' : t.city >= 0 ? 'Cities have roads' : 'Land only';
+    case 'farm': return !own ? 'Your territory only' : t.imp ? 'Tile improved' : 'Plains only';
+    case 'lumber': return !own ? 'Your territory only' : t.imp ? 'Tile improved' : 'Forest only';
+    case 'mine': return !own ? 'Your territory only' : t.imp ? 'Tile improved' : 'Hills (or 🪙 mountains)';
+    case 'derrick': return !own ? 'Your territory only' : t.imp ? 'Tile improved' : 'Needs 🛢️ oil';
+  }
+  return '';
+}
 
 function refreshPanel() {
   if (!S || !sel) { panel.innerHTML = ''; return; }
@@ -1081,17 +1554,27 @@ function refreshPanel() {
     const U = UNITS[u.type], P = S.players[u.owner];
     h += `<h3><span id="picon"></span>${U.name} <small style="color:${P.color}">${P.name}</small></h3>`;
     h += `<div class="sub">${U.desc}</div>`;
-    if (U.dom !== 'orbit') h += `<span class="pill">HP ${u.hp}/${U.hp}</span>`;
-    h += statLine(U);
+    h += `<span class="pill">HP ${u.hp}/${U.hp}</span>` + statLine(U);
     if (u.type === 'strikesat' && u.cd) h += `<span class="pill">Recharging ${u.cd}</span>`;
     if (u.owner === 0 && myTurn) {
-      const status = u.attacked ? 'Done for this turn' : u.moved ? (tgts.length ? 'Moved — can still attack' : 'Moved') : 'Ready';
-      h += `<div class="sub" style="margin-top:6px">${status}${!u.moved && reach.size ? ' · tap a highlighted tile to move' : ''}${tgts.length ? ' · tap a red ring to target' : ''}</div>`;
+      if (mode) h += `<div class="sub" style="margin-top:6px">Tap a <b style="color:#5fe0ff">blue tile</b> to ${mode.kind === 'unload' ? 'land the unit' : 'start building'}.</div><div class="row"><button data-a="cancelmode">Cancel</button></div>`;
+      else if (u.type === 'worker') h += workerPanel(u);
+      else {
+        const status = u.attacked ? 'Done for this turn' : u.moved ? (tgts.length ? 'Moved — can still attack' : 'Moved') : 'Ready';
+        h += `<div class="sub" style="margin-top:6px">${status}${!u.moved && reach.size ? ' · tap a highlighted tile to move' : ''}${tgts.length ? ' · tap a red ring to target' : ''}</div>`;
+      }
+      if (!mode && [...reach.values()].some(v => v < 0)) h += `<div class="sub">Yellow tile: board the transport.</div>`;
       h += '<div class="row">';
       if (canCapture(u)) h += `<button class="primary" data-a="capture">🚩 Capture ${cityAt(tileOf(u)).name}</button>`;
-      else { const c = cityAt(tileOf(u)); if (c && c.owner !== 0 && UNITS[u.type].cap && !u.attacked && c.owner >= 0) h += `<span class="sub">Hold this city until next turn to capture it.</span>`; }
-      if (u.type === 'satellite') h += `<button data-a="upgrade" ${canUpgrade(u) ? '' : 'disabled'}>☄️ Arm satellite (${UPGRADE_COST} ⛽)${!has(0, 'orbital') ? ' — needs Orbital Weapons' : u.age < 2 ? ' — after 2 turns in orbit' : ''}</button>`;
-      if (!u.attacked) h += `<button data-a="hold">💤 Hold</button>`;
+      else { const c = cityAt(tileOf(u)); if (c && c.owner !== 0 && U.cap && !u.attacked && c.owner >= 0) h += `<span class="sub">Hold this city until next turn to capture it.</span>`; }
+      for (const o of upgradeOptions(u)) {
+        h += `<button data-a="upgrade" data-k="${o.to}" ${o.ok ? '' : 'disabled'}>${o.to === 'strikesat' ? '☄️' : '⚡'} ${UNITS[o.to].name} (${UPGRADE_COST} ⛽)${!has(0, o.tech) ? ' — needs ' + TECH[o.tech].name : u.age < 2 ? ' — after 2 turns in orbit' : ''}</button>`;
+      }
+      if (u.cargo && !mode) u.cargo.forEach((cg, k) => {
+        h += `<button data-a="unload" data-k="${k}" ${unloadTiles(u).length ? '' : 'disabled'}>⬇ Unload ${UNITS[cg.type].name} (${cg.hp}hp)</button>`;
+      });
+      if (u.cargo && !u.cargo.length) h += `<span class="sub">Empty. Move land units next to the ship to board.</span>`;
+      if (!u.attacked && !mode && !u.job) h += `<button data-a="hold">💤 Hold</button>`;
       h += '</div>';
       if (pending) {
         const r = calcCombat(u, pending), E = UNITS[pending.type];
@@ -1100,17 +1583,20 @@ function refreshPanel() {
               <div class="row"><button class="danger" data-a="attack">💥 Confirm attack</button><button data-a="cancel">Cancel</button></div>
               <div class="sub">Tip: tap the target again to fire.</div></div>`;
       }
-    }
+    } else if (u.cargo && u.cargo.length) h += `<div class="sub">Carrying ${u.cargo.length} unit(s).</div>`;
   } else if (sel.kind === 'city') {
     const c = S.cities[sel.id], own = c.owner === 0;
     const P = c.owner >= 0 ? S.players[c.owner] : null;
     h += `<h3>${c.capital ? '⭐ ' : '🏙 '}${c.name} <small style="color:${P ? P.color : '#aaa'}">${P ? P.name : 'Neutral'}</small></h3>`;
-    h += `<span class="pill">Level ${c.level}</span><span class="pill">+${1 + c.level + (c.capital ? 2 : 0)} ⛽/turn</span>`;
+    h += `<span class="pill">Level ${c.level}</span><span class="pill">+${cityIncome(c)} ⛽/turn</span>`;
     if (isCoastal(c)) h += `<span class="pill">⚓ Port</span>`;
     if (own) {
+      const need = growNeed(c), fr = foodRate(c);
       h += `<span class="pill">Units ${unitCount(0)}/${unitCap(0)}</span>`;
+      h += c.level < MAX_LEVEL
+        ? `<div class="sub" style="margin-top:6px">🌾 Growth ${c.food}/${need} (+${fr}/turn) — farms and fisheries nearby speed this up.</div><div class="bar"><i style="width:${Math.min(100, c.food / need * 100)}%"></i></div>`
+        : `<div class="sub" style="margin-top:6px">Max size.</div>`;
       if (myTurn) {
-        h += `<div class="row">${c.level < MAX_LEVEL ? `<button data-a="expand" ${S.players[0].supply >= expandCost(c) ? '' : 'disabled'}>🏗 Expand city (${expandCost(c)} ⛽) — +1 ⛽, +1 unit cap${c.level === 2 ? ', bigger territory' : ''}</button>` : '<span class="sub">Max level</span>'}</div>`;
         h += `<div class="sub" style="margin-top:8px">Build (one per city per turn):</div><div class="grid">`;
         for (const k of Object.keys(UNITS)) {
           const U = UNITS[k]; if (U.noBuild) continue;
@@ -1123,36 +1609,48 @@ function refreshPanel() {
     } else h += `<div class="sub" style="margin-top:6px">Move a capturing unit (Infantry, Recon, Tank) here to take it. Neutral towns are captured right away; enemy cities must be held for a turn.</div>`;
   } else {
     const t = S.tiles[sel.id], o = ownerOf(t);
-    h += `<h3>${TERRAIN[t.t].name}</h3>`;
+    h += `<h3>${t.bridge ? '🌉 Bridge over ' : ''}${TERRAIN[t.t].name}</h3>`;
     h += `<span class="pill">Defense ×${TERRAIN[t.t].def}</span>`;
     h += `<span class="pill">${o >= 0 ? S.players[o].name + ' territory' : 'Unclaimed'}</span>`;
-    if (t.oil) h += `<span class="pill">${t.derrick ? '🛢 Derrick (+2 ⛽)' : '🛢 Oil field'}</span>`;
-    if (t.oil && !t.derrick && o === 0 && myTurn)
-      h += `<div class="row"><button data-a="derrick" ${canDerrick(0, t) ? '' : 'disabled'}>🛢 Build derrick (${DERRICK_COST} ⛽)${has(0, 'industry') ? '' : ' — needs Oil Industry'}</button></div>`;
-    const moveInfo = { plain:'Move cost 1', forest:'Move cost 2', hill:'Move cost 2', mountain:'Move cost 3 · no heavy vehicles', shallow:'Ships only', ocean:'Ships only' };
-    h += `<div class="sub" style="margin-top:6px">${moveInfo[t.t]}. Aircraft and satellites ignore terrain.</div>`;
+    if (t.res) h += `<span class="pill">${RES[t.res].icon} ${RES[t.res].name}</span>`;
+    if (t.imp) { const y = tileYield(t); h += `<span class="pill">${JOBS[t.imp].icon} ${JOBS[t.imp].name}: ${y.food ? '+' + y.food + ' 🌾' : ''}${y.supply ? '+' + y.supply + ' ⛽' : ''}</span>`; }
+    if (t.road) h += `<span class="pill">🛣️ Road</span>`;
+    const moveInfo = { plain:'Move cost 1', desert:'Move cost 1', forest:'Move cost 2', hill:'Move cost 2', mountain:'Move cost 3 · no heavy vehicles', shallow:'Ships only (bridges let land units cross)', ocean:'Ships only' };
+    h += `<div class="sub" style="margin-top:6px">${moveInfo[t.t]}. Roads make moves cost ½. Aircraft and satellites ignore terrain.</div>`;
+    const tips = { wheat:'Farm it for +2 🌾', iron:'Mine it for +2 ⛽', gold:'Mine it for +3 ⛽', oil:'Derrick for +3 ⛽ (Oil Industry)', fish:'Fishery for +2 🌾 (Seafaring)' };
+    if (t.res && !t.imp) h += `<div class="sub">${tips[t.res]} — send Engineers.</div>`;
   }
   panel.innerHTML = h;
   if (sel.kind === 'unit') { const u = unitById(sel.id); const pi = $('picon'); if (u && pi) pi.replaceWith(iconCanvas(u.type, S.players[u.owner].color, 30)); }
 }
 panel.addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b || b.disabled || busy) return;
+  const b = e.target.closest('button'); if (!b || b.disabled || busy || !sel) return;
   const a = b.dataset.a;
   if (sel.kind === 'unit') {
     const u = unitById(sel.id); if (!u) return;
     if (a === 'capture') { capture(u); afterAction(u); }
-    else if (a === 'upgrade') { upgrade(u); afterAction(u); }
+    else if (a === 'upgrade') { upgrade(u, b.dataset.k); afterAction(u); }
     else if (a === 'hold') { u.moved = u.attacked = true; afterAction(u); nextUnit(); }
     else if (a === 'attack' && pending) { doAttack(u, pending); afterAction(u); }
     else if (a === 'cancel') { pending = null; dirty = true; refreshPanel(); }
+    else if (a === 'cancelmode') { selectUnit(u); }
+    else if (a === 'unload') {
+      reach = new Map(); tgts = []; pending = null;
+      mode = { kind:'unload', tr:u.id, k:+b.dataset.k, tiles:new Set(unloadTiles(u).map(t => t.i)) }; dirty = true; refreshPanel();
+    } else if (a === 'job') {
+      const k = b.dataset.k, here = tileOf(u);
+      if (JOBS[k].adj) {
+        reach = new Map(); pending = null;
+        mode = { kind:'job', job:k, w:u.id, tiles:new Set(neighbors(here).filter(n => n && jobOk(0, k, n, here)).map(t => t.i)) }; dirty = true; refreshPanel();
+      } else { startJob(u, k, here); afterAction(u); }
+    }
   } else if (sel.kind === 'city') {
     const c = S.cities[sel.id];
-    if (a === 'expand') { expand(0, c); refreshUI(); }
-    if (a === 'build') { const u = build(0, c, b.dataset.k); if (u) toast(`${UNITS[u.type].name} deployed in ${c.name} — ready next turn`); refreshUI(); }
-  } else if (a === 'derrick') { buildDerrick(0, S.tiles[sel.id]); refreshUI(); }
+    if (a === 'build') { const u = build(0, c, b.dataset.k); if (u) toast(`${UNITS[u.type].name} ready in ${c.name} next turn`); refreshUI(); }
+  }
 });
 function nextUnit() {
-  const ready = unitsOf(0).filter(u => !u.moved || (!u.attacked && targetsFrom(u).length));
+  const ready = unitsOf(0).filter(u => !u.job && (!u.moved || (!u.attacked && targetsFrom(u).length)));
   if (!ready.length) { toast('All units have acted — end your turn when ready'); return; }
   let i = 0;
   if (sel && sel.kind === 'unit') { const j = ready.findIndex(u => u.id === sel.id); if (j >= 0) i = (j + 1) % ready.length; }
@@ -1186,42 +1684,51 @@ function showTech() {
 
 const HELP = `
 <h2>Goal</h2><p>Capture every enemy city. A faction with no cities is out.</p>
+<h2>Economy</h2><ul>
+<li>Cities earn <b>⛽ Supply</b> each turn. Bigger cities earn more and support more units.</li>
+<li>Cities grow on <b>🌾 food</b>. Every city makes 1 food a turn; farms and fisheries in its territory add more.</li>
+<li><b>Engineers</b> build: Roads (½ move cost), Farms (plains, +1 🌾, +2 on wheat), Lumber Camps (forest, +1 ⛽), Mines (hills, +1 ⛽, more on iron/gold), Oil Derricks (+3 ⛽), Fisheries (+2 🌾) and Bridges over coastal water.</li>
+<li>Improvements only count inside your borders. Borders widen when a city reaches level 3.</li></ul>
 <h2>Each turn</h2><ul>
-<li>You earn <b>⛽ Supply</b> from your cities (and oil derricks).</li>
 <li>Tap a <b>unit</b>: white tiles show where it can move, red rings show what it can hit. Tap a ring to preview, tap again to fire.</li>
 <li>A unit can move then attack. Attacking ends its turn.</li>
-<li>Tap a <b>city</b> to build units (one per city per turn) or expand it.</li>
-<li>Tap 🔬 to research new doctrines: tanks, artillery, navy, air force and space.</li></ul>
+<li>Tap a <b>city</b> to build (one unit per city per turn).</li>
+<li>Tap 🔬 to research doctrines: armor, artillery, navy, air force and space.</li></ul>
+<h2>Crossing water</h2><p>Build a <b>Transport Ship</b> (Seafaring). Move a land unit onto the yellow ship tile to board. Select the ship and tap Unload to land troops on an adjacent shore. Or research Engineering and bridge narrow straits.</p>
 <h2>Combat</h2><ul>
-<li>Damage depends on attack vs defense and remaining HP. Survivors fire back if they can reach.</li>
 <li>Forest ×1.25, hills ×1.5, mountains ×2, own city ×1.5 defense.</li>
 <li>Only Infantry, AA, Fighters and Destroyers can hit aircraft.</li>
 <li>Submarines are invisible until an enemy is adjacent or a Destroyer is within 2 tiles.</li>
-<li>Satellites sit in orbit: nothing can shoot them. Research Orbital Weapons to arm them.</li>
-<li>Moving next to an enemy ground or naval unit stops your movement.</li>
-<li>Units that don't act heal next turn (most in your own cities).</li></ul>
-<h2>Capturing</h2><p>Infantry, Recon and Tanks capture. Neutral towns fall at once; enemy cities must be held into your next turn.</p>
+<li>Moving next to an armed enemy ground or naval unit stops your movement.</li>
+<li>Units that rest heal next turn (most in your own cities).</li></ul>
+<h2>Space race</h2><ul>
+<li><b>Space Program</b>: launch a Recon Satellite — it reveals the whole map.</li>
+<li><b>Orbital Cannon</b>: after 2 turns in orbit, upgrade a satellite to strike ground and sea targets.</li>
+<li><b>Space Control</b>: Killer Satellites are the only thing that can destroy other satellites.</li></ul>
 <h2>Controls</h2><p>Drag to pan, pinch or +/− to zoom. Tap a tile again to cycle between unit, satellite, city and terrain.</p>`;
 
-let setup = { ai:2, size:16, diff:1 };
+let setup = { ai:1, size:16, diff:0, map:'random' };
 function showStart() {
-  let hasSave = false; try { hasSave = !!localStorage.getItem('ironfront_save'); } catch (e) {}
+  let hasSave = false; try { hasSave = !!localStorage.getItem(SAVE_KEY); } catch (e) {}
   const seg = (key, vals) => `<div class="seg">${vals.map(([v, l]) => `<button data-s="${key}" data-v="${v}" class="${setup[key] === v ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+  const capsInfo = setup.map !== 'random' ? `<div class="sub" style="margin-top:4px">You start in ${EARTH[setup.map].caps[setup.ai + 1][0]}; rivals in ${EARTH[setup.map].caps[setup.ai + 1].slice(1).join(', ')}.</div>` : '';
   openModal(`<h1>🪖 Iron Front</h1><div class="sub">Theater Command — a turn-based modern warfare strategy game.</div>
-    <p>Build an army of infantry, tanks, artillery, destroyers, submarines, jets and bombers. Race to space and put a satellite in orbit. Take every enemy city to win.</p>
+    <p>Grow your cities, develop farms, mines and oil, then build an army of infantry, tanks, ships, jets and satellites. Take every enemy city to win.</p>
+    <h2>Map</h2>${seg('map', [['random', '🎲 Random'], ['usa', '🇺🇸 North America'], ['europe', '🇪🇺 Europe']])}${capsInfo}
     <h2>Opponents</h2>${seg('ai', [[1, '1'], [2, '2'], [3, '3']])}
-    <h2>Map size</h2>${seg('size', [[12, 'Small'], [16, 'Medium'], [22, 'Large']])}
+    ${setup.map === 'random' ? `<h2>Map size</h2>${seg('size', [[12, 'Small'], [16, 'Medium'], [22, 'Large']])}` : ''}
     <h2>Difficulty</h2>${seg('diff', [[0, 'Recruit'], [1, 'Veteran'], [2, 'General']])}
+    <div class="sub" style="margin-top:4px">${['Recruit: AI builds slowly and leaves you alone for the first 15 turns.', 'Veteran: a fair fight. 8 turns of peace.', 'General: AI gets bonus supply and attacks from turn 1.'][setup.diff]}</div>
     <div class="row" style="margin-top:16px"><button class="primary" id="mStart">▶ New game</button>${hasSave ? '<button id="mCont">Continue saved game</button>' : ''}<button id="mHelp">How to play</button><button id="mWatch">Watch AIs fight</button></div>`);
-  mbox.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { setup[b.dataset.s] = +b.dataset.v; showStart(); });
+  mbox.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { const v = b.dataset.v; setup[b.dataset.s] = isNaN(+v) ? v : +v; showStart(); });
   $('mStart').onclick = () => newGame(setup);
   if (hasSave) $('mCont').onclick = () => { if (!load()) toast('Could not load save'); };
-  $('mHelp').onclick = () => { openModal(`<h1>How to play</h1>${HELP}<div class="row"><button id="mBack">Back</button></div>`); $('mBack').onclick = S && !S.over ? closeModal : showStart; };
-  $('mWatch').onclick = () => newGame({ ...setup, ai: Math.max(1, setup.ai), spectate:true });
+  $('mHelp').onclick = () => { openModal(`<h1>How to play</h1>${HELP}<div class="row"><button id="mBack">Back</button></div>`); $('mBack').onclick = showStart; };
+  $('mWatch').onclick = () => newGame({ ...setup, spectate:true });
 }
 function showMenu() {
   if (!S) return showStart();
-  openModal(`<h1>Menu</h1><div class="sub">Turn ${S.turn} · ${S.players.filter(p => p.alive).length} factions remain</div>
+  openModal(`<h1>Menu</h1><div class="sub">Turn ${S.turn} · ${S.map === 'random' ? 'Random map' : EARTH[S.map].name} · ${DIFF[S.diff].name}</div>
     ${S.players.map(p => `<div class="tech"><span class="dot" style="background:${p.color}"></span><div class="info"><b>${p.name}${p.id === 0 && !S.spectate ? ' (you)' : ''}</b><small>${p.alive ? `${citiesOf(p.id).length} cities · ${unitsOf(p.id).length} units · ${p.tech.length} doctrines` : 'Eliminated'}</small></div></div>`).join('')}
     <div class="row"><button id="mResume" class="primary">Resume</button><button id="mHelp2">How to play</button><button id="mNew" class="danger">New game</button></div>`);
   $('mResume').onclick = closeModal;
@@ -1229,21 +1736,20 @@ function showMenu() {
   $('mNew').onclick = () => {
     if (S.over || S.spectate) { S.over = true; return showStart(); }
     openModal(`<h1>Abandon this game?</h1><p>Your current war will be lost.</p><div class="row"><button id="mYes" class="danger">Abandon</button><button id="mNo">Keep playing</button></div>`);
-    $('mYes').onclick = () => { S.over = true; try { localStorage.removeItem('ironfront_save'); } catch (e) {} showStart(); };
+    $('mYes').onclick = () => { S.over = true; try { localStorage.removeItem(SAVE_KEY); } catch (e) {} showStart(); };
     $('mNo').onclick = closeModal;
   };
 }
 function gameOver(win, winner) {
-  S.over = true; busy = false; showBusy(''); try { localStorage.removeItem('ironfront_save'); } catch (e) {} refreshUI();
+  S.over = true; busy = false; showBusy(''); try { localStorage.removeItem(SAVE_KEY); } catch (e) {} refreshUI();
   const title = S.spectate ? `${winner ? winner.name + ' wins' : 'Stalemate'}` : win ? '🏆 Victory!' : '☠️ Defeat';
   const msg = S.spectate ? `The war ended on turn ${S.turn}.` : win ? `You conquered the theater in ${S.turn} turns.` : 'Your last city has fallen.';
   openModal(`<h1>${title}</h1><p>${msg}</p><div class="row"><button class="primary" id="mAgain">New game</button><button id="mLook">View map</button></div>`);
   $('mAgain').onclick = showStart; $('mLook').onclick = closeModal;
 }
 
-// expose for testing
-window.__game = { get S() { return S; }, newGame, endTurn, UNITS, TECH, setFast: v => { if (S) S.fastAI = v; } };
-
+window.__game = { get S() { return S; }, newGame, endTurn, UNITS, TECH, setFast: v => { if (S) S.fastAI = v; },
+  t: { reachable, moveUnit, unload, spawn, startJob, startTurn, tileAt, neighbors, upgrade, targetsFrom, doAttack, jobOk, isWater, unitAt } };
 showStart();
 </script>
 </body>
