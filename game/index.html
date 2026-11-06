@@ -259,9 +259,30 @@ function tileYield(t) {
   if (t.imp === 'derrick') y.supply = 3;
   return y;
 }
-function foodRate(c) { let f = 1; for (const t of S.tiles) if (t.claim === c.id) f += tileYield(t).food; return f; }
+// Cities linked to the capital (or largest city) by roads trade with it: +2 supply and +1 food each.
+const ROAD_SUPPLY = 2, ROAD_FOOD = 1;
+let connCache = {};
+function hubOf(p) { return citiesOf(p).sort((a, b) => (b.capital - a.capital) || (b.level - a.level))[0] || null; }
+function connectedSet(p) {
+  const k = connCache[p]; if (k && k.ver === S.ver) return k.set;
+  const set = new Set(), hub = hubOf(p);
+  if (hub) {
+    const seen = new Set([idx(hub.c, hub.r)]), st = [tileOf(hub)];
+    while (st.length) {
+      const t = st.pop();
+      for (const n of neighbors(t)) {
+        if (!n || seen.has(n.i) || !hasRoad(n)) continue;
+        const c = cityAt(n); if (c && c.owner !== p) continue;
+        seen.add(n.i); st.push(n); if (c) set.add(c.id);
+      }
+    }
+  }
+  connCache[p] = { ver:S.ver, set }; return set;
+}
+const isConnected = c => c.owner >= 0 && connectedSet(c.owner).has(c.id);
+function foodRate(c) { let f = 1 + (isConnected(c) ? ROAD_FOOD : 0); for (const t of S.tiles) if (t.claim === c.id) f += tileYield(t).food; return f; }
 const growNeed = c => 2 + 3 * c.level;
-function cityIncome(c) { return 1 + c.level + (c.capital ? 2 : 0); }
+function cityIncome(c) { return 1 + c.level + (c.capital ? 2 : 0) + (isConnected(c) ? ROAD_SUPPLY : 0); }
 function income(p) {
   let s = 0;
   for (const c of citiesOf(p)) s += cityIncome(c);
@@ -380,7 +401,7 @@ function segDist(px, py, pts) {
 }
 const EARTH = {
   usa: {
-    name:'North America', w:36, h:22, lon:[-125, -66], lat:[24, 50],
+    name:'North America', sizes:{ small:[24,15], large:[36,22] }, lon:[-125, -66], lat:[24, 50],
     land: [[
       [-124,50],[-124.7,48.4],[-124,46],[-124.1,43],[-124.4,40.4],[-123.8,39],[-122.5,37.8],[-121.9,36.6],[-120.6,34.6],[-118.5,34],
       [-117.1,32.5],[-116,30],[-114,27.5],[-112,25],[-110,23],[-110.5,24.5],[-112,27],[-114.5,30.5],[-114.8,31.8],[-113,31.3],
@@ -421,7 +442,7 @@ const EARTH = {
     caps: { 2:['Los Angeles','New York'], 3:['Seattle','Houston','New York'], 4:['Los Angeles','New York','Chicago','Houston'] },
   },
   europe: {
-    name:'Europe', w:36, h:26, lon:[-11, 45], lat:[35, 61],
+    name:'Europe', sizes:{ small:[24,17], large:[36,26] }, lon:[-11, 45], lat:[35, 61],
     land: [
       [ // mainland
         [21.5,61],[45,61],[45,35],[36,35],[36,36.5],[34,36.2],[32,36.2],[30.5,36.6],[28,36.8],[27.2,37.5],[26.3,38.5],[26.6,39.5],[26.2,40],
@@ -477,10 +498,105 @@ const EARTH = {
       ['Kazan',44,56.3],['Algiers',3,36.7],['Tunis',10.2,36.8],['Palermo',13.4,38.1]],
     caps: { 2:['Paris','Moscow'], 3:['Paris','Moscow','Istanbul'], 4:['Paris','Moscow','Rome','Berlin'] },
   },
+  world: {
+    name:'World', sizes:{ medium:[54,28] }, lon:[-170, 180], lat:[-50, 72],
+    land: [
+      [[-168,66],[-162,70],[-140,70],[-125,70],[-95,72],[-80,72],[-75,62],[-64,60],[-56,52],[-60,47],[-66,44],[-70,42],[-74,40.6],[-76,37],
+       [-76,35],[-81,31],[-80,26],[-81,25],[-83,29],[-85,30],[-90,29],[-95,29.5],[-97.5,26],[-97.5,22],[-96,19],[-91,18.5],[-90,21],
+       [-87,21.5],[-88,16],[-84,15],[-83,11],[-79.5,9],[-77.5,8.5],[-80,7.5],[-85,10],[-87.5,13],[-92,14.5],[-96,15.7],[-105,20],
+       [-106,23],[-110,23],[-112.5,29],[-114.8,31.5],[-117,32.5],[-120.6,34.5],[-122.5,37.8],[-124.2,42],[-124,46],[-124.7,48.4],
+       [-127,50.5],[-131,54],[-135,57.5],[-140,60],[-147,61],[-152,59],[-158,57],[-162,55],[-165,60],[-166,62],[-165,64]],          // North America
+      [[-55,72],[-22,72],[-20,70],[-30,68],[-40,65],[-43,60],[-48,61],[-52,65],[-54,69]],                                              // Greenland
+      [[-24,65.5],[-22,66.4],[-15,66.3],[-13.5,65],[-18,63.4],[-22.5,63.8]],                                                          // Iceland
+      [[-85,21.8],[-80.5,23.1],[-75,20.5],[-77.5,19.9],[-81,21.8]],                                                                    // Cuba
+      [[-77.5,8.5],[-72,12],[-63,10.5],[-55,6],[-50,1],[-44,-2.5],[-35,-5],[-35,-9],[-39,-14],[-40,-21],[-44,-23],[-48,-26],[-52,-32],
+       [-58,-35],[-57,-38],[-62,-39],[-65,-42],[-66,-47],[-69,-51],[-68.5,-55],[-73,-53],[-75,-48],[-73.5,-42],[-73.5,-37],[-71.5,-30],
+       [-70.5,-23],[-70.3,-18],[-75,-15],[-77,-12],[-79.5,-7],[-81,-5],[-80,-1],[-79.5,1],[-78,3],[-77.3,7]],                          // South America
+      [[-17,21],[-16,24],[-13,27.5],[-10,30],[-9.5,32.5],[-6,35.8],[-2,35.2],[3,36.8],[10,37.3],[11,35],[10,34],[11.5,33],[15,32.3],
+       [20,31],[20,32.5],[25,32],[29,31],[32,31.2],[34,31.3],[34.5,28],[35,24],[37,20],[39,15.5],[43,12.5],[44.5,10.5],[51,11.8],[51,10],
+       [49,6],[46,2],[42,-1],[40,-3],[39,-7],[40.5,-10.5],[40.5,-15],[35,-20],[35.5,-24],[32.5,-26],[32,-29],[28,-33],[25,-34],[20,-34.8],
+       [18.3,-34],[17,-29],[15,-27],[13,-22],[11.8,-17],[12.5,-13],[13.5,-11],[12,-5],[9.5,-1],[9.5,3.5],[8,4.5],[5,6],[1,6],[-2,5],
+       [-7.5,4.5],[-11,7],[-13,8.5],[-15,11],[-17,14.5],[-16.5,19]],                                                                    // Africa
+      [[44,-25],[47,-25],[50.5,-15.5],[49.3,-12],[47,-15],[44,-17],[43.5,-21]],                                                         // Madagascar
+      [[-9.5,43],[-9,37],[-6,36.5],[-2,36.7],[0,39],[3,42],[5,43.3],[8,44],[10,44],[12.5,44.5],[13.6,45.6],[15,44.5],[19,42],[20,39.8],
+       [22.5,36.5],[23,38],[24,40.5],[26.5,40.6],[26,38],[28,36.8],[32,36.2],[36,36.5],[35,33],[34.3,31.3],[34.9,29.5],[37,27],[39,22],
+       [42.5,16],[43.5,12.7],[45,13],[52,16],[55.5,17.5],[57.5,19],[59.5,22.5],[56.5,24],[56,26.2],[54,24],[51.5,25.5],[50,26.5],
+       [48,29.5],[50,30],[52,27.8],[56,27],[58,25.5],[62,25.2],[66.5,25.4],[68.5,23.5],[70,21],[72.8,19],[74,15],[76.5,8.5],[77.5,8],
+       [80,9.5],[80,15],[82,17],[86.5,20],[88,22],[90,22],[92,21],[94,18],[94.5,16],[97.5,16.5],[98.5,13],[98.5,8],[100.5,3.5],
+       [103.5,1.3],[104,2],[103,5.5],[100.5,8],[100.2,13.5],[103,11],[105,8.6],[106.7,10.5],[109.2,12],[108.5,16],[106.5,19],[108,21.5],
+       [110.5,21],[113.5,22.5],[117,23.5],[119.5,26],[121.5,28.5],[122,30],[121,32],[119.5,35],[122.5,37],[119,37.3],[118,38.5],
+       [121.5,40.8],[124,39.8],[126,37.5],[126.5,34.5],[129.3,35.3],[129.5,37],[128.5,38.6],[129.7,41],[132,43],[135,43.5],[138.5,47],
+       [140.5,50],[141.5,53],[137,54],[135,55],[140,59],[143,59.5],[150,59.5],[155,59.5],[156,57],[156.5,51],[160,54],[163,56],
+       [162.5,58],[164,60],[170,60],[173,61],[178,62.5],[180,65],[180,72],[25,72],[20,70],[15,69],[13,67],[10,64],[5,62],[5,59],[6,58],
+       [8,58],[10.5,59.5],[11,58.5],[12,56.5],[13,55.5],[14.5,56],[16.5,57.5],[19,59.5],[17.5,61],[17.5,62.5],[21.5,65],[24,65.8],
+       [25,64.5],[22,63],[21,61],[22,60.2],[24,60],[28,60.5],[29.5,60],[28,59.5],[24,59.3],[23.5,58.5],[24.3,57.2],[21.6,57.5],[21,55.3],
+       [19.5,54.4],[14,54],[11,54.2],[10.9,56.4],[10.5,57.7],[8.5,57],[8,55.5],[8.6,53.9],[7,53.5],[5,53.2],[4,51.5],[2.5,51.1],[1.6,50.2],
+       [0.2,49.5],[-1.4,49.7],[-1.6,48.6],[-4.7,48.5],[-2.2,47.1],[-1.2,46],[-1.2,44.6],[-1.8,43.4],[-8,43.7]],                          // Eurasia
+      [[-5.7,50],[1.4,51.2],[1.7,52.6],[0.3,53.4],[-1.6,55.6],[-1.8,57.6],[-3.3,58.6],[-5,58.6],[-6.2,57.5],[-5,55.3],[-3,53.3],[-5.2,51.7]], // Britain
+      [[-6,52.2],[-6.1,53.8],[-6.2,55.2],[-8.5,54.4],[-10,54.2],[-10.4,52],[-8.2,51.8]],                                             // Ireland
+      [[130,31],[131.5,31.5],[132,33.5],[135,33.5],[137,34.5],[140,35],[141,38],[142,40],[141.5,41.5],[145.5,43.3],[144,44.2],[141.8,45.4],
+       [141,43.2],[140,41.5],[140,40],[139.5,38],[137,37],[136,36],[133,35.5],[131,34.3],[129.7,33.3]],                                 // Japan
+      [[120,18.5],[122.5,18.5],[124,12.5],[126.5,7],[125.5,6],[122,7],[123,10.5],[121,13.5],[120.5,16]],                                // Philippines
+      [[95.3,5.6],[98,4],[103.5,-1],[106,-5.8],[104.5,-5.9],[101,-3],[98.5,1.5]],                                                       // Sumatra
+      [[109,1.5],[110.5,-2.5],[114,-3.8],[116.5,-2.5],[118.5,1],[117.5,4],[116,6.5],[113,3.5]],                                         // Borneo
+      [[105.5,-6.5],[114.5,-7.5],[114.5,-8.7],[106,-7.4]],                                                                              // Java
+      [[131,-1],[138,-1.5],[145,-4.5],[150,-10.5],[147,-10],[141,-9],[138,-8],[137,-4.5],[132,-4]],                                    // New Guinea
+      [[113.5,-22],[114,-26],[115,-34],[118,-35],[123,-34],[129,-31.5],[132,-32],[135,-34.8],[137.5,-33],[138,-35.6],[140,-38],
+       [143.5,-38.8],[146.5,-39],[150,-37.5],[151.2,-34],[153,-31],[153.5,-28],[153,-25],[150.5,-22.5],[149,-20.5],[146,-18.5],
+       [145.5,-15],[143.5,-14],[142.5,-10.7],[141.5,-13],[141.5,-16.5],[140,-17.7],[136.5,-15.8],[135.5,-12.3],[132,-11.3],[130,-12.5],
+       [129.5,-15],[127,-14],[125,-15],[122,-17.5],[121,-19.5],[117,-20.7]],                                                             // Australia
+      [[172.7,-34.5],[178.5,-37.7],[177,-39.5],[175,-41.5],[172.5,-41],[173.5,-43],[171,-44],[166.5,-46],[169,-46.7],[172.7,-43.6],
+       [174.3,-41.7],[174.7,-39],[173,-35.5]],                                                                                          // New Zealand
+    ],
+    water: [
+      [[-95,60],[-87,64],[-80,63],[-78,58],[-80,52],[-87,55],[-93,58]],                                                                 // Hudson Bay
+      [[28.9,41.2],[33,42],[36.5,41.4],[41.5,41.5],[40,43.4],[38,44.5],[35,45],[33.5,44.5],[31,46.6],[29.6,45.2],[28,43]],               // Black Sea
+      [[47,45],[49,46.5],[53,47],[54,44],[53,40],[54,37],[51,37],[49.5,40],[48,43]],                                                    // Caspian
+    ],
+    terrain(lon, lat, n, m) {
+      const near = (pts, d) => segDist(lon, lat, pts) < d;
+      if (lat > 35 && lat < 62 && Math.abs(lon - (-105.5 - (lat - 36) * 0.75)) < 4) return n > 0.45 ? 'mountain' : 'hill';
+      if (near([[-74,10],[-78,-2],[-75,-12],[-69,-18],[-69,-30],[-71,-40],[-73,-50]], 2.6)) return n > 0.4 ? 'mountain' : 'hill';
+      if (lat > 27 && lat < 38 && lon > 70 && lon < 100) return n > 0.4 ? 'mountain' : 'hill';
+      if (near([[6,45],[10,46.5],[15,47]], 2)) return 'mountain';
+      if (near([[40,43],[46,41],[50,35],[56,28]], 2.5)) return n > 0.55 ? 'mountain' : 'hill';
+      if (lon > 57 && lon < 62 && lat > 50 && lat < 70) return 'hill';
+      if (near([[-85,34],[-75,42]], 2)) return 'hill';
+      if (near([[-8,31],[0,34],[9,35]], 2)) return 'hill';
+      if (lon > 33 && lon < 42 && lat > -10 && lat < 15) return n > 0.5 ? 'hill' : 'plain';
+      if (lon > 145 && lon < 153 && lat > -38 && lat < -15) return n > 0.5 ? 'hill' : 'forest';
+      if ((lat > 16 && lat < 32 && lon > -17 && lon < 34) || (lat > 13 && lat < 32 && lon > 34 && lon < 60) ||
+          (lat > 25 && lat < 37 && lon > 55 && lon < 70) || (lat > 38 && lat < 48 && lon > 90 && lon < 115) ||
+          (lat > 37 && lat < 42 && lon > 76 && lon < 90) || (lat > -32 && lat < -18 && lon > 118 && lon < 142) ||
+          (lat > 26 && lat < 37 && lon > -118 && lon < -103) || (lat > -27 && lat < -19 && lon > 15 && lon < 25) ||
+          (lon < -68 && lat > -28 && lat < -17)) return n > 0.75 ? 'hill' : 'desert';
+      if (lat > -15 && lat < 5 && lon > -75 && lon < -45) return 'forest';
+      if (lat > -5 && lat < 5 && lon > 10 && lon < 30) return 'forest';
+      if (lat > -10 && lat < 25 && lon > 95 && lon < 155) return m > 0.35 ? 'forest' : 'plain';
+      if (lat > 50 && lat < 68) return m > 0.3 ? 'forest' : 'plain';
+      if (lat < -40 && lon > -70 && lon < -60) return n > 0.5 ? 'desert' : 'plain';
+      return m > 0.58 ? 'forest' : 'plain';
+    },
+    cities: [['Washington',-77,38.9],['Moscow',37.6,55.75],['Beijing',116.4,39.9],['Cairo',31.2,30],['New York',-74,40.7],['Los Angeles',-118.2,34],
+      ['Chicago',-87.6,41.9],['Houston',-95.4,29.8],['Seattle',-122.3,47.6],['Winnipeg',-97.1,49.9],['Anchorage',-150,61.2],['Mexico City',-99.1,19.4],
+      ['Havana',-82.4,23.1],['Panama',-79.5,9],['Bogotá',-74,4.7],['Lima',-77,-12],['Caracas',-66.9,10.5],['Manaus',-60,-3.1],['Brasília',-47.9,-15.8],
+      ['Rio de Janeiro',-43.2,-22.9],['Buenos Aires',-58.4,-34.6],['Santiago',-70.7,-33.4],['La Paz',-68.1,-16.5],['Reykjavik',-21.9,64.1],
+      ['Nuuk',-51.7,64.2],['Montreal',-73.6,45.5],['London',-0.1,51.5],['Paris',2.35,48.85],['Madrid',-3.7,40.4],['Berlin',13.4,52.5],['Rome',12.5,41.9],
+      ['Stockholm',18,59.3],['Warsaw',21,52.2],['Kyiv',30.5,50.45],['Istanbul',29,41],['Tehran',51.4,35.7],['Baghdad',44.4,33.3],
+      ['Riyadh',46.7,24.7],['Karachi',67,24.9],['Delhi',77.2,28.6],['Mumbai',72.9,19.1],['Kolkata',88.4,22.6],['Tashkent',69.2,41.3],
+      ['Novosibirsk',82.9,55],['Yekaterinburg',60.6,56.8],['Irkutsk',104.3,52.3],['Yakutsk',129.7,62],['Vladivostok',131.9,43.1],
+      ['Magadan',150.8,59.6],['Shanghai',121.5,31.2],['Hong Kong',114.2,22.3],['Chengdu',104,30.7],['Urumqi',87.6,43.8],['Ulaanbaatar',106.9,47.9],
+      ['Seoul',127,37.6],['Tokyo',139.7,35.7],['Bangkok',100.5,13.8],['Hanoi',105.8,21],['Manila',121,14.6],['Singapore',103.8,1.35],
+      ['Jakarta',106.8,-6.2],['Port Moresby',147.2,-9.4],['Darwin',130.8,-12.5],['Perth',115.9,-32],['Sydney',151.2,-33.9],
+      ['Alice Springs',133.9,-23.7],['Auckland',174.8,-36.8],['Lagos',3.4,6.5],['Dakar',-17.4,14.7],['Algiers',3,36.7],['Tripoli',13.2,32.9],
+      ['Khartoum',32.5,15.6],['Addis Ababa',38.7,9],['Nairobi',36.8,-1.3],['Kinshasa',15.3,-4.3],['Luanda',13.2,-8.8],['Johannesburg',28,-26.2],
+      ['Cape Town',18.4,-33.9],['Antananarivo',47.5,-18.9],['Timbuktu',-3,16.8],['Mogadishu',45.3,2]],
+    caps: { 2:['Washington','Moscow'], 3:['Washington','Moscow','Beijing'], 4:['Washington','Moscow','Beijing','Cairo'] },
+  },
 };
 
-function generateEarth(key, nPlayers) {
-  const E = EARTH[key], w = E.w, h = E.h;
+function generateEarth(key, nPlayers, size) {
+  const E = EARTH[key], [w, h] = E.sizes[size] || Object.values(E.sizes)[0];
   S.w = w; S.h = h; S.tiles = []; S.cities = [];
   const n1 = makeNoise(w, h, 2.5), n2 = makeNoise(w, h, 3);
   const lonOf = (c, r) => E.lon[0] + (c + 0.5 + 0.5 * (r & 1)) / (w + 0.5) * (E.lon[1] - E.lon[0]);
@@ -521,10 +637,10 @@ function recomputeTerritory() {
 const SAVE_KEY = 'ironfront_save_v2';
 function newGame(opts) {
   const n = opts.ai + 1;
-  S = { w:0, h:0, tiles:[], cities:[], units:[], players:[], turn:1, cur:0, ver:1, nextId:1, map: opts.map || 'random',
+  S = { w:0, h:0, tiles:[], cities:[], units:[], players:[], turn:1, cur:0, ver:1, nextId:1, map: opts.map || 'random', esize: opts.esize,
         explored:[], spectate: !!opts.spectate, diff: opts.diff, over:false };
-  occVer = -1; visCache = {}; fieldCache.clear();
-  const ok = S.map === 'random' ? generateRandom(opts.size, opts.size, n) : generateEarth(S.map, n);
+  occVer = -1; visCache = {}; connCache = {}; fieldCache.clear();
+  const ok = S.map === 'random' ? generateRandom(opts.size, opts.size, n) : generateEarth(S.map, n, opts.esize);
   if (!ok) { toast('Map generation failed, try again'); return; }
   for (let p = 0; p < n; p++) {
     S.players.push({ id:p, name:PNAME[p], color:PCOL[p], ai: p > 0 || !!opts.spectate, supply:4, tech:[], alive:true,
@@ -547,7 +663,7 @@ function newGame(opts) {
 function save() { if (!S || S.over || S.spectate) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
 function load() {
   try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (!s) return false;
-    S = s; occVer = -1; visCache = {}; fieldCache.clear(); clearSel();
+    S = s; occVer = -1; visCache = {}; connCache = {}; fieldCache.clear(); clearSel();
     centerOn(tileOf(S.cities.find(c => c.owner === 0) || S.cities[0])); closeModal(); refreshUI(); return true;
   } catch (e) { return false; }
 }
@@ -817,7 +933,7 @@ function finishJob(u) {
   else if (k === 'bridge') { if (!unitAt(t)) { t.bridge = true; t.road = true; } }
   else if (!t.imp) t.imp = k;
   if (u.owner === 0) { toast(`${JOBS[k].icon} ${JOBS[k].name} completed`); }
-  u.job = null; dirty = true;
+  u.job = null; bump();
 }
 function jobValue(k, t) {
   if (k === 'farm') return t.res === 'wheat' ? 3 : 1.6;
@@ -852,6 +968,11 @@ function startTurn(p) {
     if (u.job) { u.job.left--; if (u.job.left <= 0) finishJob(u); }
   }
   bump();
+  if (p === 0 && !S.spectate) {
+    const now = [...connectedSet(0)], before = S.players[0].conn || [];
+    for (const id of now) if (!before.includes(id)) toast(`🛣️ ${S.cities[id].name} is connected to your capital: +${ROAD_SUPPLY} ⛽ +${ROAD_FOOD} 🌾`);
+    S.players[0].conn = now;
+  }
   if (p === 0) { updateExplored(); save(); }
   refreshUI();
 }
@@ -869,6 +990,7 @@ async function advance() {
     if (!S.players[n].ai) break;
     showBusy(`${S.players[n].name} is moving…`);
     await aiTurn(n);
+    if (window.__onTurn) window.__onTurn(S, n);
     if (S.over) break;
     if (S.spectate && S.turn > 400) { gameOver(false); break; }
   }
@@ -954,12 +1076,37 @@ async function aiWorker(u) {
     const b = bestAt(t); if (!b) continue;
     const s = b.v / (1 + dist(here, t)); if (s > gs) { gs = s; goal = t; }
   }
+  const roads = roadTargets(p);
+  if (roads.length && (!goal || Math.random() < 0.4)) {
+    const free = roads.filter(t => !S.units.some(w => w !== u && w.owner === p && (w.tgt === t.i || (w.job && w.job.i === t.i))) && (!unitAt(t) || unitAt(t) === u));
+    if (free.length) {
+      free.sort((a, b) => dist(a, here) - dist(b, here)); goal = free[0];
+      if (goal === here) { startJob(u, 'road', here); return; }
+    }
+  }
   if (!goal) return;
   u.tgt = goal.i;
   let bt = null, bd = dist(here, goal);
   for (const [i, rem] of reachable(u)) { if (rem < 0) continue; const t = S.tiles[i]; const d = dist(t, goal); if (d < bd) { bd = d; bt = t; } }
   if (bt) { moveUnit(u, bt); await pause(u); }
-  j = bestAt(tileOf(u)); if (j) startJob(u, j.k, j.t);
+  j = bestAt(tileOf(u)); if (j) { startJob(u, j.k, j.t); return; }
+  if (tileOf(u) === goal && jobOk(p, 'road', goal, goal)) startJob(u, 'road', goal);
+}
+// tiles still missing a road on the shortest land route from each unconnected city to the hub
+function roadTargets(p) {
+  const hub = hubOf(p); if (!hub) return [];
+  const conn = connectedSet(p), probe = { type:'infantry', owner:p, c:hub.c, r:hub.r };
+  const f = distField(tileOf(hub), probe), out = [];
+  for (const c of citiesOf(p)) {
+    if (c === hub || conn.has(c.id)) continue;
+    let t = tileOf(c); if (f[t.i] === Infinity) continue;
+    for (let step = 0; step < 40 && f[t.i] > 0; step++) {
+      let nb = null; for (const n of neighbors(t)) if (n && f[n.i] < (nb ? f[nb.i] : f[t.i])) nb = n;
+      if (!nb) break; t = nb;
+      if (!hasRoad(t) && isLand(t)) out.push(t);
+    }
+  }
+  return out;
 }
 async function aiUnit(u) {
   const U = UNITS[u.type], p = u.owner, here = tileOf(u), cfg = diff();
@@ -1010,30 +1157,44 @@ async function aiSeekShip(u) {
   for (const [i, rem] of opts) if (rem >= 0 && f[i] < bv) { bv = f[i]; bt = S.tiles[i]; }
   if (bt) { moveUnit(u, bt); await pause(u); }
 }
+function seaGoals(p, here) { return S.players[p].seaTargets.slice().sort((a, b) => dist(a, here) - dist(b, here)).slice(0, 3); }
+// best water tile to land troops from: close to the ship and next to land that leads to an overseas target
+function landingTile(u) {
+  const p = u.owner, here = tileOf(u), from = distField(here, u);
+  let best = null, bv = Infinity;
+  for (const c of seaGoals(p, here)) {
+    const lf = distField(tileOf(c), landProbe(p));
+    for (const t of S.tiles) {
+      if (!isWater(t) || from[t.i] === Infinity) continue;
+      let m = Infinity; for (const n of neighbors(t)) if (n && isLand(n) && !unitAt(n) && lf[n.i] < m) m = lf[n.i];
+      if (m === Infinity) continue;
+      const v = from[t.i] + 0.5 * m; if (v < bv) { bv = v; best = t; }
+    }
+  }
+  return best;
+}
 async function aiTransport(u) {
-  const p = u.owner, P = S.players[p];
+  const p = u.owner, P = S.players[p], here = tileOf(u);
   const tryUnload = () => {
     if (!u.cargo.length || !P.seaTargets.length) return false;
-    const here = tileOf(u);
-    const goal = P.seaTargets.slice().sort((a, b) => dist(a, here) - dist(b, here))[0];
-    const lf = distField(tileOf(goal), landProbe(p));
-    const spots = unloadTiles(u).filter(t => lf[t.i] < Infinity).sort((a, b) => lf[a.i] - lf[b.i]);
+    const lfs = seaGoals(p, tileOf(u)).map(c => distField(tileOf(c), landProbe(p)));
+    const score = t => Math.min(...lfs.map(f => f[t.i]));
+    const spots = unloadTiles(u).filter(t => score(t) < Infinity).sort((a, b) => score(a) - score(b));
     let done = false;
     while (u.cargo.length && spots.length) { unload(u, 0, spots.shift()); done = true; }
+    if (done) u.waitT = 0;
     return done;
   };
   if (tryUnload()) { await pause(u); return; }
-  const here = tileOf(u);
-  const waiting = unitsOf(p).filter(x => x.wantsShip && dist(x, here) <= 4);
-  let goalT = null;
-  if (u.cargo.length && (u.cargo.length >= UNITS.transport.carry || !waiting.length) && P.seaTargets.length)
-    goalT = tileOf(P.seaTargets.slice().sort((a, b) => dist(a, here) - dist(b, here))[0]);
-  else {
-    const wanters = unitsOf(p).filter(x => x.wantsShip);
-    if (wanters.length) goalT = tileOf(wanters.sort((a, b) => dist(a, here) - dist(b, here))[0]);
+  const waiting = unitsOf(p).some(x => x.wantsShip && dist(x, here) <= 5);
+  if (!u.cargo.length || (u.cargo.length < UNITS.transport.carry && waiting && (u.waitT = (u.waitT || 0) + 1) <= 3)) {
+    // wait as a pickup point, but never inside a city where troops cannot board
+    if (here.city >= 0) { const w = neighbors(here).find(n => n && isWater(n) && !unitAt(n)); if (w) { moveUnit(u, w); await pause(u); } }
+    return;
   }
-  if (!goalT) return;
-  const f = distField(goalT, u);
+  if (!P.seaTargets.length) return;
+  const goal = landingTile(u); if (!goal) return;
+  const f = distField(goal, u);
   let bt = null, bv = f[here.i];
   for (const [i, rem] of reachable(u)) if (rem >= 0 && f[i] < bv) { bv = f[i]; bt = S.tiles[i]; }
   if (bt) { moveUnit(u, bt); await pause(u); }
@@ -1044,6 +1205,14 @@ async function pause(u) {
   if (S.fastAI) return;
   if (S.spectate || seesTile(0, tileOf(u))) await sleep(140);
 }
+// does this port reach open water (not a small lake or enclosed sea)?
+function openSea(city) {
+  const key = 'sea' + city.id; if (fieldCache.has(key)) return fieldCache.get(key);
+  const seen = new Set(), st = neighbors(tileOf(city)).filter(n => n && isWater(n));
+  st.forEach(t => seen.add(t.i));
+  while (st.length && seen.size < 40) { const t = st.pop(); for (const n of neighbors(t)) if (n && isWater(n) && !seen.has(n.i)) { seen.add(n.i); st.push(n); } }
+  const ok = seen.size >= 40; fieldCache.set(key, ok); return ok;
+}
 function aiChooseBuild(p, city) {
   const enemyAir = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'air');
   const enemyNaval = S.units.some(e => e.owner !== p && UNITS[e.type].dom === 'naval');
@@ -1051,12 +1220,13 @@ function aiChooseBuild(p, city) {
   const workers = unitsOf(p).filter(u => u.type === 'worker').length;
   const islands = S.players[p].islands;
   const ships = unitsOf(p).filter(u => u.type === 'transport').length;
-  const W = { transport: S.players[p].seaTargets.length && S.turn > 25 && ships < 2 ? 5 : 0,
+  const P = S.players[p], overseasOnly = P.seaTargets.length && P.seaTargets.length >= S.cities.filter(c => c.owner !== p).length;
+  const W = { transport: P.seaTargets.length && S.turn > 25 && ships < (overseasOnly ? 5 : 2) ? (overseasOnly ? 9 : 5) : 0,
               worker: workers < Math.min(6, citiesOf(p).length) ? 6 : 0,
               infantry: S.turn < 10 ? 6 : 2, recon: 1.5, tank: 5, artillery: 2.5, aa: enemyAir ? 4 : 0.4,
               destroyer: (islands ? 4 : 0.6) + (enemyNaval ? 2 : 0), submarine: islands ? 2.5 : 0.4,
               fighter: enemyAir ? 4 : 1.5, bomber: 3, satellite: satCount(p) < 1 ? 1.5 : 0, killersat: enemySats ? 3 : 0 };
-  const opts = Object.keys(W).filter(k => W[k] > 0 && !buildReason(p, city, k));
+  const opts = Object.keys(W).filter(k => W[k] > 0 && !buildReason(p, city, k) && (UNITS[k].dom !== 'naval' || openSea(city)));
   if (!opts.length) return null;
   let r = Math.random() * opts.reduce((a, k) => a + W[k], 0);
   for (const k of opts) { r -= W[k]; if (r <= 0) return k; }
@@ -1590,6 +1760,9 @@ function refreshPanel() {
     h += `<h3>${c.capital ? '⭐ ' : '🏙 '}${c.name} <small style="color:${P ? P.color : '#aaa'}">${P ? P.name : 'Neutral'}</small></h3>`;
     h += `<span class="pill">Level ${c.level}</span><span class="pill">+${cityIncome(c)} ⛽/turn</span>`;
     if (isCoastal(c)) h += `<span class="pill">⚓ Port</span>`;
+    if (own && !c.capital && hubOf(0) !== c) h += isConnected(c)
+      ? `<span class="pill">🛣️ Connected: +${ROAD_SUPPLY} ⛽ +${ROAD_FOOD} 🌾</span>`
+      : `<div class="sub" style="margin-top:4px">🛣️ Not connected. Link it to ${hubOf(0).name} with roads for +${ROAD_SUPPLY} ⛽ and +${ROAD_FOOD} 🌾 a turn.</div>`;
     if (own) {
       const need = growNeed(c), fr = foodRate(c);
       h += `<span class="pill">Units ${unitCount(0)}/${unitCap(0)}</span>`;
@@ -1688,6 +1861,7 @@ const HELP = `
 <li>Cities earn <b>⛽ Supply</b> each turn. Bigger cities earn more and support more units.</li>
 <li>Cities grow on <b>🌾 food</b>. Every city makes 1 food a turn; farms and fisheries in its territory add more.</li>
 <li><b>Engineers</b> build: Roads (½ move cost), Farms (plains, +1 🌾, +2 on wheat), Lumber Camps (forest, +1 ⛽), Mines (hills, +1 ⛽, more on iron/gold), Oil Derricks (+3 ⛽), Fisheries (+2 🌾) and Bridges over coastal water.</li>
+<li><b>Trade routes</b>: a city linked to your capital by an unbroken road gets +2 ⛽ and +1 🌾 a turn. Cities count as road tiles; bridges carry roads over water.</li>
 <li>Improvements only count inside your borders. Borders widen when a city reaches level 3.</li></ul>
 <h2>Each turn</h2><ul>
 <li>Tap a <b>unit</b>: white tiles show where it can move, red rings show what it can hit. Tap a ring to preview, tap again to fire.</li>
@@ -1707,20 +1881,22 @@ const HELP = `
 <li><b>Space Control</b>: Killer Satellites are the only thing that can destroy other satellites.</li></ul>
 <h2>Controls</h2><p>Drag to pan, pinch or +/− to zoom. Tap a tile again to cycle between unit, satellite, city and terrain.</p>`;
 
-let setup = { ai:1, size:16, diff:0, map:'random' };
+let setup = { ai:1, size:16, diff:0, map:'random', esize:'large' };
 function showStart() {
   let hasSave = false; try { hasSave = !!localStorage.getItem(SAVE_KEY); } catch (e) {}
   const seg = (key, vals) => `<div class="seg">${vals.map(([v, l]) => `<button data-s="${key}" data-v="${v}" class="${setup[key] === v ? 'on' : ''}">${l}</button>`).join('')}</div>`;
   const capsInfo = setup.map !== 'random' ? `<div class="sub" style="margin-top:4px">You start in ${EARTH[setup.map].caps[setup.ai + 1][0]}; rivals in ${EARTH[setup.map].caps[setup.ai + 1].slice(1).join(', ')}.</div>` : '';
   openModal(`<h1>🪖 Iron Front</h1><div class="sub">Theater Command — a turn-based modern warfare strategy game.</div>
     <p>Grow your cities, develop farms, mines and oil, then build an army of infantry, tanks, ships, jets and satellites. Take every enemy city to win.</p>
-    <h2>Map</h2>${seg('map', [['random', '🎲 Random'], ['usa', '🇺🇸 North America'], ['europe', '🇪🇺 Europe']])}${capsInfo}
+    <h2>Map</h2>${seg('map', [['random', '🎲 Random'], ['usa', '🇺🇸 North America'], ['europe', '🇪🇺 Europe'], ['world', '🌍 World']])}${capsInfo}
     <h2>Opponents</h2>${seg('ai', [[1, '1'], [2, '2'], [3, '3']])}
-    ${setup.map === 'random' ? `<h2>Map size</h2>${seg('size', [[12, 'Small'], [16, 'Medium'], [22, 'Large']])}` : ''}
+    ${setup.map === 'random' ? `<h2>Map size</h2>${seg('size', [[12, 'Small'], [16, 'Medium'], [22, 'Large']])}`
+      : setup.map === 'world' ? `<h2>Map size</h2><div class="sub">Medium · the whole globe, oceans included. Expect to need ships.</div>`
+      : `<h2>Map size</h2>${seg('esize', [['small', 'Small'], ['large', 'Large']])}`}
     <h2>Difficulty</h2>${seg('diff', [[0, 'Recruit'], [1, 'Veteran'], [2, 'General']])}
     <div class="sub" style="margin-top:4px">${['Recruit: AI builds slowly and leaves you alone for the first 15 turns.', 'Veteran: a fair fight. 8 turns of peace.', 'General: AI gets bonus supply and attacks from turn 1.'][setup.diff]}</div>
     <div class="row" style="margin-top:16px"><button class="primary" id="mStart">▶ New game</button>${hasSave ? '<button id="mCont">Continue saved game</button>' : ''}<button id="mHelp">How to play</button><button id="mWatch">Watch AIs fight</button></div>`);
-  mbox.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { const v = b.dataset.v; setup[b.dataset.s] = isNaN(+v) ? v : +v; showStart(); });
+  mbox.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { const v = b.dataset.v; setup[b.dataset.s] = isNaN(+v) ? v : +v; setup.esize = setup.map === 'world' ? 'medium' : setup.esize === 'medium' ? 'large' : setup.esize; showStart(); });
   $('mStart').onclick = () => newGame(setup);
   if (hasSave) $('mCont').onclick = () => { if (!load()) toast('Could not load save'); };
   $('mHelp').onclick = () => { openModal(`<h1>How to play</h1>${HELP}<div class="row"><button id="mBack">Back</button></div>`); $('mBack').onclick = showStart; };
@@ -1728,7 +1904,7 @@ function showStart() {
 }
 function showMenu() {
   if (!S) return showStart();
-  openModal(`<h1>Menu</h1><div class="sub">Turn ${S.turn} · ${S.map === 'random' ? 'Random map' : EARTH[S.map].name} · ${DIFF[S.diff].name}</div>
+  openModal(`<h1>Menu</h1><div class="sub">Turn ${S.turn} · ${S.map === 'random' ? 'Random map' : EARTH[S.map].name + (S.esize ? ' (' + S.esize + ')' : '')} · ${DIFF[S.diff].name}</div>
     ${S.players.map(p => `<div class="tech"><span class="dot" style="background:${p.color}"></span><div class="info"><b>${p.name}${p.id === 0 && !S.spectate ? ' (you)' : ''}</b><small>${p.alive ? `${citiesOf(p.id).length} cities · ${unitsOf(p.id).length} units · ${p.tech.length} doctrines` : 'Eliminated'}</small></div></div>`).join('')}
     <div class="row"><button id="mResume" class="primary">Resume</button><button id="mHelp2">How to play</button><button id="mNew" class="danger">New game</button></div>`);
   $('mResume').onclick = closeModal;
@@ -1749,7 +1925,7 @@ function gameOver(win, winner) {
 }
 
 window.__game = { get S() { return S; }, newGame, endTurn, UNITS, TECH, setFast: v => { if (S) S.fastAI = v; },
-  t: { reachable, moveUnit, unload, spawn, startJob, startTurn, tileAt, neighbors, upgrade, targetsFrom, doAttack, jobOk, isWater, unitAt } };
+  t: { landingTile, distField, reachable2: u => reachable(u), isConnected, connectedSet, cityIncome, reachable, moveUnit, unload, spawn, startJob, startTurn, tileAt, neighbors, upgrade, targetsFrom, doAttack, jobOk, isWater, unitAt } };
 showStart();
 </script>
 </body>
