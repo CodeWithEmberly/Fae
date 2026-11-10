@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Monday, November 9, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../">This morning's issue and podcast</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for tomorrow's seminar</span>
+        <h3><a href="#t1">Kitfield, <i>Prodigal Soldiers</i>: Twenty Years to Fix One War</a></h3>
+        <p>Kitfield argues that the junior officers who lived through defeat in Vietnam stayed in uniform, rebuilt their services from the inside over two decades, and got their redemption in Desert Storm. He tells it through a handful of careers, chiefly Barry McCaffrey, Chuck Horner, Colin Powell, Jack Galvin, and Walt Boomer, followed from 1965 to 1993. The prologue sets the claim in one scene: McCaffrey watches Schwarzkopf unveil the left hook in November 1990 and thinks the Army will not fight a war of attrition or a limited war this time. Kitfield calls these men "prodigal sons all." (We note that the prodigal son in the parable did not have to pass a congressional budget review.)</p>
+        <p>The book argues against the public picture of a military frozen in its worst years, the one reinforced by the Iran rescue and Beirut. It also argues against McCaffrey's own nightmare plan: probe the border, escalate slowly, spare targets inside Iraq, and watch the protests grow. Desert Storm, in Kitfield's telling, is the war that went the other way because the officers had learned.</p>
+        <p>The course reads it for a different reason. The syllabus calls the "iron majors" arc alluring and incomplete, because it skips the collapsing Soviet Union and a coalition built for one limited objective. Kitfield half-concedes the point himself: moving VII Corps out of Germany was unthinkable until the Warsaw Pact fell, and the force rode a wave of Cold War spending. Read the book for the reforms, then keep asking how much of the result was reform and how much was timing. His epilogue already worries that Desert Storm was an "unsustainable peak." <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Four Hundred Pages, Triaged</a></h3>
+        <p>The book has no formal introduction or conclusion. The prologue and epilogue do that job, so start there. Forty-six short chapters let you cut cleanly.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> Prologue, pp. 13–25 (the Dhahran briefing and the thesis). Epilogue, pp. 423–435 (the shrinking force, the pendulum, and the warning that the cycle repeats).</li>
+          <li><b>60 minutes.</b> Add chapter 20, "A Hollow Force," pp. 197–208; chapter 29, "Politics," pp. 268–276 (Weinberger's tests); and chapter 31, "A Palace Coup," pp. 289–298 (Goldwater-Nichols).</li>
+          <li><b>2 hours.</b> Add the Air Force line: chapter 16, "Red Flag," pp. 165–173; chapter 17, "Sky Blazer," pp. 174–181 (Creech at TAC); chapter 23, "Desert One," pp. 223–234; chapter 38, "Band of Brothers," pp. 356–364 (Instant Thunder reaches Riyadh); chapter 42, "Air War," pp. 380–391; and chapter 46, "Partings," pp. 412–422 (the cease-fire).</li>
+        </ol>
+        <p>Skip the Vietnam chapters (1–11) unless you have time left. The morning issue will walk them chapter by chapter. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Catch With a Pencil</a></h3>
+        <ol class="qs">
+          <li><b>Prologue, pp. 19–24.</b> McCaffrey's feared plan (slow escalation, nothing inside Iraq) against the plan Schwarzkopf actually briefs. The gap between them is the book's whole thesis.</li>
+          <li><b>Chapter 16, pp. 166–167.</b> Red Flag's arithmetic. Vietnam showed a pilot needed about ten combat missions to have a good chance of surviving, so the Air Force built the ten missions in the Nevada desert. More than thirty pilots died there in the first few years.</li>
+          <li><b>Chapter 17, pp. 175–177.</b> Creech's diagnosis of Tactical Air Command: half the planes not combat ready on a given day, 220 grounded for weeks, sorties falling 8 percent a year. Then his four pass/fail rules for commanders.</li>
+          <li><b>Chapter 20, p. 199, and chapter 23, p. 228.</b> Meyer tells Carter the Army is hollow; after Desert One, Meyer lists the failures it exposed: services that couldn't work together, broken equipment, bad communications, unclear command. Hold that list until Goldwater-Nichols (p. 297), which reads like the fix.</li>
+          <li><b>Chapter 29, pp. 269–270.</b> Weinberger's six tests for using force, and Powell's doubts about any doctrine that claims to fit every crisis.</li>
+          <li><b>Chapter 38, p. 362, and chapter 42, pp. 385–386.</b> Horner's first reaction to a Pentagon-built air plan was that Washington picking targets was how Vietnam went wrong. Then the F-117s: about 2 percent of combat sorties and more than 40 percent of the strategic, heavily defended targets.</li>
+        </ol>
+        <p>Kitfield calls the Air Staff planner "Col. Jack Warden." The syllabus and Olsen, who comes up Thursday, both call him John Warden, so use John in seminar. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <p>The questions come from the syllabus page for Seminar 10, "The Cold War Ends." The morning issue answers them; tonight, just know where to look.</p>
+        <ol class="qs">
+          <li><b>Was the preparation for and the actual use of force effective?</b> The prologue for the plan; chapter 42 for the air war; chapters 45 and 46 for the ground war's light casualties and the "Highway of Death" that hurried the cease-fire.</li>
+          <li><b>Was the military buildup more effective at deterring a great power than intervening in a volatile region?</b> Chapter 29 for the Weinberger buildup; chapters 27 and 28 for Beirut and Grenada; chapter 34 for the Berlin Wall falling; the prologue for why VII Corps could leave Germany.</li>
+          <li><b>In what ways did the military change in this interwar period?</b> Chapter 12 (the all-volunteer force), chapters 16 and 17 (Red Flag and Creech), and chapter 33 (the National Training Center and AirLand Battle).</li>
+          <li><b>What changes were driven internally and what were forced upon the military?</b> Internal: chapter 8 (the Army War College study the chief of staff kept quiet) and chapter 17 (Creech). Forced: chapters 30 through 32 (the congressional reformers and Goldwater-Nichols, which the services fought).</li>
+          <li><b>What regional or international problems did the United States encounter that would define the post Cold War strategic environment?</b> Chapters 22 and 23 (Iran and Desert One), chapter 24 (Central Command's creation), chapters 27 and 28 (Lebanon and Grenada), and the epilogue (Bosnia, Somalia, and a shrinking force).</li>
+        </ol>
+        <p>Opinion: question four is where the iron-majors story is weakest, because the biggest reform in the book is one Congress passed over the services' objections. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, Without a Program</a></h3>
+        <ol class="qs">
+          <li><b>Barry McCaffrey.</b> Commander of the 24th Infantry Division in 1990 and the book's main thread, from Vietnam adviser to Powell's assistant in 1993 (pp. 14, 24, 427).</li>
+          <li><b>Chuck Horner.</b> Fighter pilot in Thailand in 1965, Red Flag flight lead in 1978, and Ninth Air Force commander who ran the Desert Storm air war (pp. 44, 166, 332).</li>
+          <li><b>Bill Creech.</b> Tactical Air Command commander who found TAC "overcentralized and thoroughly dispirited" and ran it on four rules: no lying, no integrity violations, no abuse of power, no public temper (pp. 175, 177).</li>
+          <li><b>Shy Meyer.</b> Army chief of staff who told Carter in 1979 that the Army was hollow and who pushed for a joint special operations force after Desert One (pp. 199, 228).</li>
+          <li><b>Red Flag.</b> Large air combat exercises at Nellis from 1975, flown against Aggressor pilots using Soviet tactics (pp. 166–167).</li>
+          <li><b>Weinberger's six tests.</b> Vital interests, enough force to win, clear objectives, forces sized to them, public support, and force only as a last resort (p. 269).</li>
+          <li><b>Goldwater-Nichols (1986).</b> Strengthened the chairman and the unified commanders, and made joint duty a requirement for general or flag rank (pp. 20, 297).</li>
+          <li><b>Instant Thunder.</b> The Pentagon-built air plan that Horner's planners reworked into Central Command's four-phase campaign against Iraqi centers of gravity (p. 362).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Haun to Kitfield</span>
+        <h3><a href="#t6">Haun Counted the Wins; Kitfield Throws the Parade</a></h3>
+        <p>Haun's numbers come with you tonight. Of twenty-three modern American air campaigns since 1965, direct attack on enemy forces met its military objectives nine times in eleven, strategic bombing two in six, and interdiction failed in all but one of six. Haun also says the Air Force brought back battlefield air interdiction to support AirLand Battle and then listed no such missions on its Desert Storm tasking orders. Kitfield calls the left hook classic AirLand Battle, gives Instant Thunder its centers of gravity, and credits Horner's air blitz with blinding Iraq to two corps moving west. Both books cover Desert Storm, and they put the credit in different places.</p>
+        <p>Keep one question in mind while reading: when Kitfield credits airpower in Desert Storm, is he crediting the strategic campaign against Baghdad or the attacks on the Iraqi army in the field? Haun would want to know, and so will Olsen on Thursday. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>McCaffrey at Schwarzkopf's briefing, November 14, 1990; "not going to fight a war of attrition, or a limited war": Kitfield, 14–16, 24.</li>
+          <li>"prodigal sons all": Kitfield, 24.</li>
+          <li>Public image "frozen in a darker time," reinforced by Iran and Beirut: Kitfield, 18.</li>
+          <li>McCaffrey's worst case: gradual escalation, no attacks inside Iraq, protests: Kitfield, 19.</li>
+          <li>VII Corps unthinkable before the Warsaw Pact collapse; wave of Cold War spending: Kitfield, 21.</li>
+          <li>"unsustainable peak": Kitfield, 434.</li>
+          <li>Iron-majors arc "alluring" but incomplete; Soviet collapse; coalition with a limited objective: SAASS 628 syllabus, Seminar 10.</li>
+          <li>The parable aside is our opinion.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter page ranges: Kitfield, chapter openings as listed (prologue 13; ch. 16, 165; ch. 17, 174; ch. 20, 197; ch. 23, 223; ch. 29, 268; ch. 31, 289; ch. 38, 356; ch. 42, 380; ch. 46, 412; epilogue 423).</li>
+          <li>Ten combat missions to survive; Red Flag from 1975; Aggressors: Kitfield, 166.</li>
+          <li>More than thirty pilots died in the first few years: Kitfield, 167.</li>
+          <li>Half of TAC's planes not combat ready; 220 hangar queens; sorties down 8 percent a year: Kitfield, 175.</li>
+          <li>Creech's four rules: Kitfield, 177.</li>
+          <li>Meyer: "basically what we have is a hollow Army": Kitfield, 199.</li>
+          <li>Desert One as a microcosm of failures; Meyer's push for a joint special operations force: Kitfield, 228.</li>
+          <li>Goldwater-Nichols provisions; Special Operations Command, 1987: Kitfield, 297.</li>
+          <li>Weinberger's six tests, November 28, 1984; Powell's reservations: Kitfield, 269–270.</li>
+          <li>Horner angered by a Pentagon plan; "Col. Jack Warden"; four-phase campaign against centers of gravity: Kitfield, 362.</li>
+          <li>F-117s: 2 percent of combat sorties, more than 40 percent of strategic targets: Kitfield, 386.</li>
+          <li>Col John Warden: SAASS 628 syllabus, "SAASS Competencies."</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 10, "The Cold War Ends."</li>
+          <li>Highway of Death, cease-fire pressure, one-hundred-hour ground war: Kitfield, 413.</li>
+          <li>Ground war casualty figures: Kitfield, 403, 405.</li>
+          <li>Berlin Wall, November 9, 1989: Kitfield, 321.</li>
+          <li>Army War College study held close by Westmoreland: Kitfield, 111–112.</li>
+          <li>Goldwater-Nichols and service opposition: Kitfield, 289–298.</li>
+          <li>Bosnia, Somalia, shrinking force: Kitfield, 428, 434.</li>
+          <li>The closing line on question four is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>McCaffrey: Kitfield, 14, 24, 427 (Powell's chief military assistant, 1993).</li>
+          <li>Horner at Korat, 1965: Kitfield, 44; Red Flag flight lead, 166; Ninth Air Force, 332.</li>
+          <li>Creech: Kitfield, 175, 177.</li>
+          <li>Meyer: Kitfield, 199, 228.</li>
+          <li>Red Flag: Kitfield, 166–167.</li>
+          <li>Weinberger's tests: Kitfield, 269.</li>
+          <li>Goldwater-Nichols: Kitfield, 20, 297.</li>
+          <li>Instant Thunder: Kitfield, 362.</li>
+        </ul>
+        <h3>Bridge from today</h3>
+        <ul>
+          <li>Twenty-three campaigns; direct attack nine of eleven; strategic bombing two of six; interdiction all but one failed: Haun, 7.</li>
+          <li>BAI reintroduced for AirLand Battle; no BAI missions on Desert Storm air tasking orders: Haun, 205.</li>
+          <li>Left hook as "classic AirLand Battle doctrine": Kitfield, 24.</li>
+          <li>Air blitz blinded Iraq to two Army corps moving west: Kitfield, 391.</li>
+          <li>Olsen's seminar on Thursday, November 12: SAASS 628 syllabus, course calendar.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>
