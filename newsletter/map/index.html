@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Course Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>
+.tag{font-family:var(--font-data);font-size:12px;letter-spacing:.03em;padding:0 5px;border:1px solid currentColor;border-radius:3px;margin-left:4px;white-space:normal}
+.t-supports{color:var(--ok)}.t-cuts{color:var(--stamp)}.t-mixed{color:var(--accent)}
+.bank-sec h2,.map-sec h2{font-family:var(--font-head);font-size:24px;margin:28px 0 8px;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.bank-sec h3,.map-sec h3{font-family:var(--font-head);font-size:18px;margin:16px 0 4px;color:var(--accent)}
+.bank-sec ul,.map-sec ul{margin:0 0 10px;padding-left:1.2em}.bank-sec li,.map-sec li{margin-bottom:6px;font-size:18px}
+.lede{color:var(--muted);max-width:68ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>Course Map</h1>
+    <p class="tag">SAASS 628 · every book read so far, by theme · updated 2026-11-10</p>
+  </header>
+  <div class="cols"><main>
+<p class="toc-after"><a href="../">This morning's issue</a> · <a href="../tonight/">Tonight</a></p>
+<p class="lede">Eight themes run through the course. Under each, every book's strongest claim on it, in reading order. Page numbers are the books' printed pages.</p>
+<nav class="toc"><ol><li><a href="#th0">Ends and means</a></li><li><a href="#th1">Limits and escalation control</a></li><li><a href="#th2">Coercion (does bombing work?)</a></li><li><a href="#th3">Alliances and partners</a></li><li><a href="#th4">Technology and innovation</a></li><li><a href="#th5">ISR and knowing the enemy</a></li><li><a href="#th6">Institutional learning</a></li><li><a href="#th7">Sustaining the effort</a></li><li><a href="#theses">Each book in one sentence</a></li></ol></nav>
+<section class="map-sec" id="th0"><h2>Ends and means</h2><ul><li><b>Gaddis:</b> Strategy fails when means are treated as unlimited, because "the abundance of means" removes the pressure to choose among ends (p. 262).</li><li><b>Crane:</b> With the enemy's war-making sources off-limits, FEAF had to find another way to use airpower "to influence enemy decision makers" (p. 8).</li><li><b>Zhang:</b> The PLAAF was created to invade Taiwan, but Korea gave it a different war, fought with pilots averaging 63 hours (pp. 32, 42).</li><li><b>McDougall:</b> "The objective of American technocracy was to avoid defining its objective" (pp. 447–448).</li><li><b>Schlight:</b> With MACV setting ground objectives and treating air as support, the Air Force had no war objective of its own and measured effort instead of progress (p. 290)</li><li><b>Clodfelter:</b> Bombing must be judged only by its contribution to war aims, and Johnson's advisers never agreed on what bombing was for (pp. 10, 223)</li><li><b>Randolph:</b> Both sides expected battlefield results to translate directly into results at the negotiating table, and they were right, so the Easter Offensive was a strategic success for Hanoi despite an ambiguous or failed military outcome (p. 339).</li><li><b>Nguyen:</b> Le Duan relied on the General Offensive and General Uprising in 1964, 1968, and 1972 to topple Saigon, and the mass insurrection failed each time at enormous cost (ebook pp. 430–431).</li><li><b>Haun:</b> Coercion succeeded only when US demands were low; by 1972 the US asked Hanoi only to let it withdraw, which helped the North win in 1975 (p. 221).</li></ul></section>
+<section class="map-sec" id="th1"><h2>Limits and escalation control</h2><ul><li><b>Gaddis:</b> Calibrated escalation in Vietnam produced effects "precisely opposite from those intended," drawing the U.S. deeper instead of limiting involvement (p. 246).</li><li><b>Crane:</b> The JCS reserved retaliatory strikes on China to itself and preemptive attacks to the president, and kept rejecting expanded authority for Clark (p. 126).</li><li><b>Zhang:</b> Both sides restrained their air forces. The USAF never struck bases in northeast China, Washington hid Soviet participation from the public, and Beijing never sent its air force south of the 38th Parallel (pp. 210–211).</li><li><b>McDougall:</b> Planners judged passive military satellites stabilizing and orbital weapons destabilizing, and gave up nuclear weapons in orbit and nuclear ASATs to keep space open for reconnaissance (p. 339).</li><li><b>Schlight:</b> Air power succeeded in the South without threatening to raise the level of conflict, which moved the Air Force toward flexible response (p. 309)</li><li><b>Clodfelter:</b> Political controls flow from negative objectives such as avoiding Chinese or Soviet intervention, and the atomic bomb makes them a standard feature of war (pp. 10, 228)</li><li><b>Randolph:</b> Nixon timed and limited strikes around the Beijing and Moscow summits, such as the 48-hour strikes that had to end before he left for China on February 17, the first case of triangular diplomacy directly shaping operations (pp. 50–51).</li><li><b>Nguyen:</b> Nixon's 1972 escalation, including B-52s and mining that endangered Soviet ships, paid off because neither Beijing nor Moscow would risk relations with Washington for Hanoi (ebook p. 355).</li><li><b>Haun:</b> Johnson ruled out invading the North for fear of Chinese intervention as in Korea, which let the NVA disperse and limited what air power alone could achieve (p. 54).</li></ul></section>
+<section class="map-sec" id="th2"><h2>Coercion (does bombing work?)</h2><ul><li><b>Gaddis:</b> Rolling Thunder grew to 226,000 tons in 1967 without reducing infiltration or bringing Hanoi to talks (p. 245–246).</li><li><b>Crane:</b> Air pressure may have contributed to the armistice, but Stalin's death, Soviet-bloc unrest, and battlefield face-saving also mattered (p. 159, 164).</li><li><b>Zhang:</b> Stalin's death, not U.S. air pressure, brought the armistice breakthrough (p. 197).</li><li><b>McDougall:</b> Khrushchev's missile bluff, "For it was all a bluff," moved allied opinion but did not move Western governments in Berlin (pp. 239, 249).</li><li><b>Schlight:</b> Massive B-52 use against an unseen guerrilla enemy found few real targets; McConnell admitted there were no truly good ones (pp. 53, 82)</li><li><b>Clodfelter:</b> Nixon's bombing worked better than Johnson's because it threatened Hanoi's vital concern, an army fighting a conventional war (pp. 223–225)</li><li><b>Randolph:</b> Linebacker was designed to coerce Hanoi into serious negotiations and met Nixon's near-term goals, but the bombing was a price the Politburo would pay and could not compel a stable peace (pp. 337–338, 342).</li><li><b>Nguyen:</b> Linebacker II raised the cost of delay and Hanoi returned to talks on 26 December, but the bombing mobilized world condemnation instead of breaking Hanoi's will (ebook p. 412).</li><li><b>Haun:</b> Strategic bombing achieved political goals in 2 of 6 cases and interdiction in 0 of 6, against 9 of 11 military successes for direct attack (p. 218).</li></ul></section>
+<section class="map-sec" id="th3"><h2>Alliances and partners</h2><ul><li><b>Gaddis:</b> The Nixon Doctrine shifted manpower to the threatened nation while the U.S. supplied aid and a nuclear shield (p. 296).</li><li><b>Crane:</b> The 1952 hydroelectric raids caused a political storm in Britain that required a British deputy UN commander to calm (p. 119).</li><li><b>Zhang:</b> Stalin kept Soviet air operations defensive and limited, and China concluded the USSR was an unreliable ally (pp. 139, 208).</li><li><b>McDougall:</b> Soviet space boasts shifted European opinion, and by 1960 Britons rated the Soviets stronger 59 to 15 percent (pp. 239–240).</li><li><b>Schlight:</b> The VNAF grew into a force flying a fourth of strike sorties but still depended on the U.S. for planning and long-range development (p. 304)</li><li><b>Clodfelter:</b> Linebacker could not have succeeded without the South Vietnamese army holding on the ground (p. 191)</li><li><b>Randolph:</b> The RVNAF came to rely on U.S. air power in every engagement, and Randolph doubted it could replace that reliance once advisors left (p. 337).</li><li><b>Nguyen:</b> Hanoi and Saigon, not Washington, dictated the nature and pace of U.S. intervention (ebook p. 433).</li><li><b>Haun:</b> Direct attack with a competent friendly ground force succeeded militarily in 7 of 7 cases, without one in 2 of 4 (p. 222).</li></ul></section>
+<section class="map-sec" id="th4"><h2>Technology and innovation</h2><ul><li><b>Gaddis:</b> The Air Force adapted ends to fit its preferred means, using jets and B-52s where cheaper, more accurate aircraft were available (p. 251).</li><li><b>Crane:</b> The Navy's 1952 drone strikes failed, but their reconnaissance potential foreshadowed modern RPVs (p. 134).</li><li><b>Zhang:</b> Even with MiG-15s, inexperienced pilots could not use the technology, and combat proficiency "showed no significant improvement" (pp. 211–212).</li><li><b>McDougall:</b> The rivalry that culminated in Sputnik turned the state into "the dominant promoter and manager of technological progress" (p. 451).</li><li><b>Schlight:</b> Shed Light and gunships showed specialized wartime equipment could be fielded fast, while nuclear-era gear needed costly changes for repeated sorties (pp. 301–302)</li><li><b>Clodfelter:</b> Technology made air power more lethal but did not guarantee political effect (p. 222)</li><li><b>Randolph:</b> The Americans had a wealth of new technology but lacked the command systems, doctrine, and training to exploit it (p. 2).</li><li><b>Nguyen:</b> By June 1972 Hanoi admitted its high-technology, big-unit offensive had failed to reach its objectives (ebook p. 353).</li><li><b>Haun:</b> Radar, GPS, infrared sensors, and night vision improved all-weather and night operations, but mobile targets still require near-real-time intelligence (pp. 221, 223).</li></ul></section>
+<section class="map-sec" id="th5"><h2>ISR and knowing the enemy</h2><ul><li><b>Gaddis:</b> Washington "would have been better off reading Halberstam than Harkins"; official reporting was less accurate than independent sources (p. 255).</li><li><b>Crane:</b> MiGs denied reconnaissance near the Yalu at the moment China was intervening (p. 53).</li><li><b>Zhang:</b> Poor radar and poor spotting left the PLAAF missing 70 percent of intruders in 1954 (p. 212).</li><li><b>McDougall:</b> The first reconnaissance satellites ended the missile gap, cutting the estimate from 120 Soviet missiles to at most fourteen (p. 329).</li><li><b>Schlight:</b> Reconnaissance was the most disappointing activity; collection outran interpretation and dissemination (p. 298)</li><li><b>Clodfelter:</b> 7th Air Force could not measure what bombing achieved; photo interpreters were swamped and tonnage figures unknowable (p. 148)</li><li><b>Randolph:</b> Low U.S. estimates of supplies moving down the trail made planners expect another short "high point" offensive rather than the 1972 invasion (p. 56).</li><li><b>Nguyen:</b> Viewing the war only through the American lens led to a faulty understanding of the enemy's war (ebook p. 433).</li><li><b>Haun:</b> The DIA and CIA reached opposite verdicts on Commando Hunt I from the same war, and both were correct, because they measured different things (p. 128).</li></ul></section>
+<section class="map-sec" id="th6"><h2>Institutional learning</h2><ul><li><b>Gaddis:</b> Democratic accountability forced "course corrections" against persisting in failed strategies, unlike Soviet "authoritarian autism" (p. 388–389).</li><li><b>Crane:</b> Because the USAF believed air pressure produced the armistice, Korea's limited-war lessons "were lost or deemed irrelevant" and had to be relearned in Vietnam (p. 170).</li><li><b>Zhang:</b> The PLAAF drew from Korea the lesson it already believed, that the human factor is decisive, and kept a defensive doctrine until after 1991 (pp. 206, 213).</li><li><b>McDougall:</b> By 1962 the Soviets learned their space program was the real bluff, leaving them five years behind in military satellites (pp. 269–270).</li><li><b>Schlight:</b> The war forced a "watershed" qualified acceptance of flexible response after two decades of nuclear doctrine (p. 309)</li><li><b>Clodfelter:</b> Air leaders treated Korea as an aberration and after Vietnam kept their doctrine unchanged, citing Linebacker II as proof (pp. 18, 227–228)</li><li><b>Randolph:</b> Hanoi studied American systems and its own failures and fixed them (four army corps and a new road network by 1974), while U.S. units lost experience to one-year tours and four-month command tenures (pp. 57–58, 211, 339–340).</li><li><b>Nguyen:</b> Le Duan kept repeating the failed general uprising strategy and purged doubters such as Giap's deputies before Tet (ebook pp. 428, 431).</li><li><b>Haun:</b> The Air Force twice removed armed recce from doctrine, in 1966 and after Desert Storm, despite its record (p. 225).</li></ul></section>
+<section class="map-sec" id="th7"><h2>Sustaining the effort</h2><ul><li><b>Gaddis:</b> Symmetrical containment needed resources and will the U.S. never generated "over an extended period of time" (p. 342).</li><li><b>Crane:</b> Interdiction cost 243 aircraft destroyed and 290 heavily damaged with only 131 replacements received (p. 116).</li><li><b>Zhang:</b> The Soviets rotated whole divisions, and their claimed kill ratio fell from 7.9:1 to 1.9:1 as experienced pilots went home (p. 202).</li><li><b>McDougall:</b> The race to keep up "threatens to erode the very values that make one's society worth defending" (p. 13).</li><li><b>Schlight:</b> By 1968 about one-third of the worldwide Air Force inventory served the war and TAC could not have fought a second large war (pp. 289, 306)</li><li><b>Clodfelter:</b> Rising losses (171, 280, 326 aircraft a year) and $6.60–$9.60 spent per dollar of damage made Rolling Thunder costly for little result (pp. 149, 152)</li><li><b>Randolph:</b> Nixon's 1972 surge stripped forces and ordnance worldwide, and Congress never fully replenished them, contributing to the hollow military of the late 1970s (pp. 116–117).</li><li><b>Nguyen:</b> Hanoi's strategy targeted U.S. staying power, from Le Duan's 1967 bet that Americans could not endure a higher level of war to the 1972 effort to use U.S. domestic and world opinion (ebook pp. 144–145, 409).</li><li><b>Haun:</b> Flat budgets, with 70 percent going to operations, maintenance, and personnel, will force hard choices and an end to wars of choice (pp. 247, 250).</li></ul></section>
+<section class="map-sec" id="theses"><h2>Each book in one sentence</h2><ul><li><b>Gaddis, Strategies of Containment (rev. ed., 2005):</b> U.S. Cold War strategy swung between "symmetrical" containment (meet every threat wherever it arises, which assumes expandable means) and "asymmetrical" containment (pick the terrain and the instruments, which assumes limited means), and each swing was driven mostly by how leaders perceived their resources (pp. vii–ix, 302, 342–343).</li><li><b>Crane, American Airpower Strategy in Korea, 1950–1953:</b> In Korea the USAF entered with inflated expectations, could not strike the true sources of enemy power, and tried interdiction and then "air pressure" to force a settlement with limited resources; the ambiguous armistice let it claim success and skip the lessons it later relearned in Vietnam (pp. 6–9, 170, 183–184).</li><li><b>Zhang, Red Wings over the Yalu:</b> The PLAAF entered Korea hastily built, dependent on a Soviet patron who limited his own air war to avoid fighting the United States, and handicapped mainly by inexperience; the Soviets, not the Chinese, fought most of the MiG war, and the Korean experience left China with a defensive air doctrine and a heroic myth that distorted its understanding of airpower for forty years (pp. 6–8, 201–214).</li><li><b>McDougall, ...the Heavens and the Earth:</b> The international rivalry that peaked with Sputnik made the state the main promoter and manager of technological change ("technocracy"), and the endless race for security through new technology threatens to erode the values that make a society worth defending (pp. 5, 13, 451).</li><li><b>Schlight, The War in South Vietnam: The Years of the Offensive, 1965–1968:</b> In South Vietnam the Air Force was forced to make close air support, a mission it disliked, its main job, and it did that job well tactically, but it never had its own war objective or reliable data to show what its effort achieved (pp. v, 289–290, 309).</li><li><b>Clodfelter, The Limits of Air Power:</b> Bombing's value is its contribution to war aims, and that value depends on the goals sought and the kind of war: it failed Johnson against a guerrilla war that needed few supplies, and it worked for Nixon's limited goals against Hanoi's 1972 conventional offensive (pp. 9–11, 223–225).</li><li><b>Randolph, Powerful and Brutal Weapons:</b> Nixon's massive air and naval response to the 1972 Easter Offensive blunted the NVA, won his larger diplomatic and electoral game, and got the United States out with its credibility intact, but Hanoi's total commitment, organization, and patient study of American methods let it reach its minimum aims and set up 1975, and American power could not compel a stable settlement (pp. 333, 337–342).</li><li><b>Nguyen, Hanoi's War:</b> Le Duan and Le Duc Tho, not Ho Chi Minh or Giap, ran Hanoi's war; leaders in Hanoi and Saigon set the nature and pace of U.S. intervention; and Hanoi won less through its three failed general offensives than through a world relations campaign that blunted Washington's superpower diplomacy (ebook pp. 20–21, 428, 430–433).</li><li><b>Haun, Tactical Air Power and the Vietnam War:</b> Air power works best by directly attacking enemy fielded forces alongside a capable friendly ground force, which makes the enemy army disperse and hide or be destroyed if it masses; strategic bombing and air interdiction rarely succeed (pp. 1–2, 6–7, 224, 228).</li></ul></section>
+</main></div>
+  <footer>The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.</footer>
+</div>
+
+</body>
+</html>
