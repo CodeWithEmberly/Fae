@@ -197,6 +197,21 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
 
+<style>/* THEME: sunrise (morning edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#141a2e;      /* pre-dawn navy */
+  --ink:#f3ece0;        /* warm white */
+  --muted:#b6b2c6;
+  --rule:#2e3654;
+  --accent:#ffb36b;     /* sunrise gold-orange */
+  --accent-soft:#272540;/* violet dawn */
+  --stamp:#ff9a84;      /* rose */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#3a2a4c 0,#24233f 140px,#141a2e 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \2600";color:var(--accent);font-size:.6em;vertical-align:middle}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -207,177 +222,140 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
   <div class="tally" aria-label="Running tallies">
     <span>628 books: <b>10</b> read · <b>8</b> to go</span>
     <span>Next seminar: <b>Olsen, Thursday</b></span>
-    <span>628 paper due in <b>21</b> days</span>
+    <span>628 paper due in <b>20</b> days</span>
   </div>
 
   <section class="listen" id="listen" aria-label="Today's episode">
-    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 6 minutes</p>
-    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-10.mp3"></audio>
-    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-10.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 5 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-11.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-11.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
   </section>
 
   <div class="cols">
     <main>
-      <p class="dateline">Tuesday, November 10, 2026 · Seminar today: Kitfield at 1200 · Olsen Thursday</p>
+      <p class="dateline">Wednesday, November 11, 2026 · Veterans Day · No seminar today · Olsen tomorrow at 1200</p>
       <nav class="toc" aria-label="Today's articles">
         <h2>Today's Articles</h2>
         <p class="toc-after">Tonight's reading prep posts after class: <a href="tonight/">The Long Game: Tonight</a> · Course map: <a href="map/">every book, one page</a></p>
         <ol>
-          <li><a href="#a1">Today's Seminar Questions, Answered: Five Questions, One Hundred Hours</a></li>
-          <li><a href="#a2">Twenty Years of Homework, Graded in a Hundred Hours</a></li>
-          <li><a href="#a3">Counterpoint: Haun Audits the Victory Parade</a></li>
-          <li><a href="#a4">In the Strait, Kitfield Would Ask Who Fixes the Airplanes</a></li>
-          <li><a href="#a5">Seventy Years of Cutting Supply Lines to Just Above What the Enemy Needs</a></li>
-          <li><a href="#a6">Kitfield's Two Percent Passes the Sneaker Test</a></li>
-          <li><a href="#a7">The Pentagon Wants a Top Gun for Contracting Officers. Kitfield Says Bring a Promotion Board.</a></li>
+          <li><a href="#a1">Counterpoint: Linebacker Coerced a Schedule. Randolph Asks What Else.</a></li>
+          <li><a href="#a2">Olsen's Best Evidence for Drones Is a Thirteen-Foot Decoy</a></li>
+          <li><a href="#a3">Three Wars of Turning Off the Lights</a></li>
+          <li><a href="#a4">"Render Ineffective" Was the Polite Way to Write "Kill Saddam"</a></li>
+          <li><a href="#a5">Two Days of Tomahawks, Ten Years of Reloading</a></li>
         </ol>
         <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
       </nav>
 
       <article id="a1">
-        <span class="kicker">Seminar 10 · Kitfield, today at 1200</span>
-        <h3><a href="#a1">Today's Seminar Questions, Answered: Five Questions, One Hundred Hours</a></h3>
-        <ol class="qs">
-          <li><b>Was the preparation for and the actual use of force effective?</b> Yes in battle, less clearly at the finish. F-117s flew about 2 percent of the combat sorties, attacked more than 40 percent of the strategic targets, and lost no aircraft, and the two Marine divisions lost one man killed on the first day of a ground war that experts had expected to cost twenty thousand or more American casualties (chapters 42, 45, and 46). The finish is weaker: by February 27 the "Highway of Death" footage produced a clamor for a cease-fire, and Kitfield admits there was little reliable evidence that any mobile Scud launchers were destroyed (chapter 46).</li>
-          <li><b>Was the military buildup more effective at deterring a great power than intervening in a volatile region?</b> By Kitfield's account, yes. He concludes that the revitalized forces of the 1980s deterred Soviet military ambitions, though he also lists Afghanistan, Chernobyl, and the Strategic Defense Initiative among Moscow's other worries (chapter 34). The same buildup could not protect the Marines in Beirut, where 241 were dead or dying on October 23, 1983, after rules of engagement generally barred keeping magazines loaded and the gate guards obeyed and orders ran through five headquarters to the Pentagon (chapter 27).</li>
-          <li><b>In what ways did the military change in this interwar period?</b> It recruited better, trained harder, maintained better, and fought jointly. Recruits with a high school diploma rose from 62 to 85 percent by 1983 (chapter 32). Red Flag gave pilots their first ten combat missions in Nevada, and the National Training Center mauled nine of ten visiting Army units (chapters 16 and 33). Under Creech, TAC aircraft went from eleven sorties a month in 1978 to twenty-one, and the crash rate fell from one per 13,000 flying hours to one per 50,000 (chapter 25).</li>
-          <li><b>What changes were driven internally and what were forced upon the military?</b> The services fixed how each one fought; Congress fixed how they fought together. Top Gun in 1968, Red Flag, Creech's TAC, and Abrams's move of as much as 70 percent of the Army's combat service support into the reserves were internal (chapters 13, 15, 16, and 17). The all-volunteer force came from the president, and Goldwater-Nichols and Special Operations Command came from Congress over strong service opposition. David Jones, after years as a joint chief, concluded that change had to be forced on the Pentagon from outside (chapters 12, 26, 31, and 35).</li>
-          <li><b>What regional or international problems did the United States encounter that would define the post Cold War strategic environment?</b> The Persian Gulf, terrorism, and peacekeeping. The Iran hostage crisis and Desert One in 1980 exposed services that could not work together, the Carter Doctrine produced the Rapid Deployment Joint Task Force and then Central Command, Beirut showed the price of presence without a clear mission, and the Earnest Will tanker escorts put the Navy in the Gulf in 1987 and 1988 (chapters 23, 24, 27, and 38). By the epilogue the force is shrinking by at least a third, with Somalia and Bosnia ahead.</li>
-        </ol>
-        <p>Chapter lessons for this book are on <a href="tonight/">last night's page</a>. Pages are in Sources. Opinion: questions two and five answer each other. The buildup was built for the war that never came, and the wars that did come were the kind it handled worst. <span class="by">(S)</span></p>
+        <span class="kicker">Counterpoint · Randolph against Clodfelter · review before Olsen</span>
+        <h3><a href="#a1">Counterpoint: Linebacker Coerced a Schedule. Randolph Asks What Else.</a></h3>
+        <p>Mark Clodfelter's central claim is that Nixon's 1972 bombing worked as a political instrument because Nixon wanted little and Hanoi had switched to a kind of war that bombing could hurt. Of the December raids he writes that the "Eleven-Day War" was "not the only reason for a settlement, but it was a primary one," and that Nixon's threat of another Linebacker helped persuade the Politburo to sign. His epilogue explains the mechanism. After Tet gutted the Viet Cong, the Easter Offensive was an all-out conventional assault, so for the first time in Vietnam the bombing hit something Hanoi needed in order to win. (Clausewitz called this polarity. Air planners call it a target.)</p>
+        <p>Stephen Randolph, whom we read last Thursday, keeps two scorecards and gives Hanoi the better one. He grants the damage: in the first two months, Linebacker wiped out North Vietnam's industry and 70 percent of its electrical capacity, and air power caused most of the North Vietnamese army's casualties in the South. Hanoi still kept supplies moving to the front, met its minimum strategic objectives, and set up its 1975 victory. He calls the Easter Offensive "a strategic success, despite its ambiguous, or even failed, military outcome." If the side being coerced walks away with its minimum aims, what exactly was it coerced into?</p>
+        <p>Clodfelter's own evidence helps Randolph more than it helps Clodfelter. He concedes that the January agreement's differences from the October accord "were largely cosmetic." He also shows the pressure running toward Saigon. The congressional fury over the Christmas bombing, including a House Democratic Caucus vote of 154 to 75 to cut off war funds, became Nixon's lever on Thieu, whom he warned that Congress would cut off South Vietnam if he refused to sign. Thieu sent his foreign minister to Paris on January 20. So 729 B-52 sorties, 15,237 tons, and fifteen bombers lost bought Hanoi's return to a text it had accepted in October, plus Saigon's signature. (The government most coerced in December 1972 may have been the ally.)</p>
+        <p>Each author's evidence has limits. Clodfelter can show that the bombing changed the timing: Hanoi agreed to resume talks on December 27, the morning after 120 B-52s hit ten targets in fifteen minutes. By his own "cosmetic" line, he can't show that it changed the terms. Randolph can show that Hanoi's strategic position survived the bombing, and his casualty figures show how badly the bombing hurt along the way. Neither can show what Hanoi would have done in January without the eleven days, which is the question both books need answered.</p>
+        <p>Opinion: Randolph wins on the outcome and Clodfelter on the mechanism, and the two answers fit together. First order, bombing hurt an army that had come out to fight in the open. Second order, Hanoi traded battlefield gains it could not hold for an American exit it could use, and Washington spent its leverage on Saigon, not Hanoi. Third order, air commanders concluded that a Linebacker-style campaign in spring 1965 would have won the war, which Clodfelter calls a misreading of "a unique campaign for very limited ends." The seminar comment: "Linebacker II coerced a schedule, not a settlement: Clodfelter himself calls January's changes from October largely cosmetic, and Randolph shows Hanoi still met its minimum objectives, so the lesson is that bombing works when the demand is small." Tomorrow's book covers a campaign whose demand was the regime itself. <span class="by">(S)</span></p>
       </article>
 
       <article id="a2">
-        <span class="kicker">The Reading · Kitfield, <i>Prodigal Soldiers</i></span>
-        <h3><a href="#a2">Twenty Years of Homework, Graded in a Hundred Hours</a></h3>
-        <p>James Kitfield, a defense reporter, argues that the officers who came home from Vietnam in disgrace stayed in uniform, rebuilt their services over two decades, and won the Gulf War. He tells it through a few careers, chiefly Barry McCaffrey, Chuck Horner, Colin Powell, Jack Galvin, and Walt Boomer. In the prologue McCaffrey hears Schwarzkopf brief the left hook in November 1990 and thinks, "By God, we learned." (The book is four hundred pages of explaining what, exactly, they learned.)</p>
-        <p>McCaffrey's nightmare in the prologue, gradual escalation with no attacks inside Iraq and protests growing at home, is Rolling Thunder as Clodfelter described it, and the "slowly ascending tempo" Haun quoted from 1965. Kitfield's officers spent twenty years making sure the next war would not be run on that schedule. Horner, a Red Flag flight lead in 1978, ran the 1991 air war; McCaffrey, wounded as a company commander in 1969, led the 24th Infantry Division three hundred kilometers into Iraq.</p>
-        <p>Opinion: Kitfield is a reporter, and his evidence is mostly what his subjects told him. That makes the book a strong record of what the officers believed they had fixed and a weaker record of what the Iraqis did. A redemption story is easier to tell when the opposing team rarely gets interviewed. <span class="by">(S)</span></p>
+        <span class="kicker">The 628 Paper · Hormuz through Olsen (tomorrow's book)</span>
+        <h3><a href="#a2">Olsen's Best Evidence for Drones Is a Thirteen-Foot Decoy</a></h3>
+        <p>The prompt asks for the most important potential crisis and how Airmen should prepare, in ten pages due December 1. The crisis is keeping the Strait of Hormuz open after the United States withdraws from the war with Iran. The working answer is sustainable ISR, sensors, drones, and robotics rather than strategic bombing. What follows is our extrapolation from John Andreas Olsen, not Shaun's answer.</p>
+        <p>Olsen supports the answer at its core. His book argues that bombing a regime's leadership did not change the regime: forty-three days of bombing against several hundred targets, and the Republican Guard still withdrew in good order and the regime put down two revolts. All forty-three of Iraq's top political and military leaders on January 15 were alive after March 1. His diagnosis is a sensing failure. American intelligence focused on order of battle, so the planners knew little about Iraq beyond the locations of buildings and communications. The first night's cleverest move was also unmanned. Thirteen-foot decoy drones drew Iraqi radars into the air battle, anti-radiation missiles followed them in, and Iraqi air-defense radar activity fell by over 90 percent within three days. For the rest of the war the Iraqis were reluctant to turn on their radars or generate electrical power for fear of being targeted. A threat that stayed overhead changed behavior more than the damage did. (For a patrol over a strait, that is the entire business model.)</p>
+        <p>He cuts against the answer in three places. He credits the strategic campaign with real effects, fog and friction in Iraqi decisions and degraded war-making, so the paper can't treat strike as useless. He warns that air power tempts politicians because it seems to offer "the pleasures of gratification without the burdens of commitment," and a drone orbit is the most painless version of that temptation ever built. And Powell's verdict on Instant Thunder in December 1990, that such strategies "are designed to hope to win," applies to any presence mission with no theory of what makes Tehran change its behavior. One more caution, from 1991: the Tomahawks fired from the Persian Gulf flew over Iran's mountains without Tehran being told, and Olsen reports that nothing was made of it. Nobody should plan on that courtesy twice.</p>
+        <p>Opinion, extrapolated: Olsen would fund the sensors if they are aimed at how the regime holds power as well as at counting its boats. The paper should name the Iranian behavior the orbit is meant to change and say how Airmen will know it changed. A sensor network that measures nothing in particular is just very expensive weather. <span class="by">(S)</span></p>
       </article>
 
       <article id="a3">
-        <span class="kicker">Counterpoint · Haun against Kitfield</span>
-        <h3><a href="#a3">Counterpoint: Haun Audits the Victory Parade</a></h3>
-        <p>Kitfield's central claim is that the reforms of the Vietnam generation produced the victory in Desert Storm. Phil Haun, whom we read yesterday, agrees that the force of 1991 was superb and disagrees about which parts of it won. His Appendix B scores the war's three air campaigns separately, using the Gulf War Air Power Survey of 1993, and two of the three fail.</p>
-        <p>The strategic campaign that Kitfield's chapter 42 celebrates failed first. Instant Thunder's night raids eliminated the highest-priority targets around Baghdad, and Saddam Hussein stayed in power and in command. Haun gives four proofs: Saddam drove to Basra two weeks into the air war to meet his generals and ordered the attack on Al Khafji, he approved Scud targets daily, he approved the order to withdraw from Kuwait on February 26, and after the war he used the surviving Republican Guard to crush the Shia and Kurdish uprisings. Interdiction did no better. Bombing cut Iraqi transport capacity from 200,000 tons a day to 20,000, but an army sitting in static defenses needed only 10,000 to 15,000. Haun's bluntest sentence is that Instant Thunder and the interdiction campaign are the only modern air operations where most factors favored air power, "yet both failed."</p>
-        <p>What worked, in Haun's account, was the unglamorous middle: armed reconnaissance against the Iraqi army in Kuwait. By the ground invasion 25 to 30 percent of that army had been attrited, about 10 percent of its armor and artillery by airstrikes and most of the rest by desertion, and the air threat kept the remainder dispersed and dug in until coalition armor rolled over it. Haun adds two points Kitfield doesn't stress. The end of the Cold War "provided a surplus of forces," and the Air Force put no battlefield air interdiction missions on its tasking orders, which spared it from coordinating targets with ground commanders.</p>
-        <p>Kitfield's evidence can show competence. Red Flag graduates, stealth statistics, a TAC mission-capable rate approaching 85 percent, and one Marine killed on the first day are real and page-sourced. It can't show cause, because his sources are the Americans who ran the war, and the officers who built Instant Thunder are not the people to ask whether it worked. To his credit he reports the gaps: intelligence and damage assessment struggled, and there was little reliable evidence that any mobile Scud launcher died. Kitfield even writes that for Horner the point "was never about whether airpower could win a war on its own," which is Haun's thesis in a pilot's voice.</p>
-        <p>Opinion: Haun has the better of it on what won, and Kitfield on why the force could win at all. First order, crediting Instant Thunder teaches planners that decapitation works, though Saddam kept command of his army for the whole war. Second order, the Air Force, by Haun's account, dropped battlefield air interdiction from its doctrine again after Desert Storm, the second time it had deleted the mission that kept an enemy army pinned. Third order, by our inference, the service went into the 1990s funding the campaign that failed and forgetting the one that worked. The seminar comment: "Kitfield proves the 1991 force was competent, but Haun's appendix shows the strategic bombing and interdiction campaigns failed and direct attack on a static Iraqi army did the work, so the reform that mattered most was the ground force that made the Iraqis hold still." The parade was earned. By Haun's count, two of the three air campaigns marching in it were not. <span class="by">(S)</span></p>
+        <span class="kicker">The Readings So Far · Crane, Randolph, Kitfield, and Olsen</span>
+        <h3><a href="#a3">Three Wars of Turning Off the Lights</a></h3>
+        <p>Three books on the shelf describe air forces switching off an enemy's electricity, and in none of them did the enemy's leadership give up because the lights went out. In Crane's Korea, Navy and Air Force fighter-bombers flew 546 and 730 sorties in four days from June 23, 1952, and destroyed 90 percent of North Korea's electric power potential. American prisoners that summer never saw the end of a propaganda film, because the power never lasted the full showing. In Randolph's 1972, Linebacker eliminated 70 percent of North Vietnam's electrical capacity in two months, and Hanoi kept its supplies moving. In Olsen's 1991, the Coalition hit eleven power plants and seven transformers in the first two days, and Baghdad lost commercial power within hours. (Seventy years of proving that dictators own flashlights.)</p>
+        <p>Olsen adds a detail the earlier books lack: Warden wanted transformers struck rather than generators, so the damage would not outlast a short war and the United States could help rebuild a postwar Iraq. Electric power then drew only 280 of the war's 35,040 strikes, under 1 percent, while Iraqi ground forces drew 23,430, about two-thirds. That matches Haun's appendix, which we read Monday: the work that decided the war was done against the army in Kuwait.</p>
+        <p>The news has been pinning itself to this shelf all week. Monday's cheap cruise missiles dropped from C-17s met Haun's Assault Breaker, and the question was who finds the targets. Tuesday's plan for a weapons school for acquisition "mavericks" met Kitfield's Top Gun and the Goldwater-Nichols promotion rules. Olsen turns that last link around. Kitfield credited Goldwater-Nichols for Horner's unified air command, while Olsen notes that the same 1986 law gave unprecedented power to the chairman and the theater commanders, which left the Air Staff, Warden's home, outside the chain of command that wrote the war plans. Opinion: the same law gets opposite reviews because Kitfield watches the theater commander's office and Olsen watches the Air Staff. Bring both pages tomorrow. <span class="by">(S)</span></p>
       </article>
 
       <article id="a4">
-        <span class="kicker">The 628 Paper · Hormuz through Kitfield</span>
-        <h3><a href="#a4">In the Strait, Kitfield Would Ask Who Fixes the Airplanes</a></h3>
-        <p>The prompt asks for the most important potential crisis and how Airmen should prepare, in ten pages due December 1. The crisis is keeping the Strait of Hormuz open after the United States withdraws from the war with Iran, and the working answer is sustainable ISR, sensors, drones, and robotics rather than strategic bombing. This is our extrapolation from Kitfield, not Shaun's answer.</p>
-        <p>Kitfield supports the answer in three places. The Gulf War's quiet star was a sensor: Joint STARS, rushed to the theater at Schwarzkopf's request, could track almost anything moving on the ground within 155 miles, and on Highway Six it cued Strike Eagles onto a fleeing convoy within ninety minutes. Sustainability, in his book, is a maintenance statistic. Creech nearly doubled TAC's monthly sorties per aircraft while Air Force spare parts were set to rise about 60 percent, which is what a permanent orbit over a strait would require. And the Vincennes, which misidentified an Iranian airliner and killed hundreds of civilians, shows that identifying the target is half the mission in crowded Gulf waters. (This week's news adds that unmanned boats have already rescued downed pilots and struck an Iranian submarine.)</p>
-        <p>He cuts against it in three others. Gulf presence has been a Navy job: Earnest Will in 1987 and 1988 was largely a Navy operation, and in 1990 Navy leaders assumed their service would supply the continuing presence afterward. Beirut shows what an open-ended presence mission with unclear rules can cost, 241 Marines, and Weinberger's tests ask for clear objectives and public support before force is used. And the withdrawal from Vietnam left only four of ten active Army divisions deployable by 1979, which suggests the years after this war are when readiness will decay.</p>
-        <p>Opinion, extrapolated: Kitfield would back the sensors and ask for three things the paper should answer, a Red Flag for drone and sensor crews, a rules-of-engagement annex written before the first orbit, and a maintenance budget that outlasts the news cycle. A presence mission ends when the money does. <span class="by">(S)</span></p>
-      </article>
-
-      <article id="a5">
-        <span class="kicker">The Readings So Far · Gaddis through Kitfield</span>
-        <h3><a href="#a5">Seventy Years of Cutting Supply Lines to Just Above What the Enemy Needs</a></h3>
-        <p>Four books on the shelf report the same interdiction result: the bombing cut supplies sharply and never below what the enemy needed. Crane's FEAF study of April 1952 found rail interdiction had failed despite more than 15,000 rail cuts. Clodfelter's Linebacker I cut North Vietnam's overland imports from 160,000 tons a month to 30,000. Haun's CIA analysts noted the enemy in the South needed fewer than fifteen truckloads a day. In Iraq, bombing cut transport from 200,000 tons a day to 20,000 for an army that needed 10,000 to 15,000. (Four wars, one footnote: the enemy kept eating.)</p>
-        <p>The news keeps landing on the same shelf. Yesterday's item on cheap cruise missiles dropped from C-17s met Haun's Assault Breaker, and the question was who finds the targets. Kitfield answers with Joint STARS on Highway Six, the way McDougall's reconnaissance satellites cut the CIA's count of Soviet missiles to at most fourteen in 1961. Last week's war-funding stories met Randolph's Senate caucus voting 35 to 8 to cut off funds in 1972 and Haun's Cooper-Church amendment. Kitfield adds Abrams, who moved as much as 70 percent of the Army's support into the reserves so that a war would need a call-up, and with it the public.</p>
-        <p>Gaddis explains why Kitfield's generation hated gradualism. Flexible response, he showed, rested on "calibration," moving up or down a range of precisely calculated actions, and Kitfield's officers spent twenty years making sure nobody calibrated them again. Opinion: Gaddis described a doctrine and Kitfield describes a generation's allergic reaction to it. Thursday's book, Olsen's <i>Strategic Air Power in Desert Storm</i>, takes up the very campaign Haun just failed, so bring his appendix to class. <span class="by">(S)</span></p>
-      </article>
-
-      <article id="a6">
-        <span class="kicker">Technical Writing · Week 3, Day 2 · using evidence and evaluating sources</span>
-        <h3><a href="#a6">Kitfield's Two Percent Passes the Sneaker Test</a></h3>
-        <p>Booth, Colomb, Williams, Bizup, and FitzGerald, in <i>The Craft of Research</i>, say readers judge evidence on five tests: accurate, precise, sufficient, representative, and authoritative. They demonstrate with a child asking for new sneakers, whose parent rejects "these are too small" as imprecise, "look at how I limp" as unrepresentative, and "Harry said so" as unauthoritative. Their warning words are some, most, many, often, and usually, which can limit a claim honestly or fudge it when the writer didn't find the number. They also warn that one or two examples, however vivid, invite the charge of cherry-picking.</p>
-        <p>Kitfield's best evidence passes. Before: "Stealth did most of the heavy lifting in the air war." After: "F-117s flew about 2 percent of the combat sorties and attacked more than 40 percent of the strategic targets without a loss." The second sentence is accurate, precise, and checkable. It fails only the representative test if you use it to prove the whole air war worked, since Haun shows the strategic targets were the part that failed.</p>
-        <p>The authority test cuts hardest in today's book. Kitfield's witness for whether the reforms worked is usually the reformer, which is "Harry said so" with four stars. Opinion: quote him for what happened in the room and go to the Gulf War Air Power Survey, through Haun, for what happened to Iraq.</p>
-        <p>Pro tip: for every number in your draft, write "out of how many?" in the margin. If you can't answer, the number is decoration. <span class="by">(S)</span></p>
+        <span class="kicker">Technical Writing · Week 3, Day 3 · precise language</span>
+        <h3><a href="#a4">"Render Ineffective" Was the Polite Way to Write "Kill Saddam"</a></h3>
+        <p>Timothy Pollock, in <i>Storytelling in Your Academic Writing</i>, says jargon keeps outsiders at arm's length and gives insiders power. His example is Crozier's study of a French cigarette factory, where the repair manuals were "accidentally" destroyed in a fire and the mechanics passed the knowledge down orally, only to people they trusted. He cites a 2006 study by Oppenheimer that found readers judged writers who used complex language as less intelligent. Pollock's fix is plain: use the common word when an equivalent exists, use the shorter word, and drop presumptuous words like "obviously" and "merely." He also asks for verbs that carry the meaning, since "the alliance blew up" and "the alliance dissolved" each tell the reader more than "the alliance ended."</p>
+        <p>Olsen catches the planners doing the opposite. Instant Thunder's objective was first written as "kill Saddam," and later versions said "decapitating," "render ineffective," and "incapacitate leadership." Olsen calls these "mere changes of label." Before: "The campaign sought to achieve leadership incapacitation effects through precision engagement of regime nodes." After: "The planners wanted Saddam dead or cut off from his army and his people, and Warden expected a coup within a week." The second sentence can be checked against what happened. The first can't, which is presumably why somebody liked it.</p>
+        <p>Opinion: in a strategy paper, jargon hides the theory of victory, and the theory is the part the grader wants to see. "Effects," "nodes," and "leverage" let a writer skip the sentence that says who does what, and why the enemy would care.</p>
+        <p>Pro tip, an old editor's trick: keep a Ctrl+F list of your own fog words (effects, nodes, leverage, degrade, impact, obviously, merely) and search the draft for each. At every hit, ask what physically happened and to whom. If you can't say, neither can the reader. <span class="by">(S)</span></p>
       </article>
 
       <p class="section-label">News × the Books</p>
 
-      <article id="a7">
-        <span class="kicker">Leadership × Kitfield · via War on the Rocks, November 10</span>
-        <h3><a href="#a7">The Pentagon Wants a Top Gun for Contracting Officers. Kitfield Says Bring a Promotion Board.</a></h3>
-        <p>Two former Defense Innovation Unit insiders want the unit to become the Pentagon's weapons school for buying commercial technology. Writing in War on the Rocks today, Ben McNally, a former DIU analyst, and Donald "Chee" Gansberger, a retired Air Force tactical air control party specialist who was DIU's first warfighter-in-residence, propose selecting "military mavericks," running them through a course, warranting them to award contracts, and sending them back to the services. Graduates would get a special experience identifier and a spot on the Joint Duty Assignment List, "giving Joint Staff credit." They argue the current system "incentivizes fear and compliance," and one author's record is their exhibit: the DIU work, they write, meant "permanently derailing the author's military career." The unit's wins include unmanned boats later used to rescue downed pilots and strike an Iranian submarine.</p>
-        <p>Kitfield has both halves of this plan, decades apart. The Navy's Top Gun opened in 1968 with selected pilots, expert instructors flying enemy-like aircraft, and blunt after-action reviews, and its graduates reached the fleet in 1969 better at killing and at surviving. A "maverick band" of Air Force fighter pilots pushed Red Flag for the same reason. The services built that half themselves, and Congress had to force the other. David Jones wanted joint duty to be "mandatory for promotion rather than a career dead end," concluded the change would have to be forced from outside, and Goldwater-Nichols made a joint assignment a requirement for a general's star in 1986, over service opposition.</p>
-        <p>Opinion: the authors have read the right history, perhaps without meaning to. Training creates mavericks, and only the promotion system keeps them. Jack Galvin, Kitfield notes, suspected his own "maverick ways" had earned him an invisible black mark at Army personnel. The Joint Duty Assignment List is the part of this proposal with teeth, since a course without career credit is a sabbatical. The Pentagon already knows how to build a weapons school. The harder part, on Kitfield's evidence, is promoting the people who graduate from one. <span class="by">(S)</span></p>
+      <article id="a5">
+        <span class="kicker">Defense &amp; Conflict × Olsen · via CSIS, November 10</span>
+        <h3><a href="#a5">Two Days of Tomahawks, Ten Years of Reloading</a></h3>
+        <p>The United States has enough munitions to fight Iran again, and a war with China is another matter, according to a CSIS analysis published yesterday by Mark Cancian and Chris Park. In the thirty-nine-day campaign that ended with the April 8 ceasefire, and in the operations since, U.S. forces spent between a third and two-thirds of key munition inventories, including about a third of the prewar Tomahawk stock. Tomahawk production has averaged 86 missiles a year over the past ten fiscal years, against a goal of 1,000. By day fourteen, the authors note, Secretary Hegseth said less than 1 percent of the munitions U.S. forces fired were long-range. Their summary: "The problem is not money, assuming Congress continues its support, but time." They judge stocks sufficient for Iran and warn that the shift to cheap short-range weapons may not be achievable against a great power like China.</p>
+        <p>Olsen's chapter on the air campaign shows the same pattern in 1991. The Tomahawk, at $1.1 million each, had never been used in war, and Powell told Glosson in October 1990 that every Tomahawk the Navy had was not worth anything and that a fighter should back up every target they were aimed at. The Coalition launched 282 in the whole war, 64 percent of them in the first two days, and none after February 1. Strikes on leadership targets peaked in those same two days, then declined, and for the last two-thirds of the war the strategic campaign ran at what Olsen calls "a minimum level." The expensive weapons opened the war, and cheaper ones fought the rest of it.</p>
+        <p>Opinion: thirty-five years apart, the planners lavished attention on the opening salvo and left the reload to the budget process. The pattern makes sense against Iraq or Iran, where the long-range weapons kick the door in and the short-range ones can then work in the open, which is the transition CSIS says may not work against China. Olsen adds a warning the report doesn't. The opening salvo in 1991 was also the part aimed at the regime, and the regime survived it. A force that spends its scarcest weapons in the first forty-eight hours had better be sure the first forty-eight hours decide something.</p>
+        <p>Powell thought the Tomahawk was worth nothing. The Pentagon now finds it worth a wait of several years. <span class="by">(S)</span></p>
       </article>
 
       <p class="endmark">End of today's articles.</p>
 
       <section class="sources" id="sources" aria-label="Sources">
         <h2>Sources</h2>
-        <p class="fine">Keyed to the phrase each one supports. Kitfield pages are printed pages: James Kitfield, Prodigal Soldiers (New York: Simon &amp; Schuster, 1995). Haun pages are printed pages: Phil Haun, Tactical Air Power and the Vietnam War (Cambridge: Cambridge University Press, 2024); Appendix B pages are taken from its running heads. Wayne C. Booth, Gregory G. Colomb, Joseph M. Williams, Joseph Bizup, and William T. FitzGerald, The Craft of Research, 4th ed. (Chicago: University of Chicago Press, 2016), printed pages. Clodfelter and Nguyen pages are ebook PDF pages; Gaddis, Crane, Zhang, McDougall, Schlight, and Randolph pages are printed pages. <i>Opinion</i> needs no source.</p>
+        <p class="fine">Keyed to the phrase each one supports. Olsen pages are printed pages: John Andreas Olsen, Strategic Air Power in Desert Storm (London: Frank Cass, 2003). Clodfelter pages are ebook PDF pages: Mark Clodfelter, The Limits of Air Power. Randolph, Crane, Kitfield, and Haun pages are printed pages. Timothy G. Pollock, Storytelling in Your Academic Writing, 2nd ed., printed pages. <i>Opinion</i> needs no source.</p>
 
         <h3>Today's episode</h3>
         <ul>
-          <li>Debate: internal or forced reform (seminar question four). Ten combat missions; Red Flag from 1975: Kitfield, 166. Study commissioned by Westmoreland, 108; "close held," 112; Meyer gives Ulmer a corps and a leadership center a decade later, 207.</li>
-          <li>"would have to be forced on the Pentagon from the outside": Kitfield, 251. Spare parts up about 60 percent; eleven to twenty-one sorties; crash rate one per 13,000 to one per 50,000 flying hours: Kitfield, 245. Creech's four rules: Kitfield, 177.</li>
-          <li>Horner's centralized control "a result primarily of the Goldwater-Nichols reforms": Kitfield, 381. "Sir, we've all done this before at Red Flag": Kitfield, 244. Service leadership "furiously" fought the reforms, then "a good-faith effort": Kitfield, 330. Senate vote 95 to 0: Kitfield, 295.</li>
-          <li>Quiz: Red Flag, Kitfield, 166. "hollow Army," four of ten divisions, Kitfield, 199. F-117s, Kitfield, 386, 414. FEAF rail study, Crane, 115–116. Linebacker I, Clodfelter, ch. V, ebook p. 184; Desert Storm interdiction, Haun, 271.</li>
+          <li>Debate: Did Col Warden's strategy achieve its promise? (seminar question two). All forty-three top leaders alive after March 1: Olsen, 259. Generals learn of the withdrawal on commercial radio: Olsen, 261. Samarrai on degraded command: Olsen, 262.</li>
+          <li>Coup within a week: Olsen, 94. "hoped for, but unstated": Olsen, 1. Regime change not a Coalition objective: Olsen, 288. Radar activity down over 90 percent: Olsen, 242. Saddam to Basra, Al Khafji: Haun, 271.</li>
+          <li>"The fact that Saddam survived does not indicate, however, that the concept of 'strategic paralysis' was ineffectual": Olsen, 287. "designed to hope to win": Olsen, 291. Powell to Glosson on Tomahawks: Olsen, 241. "more of the same" on the inner ring: Olsen, 292.</li>
+          <li>Quiz: Tomahawks, Olsen, 242. "Kill Saddam" relabeled, Olsen, 94. Table 5 strike shares, Olsen, 257. June 1952 power strikes, Crane, 119. "largely cosmetic," Clodfelter, ch. VI, ebook p. 217; "strategic success," Randolph, 339.</li>
         </ul>
 
-        <h3>Today's Seminar Questions, Answered</h3>
+        <h3>Counterpoint: Linebacker Coerced a Schedule</h3>
         <ul>
-          <li>Seminar 10 questions: SAASS 628 syllabus, Seminar 10, "The Cold War Ends."</li>
-          <li>F-117s, about 2 percent of combat sorties, more than 40 percent of strategic targets: Kitfield, 386; no F-117 lost: Kitfield, 414. Experts predicting twenty thousand or more U.S. casualties: Kitfield, 404. One Marine killed in action on the first day: Kitfield, 405. "Highway of Death" footage and the clamor for a cease-fire, February 27: Kitfield, 413. "little reliable evidence" of mobile Scud launchers destroyed: Kitfield, 414.</li>
-          <li>1980s revitalization deterring Soviet military ambitions; Afghanistan, Chernobyl, SDI: Kitfield, 325–326. 241 Marines dead or dying, October 23, 1983: Kitfield, 258, 260. Rules of engagement on loaded magazines; gate guards: Kitfield, 261. Chain of command from Beirut to the Pentagon: Kitfield, 262.</li>
-          <li>High school graduates from 62 to 85 percent by 1983: Kitfield, 302. Ten combat missions; Red Flag from 1975: Kitfield, 166. Nine of ten units badly mauled at the National Training Center: Kitfield, 311. Eleven to twenty-one sorties a month; crash rate one per 13,000 to one per 50,000 flying hours: Kitfield, 245.</li>
-          <li>Top Gun, 1968: Kitfield, 162. As much as 70 percent of combat service support to the reserves: Kitfield, 150. Creech's TAC: Kitfield, 175–177. Volunteer force forced on the Army by the president: Kitfield, 138, 145. Jones, change forced from outside: Kitfield, 251. Special Operations Command, 1987, services strongly opposed: Kitfield, 297. Service leadership "furiously" fought Goldwater-Nichols: Kitfield, 330.</li>
-          <li>Desert One failures: Kitfield, 228. Carter Doctrine and Rapid Deployment Joint Task Force: Kitfield, 237, 239; Central Command, January 1983: Kitfield, 240. Earnest Will, 1987–88: Kitfield, 358, 361. Shrinking by at least a third: Kitfield, 423. Somalia, Bosnia, and Korea: Kitfield, 428, 434.</li>
-          <li>The closing line is our opinion.</li>
+          <li>"not the only reason for a settlement, but it was a primary one"; Nixon's threat of another Linebacker helped persuade the Politburo: Clodfelter, ch. VI, ebook p. 214.</li>
+          <li>Tet's decimation of the Viet Cong; Easter Offensive an all-out conventional assault; Clausewitz's "principle of polarity": Clodfelter, epilogue, ebook p. 225.</li>
+          <li>Industry wiped out and 70 percent of electrical capacity eliminated in two months; air power caused most NVA casualties; supplies kept moving, minimum strategic objectives, conditions for 1975: Randolph, 338. "a strategic success, despite its ambiguous, or even failed, military outcome": Randolph, 339.</li>
+          <li>"were largely cosmetic": Clodfelter, ch. VI, ebook p. 217. House Democratic Caucus, 154 to 75: ebook p. 210. Nixon's warning to Thieu about Congress: ebook p. 218. Foreign minister sent to Paris, January 20: ebook p. 219.</li>
+          <li>729 sorties, 15,237 tons: Clodfelter, ch. VI, ebook p. 213. Fifteen B-52s lost: ebook p. 212. 120 B-52s, ten targets, fifteen minutes, December 26: ebook p. 206. Hanoi agrees to resume talks, December 27: ebook p. 207.</li>
+          <li>Air commanders' spring 1965 claim: Clodfelter, ch. VI, ebook pp. 219–220. "a unique campaign for very limited ends": Clodfelter, epilogue, ebook p. 227.</li>
+          <li>The verdict, the order-of-effects reading, and the seminar comment are our opinion.</li>
         </ul>
 
-        <h3>Twenty Years of Homework</h3>
-        <ul>
-          <li>Ford Award for defense reporting: Kitfield, About the Author. Main characters and the 1965–1993 span: Kitfield, prologue and epilogue. "By God, we learned": Kitfield, 24. Schwarzkopf's briefing, November 1990: Kitfield, 14–16.</li>
-          <li>McCaffrey's worst case of gradual escalation, no attacks inside Iraq, protests: Kitfield, 19. "slowly ascending tempo": Haun, 46. Rolling Thunder's aim to "impose a gradually increasing cost": Clodfelter, ch. III, ebook p. 91.</li>
-          <li>Horner, Red Flag flight lead, 1978: Kitfield, 166. McCaffrey wounded March 9, 1969: Kitfield, 94–97. Three hundred kilometers deep into the enemy's rear: Kitfield, 403.</li>
-          <li>The judgment about his sources is our opinion.</li>
-        </ul>
-
-        <h3>Counterpoint: Haun Audits the Victory Parade</h3>
-        <ul>
-          <li>Haun's Desert Storm sources, the Gulf War Air Power Survey (Keaney and Cohen, 1993): Haun, 270–273 (notes).</li>
-          <li>Instant Thunder eliminated the highest-priority targets; Saddam remained in power and in control: Haun, 270. Basra trip, Al Khafji, daily Scud targeting, February 26 withdrawal order, uprisings crushed: Haun, 271.</li>
-          <li>Transport capacity cut from 200,000 to 20,000 tons a day; the army needed 10,000–15,000: Haun, 271. "yet both failed": Haun, 273.</li>
-          <li>25 to 30 percent attrited; about 10 percent of armor and artillery by airstrikes, the rest desertions; air power kept units dispersed and static: Haun, 272–273. Most missions armed recce; no BAI missions on the air tasking orders: Haun, 205. "provided a surplus of forces": Haun, 270.</li>
-          <li>Intelligence and damage assessment problems; "little reliable evidence" on mobile launchers: Kitfield, 414. "was never about whether airpower could win a war on its own": Kitfield, 414. TAC mission-capable rate approaching 85 percent: Kitfield, 245.</li>
-          <li>BAI disappeared from doctrine after Desert Storm, the second such deletion: Haun, 225. The third-order link is our inference; the verdict and seminar comment are our opinion.</li>
-        </ul>
-
-        <h3>In the Strait, Kitfield Would Ask Who Fixes the Airplanes</h3>
+        <h3>Olsen's Best Evidence for Drones Is a Thirteen-Foot Decoy</h3>
         <ul>
           <li>Paper prompt and due date: SAASS 628 syllabus, "Grading." The crisis and working answer are Shaun's.</li>
-          <li>Joint STARS rushed to the Gulf at Schwarzkopf's request; 155-mile radius: Kitfield, 388. Highway Six, Strike Eagles turned loose within ninety minutes: Kitfield, 412–413.</li>
-          <li>Sorties from eleven to twenty-one a month; spare parts up about 60 percent, 1981–83: Kitfield, 245.</li>
-          <li>Vincennes shot down an Iranian airliner with the loss of hundreds of civilians: Kitfield, 375. Unmanned boats used to rescue downed pilots and strike an Iranian submarine: War on the Rocks, November 10, 2026.</li>
-          <li>Earnest Will largely a Navy operation; the Navy to supply the continuing presence: Kitfield, 361. Crist pleading for service support: Kitfield, 358.</li>
-          <li>Beirut, 241 Marines: Kitfield, 260. Weinberger's tests: Kitfield, 269. Four of ten active divisions deployable: Kitfield, 199.</li>
-          <li>The three recommendations and closing line are our extrapolation and opinion.</li>
+          <li>Forty-three days against several hundred targets; orderly Republican Guard withdrawal; two revolts put down: Olsen, 288. All forty-three top leaders alive after March 1 (quoting Pape): Olsen, 259.</li>
+          <li>Intelligence focused on order of battle: Olsen, 1. Planners knew little beyond locations of buildings and communications: Olsen, 290.</li>
+          <li>Thirteen-foot unmanned decoys, HARMs, "Puba's Party"; radar activity down over 90 percent in three days; reluctance to use radars: Olsen, 242. Reluctance to generate electrical power: Olsen, 242–243.</li>
+          <li>Fog and friction; degraded war-making: Olsen, 1, 293. "the pleasures of gratification without the burdens of commitment": Olsen, 2. "designed to hope to win": Olsen, 291.</li>
+          <li>Tomahawks over the Iranian mountains without Tehran being informed; nothing made of it: Olsen, 242.</li>
+          <li>The recommendation and closing line are our extrapolation and opinion.</li>
         </ul>
 
-        <h3>Seventy Years of Cutting Supply Lines</h3>
+        <h3>Three Wars of Turning Off the Lights</h3>
         <ul>
-          <li>FEAF study, April 1952, more than 15,000 rail cuts: Crane, 115–116. Linebacker I, 160,000 to 30,000 tons a month: Clodfelter, ch. V, ebook p. 184. Fewer than fifteen truckloads a day: Haun, 128. Desert Storm interdiction: Haun, 271.</li>
-          <li>Cheap cruise missiles from C-17s: Air &amp; Space Forces Magazine, November 8, 2026 (Monday's issue). Assault Breaker: Haun, 243–244. Satellites cut the Soviet missile count to at most fourteen, 1961: McDougall, 327–330.</li>
-          <li>Senate Democratic Caucus, 35 to 8, May 1972: Randolph, 179. Cooper-Church: Haun, 140. Abrams and the reserves: Kitfield, 150.</li>
-          <li>"calibration," a range of precisely calculated actions: Gaddis, 214, 241. Olsen's seminar on Thursday: SAASS 628 syllabus, course calendar.</li>
+          <li>June 23, 1952; 546 Navy and 730 Fifth Air Force sorties; 90 percent of North Korea's electric power potential in four days; POWs and the propaganda films: Crane, 119.</li>
+          <li>70 percent of electrical capacity in two months; supplies kept moving: Randolph, 338.</li>
+          <li>Eleven power plants and seven transformers in the first two days; Baghdad lost commercial power within hours: Olsen, 242.</li>
+          <li>Transformers rather than generators; a postwar Iraq the United States would help rebuild: Olsen, 95. Table 5, electric power 280 strikes (0.8 percent), Iraqi ground forces 23,430 (66.9 percent), total 35,040, from the Gulf War Air Power Survey: Olsen, 257.</li>
+          <li>Desert Storm armed reconnaissance and attrition of the Iraqi army: Haun, 272–273.</li>
+          <li>C-17 cruise missiles and Assault Breaker: Monday's issue (Air &amp; Space Forces Magazine, November 8; Haun, 243–244). DIU "mavericks": War on the Rocks, November 10; Top Gun and Goldwater-Nichols: Kitfield, 162, 297.</li>
+          <li>Goldwater-Nichols and Horner's centralized control: Kitfield, 381. Unprecedented power to the chairman and the CINCs: Olsen, 87–88.</li>
+          <li>The flashlight line and the closing opinion are ours.</li>
         </ul>
 
-        <h3>Kitfield's Two Percent Passes the Sneaker Test</h3>
+        <h3>"Render Ineffective" Was the Polite Way to Write "Kill Saddam"</h3>
         <ul>
-          <li>Five tests (accurate, precise, sufficient, representative, authoritative); the sneakers dialogue: Booth et al., 137–138.</li>
-          <li>Warning words (some, most, many, often, usually): Booth et al., 139. Anecdote and cherry-picking: Booth et al., 140.</li>
-          <li>F-117 figures: Kitfield, 386. Strategic bombing failed: Haun, 270–273.</li>
-          <li>The "out of how many?" tip is ours.</li>
+          <li>Jargon as insiders' power; Crozier's French cigarette plant; Oppenheimer (2006): Pollock, 40–41.</li>
+          <li>Limit jargon, shorter words, avoid "obviously" and "merely": Pollock, 41. "Blew up," "dissolved," "ended": Pollock, 43–44.</li>
+          <li>"kill Saddam," "decapitating," "render ineffective," "incapacitate leadership," "mere changes of label"; coup within a week: Olsen, 94.</li>
+          <li>The fog-word list is an old editor's trick; the opinion is ours.</li>
         </ul>
 
-        <h3>The Pentagon Wants a Top Gun for Contracting Officers</h3>
+        <h3>Two Days of Tomahawks, Ten Years of Reloading</h3>
         <ul>
-          <li>McNally and Gansberger's proposal, biographies, the six steps, Joint Duty Assignment List credit, "incentivizes fear and compliance," "permanently derailing the author's military career," Saronic vessels: Ben McNally and Donald Gansberger, "To Implement Acquisition Reform, Empower Military Mavericks," War on the Rocks, November 10, 2026.</li>
-          <li>Top Gun, 1968; graduates reach the fleet in spring 1969: Kitfield, 162. "maverick band" pushing Red Flag: Kitfield, 163.</li>
-          <li>"mandatory for promotion rather than a career dead end": Kitfield, 251. Joint assignment required for flag or general rank: Kitfield, 297. Services fought the reforms: Kitfield, 330.</li>
-          <li>Galvin's "maverick ways": Kitfield, 103.</li>
-          <li>The opinion paragraph is ours.</li>
+          <li>Mark F. Cancian and Chris H. Park, "Munition Inventories: An Update Amid Renewed War Risk," CSIS, November 10, 2026: thirty-nine-day campaign, April 8 ceasefire, a third to two-thirds of key inventories, a third of Tomahawks, 86 a year over ten fiscal years, goal of 1,000, Hegseth's day-fourteen figure, "The problem is not money," Iran and China conclusions.</li>
+          <li>$1.1 million each, never used in conflict; Powell to Glosson, October 1990: Olsen, 241. 282 launched, 64 percent in the first two days, none after February 1: Olsen, 242.</li>
+          <li>Leadership strikes highest in the first two days; "a minimum level": Olsen, 256.</li>
+          <li>The opinion paragraphs and closing line are ours.</li>
         </ul>
       </section>
 
@@ -386,62 +364,57 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
         <h2>Q&amp;A · Test Yourself</h2>
         <p class="howto">Answer from memory first, then open each question to check.</p>
 
-        <h3 class="qa-h">Today's practice · from Booth et al., <i>The Craft of Research</i></h3>
-        <p class="fine">The rule: test each piece of evidence for accuracy, precision, sufficiency, representativeness, and authority, and replace hedge words like "many" and "often" with the number when you can find it (pp. 137–140). Rewrite this sentence about Desert Storm interdiction so it passes the precision and sufficiency tests (Haun, 271).</p>
-        <p class="protip">"Coalition bombing badly hurt Iraqi supply lines, so interdiction mostly worked."</p>
+        <h3 class="qa-h">Today's practice · from Pollock, <i>Storytelling in Your Academic Writing</i></h3>
+        <p class="fine">The rule: use the common word when an equivalent exists, prefer the shorter word, and choose verbs that carry the meaning (pp. 41, 43–44). Rewrite this sentence so a reader can check it against what happened (Olsen, 242–243).</p>
+        <p class="protip">"Opening-night kinetic engagement of the power infrastructure generated significant second-order effects on the adversary's C2 and IADS."</p>
         <div class="mine">
           <label for="mine-practice">Your rewrite:</label>
-          <textarea id="mine-practice" placeholder="Bombing cut… but the Iraqi army needed only…"></textarea>
+          <textarea id="mine-practice" placeholder="In the first two days, the Coalition bombed…"></textarea>
           <small>Saved only in this browser on this device.</small>
         </div>
         <ul class="recall">
-          <li><details><summary>One possible rewrite</summary><p>"Coalition bombing cut Iraqi transport capacity from 200,000 tons a day to 20,000, but an army in static defenses needed only 10,000 to 15,000, so interdiction hurt and did not starve it" (Haun, 271). The numbers make the claim precise, and the need figure keeps it from being cherry-picked (Booth et al., 139–140).</p></details></li>
+          <li><details><summary>One possible rewrite</summary><p>"In the first two days the Coalition bombed eleven power plants and seven transformers; Baghdad lost commercial power within hours, Iraqi radars and communications fell back on weaker backup systems, and the Iraqis avoided generating power for the rest of the war" (Olsen, 242–243). Every noun is a thing and every verb is something that happened (Pollock, 41).</p></details></li>
         </ul>
 
         <h3 class="qa-h">Connect the dots</h3>
         <ul class="recall">
-          <li><details><summary>Two former DIU insiders want a weapons school for acquisition "mavericks," with Joint Duty Assignment List credit. Link it to Kitfield and Haun.</summary><p>Kitfield: Top Gun (1968) and Red Flag show the services can build training on their own (162, 166), but joint duty became a promotion requirement only when Goldwater-Nichols forced it, over service opposition (297, 330). Haun: services fund what fits their culture, which is why AirLand Battle sold and AirSea Battle did not (249). Training makes mavericks; the promotion system decides whether they stay (War on the Rocks, Nov 10).</p></details></li>
-          <li><details><summary>The same article says commercial satellite imagery showed Russia preparing to invade Ukraine in February 2022. Link it to McDougall and Kitfield.</summary><p>McDougall: reconnaissance satellites killed the missile gap in 1961 by cutting the CIA's count of Soviet missiles to at most fourteen (327–330). Kitfield: Joint STARS could track almost anything moving on the ground within 155 miles and cued the Highway Six strikes (388, 413). In both, seeing came before striking (War on the Rocks, Nov 10).</p></details></li>
+          <li><details><summary>CSIS says U.S. forces spent about a third of their Tomahawks against Iran, and that production has averaged 86 a year. Link it to Olsen and Haun.</summary><p>Olsen: 282 Tomahawks in 1991, 64 percent in the first two days and none after February 1, and leadership strikes fell to "a minimum level" after the opening (242, 256). Haun: what worked in Desert Storm was sustained armed reconnaissance against the Iraqi army, which used cheap weapons over weeks (272–273). The expensive opening gets the headlines; the cheap middle does the work (CSIS, Nov 10).</p></details></li>
+          <li><details><summary>Ukraine's foreign minister says Russia is hitting the power grid before winter, and his family in Kyiv often has only a few hours of electricity a day. Link it to Crane and Olsen.</summary><p>Crane: 90 percent of North Korea's electric power potential destroyed in four days in June 1952, without ending the war (119). Olsen: Warden aimed at transformers, not generators, to avoid long-term damage, and Baghdad's blackout did not topple the regime (95, 242). Grid attacks hurt civilians quickly and governments slowly (Defense News/Reuters, Nov 10).</p></details></li>
         </ul>
 
         <h3 class="qa-h">Kitfield: seminar recall</h3>
         <ul class="recall">
           <li><details><summary>What did McCaffrey think after Schwarzkopf briefed the left hook?</summary><p>That they would not fight a war of attrition or a limited war: "By God, we learned." <span class="pg">K 24</span></p></details></li>
-          <li><details><summary>What did the 1970 Army War College Study on Military Professionalism find, and what did Westmoreland do with it?</summary><p>About 450 officers described ambitious, transitory commanders producing statistics and optimistic reports; Westmoreland ordered the study "close held," though its authors could brief it at the schools. <span class="pg">K 109–112</span></p></details></li>
-          <li><details><summary>Why did the Air Force build Red Flag?</summary><p>The Red Baron reports and Vietnam showed a pilot needed about ten combat missions to have a good chance of surviving, so from 1975 the Air Force gave pilots those missions in training. <span class="pg">K 166</span></p></details></li>
+          <li><details><summary>Why did the Air Force build Red Flag?</summary><p>Vietnam showed a pilot needed about ten combat missions to have a good chance of surviving, so from 1975 the Air Force gave pilots those missions in training. <span class="pg">K 166</span></p></details></li>
           <li><details><summary>What did Creech's TAC achieve by the early 1980s?</summary><p>Mission-capable rates approaching 85 percent, sorties per aircraft up from eleven a month in 1978 to twenty-one, and a crash rate down from one per 13,000 flying hours to one per 50,000. <span class="pg">K 245</span></p></details></li>
-          <li><details><summary>What did Shy Meyer tell the president's team at Camp David in November 1979?</summary><p>That the Army was hollow: "basically what we have is a hollow Army." Only four of ten active divisions were deployable. <span class="pg">K 199</span></p></details></li>
-          <li><details><summary>Why did Abrams put as much as 70 percent of the Army's combat service support in the reserves?</summary><p>So the Army could not go to war without a reserve call-up, and with it the public. <span class="pg">K 150–151</span></p></details></li>
-          <li><details><summary>What did Goldwater-Nichols require for promotion to general or flag rank?</summary><p>A joint curriculum at a War College followed by a joint-duty assignment. <span class="pg">K 297, 330</span></p></details></li>
+          <li><details><summary>What did Shy Meyer tell the president's team at Camp David in November 1979?</summary><p>That the Army was hollow. Only four of ten active divisions were deployable. <span class="pg">K 199</span></p></details></li>
           <li><details><summary>How did the F-117s perform in Desert Storm?</summary><p>About 2 percent of combat sorties, more than 40 percent of the strategic targets, and no losses. <span class="pg">K 386, 414</span></p></details></li>
-          <li><details><summary>What does Haun say Instant Thunder and the interdiction campaign have in common?</summary><p>They are the only modern air operations where most factors favored air power, "yet both failed." <span class="pg">H 273</span></p></details></li>
-          <li><details><summary>Which earlier debacles does McCaffrey say the military has righted itself after?</summary><p>Kasserine Pass, Task Force Smith, the Ia Drang Valley, and Desert One. <span class="pg">K 434–435</span></p></details></li>
         </ul>
 
         <h3 class="qa-h">The Shelf</h3>
         <ul class="recall">
-          <li><details><summary>Gaddis: what did flexible response in Vietnam assume about force?</summary><p>"Calibration," the belief that the United States could move up or down a range of precisely calculated actions and deter aggression without extreme escalation or humiliation (241).</p></details></li>
-          <li><details><summary>Crane: what did the April 1952 FEAF study find about rail interdiction?</summary><p>It had failed despite more than 15,000 rail cuts (115–116).</p></details></li>
+          <li><details><summary>Gaddis: what did flexible response in Vietnam assume about force?</summary><p>"Calibration," moving up or down a range of precisely calculated actions without extreme escalation or humiliation (241).</p></details></li>
+          <li><details><summary>Crane: what did the June 1952 hydroelectric strikes achieve?</summary><p>546 Navy and 730 Fifth Air Force sorties destroyed 90 percent of North Korea's electric power potential in four days (119).</p></details></li>
           <li><details><summary>Zhang: what did Moscow order Belov's 151st Air Division in 1950?</summary><p>To retrain Chinese pilots first and not to fly beyond the Yalu (62).</p></details></li>
           <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
           <li><details><summary>Schlight: what share of 1966 strike sorties hit enemy troops engaged with allied forces?</summary><p>About 3 percent (216).</p></details></li>
-          <li><details><summary>Clodfelter: how much did Linebacker I cut North Vietnam's overland imports?</summary><p>From 160,000 to 30,000 tons a month (ch. V, e184).</p></details></li>
-          <li><details><summary>Randolph: how did the Senate Democratic Caucus respond to Nixon's May 8, 1972 speech?</summary><p>It voted 35 to 8 to cut off war funds (179).</p></details></li>
+          <li><details><summary>Clodfelter: how did January 1973's agreement differ from October's?</summary><p>"Largely cosmetic" differences (ch. VI, e217).</p></details></li>
+          <li><details><summary>Randolph: how does he score the Easter Offensive for Hanoi?</summary><p>"A strategic success, despite its ambiguous, or even failed, military outcome" (339).</p></details></li>
           <li><details><summary>Nguyen: who does she say actually ran Hanoi's war?</summary><p>Le Duan, first secretary from 1960 until his death in 1986, with Le Duc Tho as his right hand (intro, e19–20).</p></details></li>
-          <li><details><summary>Haun: how did direct attack score across the twenty-three campaigns?</summary><p>Tried eleven times, military success nine times, political success five (7, 218).</p></details></li>
+          <li><details><summary>Haun: what do Instant Thunder and the Desert Storm interdiction campaign have in common?</summary><p>They are the only modern air operations where most factors favored air power, "yet both failed" (273).</p></details></li>
           <li><details><summary>Kitfield: what did David Jones conclude about reforming the joint system?</summary><p>That the fundamental changes would have to be forced on the Pentagon from outside (251).</p></details></li>
         </ul>
 
         <h3 class="qa-h">Writing drills</h3>
         <ul class="recall">
-          <li><details><summary>Make it precise: "Many Marines were killed in Beirut because of a lot of problems with the rules."</summary><p>"On October 23, 1983, a truck bomb killed or mortally wounded 241 Marines at a compound where the rules of engagement generally barred keeping magazines loaded" (Kitfield, 260–261). Numbers and a date replace "many" and "a lot" (Booth et al., 139).</p></details></li>
-          <li><details><summary>Fix the authority problem: "The reforms clearly worked, as the generals who led them later said."</summary><p>"Horner and Hornburg credited Creech's reforms for the victory (Kitfield, 415), but the Gulf War Air Power Survey, as Haun reads it, found the strategic bombing and interdiction campaigns failed (Haun, 270–273)." Quote the witness for what he saw and an independent source for the result (Booth et al., 140).</p></details></li>
-          <li><details><summary>Review (Monday, agency): give the agent back in "Battlefield air interdiction disappeared from doctrine after Desert Storm."</summary><p>"After Desert Storm, the Air Force again struck BAI from its doctrine" (Haun, 5, 225). Missions rarely wander off on their own (Sword, 37).</p></details></li>
+          <li><details><summary>Cut the fog: "Strategic paralysis effects were operationalized against regime centers of gravity."</summary><p>"Warden's planners bombed Baghdad's leadership, communications, and power targets, hoping Saddam would lose control and someone would overthrow him within a week" (Olsen, 94). Common words, a named actor, a checkable claim (Pollock, 41).</p></details></li>
+          <li><details><summary>Pick the verb that carries the meaning: "Things changed in the Paris talks in December 1972, then the bombing happened, then talks happened again."</summary><p>"On December 13, Hanoi's negotiators slipped seventeen changes into a supposedly finished text; Nixon sent the B-52s north, and on December 27 Hanoi agreed to resume talks" (Clodfelter, ch. VI, e200, e207). "Slipped," "sent," and "agreed" say who acted (Pollock, 43–44).</p></details></li>
+          <li><details><summary>Review (Tuesday, evidence): make it precise: "Tomahawks were used a lot early in Desert Storm."</summary><p>"The Coalition fired 282 Tomahawks, 64 percent of them in the first two days and none after February 1" (Olsen, 242). The number replaces "a lot" (Booth et al., 139).</p></details></li>
         </ul>
 
         <div class="mine">
-          <label for="mine-crane">Your turn: two sentences on whether the reforms Kitfield describes were mostly internal or mostly forced, each with one number or date as evidence (Kitfield, 150, 166, 297, 330).</label>
-          <textarea id="mine-crane" placeholder="The services built… but Congress forced…"></textarea>
+          <label for="mine-crane">Your turn: two sentences answering tomorrow's question two, "Did Col Warden's strategy achieve its promise?", each with one number or page as evidence (Olsen, 242, 259, 287, 291).</label>
+          <textarea id="mine-crane" placeholder="Warden promised… but Olsen shows…"></textarea>
           <small>Saved only in this browser on this device.</small>
         </div>
       </section>
@@ -465,8 +438,8 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
             <tr><td>5 Nov</td><td class="st-done">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill done">READ</span></td></tr>
             <tr><td>6 Nov</td><td class="st-done">Nguyen, <i>Hanoi's War</i></td><td><span class="pill done">READ</span></td></tr>
             <tr><td>9 Nov</td><td class="st-done">Haun, <i>Tactical Air Power and the Vietnam War</i></td><td><span class="pill done">READ</span></td></tr>
-            <tr><td>10 Nov</td><td class="st-now">Kitfield, <i>Prodigal Soldiers</i></td><td><span class="pill now">SEMINAR</span></td></tr>
-            <tr><td>12 Nov</td><td>Olsen, <i>Strategic Air Power in Desert Storm</i></td><td><span class="pill now">NEXT</span></td></tr>
+            <tr><td>10 Nov</td><td class="st-done">Kitfield, <i>Prodigal Soldiers</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>12 Nov</td><td class="st-now">Olsen, <i>Strategic Air Power in Desert Storm</i></td><td><span class="pill now">NEXT</span></td></tr>
             <tr><td>13 Nov</td><td>Fravel, <i>Active Defense</i></td><td></td></tr>
           </tbody>
         </table>
@@ -474,8 +447,8 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-si
       </section>
       <section>
         <h2>Countdowns</h2>
-        <div class="count"><span>Olsen seminar, 12 Nov</span><b>2</b></div>
-        <div class="count"><span>628 paper due, 1 Dec</span><b>21</b></div>
+        <div class="count"><span>Olsen seminar, 12 Nov</span><b>1</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>20</b></div>
       </section>
       <section>
         <h2>Daily Lineup</h2>
