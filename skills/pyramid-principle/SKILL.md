@@ -1,6 +1,6 @@
 ---
 name: pyramid-principle
-description: Structure professional writing and thinking with Barbara Minto's Pyramid Principle — answer first, SCQA opening, ideas grouped under a single governing point. Use this whenever the user is writing, outlining, or fixing professional communication (emails, memos, reports, recommendations, decision papers, executive summaries, briefings, slide decks, point papers, staff papers, BLUF-style messages), asks to "tighten" or "restructure" one, says their draft is buried, rambling, or unclear, or says something like "help me figure out what I'm trying to say," "I have a bunch of thoughts, help me get to the point," or "think this through with me" about a work situation they need to communicate. Also use for auditing a draft's logic or structure. Do not use for academic essays or humanities scholarship, or for open-ended idea generation where no single answer or message is the goal.
+description: Structure professional writing and thinking with Barbara Minto's Pyramid Principle — answer first, SCQA opening, ideas grouped under a single governing point. Use this whenever the user is writing, outlining, or fixing professional communication (emails, memos, reports, recommendations, decision papers, executive summaries, briefings, slide decks, point papers, staff papers, BLUF-style messages), asks to "tighten" or "restructure" one, says their draft is buried, rambling, or unclear, or says something like "help me figure out what I'm trying to say," "I have a bunch of thoughts, help me get to the point," or "think this through with me" about a work situation they need to communicate. Also use for auditing a draft's logic or structure, including the argument structure of academic argument, policy, and strategy papers (war college / SAASS-style papers, thesis-driven essays): whether the thesis is clear and early, whether sections and numbered lists actually support it and map onto each other, whether case groupings hang together, and whether the paper's test or evidence answers the question it claims to. For those papers this skill covers structure only; prose style, sources, and grading belong to book-panel-review and essay-workshop. Do not use for line editing, citation checking, literary or humanities scholarship where the argument is meant to unfold rather than lead, or open-ended idea generation where no single answer or message is the goal.
 ---
 
 # Pyramid Principle
@@ -71,6 +71,21 @@ Use when the user hands you a draft and asks for review, tightening, or "does th
 4. **Offer the rewrite** (or do it, if they asked for it). If they want light-touch edits, prioritize: the lead first, then the key line, then everything else.
 
 Be honest but proportionate — a three-line email doesn't need a full structural teardown.
+
+#### Auditing argument and policy papers
+
+Academic argument papers (war college, SAASS, policy and strategy essays) are a different reader and genre, but the pyramid is still the best X-ray of their logic. Adjust the audit:
+
+- **Respect genre conventions.** A narrative hook before the thesis, a bookend conclusion, and topic-label section headings are normal and often graded expectations — note them as deliberate, don't "fix" them. The test is whether the thesis arrives by the end of the introduction and whether each paragraph's topic sentence is an assertion.
+- **Look for what graders and sharp readers exploit:**
+  - *Competing governing thoughts* — an intro carrying two or three top-level claims (e.g., "what the crisis is" and "what to do about it") at equal weight. If the assignment requires both, make the second clearly answer the question the first raises.
+  - *Lists that don't map* — a strategy with N steps and a recommendation with M preparations that never connect, or a step with no matching preparation. Every numbered list should map onto the others or say how it relates.
+  - *Mixed-kind case groupings* — e.g., a section titled for one kind of case that also holds the counterexample or the model.
+  - *Test/evidence mismatch* — a stated hypothesis or falsification test that measures something different from what the paper's own cases show matters.
+  - *Overloaded intro paragraphs* — count the distinct moves; more than about five usually means a split.
+  - *Unstated ordering logic* in the paper's main list of recommendations.
+- **Stay in your lane.** Report structure and logic only. Leave prose, citations, and grading to book-panel-review and essay-workshop, and say so if the user asks for those.
+- **Don't rewrite the paper.** Show the reconstructed pyramid, rank the problems, and give a concrete fix for each (where to split, what sentence to add, what to retitle). Offer to work any one of them through with the user.
 
 ## Audit checklist
 
