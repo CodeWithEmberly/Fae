@@ -214,3 +214,6 @@ body.flying #toolbar, body.flying #tray, body.flying #hint, body.flying #rci, bo
   .cat { flex: 0 0 76px; }
   #toolbar { justify-content: center; }
 }
+
+#nameInput { flex: 1; min-width: 0; min-height: 44px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.25); color: var(--ink); padding: 0 12px; font: inherit; font-size: 16px; }
+.confirm { border: 1px solid rgba(229, 72, 77, 0.5); border-radius: 12px; padding: 4px 12px; }

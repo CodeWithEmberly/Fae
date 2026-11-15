@@ -230,8 +230,10 @@
       case 'adjourn': FS.council.adjourn(S); session = null; U.closeSheet(); U.toast('🏛️ The council is adjourned. Next session: ' + fmtMonth(S.nextCouncil) + '.'); U.hud(true); return;
       case 'beginCouncil': session = { items: FS.council.makeAgenda(S), i: 0 }; break;
       case 'save': { var ok = FS.save(S); U.toast(ok ? '💾 Saved' : 'Could not save', ok ? 'good' : 'bad'); break; }
-      case 'newgame': if (confirm('Start a brand new homestead? Your current city will be replaced.')) { U.closeSheet(); session = null; FS.startGame(FS.newGame(), true); FS.save(FS.state); } return;
-      case 'rename': { var nm = prompt('Name your settlement', S.name); if (nm && nm.trim()) { S.name = nm.trim().slice(0, 28); U.hud(true); } break; }
+      case 'newgame': U.menuConfirm = true; break;
+      case 'newgameNo': U.menuConfirm = false; break;
+      case 'newgameYes': U.menuConfirm = false; U.closeSheet(); session = null; FS.startGame(FS.newGame(), true); FS.save(FS.state); return;
+      case 'rename': { var inp = $('nameInput'), nm = inp && inp.value; if (nm && nm.trim()) { S.name = nm.trim().slice(0, 28); U.hud(true); U.toast('✏️ Renamed to ' + esc(S.name), 'good'); } break; }
       case 'help': U.showHelp(); return;
       case 'close': U.closeSheet(); return;
       case 'goto': FS.render.centerOn(+ds.x + 0.5, +ds.y + 0.5); U.closeSheet(); return;
@@ -468,9 +470,12 @@
     });
   };
   U.showMenu = function () {
+    U.menuConfirm = false;
     U.openSheet('☰ ' + esc(S.name), null, function () {
-      return '<div class="menu"><button class="btn" data-act="rename">✏️ Rename settlement</button><button class="btn" data-act="save">💾 Save now</button>' +
-        '<button class="btn" data-act="help">❓ How to play</button><button class="btn danger" data-act="newgame">🌱 New homestead</button></div>' +
+      return '<div class="menu"><div class="row"><input id="nameInput" maxlength="28" value="' + esc(S.name) + '" aria-label="Settlement name"><button class="btn" data-act="rename">✏️ Rename</button></div>' +
+        '<button class="btn" data-act="save">💾 Save now</button><button class="btn" data-act="help">❓ How to play</button>' +
+        (U.menuConfirm ? '<div class="confirm"><p>Start a brand new homestead? Your current city will be replaced.</p><div class="actions"><button class="btn danger" data-act="newgameYes">Yes, start over</button><button class="btn" data-act="newgameNo">Keep my city</button></div></div>'
+          : '<button class="btn danger" data-act="newgame">🌱 New homestead</button>') + '</div>' +
         '<p class="muted">Autosaves every year and when you leave. Founded ' + FS.START_YEAR + ' · seed ' + S.seed + '</p>';
     });
   };
