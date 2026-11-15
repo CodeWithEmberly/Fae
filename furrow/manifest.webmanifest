@@ -1,0 +1,11 @@
+{
+  "name": "Furrow to Skyline",
+  "short_name": "Furrow",
+  "description": "Grow a river homestead into a metropolis. A mobile-first city builder about people, councils and architecture.",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#1b2a33",
+  "theme_color": "#1b2a33",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
