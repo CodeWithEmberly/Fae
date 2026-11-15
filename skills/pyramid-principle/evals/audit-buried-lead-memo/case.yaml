@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: audit-buried-lead-memo
+expected_outcome: |
+  A review that reconstructs the memo's actual structure, diagnoses a buried and hedged ask, label subject line, chronological/discovery ordering, mixed-kind points, and missing explicit recommendation, then proposes a restructured BLUF memo with a clear recommendation and grouped reasons, without inventing facts.

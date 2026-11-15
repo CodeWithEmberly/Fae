@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: think-finds-governing-thought
+expected_outcome: |
+  The response helps the user converge on a governing thought instead of jumping straight to a finished note: it identifies the reader and what they must decide, works the situation/complication/question, groups the user's points by kind, separates non-reasons (e.g. the user's willingness/hesitation) from supporting points, offers a tentative governing thought held loosely, and asks a small number of focused questions.

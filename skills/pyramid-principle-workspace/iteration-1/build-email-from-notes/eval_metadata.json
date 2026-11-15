@@ -1,0 +1,11 @@
+{
+  "eval_name": "build-email-from-notes",
+  "prompt": "Can you write this up as an email to my boss (Lt Col Ramirez)? Notes: we've been asked to cut 10% from the FY27 travel budget. I looked at it. Option A is cut the two conferences nobody really gets much out of (saves ~6%). Option B is go virtual for the quarterly site visits (saves ~8% but we lose face time with the field units, and they've complained before). Option C do both partially - drop one conference and make 2 of 4 site visits virtual, saves about 10.5%. I think C. Budget office needs our answer by Dec 5. Also fyi last year we underspent travel by 3% anyway.",
+  "assertions": [
+    "The email subject line states the recommendation or the ask (Option C / combined approach and/or the decision needed), not just a topic",
+    "The first sentence of the email body states the recommendation (Option C)",
+    "The email states the Dec 5 deadline as part of an explicit ask",
+    "The email briefly presents why Options A and B fall short (A doesn't reach 10%; B costs face time with field units)",
+    "The email does not invent facts, figures, or names not present in the user's notes (placeholders are acceptable)"
+  ]
+}

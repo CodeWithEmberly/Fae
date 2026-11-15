@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: build-email-from-notes
+expected_outcome: |
+  An email that leads with the recommendation (Option C) in the subject line and first sentence, supports it with grouped, parallel points, presents the alternatives briefly, and closes with a clear ask and the Dec 5 deadline; it does not invent facts.

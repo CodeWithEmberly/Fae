@@ -1,0 +1,12 @@
+{
+  "eval_name": "audit-buried-lead-memo",
+  "prompt": "Can you review this memo before I send it to the squadron commander? Something feels off but I can't say what.\n\nMEMORANDUM FOR 42 SQ/CC\nSUBJECT: Maintenance Scheduling\n\n1. Background. Over the past six months the maintenance flight has been using the legacy scheduling spreadsheet. The spreadsheet was created in 2019 by MSgt Doyle who has since PCS'd. It has 14 tabs and many macros.\n\n2. In August we had two instances where aircraft were double-booked for phase inspection and sortie generation. In September there was one more. These caused a combined 11 lost sorties.\n\n3. The wing has licensed the new IMDS scheduling module and three other squadrons are already using it. Training is available through the wing in January. Training takes two days per scheduler and we have four schedulers.\n\n4. TSgt Nguyen has also been working on fixing the spreadsheet macros in her spare time and thinks she can have it fixed by February.\n\n5. Also, the spreadsheet can't be accessed by the flight line expediters on their tablets, which slows things down.\n\n6. Request the commander consider whether we should move to the IMDS module.\n\n//signed//",
+  "assertions": [
+    "The review identifies that the request/recommendation is buried at the end (paragraph 6) and hedged ('consider whether')",
+    "The review identifies that the subject line 'Maintenance Scheduling' is a topic label rather than a statement of the point",
+    "The review points out that the memo is ordered chronologically / by discovery rather than by importance",
+    "The review shows a reconstruction or outline of the memo's current structure before or alongside the fix",
+    "The review provides a restructured memo or outline that leads with an explicit recommendation in the first paragraph (BLUF)",
+    "The review handles TSgt Nguyen's spreadsheet fix as an alternative/option to address rather than ignoring it"
+  ]
+}
