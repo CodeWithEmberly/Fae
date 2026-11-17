@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunrise (morning edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#141a2e;      /* pre-dawn navy */
+  --ink:#f3ece0;        /* warm white */
+  --muted:#b6b2c6;
+  --rule:#2e3654;
+  --accent:#ffb36b;     /* sunrise gold-orange */
+  --accent-soft:#272540;/* violet dawn */
+  --stamp:#ff9a84;      /* rose */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#3a2a4c 0,#24233f 140px,#141a2e 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \2600";color:var(--accent);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-11-12 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>11</b> read · <b>7</b> to go</span>
+    <span>Next seminar: <b>Fravel, Friday</b></span>
+    <span>628 paper due in <b>19</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 5 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-12.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-12.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Thursday, November 12, 2026 · Seminar today: Olsen at 1200 · Fravel tomorrow</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <p class="toc-after">Tonight's reading prep posts after class: <a href="../2026-11-12-tonight/">The Long Game: Tonight</a> · Course map: <a href="../../map/">every book, one page</a></p>
+        <ol>
+          <li><a href="#a0">Today's seminar questions, answered</a></li>
+          <li><a href="#a1">Olsen Grades the Bombing From the Receiving End</a></li>
+          <li><a href="#a2">Counterpoint: Haun Says the Army Got the Bombs and the Credit</a></li>
+          <li><a href="#a3">Saddam Got His Battle Damage Assessment From a Russian</a></li>
+          <li><a href="#a4">Two Percent, Twice</a></li>
+          <li><a href="#a5">Olsen Opens With a Fight, Which Is Why You Remember His Thesis</a></li>
+          <li><a href="#a6">The Air Force Has a New System. So Did Iraq.</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
+      </nav>
+
+      <article id="a0">
+        <span class="kicker">Seminar 11 · Olsen, <i>Strategic Air Power in Desert Storm</i> · "Cold War Airpower begins 'Unipolar Moment'"</span>
+        <h3><a href="#a0">Today's Seminar Questions, Answered</a></h3>
+        <ol class="qs">
+          <li><b>How did the strategy evolve from conception to implementation?</b> It began as John Warden's Instant Thunder, built in the Air Staff's Checkmate office days after the invasion on his Five Rings model, and it promised to move Saddam with six to nine days of strikes on 84 targets. Schwarzkopf liked it as a retaliation option and kept it as Phase I of a four-phase plan, which he quietly had his own staff draft (chapter 2). Horner sent Warden home after the August 20 briefing but kept his planners, and David Deptula carried the concept into Buster Glosson's Black Hole cell, where the target list grew from 84 to 481 by January 15 (chapter 3). Asked how the final plan differed from Instant Thunder, Horner said, "How does a butterfly differ from a larva?"</li>
+          <li><b>Did Col Warden's strategy achieve its promise?</b> Half of it. Olsen's verdict is that the campaign degraded Iraqi war-making and put fog and friction into the regime's decisions, but it did not meet the "hoped for, but unstated" aim of changing the regime (introduction). Forty-three days of bombing didn't collapse Iraqi command and control; the Republican Guard withdrew in good order and the regime put down two revolts (conclusions). Olsen still judges the January plan "a huge improvement" on Warden's August concept.</li>
+          <li><b>Were Tactical Air Command's doctrinal concepts more effective than the premise behind Instant Thunder?</b> Not in 1990, by Olsen's account. TAC had accepted a subordinate role under AirLand Battle, and the 31 Initiatives treated air power as fire support for the ground forces; Horner's margin note at the July 1990 Internal Look exercise was "Build a hose and point it where the ground commander sees that it's needed" (chapter 1). When Glosson asked for an offensive option in August, nothing existed beyond defending Saudi Arabia except Instant Thunder (chapter 3). The best case for TAC comes from Haun, whose appendix credits the direct attack on Iraq's fielded forces with the decisive work.</li>
+          <li><b>How much did the Goldwater-Nichols Act reforms affect interservice cooperation?</b> A great deal, mostly by centralizing power. The 1986 law gave unprecedented authority to the chairman and the theater commanders, so the Air Staff, where Checkmate sat, had no mandate to plan a war (chapter 2). It also meant the service chiefs met the president only when invited, and General McPeak reached Camp David on December 1 after Edward Luttwak called Senator John Warner, who reportedly called the White House (chapter 3).</li>
+          <li><b>Were there any strategic mistakes made during the war?</b> Yes, and Olsen names three. After the al-Firdos bunker strike on February 13 killed civilians, Powell and Schwarzkopf approved every Baghdad strike themselves, which amounted to a nine-day bombing halt on the capital; and when division commanders pressed Schwarzkopf, he shifted bombs from the Republican Guard to frontline conscripts, so the Guard escaped largely intact and helped crush the southern uprising (chapter 5). The biggest mistake was that nobody planned the end: senior officers held that "war termination is not our job," and Bush urged Iraqis to rise up in late February without backing them (conclusions).</li>
+          <li><b>Why did it end when it did?</b> Because Washington wanted a ground war first. On February 11, Saddam told the Soviet envoy Yevgeny Primakov he would withdraw without compensation, but by then Washington demanded that the army leave its tanks and artillery behind, and Saddam chose to bargain (chapter 5). Olsen argues the United States had already decided to have its ground war, partly because ending without the massed Army might hurt the case for a large Army and would hand Moscow the credit. Haun adds that the ceasefire itself came early because leaders feared the images from the "highway of death."</li>
+          <li><b>What was the perception of Saddam Hussein and his military?</b> Washington misread him before and during the war. Before it, NSD-26 sought to bring him "into the family of nations," and senior officers expected at most a grab of the Rumaila oilfield and two islands (chapter 1). Olsen's profile finds him "both a rational and calculating decision-maker" who trusted nobody (chapter 4), but one fed flattery: a council member told him, "I saw you in my dream. You were victorious on your white horse," and he did not grasp the bombing's damage until Primakov showed him pictures in mid-February.</li>
+        </ol>
+        <p>Chapter lessons for this book are on <a href="../2026-11-12-tonight/">last night's page</a>. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a1">
+        <span class="kicker">Today's Reading · Olsen, <i>Strategic Air Power in Desert Storm</i></span>
+        <h3><a href="#a1">Olsen Grades the Bombing From the Receiving End</a></h3>
+        <p>John Andreas Olsen's main contribution is the Iraqi side of the ledger. He interviewed high-ranking Iraqi officials and officers, and they agreed the regime was partly paralyzed, though he concedes their accounts are subjective ("where you stand depends on where you sit," as he puts it). That puts him on the shelf beside Zhang and Nguyen, who also graded an American air war from the capital being bombed. Every book that does this reaches a version of the same finding: the target was more complicated than the targeteers thought.</p>
+        <p>His closing verdict is careful to the point of being lawyerly. The campaign incapacitated the regime "only in relative terms": it kept Saddam from decisive offensive action and did not stop him from securing his own survival. The attacks on Warden's inner ring took only 2 percent of the air effort. And Saddam, Olsen notes, called the war the "Mother of all Battles," not of all wars, and lived to fight another day. (He had read his Clausewitz, or at least his own press.)</p>
+        <p>Yesterday's counterpoint ended on a rule from Clodfelter and Randolph: bombing works when the demand is small. Olsen tests the opposite case, a campaign whose hoped-for demand was the regime itself, and the result is the rule's mirror image. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">Counterpoint · Haun against Olsen</span>
+        <h3><a href="#a2">Counterpoint: Haun Says the Army Got the Bombs and the Credit</a></h3>
+        <p>Olsen's central claim is that the strategic air campaign against the Iraqi leadership succeeded at degrading the regime and failed at changing it, because Washington never understood how Saddam held power. The failure, in his account, belongs to intelligence and policy: the planners knew little about the regime beyond the locations of buildings and communications, and the White House never declared regime change an objective. Fix the knowledge and the politics, the argument implies, and the concept works. He cites Kosovo and Afghanistan as proof that air power can change a regime when the aim is declared.</p>
+        <p>Phil Haun, whom we read Monday, makes the strongest case against him. Haun's appendix scores Instant Thunder and the interdiction campaign as the only modern air operations where most operational and environmental factors favored air power, "yet both failed." His evidence that Saddam kept control is concrete. Two weeks into the air war Saddam traveled to Basra to meet his commanders and sent two mechanized divisions toward Al Khafji; he approved Scud targeting daily; he approved the order to withdraw from Kuwait on February 26; and after the war he used the Republican Guard to crush the Shia and Kurdish uprisings. What worked, Haun argues, was the direct attack on the army: 25 to 30 percent of it was attrited before the ground war, desertions did most of that, and armed reconnaissance strikes wrecked its supply distribution. (The paralysis, it turns out, set in at the front.)</p>
+        <p>Olsen's own chapter 5 helps Haun more than he might like. When Olsen explains why Saddam told Primakov on February 11 that he would withdraw, the reason he gives is that Saddam had visited his troops in Kuwait on January 23 and Basra four days later and had seen that the bombing, "especially of military formations," was increasingly devastating. That is the fielded-forces campaign doing the coercing. Olsen's interviews are his strength, and nobody else on the shelf has them; but Iraqi officers telling a researcher their regime felt foggy cannot show that the fog changed a decision. Haun's evidence has the reverse problem. He uses the Gulf War Air Power Survey and can show that Saddam's orders still went out; he can't show how much worse those orders were for the friction Olsen found.</p>
+        <p>Opinion: Haun has the better of it on what moved Saddam, and Olsen has the better of it on why the larger aim failed. First order, the bombs that hurt Saddam were the ones falling on his army, and the inner ring drew 2 percent of the effort. Second order, the Republican Guard, the force that linked the regime to the people, escaped largely intact because the bombing shifted to frontline conscripts, and the Guard put down the uprising Bush had encouraged. Third order, the Air Force kept the Warden idea anyway: Michael Ryan called going after the enemy with massive force from the opening moment "classic air power doctrine" after Kosovo, and Michael Short said he would have gone for "the head of the snake" on the first night. The seminar comment: "Olsen's own Primakov evidence says Saddam moved after seeing his army bombed, not his ministries, so the strategic campaign's real product was friction, and Haun's attrition numbers did the coercing." Olsen says airmen are criticized for their promises more than credited for their achievements, which is true, and also what happens when the promises are larger. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">The 628 Paper · Hormuz through Olsen · extrapolation</span>
+        <h3><a href="#a3">Saddam Got His Battle Damage Assessment From a Russian</a></h3>
+        <p>The prompt asks for the most important potential crisis and how Airmen should prepare, in ten pages due December 1. Shaun's crisis is keeping the Strait of Hormuz open after the United States withdraws from the war with Iran, and his working answer is sustainable ISR, sensors, drones, and robotics rather than strategic bombing. What follows is our extrapolation from Olsen's conclusions, and not Shaun's answer.</p>
+        <p>Olsen supports the answer's central premise, which is that understanding comes before striking. His prescription for better strategic bombing is to study potential enemies, their culture, and how their power systems work, and he lists the things air power lacked in 1991, among them inside information and timely human intelligence. A persistent sensor network over the strait is a way to learn an adversary's habits over months: which units move, when, and in answer to what. Olsen's oddest detail supports a second use. Saddam's council told him what he wanted to hear, and he did not know how bad the bombing was until Primakov showed him pictures in mid-February 1991. Imagery that can be shown to a decision-maker is a coercive tool. (A sensor is cheaper than a Russian envoy and more reliable about showing up.)</p>
+        <p>Olsen cuts against the answer in two places. He applies Peter Faber's three pathologies of air theory to Warden, and the second, a "fetish of quantification and prediction," is the occupational hazard of any sensor-centered plan: counting boats is easier than understanding Tehran. He also faults Washington for never planning war termination. A "sustainable presence" with no stated end state repeats that error by design. If the paper can't say what the orbit is meant to make Iran stop doing, a reader will ask why the orbit exists.</p>
+        <p>Opinion, extrapolated: Olsen would back the sensors if the paper aims them at how Iran's leaders decide, names the behavior the presence should change, and says who gets shown the pictures. Otherwise the drones will produce excellent footage of a problem nobody has defined. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a4">
+        <span class="kicker">The Readings So Far · Olsen, Kitfield, Haun, and Clodfelter</span>
+        <h3><a href="#a4">Two Percent, Twice</a></h3>
+        <p>The same small number shows up in two books about the same war, and it means opposite things. In Kitfield, the F-117s flew only 2 percent of the combat sorties in Desert Storm and attacked more than 40 percent of the strategic and most heavily defended targets, with no F-117s lost. In Olsen, the attacks on Warden's inner ring took 2 percent of the overall air effort, and only 740 of 43,123 strikes hit what he calls the central nervous system. Kitfield's 2 percent is a triumph of efficiency. Olsen's is a question about whether the strategy got a fair trial. (Statistics, like airmen, perform differently depending on who is briefing them.)</p>
+        <p>Haun supplies the third reading of that number. In his appendix, most strikes fell on the Iraqi army in the Kuwaiti theater, the heaviest on the regular infantry along the Saudi border, and that is where he finds the decisive effect. Put the three together and you get the picture Olsen's own Table 2 hints at: the plan grew from 84 targets to 481, and the growth was mostly military.</p>
+        <p>The news has been pinning itself here all week. Wednesday's CSIS munitions report met Olsen's Tomahawks, which were spent mostly in the first two days, and the lesson was that the opening salvo gets the attention while the reload decides the war. Yesterday's counterpoint left us with Clodfelter's rule that bombing coerces when the demand is small. Olsen extends it: the demand in 1991 was small on paper (leave Kuwait), large in the planners' hopes (a new regime), and the bombing achieved roughly the paper version. Opinion: the hidden demand is the one that gets graded in the history books. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a5">
+        <span class="kicker">Technical Writing · Week 3, Day 4 · the thesis and the argument</span>
+        <h3><a href="#a5">Olsen Opens With a Fight, Which Is Why You Remember His Thesis</a></h3>
+        <p>Gerald Graff and Cathy Birkenstein, in <i>They Say / I Say</i>, argue that a thesis needs the conversation it answers. Their example is a conference speaker who spent a whole talk proving a sociologist's work was important, and only in the question period revealed that critics had attacked it. Until then, nobody knew why he was talking. Their rule is to state your position and the one it answers together, as a unit, early: within a paragraph or two in a short essay. Orwell does it in the first lines of "Politics and the English Language," which they reduce to "Most people assume we can't fix the language. But I say we can."</p>
+        <p>Olsen follows the rule in his conclusions. He opens with Robert Pape, who argues that strategic air power failed in Iraq because Saddam survived and was not coerced, and answers in the next breath that Saddam's survival doesn't mean strategic paralysis was ineffectual. You remember his claim because you remember whom he's arguing with. Before: "This paper examines the strategic air campaign in Desert Storm and its effects on the Iraqi regime." After: "Pape argues the 1991 leadership campaign failed because Saddam survived; Olsen's Iraqi interviews show it partly paralyzed the regime, and its failure to change the regime traces to an aim Washington never declared." The first sentence announces a topic. The second picks a fight and says who wins.</p>
+        <p>Opinion: in a SAASS paper, the "they say" also tells the grader which books you read. A thesis with no opponent reads as if you didn't find one, and on this shelf there is always one.</p>
+        <p>Pro tip, an old editor's trick: before drafting, fill in one sentence, "Some argue ___; I argue ___ because ___." If the first blank stays empty, you have a topic and no thesis yet. If the third stays empty, you have an opinion. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a6">
+        <span class="kicker">Acquisition × Olsen · via <i>Air &amp; Space Forces Magazine</i>, November 10</span>
+        <h3><a href="#a6">The Air Force Has a New System. So Did Iraq.</a></h3>
+        <p>The Air Force said Tuesday it has finished Force Design 2026, a plan for how it will fight a capable adversary, and nobody outside will get to read it. A spokesperson told <i>Air &amp; Space Forces Magazine</i> the plan is classified and has "no publicly releasable unclassified version," unlike the 2024 design under General Allvin, which came with an unclassified overview. The service says the plan focuses on "technology, autonomy and integration," cites advances in sensing, networking, artificial intelligence, unmanned systems, long-range weapons, and electronic warfare, and urges Airmen to think less about individual platforms and more about the systems connecting them. General Wilsbach called it "a fundamental shift." The story notes the service's plans for hundreds of autonomous drones. It reports no budget figures and no outside critics.</p>
+        <p>Olsen has seen a confident Air Force vision before. In 1990, <i>Global Reach, Global Power</i> argued that "a new Air Force" was in the making and would be the dominant service, and Warden built Instant Thunder on it and on his Five Rings, a systems model of the enemy. Olsen credits the Checkmate planners with "great insight" about aircraft and precision weapons. Their problem lay elsewhere: they knew little about the regime beyond buildings and communications. He also describes Warden's "rather mechanistic view of war," the belief that American air power could largely control a war through technological supremacy.</p>
+        <p>Opinion: the new design asks Airmen to see their own force as a system, and Olsen's closing lesson is that the enemy is one too, and that strategic paralysis "is not a surgical exercise with identifiable cause-effect links." A list of sensing, networking, and autonomy describes what the Air Force will see with. Does it say what the Air Force needs to understand? We can't tell, which is the point of classification and also the trouble with it. Hundreds of drones will find buildings faster than the F-117s did. In 1991, finding the buildings was the easy part.</p>
+        <p>The Air Force has written a plan nobody outside can read. In 1991, the problem was a regime nobody inside could read. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Keyed to the phrase each one supports. Olsen pages are printed pages: John Andreas Olsen, Strategic Air Power in Desert Storm (London: Frank Cass, 2003). Haun pages are printed pages: Phil Haun, Tactical Air Power and the Vietnam War (Cambridge: Cambridge University Press, 2024); Appendix B pages are taken from its running heads. Kitfield pages are printed pages: James Kitfield, Prodigal Soldiers (New York: Simon &amp; Schuster, 1995). Gerald Graff and Cathy Birkenstein, They Say / I Say, 3rd ed. (New York: W. W. Norton, 2014), printed pages. Clodfelter pages are ebook PDF pages. <i>Opinion</i> needs no source.</p>
+
+        <h3>Today's episode</h3>
+        <ul>
+          <li>Debate: question three, TAC concepts against the Instant Thunder premise. TAC accepts a subordinate role: Olsen, 47. 25–30 percent attrited; about 10 percent of armor and artillery; desertions; armed reconnaissance and supply distribution: Haun, 272.</li>
+          <li>Nothing beyond defending Saudi Arabia except Instant Thunder: Olsen, 128. Six to nine days against 84 targets: Olsen, 270. "a huge improvement": Olsen, 290. "yet both failed": Haun, 273. Regime change not a Coalition objective: Olsen, 288.</li>
+          <li>Primakov, February 11; visits to Kuwait and Basra; "especially of military formations": Olsen, 267–268. Shift from the Republican Guard to conscripts; Guard escapes and crushes the uprising: Olsen, 254–255.</li>
+          <li>Quiz: 84 to 481 targets, Olsen, 158. Al-Firdos and the nine-day halt, Olsen, 253, 257. Goldwater-Nichols, Olsen, 87–88. F-117s 2 percent of sorties, more than 40 percent of strategic targets, Kitfield, 386. Inner ring 2 percent, Olsen, 295.</li>
+        </ul>
+
+        <h3>Today's Seminar Questions, Answered</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 11, "Cold War Airpower begins 'Unipolar Moment.'"</li>
+          <li>Six to nine days against 84 targets: Olsen, 270. Five Rings basis: Olsen, 87. Phase I and the secret four-phase plan: Olsen, 107. Horner keeps the planners, not Warden; Glosson appointed: Olsen, 111, 128. Target list 84 to 481 (Table 2), 21 August to 15 January: Olsen, 158. "How does a butterfly differ from a larva?": Olsen, 166.</li>
+          <li>"hoped for, but unstated": Olsen, 1. Forty-three days, orderly Guard withdrawal, two revolts: Olsen, 288. "a huge improvement": Olsen, 290.</li>
+          <li>31 Initiatives and air power as fire support; TAC agreed to the subordinate role: Olsen, 47. Internal Look and Horner's "Build a hose" note: Olsen, 48. Nothing beyond defending Saudi Arabia except Instant Thunder: Olsen, 128. "hamstrung": Olsen, 289. Direct attack on fielded forces: Haun, 273.</li>
+          <li>Unprecedented power to the CJCS and CINCs; Air Staff outside the planning chain: Olsen, 87–88. Chiefs met the President only if suggested; Luttwak, Warner ("supposedly called"), Camp David on December 1: Olsen, 153.</li>
+          <li>Capital off limits, February 13: Olsen, 252. Al-Firdos, every Baghdad strike approved by Powell and Schwarzkopf, nine days: Olsen, 253; date of al-Firdos, Olsen, 257. Shift from the Guard to conscripts; Guard escapes and quells the uprising: Olsen, 254–255. "war termination is not our job": Olsen, 293. Bush's late-February call: Olsen, 294.</li>
+          <li>Primakov, February 11; tanks and artillery demand; Saddam bargains: Olsen, 267. Ground war already decided; Army rationale; Soviet credit: Olsen, 268. "seizing and holding": Olsen, 269. "Highway of death" and the early ceasefire: Haun, 273.</li>
+          <li>NSD-26, "into the family of nations": Olsen, 22. Rumaila and the two islands: Olsen, 31. "both a rational and calculating decision-maker": Olsen, 177. "white horse"; Primakov's pictures: Olsen, 183.</li>
+        </ul>
+
+        <h3>Olsen Grades the Bombing From the Receiving End</h3>
+        <ul>
+          <li>Iraqi interviews, "partly paralysed," "where you stand depends on where you sit": Olsen, 287.</li>
+          <li>"only in relative terms"; 2 percent of the overall air effort: Olsen, 295. "Mother of all Battles"; lived to fight another day: Olsen, 295.</li>
+          <li>Yesterday's counterpoint (Clodfelter, ch. VI, ebook p. 217; Randolph, 339). The Clausewitz aside is ours.</li>
+        </ul>
+
+        <h3>Counterpoint: Haun Says the Army Got the Bombs and the Credit</h3>
+        <ul>
+          <li>Success at degrading, failure at changing the regime; order-of-battle intelligence: Olsen, 1–2. Buildings and communications: Olsen, 290. Regime change not an objective: Olsen, 288. Kosovo and Afghanistan: Olsen, 293.</li>
+          <li>"yet both failed": Haun, 273. Basra, Al Khafji, Scuds, February 26 withdrawal order, Guard crushes uprisings: Haun, 270–271. 25–30 percent attrited, desertions, armed reconnaissance and supply distribution: Haun, 272.</li>
+          <li>Saddam's January 23 and January 27 visits; "especially of military formations": Olsen, 267–268. Primakov, February 11: Olsen, 267.</li>
+          <li>Inner ring 2 percent: Olsen, 295. Guard escapes after the shift to conscripts: Olsen, 254–255. Bush's call: Olsen, 294.</li>
+          <li>Ryan, "classic air power doctrine": Olsen, 288. Short, "the head of the snake": Olsen, 289. Mason on airmen's promises: Olsen, 286.</li>
+          <li>The verdict, the order-of-effects reading, and the seminar comment are our opinion.</li>
+        </ul>
+
+        <h3>Saddam Got His Battle Damage Assessment From a Russian</h3>
+        <ul>
+          <li>Paper prompt and due date: SAASS 628 syllabus, "Grading." The crisis and working answer are Shaun's.</li>
+          <li>Study the nature of potential enemies, their culture, and power systems: Olsen, 295. Inside information and timely human intelligence: Olsen, 270.</li>
+          <li>Council flattery; Primakov's pictures in mid-February: Olsen, 183.</li>
+          <li>Faber's three pathologies, "fetish of quantification and prediction": Olsen, 270. No plan to terminate the war: Olsen, 293.</li>
+          <li>The application to Hormuz and the closing line are our extrapolation and opinion.</li>
+        </ul>
+
+        <h3>Two Percent, Twice</h3>
+        <ul>
+          <li>F-117s: 2 percent of combat sorties, more than 40 percent of strategic and most heavily defended targets: Kitfield, 386. No F-117s lost: Kitfield, 414.</li>
+          <li>2 percent of the overall air effort: Olsen, 295. 740 of 43,123 strikes: Olsen, 167.</li>
+          <li>Most strikes on the Iraqi army; heaviest on the regular infantry along the border: Haun, 272.</li>
+          <li>Table 2, 84 to 481 targets: Olsen, 158.</li>
+          <li>CSIS munitions item: Wednesday's issue (CSIS, November 10; Olsen, 241–242, 256). Clodfelter's rule: Wednesday's counterpoint.</li>
+          <li>The statistics aside and the closing opinion are ours.</li>
+        </ul>
+
+        <h3>Olsen Opens With a Fight, Which Is Why You Remember His Thesis</h3>
+        <ul>
+          <li>The conference speaker and Dr. X: Graff and Birkenstein, 19–20. A thesis needs the larger conversation; delay no more than a paragraph or two in a short essay: 20. Position and response as a unit: 21. Orwell's opening and their paraphrase: 22.</li>
+          <li>Pape's argument and Olsen's answer: Olsen, 286–287.</li>
+          <li>The fill-in-the-blanks test is an old editor's trick; the opinion is ours.</li>
+        </ul>
+
+        <h3>The Air Force Has a New System. So Did Iraq.</h3>
+        <ul>
+          <li>Stephen Losey, "New USAF Force Design Bets on Technology, Remains Under Wraps," <i>Air &amp; Space Forces Magazine</i>, November 10, 2026: Force Design 2026 finished; replaces One Force Design 2024 under Allvin; classified, "no publicly releasable unclassified version"; "technology, autonomy and integration"; sensing, networking, AI, autonomy, unmanned systems, long-range weapons, electronic warfare; systems over platforms; Wilsbach, "a fundamental shift"; hundreds of autonomous drones.</li>
+          <li>Global Reach, Global Power, "a new Air Force," the dominating service: Olsen, 87. "great insight"; buildings and communications: Olsen, 290. "rather mechanistic view of war": Olsen, 270. "is not a surgical exercise with identifiable cause-effect links"; "the enemy as a system": Olsen, 295.</li>
+          <li>The opinion paragraphs and closing line are ours.</li>
+        </ul>
+      </section>
+
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Graff and Birkenstein, <i>They Say / I Say</i></h3>
+        <p class="fine">The rule: state your position and the view it answers together, as a unit, near the start (pp. 20–21). Rewrite this topic sentence as a "they say / I say" thesis, using Olsen and Haun (Olsen, 267–268; Haun, 272–273).</p>
+        <p class="protip">"This paper will discuss the role of strategic bombing in ending the 1991 Gulf War."</p>
+        <div class="mine">
+          <label for="mine-practice">Your rewrite:</label>
+          <textarea id="mine-practice" placeholder="Olsen argues… but Haun shows…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible rewrite</summary><p>"Olsen credits the 1991 leadership strikes with paralyzing the Iraqi regime, but his own account of why Saddam offered to withdraw on February 11 points to the bombing of his army, which Haun shows had attrited 25 to 30 percent of it; the war ended on the fielded-forces campaign's schedule, not Warden's" (Olsen, 267–268; Haun, 272). The opponent and the claim arrive in one sentence (Graff and Birkenstein, 21).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Connect the dots</h3>
+        <ul class="recall">
+          <li><details><summary>The Air Force's classified Force Design 2026 stresses sensing, networking, and autonomy. Link it to Olsen and Kitfield.</summary><p>Kitfield: technology delivered in 1991, with F-117s flying 2 percent of sorties against more than 40 percent of the strategic targets (386). Olsen: the planners had "great insight" into aircraft and precision weapons but knew little about the regime beyond buildings and communications (290), and he faults Warden's "mechanistic view of war" (270). Better sensors answer Kitfield's question, not Olsen's (Air &amp; Space Forces Magazine, Nov 10).</p></details></li>
+          <li><details><summary>The same story says the service plans hundreds of autonomous drones. Link it to Haun and Olsen.</summary><p>Haun: what worked in Desert Storm was armed reconnaissance against the fielded army, which disrupted its supply distribution and drove desertions (272). Olsen: thirteen-foot decoy drones drew Iraqi radars into the fight on the first night, and radar activity fell by over 90 percent (242). Cheap unmanned systems have a record against armies and air defenses; Olsen's book is the record against regimes.</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Olsen: seminar recall</h3>
+        <ul class="recall">
+          <li><details><summary>How many targets did Instant Thunder list in August 1990, and how many did the plan have on January 15?</summary><p>84, growing to 481 (Table 2). <span class="pg">O 158</span></p></details></li>
+          <li><details><summary>What did Saddam tell Primakov on February 11, 1991?</summary><p>That he would withdraw from Kuwait without economic or territorial compensation; by then Washington demanded the army leave its tanks and artillery. <span class="pg">O 267</span></p></details></li>
+          <li><details><summary>What changed after the al-Firdos bunker strike?</summary><p>Powell and Schwarzkopf approved every Baghdad strike, in effect a nine-day halt on the capital. <span class="pg">O 253</span></p></details></li>
+          <li><details><summary>What did the Goldwater-Nichols Act do that kept Checkmate out of the war planning?</summary><p>It gave unprecedented power to the chairman and the theater commanders; the Air Staff was not part of the command structure that wrote war plans. <span class="pg">O 87–88</span></p></details></li>
+          <li><details><summary>What share of the air effort went against Warden's inner ring?</summary><p>2 percent; 740 of 43,123 strikes hit the "central nervous system." <span class="pg">O 167, 295</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: what did flexible response in Vietnam assume about force?</summary><p>"Calibration," moving up or down a range of precisely calculated actions without extreme escalation or humiliation (241).</p></details></li>
+          <li><details><summary>Crane: what did the June 1952 hydroelectric strikes achieve?</summary><p>546 Navy and 730 Fifth Air Force sorties destroyed 90 percent of North Korea's electric power potential in four days (119).</p></details></li>
+          <li><details><summary>Zhang: what did Moscow order Belov's 151st Air Division in 1950?</summary><p>To retrain Chinese pilots first and not to fly beyond the Yalu (62).</p></details></li>
+          <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
+          <li><details><summary>Schlight: what share of 1966 strike sorties hit enemy troops engaged with allied forces?</summary><p>About 3 percent (216).</p></details></li>
+          <li><details><summary>Clodfelter: how did January 1973's agreement differ from October's?</summary><p>"Largely cosmetic" differences (ch. VI, e217).</p></details></li>
+          <li><details><summary>Randolph: how does he score the Easter Offensive for Hanoi?</summary><p>"A strategic success, despite its ambiguous, or even failed, military outcome" (339).</p></details></li>
+          <li><details><summary>Nguyen: who does she say actually ran Hanoi's war?</summary><p>Le Duan, first secretary from 1960 until his death in 1986, with Le Duc Tho as his right hand (intro, e19–20).</p></details></li>
+          <li><details><summary>Haun: what do Instant Thunder and the Desert Storm interdiction campaign have in common?</summary><p>They are the only modern air operations where most factors favored air power, "yet both failed" (273).</p></details></li>
+          <li><details><summary>Kitfield: what share of Desert Storm sorties did the F-117s fly, and what share of strategic targets did they attack?</summary><p>About 2 percent of sorties and more than 40 percent of the strategic and most heavily defended targets (386).</p></details></li>
+          <li><details><summary>Olsen: what is his two-part verdict on the strategic air campaign?</summary><p>It degraded war-making and induced fog and friction, but did not meet the "hoped for, but unstated" objective of changing the regime (1).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Give this thesis an opponent: "Goldwater-Nichols shaped the Gulf War air campaign."</summary><p>"Kitfield's David Jones concluded that reform would have to be forced on the Pentagon from outside (251); Olsen shows the reform that came, Goldwater-Nichols, left the Air Staff outside the planning chain, so Checkmate's plan reached the war only because Schwarzkopf asked for it (87–88, 107)." Position and opponent arrive together (Graff and Birkenstein, 21).</p></details></li>
+          <li><details><summary>Find the missing "because": "Some argue the al-Firdos halt hurt the campaign; I argue it did not."</summary><p>"…I argue it did not change the outcome, because Olsen's Iraqi interviewees said 'more of the same' against the inner ring would not have made much difference (292)." Without the because, it's an opinion.</p></details></li>
+          <li><details><summary>Review (Wednesday, precise language): cut the fog: "Leadership targeting generated suboptimal regime-level outcomes."</summary><p>"Forty-three days of bombing several hundred targets did not collapse Saddam's command and control; his Guard withdrew in order and put down two revolts" (Olsen, 288). Things and actions replace "outcomes" (Pollock, 41).</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: one "they say / I say" sentence for today's question five, "Were there any strategic mistakes made during the war?", naming Olsen or Haun as the "they" and citing one page (Olsen, 253–255, 293–294; Haun, 273).</label>
+          <textarea id="mine-crane" placeholder="Olsen argues… but…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-done">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>30 Oct</td><td class="st-done">McDougall, <i>…The Heavens and the Earth</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>2 Nov</td><td class="st-done">Schlight (intro, ch. 1–2) + document pack (decision exercise)</td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>3 Nov</td><td class="st-done">Clodfelter, <i>The Limits of Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>5 Nov</td><td class="st-done">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>6 Nov</td><td class="st-done">Nguyen, <i>Hanoi's War</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>9 Nov</td><td class="st-done">Haun, <i>Tactical Air Power and the Vietnam War</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>10 Nov</td><td class="st-done">Kitfield, <i>Prodigal Soldiers</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>12 Nov</td><td class="st-now">Olsen, <i>Strategic Air Power in Desert Storm</i></td><td><span class="pill now">SEMINAR</span></td></tr>
+            <tr><td>13 Nov</td><td>Fravel, <i>Active Defense</i></td><td><span class="pill now">NEXT</span></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Six more after Fravel, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Fravel seminar, 13 Nov</span><b>1</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>19</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: one story, defense, leadership, or conflict (Fridays add Space × Sci-Fi; politics is on the afternoon page)</li>
+          <li>Sources, then Q&amp;A</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, Punchbowl News, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Defense News</i>, <i>Breaking Defense</i>, <i>Air &amp; Space Forces Magazine</i>, SpaceNews, CSIS, and RAND.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+</script>
+
+</body>
+</html>

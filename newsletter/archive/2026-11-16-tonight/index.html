@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-16 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Monday, November 16, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-16/">This morning's issue and podcast</a> · <a href="../">Archive of every edition</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Henriksen, <i>NATO's Gamble</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tomorrow's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar</a></li>
+          <li><a href="#t7">Political strategy × Henriksen</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#h-01">Ch. 1 (with introduction): Ninety Targets, Three Nights, and No Phase 4</a></li>
+          <li><a href="#h-02">Ch. 2: Desert Storm Was a Bad Role Model for Kosovo</a></li>
+          <li><a href="#h-03">Ch. 3: One Vietnam, Two Lessons, and a Pentagon with Its Foot on the Brake</a></li>
+          <li><a href="#h-04">Ch. 4: Bosnia Was a Six-Factor Win, and Washington Remembered Only One</a></li>
+          <li><a href="#h-05">Ch. 5: Eighty Planes, Forty-Eight Hours Late</a></li>
+          <li><a href="#h-06">Ch. 6: The Photo Washington Called an Accident</a></li>
+          <li><a href="#h-07">Ch. 7: A Threat Is Worth Only What the Target Thinks It Is Worth</a></li>
+          <li><a href="#h-08">Ch. 8: Racak Was Real. The Plan Built on It Was the Problem</a></li>
+          <li><a href="#h-09">Ch. 9: Bosnia Was the Study Guide, and Kosovo Was a Different Exam</a></li>
+          <li><a href="#h-10">Ch. 10 (conclusion): NATO Coerced Itself, and the Bill Came Due in 78 Days</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Tuesday's seminar</span>
+        <h3><a href="#t1">Henriksen, <i>NATO's Gamble</i>: The Alliance That Bet Three Days and Paid for Seventy-Eight</a></h3>
+        <p>Henriksen argues that NATO went to war over Kosovo on 24 March 1999 without a plan for anything past the first few days, and that both the politicians and the airmen share the blame. Key leaders expected two to four days of bombing to move Milosevic, because they believed Operation Deliberate Force had done that in Bosnia in 1995. Milosevic called the bluff, and the bombing ran seventy-eight days. When the first bombs fell, no one in NATO's military leadership had political guidance or a strategy for Kosovo after the war. (Henriksen admits that "NATO was unprepared" is an open door. He walks through it anyway, with interviews.)</p>
+        <p>The book argues against two comfortable stories. Against the airmen's story, that politicians tied their hands, he says the airmen were also unprepared for a humanitarian intervention in the middle of Europe and were quick to push the blame onto the politicians. Against the diplomats' story, that air power is a cheap, controllable way to send a message, he shows how threats NATO could not carry out boxed the alliance in until it had to bomb or back down. His frame is coercive diplomacy: changing an opponent's behavior by working on both costs and benefits, with force as only one tool.</p>
+        <p>For this course, Henriksen is Lambeth's mirror. Lambeth wrote the airman's case for the technology; Henriksen writes about the strategy that the technology was supposed to serve. The syllabus says the result looked more like Rolling Thunder than Instant Thunder, and that is the course's second theme in one sentence: the limits now came from nineteen governments, their voters, and the lack of a UN mandate, instead of from the nuclear shadow. Read it asking who set each limit, and whether the airmen had an answer for a war they did not want to fight. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Ten Chapters, One Evening, Sorted by Payoff</a></h3>
+        <p>Read the argument first, then the threats, then the war. The edition on file is an ebook with no printed page numbers, so these are ebook pages; match them to your copy by chapter.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The introduction, ebook 11 to 16 (the thesis in six pages), then chapter 10, ebook 324 to 341 (coercive diplomacy defined, Short's "right way," NATO coercing itself, and the last paragraph).</li>
+          <li><b>60 minutes.</b> Add chapter 1, ebook 45 to 56 (the target list, Phase Two Plus, Chirac and the Interior Ministry), and chapter 9, ebook 300 to 315 (why Bosnia's lesson misled Washington).</li>
+          <li><b>2 hours.</b> Add chapter 5, ebook 230 to 246 (the move to NATO and Determined Falcon); chapter 7, ebook 260 to 277 (the October activation order and what Milosevic told his council); chapter 8, ebook 279 to 299 (Racak and Rambouillet); and chapter 4, ebook 191 to 209 (the six factors behind Dayton).</li>
+        </ol>
+        <p>Chapters 2 and 3 can wait. They cover air power theory and Vietnam's lessons, which Clodfelter and Kitfield already covered, and the lessons below hit their main points. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 1, ebook 47 to 48.</b> About ninety targets, fifty-one hit on the first night, and old targets struck again by night three. Watch how the target list measures the strategy.</li>
+          <li><b>Chapter 1, ebook 53 to 56.</b> Phase Two Plus, a procedural workaround that let Solana approve Phase Three targets without the council formally moving to Phase Three. This is consensus management in practice.</li>
+          <li><b>Chapter 5, ebook 243 to 246.</b> Determined Falcon on 15 June 1998: eighty aircraft and no ability to strike within forty-eight hours. Naumann's verdict is that Milosevic rightly read it as a bluff.</li>
+          <li><b>Chapter 7, ebook 261 to 262.</b> Milosevic tells his Supreme Defense Council to expect five to seven days of bombing. Compare it with NATO's own two to four.</li>
+          <li><b>Chapter 9, ebook 309 to 311.</b> Milosevic as an opportunist who took the benefits on offer at Dayton. That cuts against the idea that only force moves him.</li>
+          <li><b>Chapter 10, ebook 337 and 339.</b> The military shares the blame, and Clark admits he sacrificed the basic logic of warfare to keep the alliance together. Here Henriksen is harder on the airmen than they are on themselves.</li>
+        </ol>
+        <p>Read the endnotes for chapter 9 too. Henriksen flags a Belgrade editor's claim about Holbrooke as one he could not verify, and few authors bother to say so. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Four Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 14, "Operation ALLIED FORCE: Airpower Gets its Day?" Tomorrow morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>How do alliance politics affect stated military objectives?</b> Chapter 1, ebook 29 to 31 and 48 to 56 (one objective, getting Milosevic back to Rambouillet; target approval by capital); chapter 10, ebook 333 and 339 (targeting aimed at home audiences).</li>
+          <li><b>What are the risks of acting without gaining consensus?</b> Introduction, ebook 13 (no UN authorization, nineteen nations); chapter 1, ebook 37 to 42 (the separate U.S. campaign, Noble Anvil, and Short's warning about allies); chapter 5, ebook 230 to 231 and 243.</li>
+          <li><b>Did airpower provide NATO with a scalpel or a sledgehammer to intervene in a civil war?</b> Chapter 2, ebook 108 and 116 to 118 (Short's shock against the French "save the best targets"); chapter 10, ebook 327 to 332 (Short's lecture and the jeweler exchange).</li>
+          <li><b>Did NATO "win" this war? Serbia? The Kosovars?</b> Henriksen's story stops in the first week of bombing, so his book only half answers this. Use the introduction, ebook 11, chapter 6, ebook 251 to 256 (the KLA's gains and the independence nobody would grant), and chapter 10, ebook 341. Bring Lambeth's chapter 6, pp. 191 to 193, for why Milosevic quit.</li>
+        </ol>
+        <p>Opinion: prepare question four. The book ends where the war begins, so whoever has read Lambeth's list of reasons Milosevic quit will be the only one at the table with evidence for the ending. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>Klaus Naumann.</b> German general and chairman of the NATO Military Committee; Henriksen's sharpest witness on the alliance's bluffs (ebook 57, 244).</li>
+          <li><b>Michael Short.</b> The lieutenant general in charge of the air campaign, who wanted to hit Belgrade hard on the first night (ebook 22, 82).</li>
+          <li><b>Wesley Clark.</b> SACEUR, who wanted the fielded forces and admitted trading the logic of warfare for alliance cohesion (ebook 12, 331, 339).</li>
+          <li><b>Richard Holbrooke and Robert Gelbard.</b> The U.S. diplomats on the Balkans; Holbrooke's October 1998 deal and his meeting with the KLA's spokesman run through chapters 6 and 7 (ebook 248 to 250, 267).</li>
+          <li><b>KLA.</b> The Kosovo Liberation Army, never a party to the October agreement, which filled the space whenever Serb forces pulled back (ebook 251, 270).</li>
+          <li><b>ACTORD.</b> NATO's activation order of 13 October 1998, the step that turned the threat into a ready force (ebook 266).</li>
+          <li><b>Phase Two Plus.</b> The workaround that let NATO escalate targets without a formal decision by the council (ebook 53 to 55).</li>
+          <li><b>Coercive diplomacy.</b> Changing an opponent's behavior by working on costs and benefits, with threatened or limited force as one option (ebook 324).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Lambeth to Henriksen</span>
+        <h3><a href="#t6">Same Seventy-Eight Days, Two Different Culprits</a></h3>
+        <p>Lambeth and Henriksen agree on the facts of Kosovo and disagree about whom to blame. Lambeth calls Allied Force a win for air power and a step backward in efficiency from Desert Storm, and he blames gradualism, the decision to rule out ground forces, and a strategy that air power could not rise above. His witnesses are airmen: Short, Ryan, Fogleman, and McPeak all faulted the strategy. Henriksen interviews many of the same people and turns the charge partly back on them. He says the Air Force arrived with "the classic air campaign that we'd all learned at Maxwell," and had nothing to offer when politicians said they had to do something. (Both authors quote "My jeweler outranks yours." Only one of them thinks the joke is on the airmen.)</p>
+        <p>Keep one question in mind while reading: if air power "can never be more effective than the strategy it is intended to support," as Lambeth says, whose job was it in 1998 to tell the politicians there was no strategy? Henriksen's chapter 8 has General Ralston's answer. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Henriksen · via Punchbowl News AM and electoral-vote.com, November 16</span>
+        <h3><a href="#t7">Coalitions Aim Inward First</a></h3>
+        <p>Senate Democrats return to Washington tonight split over how far to go to cut off money for the Iran war, according to Punchbowl News this morning. Sen. Chris Van Hollen, who is challenging Chuck Schumer for leader, said on CNN that Democrats must "use all our powers right now" to deny the war's funding, and that Schumer does not agree. Schumer has said only that he wants to use Congress's power of the purse, and Iran war powers votes sit in his tentative plan for the first 100 days. The government funding deadline is December 11. Punchbowl counts 15 public endorsements for Schumer and five for Van Hollen, and three more senators have said they will not vote for Schumer. On the administration side, electoral-vote.com reports that Secretary of State Marco Rubio used a Federalist Society speech on Friday to defend the Iran war and say Iran must never get a nuclear weapon. EV's Senate map shows 55 Democrats, 44 Republicans, and one tie. Also on the calendar: the President meets Xi Jinping in Shenzhen on Thursday, then holds a three-way meeting with Xi and Vladimir Putin. (Somewhere a speechwriter is drafting a toast for that one.)</p>
+        <p>Henriksen documented the problem these leaders face. When a war depends on keeping a coalition together, decisions start aiming at the coalition. In 1999 one NATO ambassador admitted that allies worried more about how their actions played in their own capitals than about their effect on Milosevic. Clark said he gave up the basic logic of warfare to keep the alliance together, and Henriksen says targeting turned inward, toward domestic publics and allied consensus. A caucus is smaller than an alliance, but the arithmetic works the same way. Whatever comes out of the Senate Democrats' fight will be shaped first by what holds their votes together, and only second by its effect on Tehran or the White House.</p>
+        <p>Opinion: Henriksen's other warning fits both parties. NATO made threats it could not carry out and then had to keep making bigger ones to stay credible. A funding threat that a caucus cannot carry out on December 11 teaches the other side how long to wait. (NATO warned Milosevic from May 1998 to March 1999. He used the time.) <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Henriksen, <i>NATO's Gamble</i></p>
+
+      <article id="h-01">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 1</span>
+        <h3><a href="#h-01">Ninety Targets, Three Nights, and No Phase 4</a></h3>
+        <p>A threat with no plan for its own failure is a gamble, and chapter 1 of Henriksen's book is the case file. NATO began bombing Yugoslavia on 24 March 1999, and key people in Washington and other capitals expected two to four days to be enough, because they believed Operation Deliberate Force had moved Milosevic the same way in Bosnia in 1995. The war lasted seventy-eight days. Henriksen sets out to explain why the alliance was so unprepared, and the first chapter does it by counting.</p>
+        <p>The numbers are small. NATO had about ninety targets, enough for three days, and Daalder and O'Hanlon sum up the result as "a hope, but not a plan." On the first night, fifty-one targets went down and the Serb air defenses never came up. By the third night General Short canceled the second wave of F-117s because the ninety-one targets he had been given were gone, and crews struck old ones again. Asked what came after Phase Three, one senior official said, "There is no phase 4." The targeting cell at Vicenza was told fewer than forty-eight hours before the start to pick three nights of good targets, and later pieced together guidance by watching NATO's spokesman on television. That spokesman, Air Commodore Wilby, was pulled off a ski vacation in the Alps. Meanwhile the United States ran a separate campaign, Joint Task Force Noble Anvil, and France's chief of defense learned of it from a phone call.</p>
+        <p>The weak seminar comment is "NATO was unprepared for Kosovo." It is true and nobody will argue with it, which is why it earns nothing; Henriksen admits earlier authors had already said it. The strong version names the mechanism. Leaders expected a three-day show of resolve, so NATO bought ninety targets, set no goal beyond getting Milosevic back to Rambouillet, and had nothing for night four. The assumption wrote the plan. Opinion: that was a wish with a budget attached. It named the result and funded three nights of it.</p>
+        <p>The first-order effect of the three-day assumption was a thin target list and no strategy. The second-order effect landed on the alliance. Washington demanded target-by-target approval, France demanded the lists and got them in Paris before 8 PM each evening, and General Naumann says he arranged Phase Two Plus, counting on a council tired after hours of debate, so Secretary-General Solana could approve Phase Three targets without formally moving to Phase Three. The third-order effect was trust. President Chirac grasped how far the campaign had moved only when he watched the Interior Ministry burn on 3 April, day 11, and he phoned President Clinton. General Kelche says the secret U.S. campaign gave Europeans a reason to fix their own military shortcomings, and General Short warned that doing it again would cost the United States its allies. Every link rests on a named officer or an official report, so a critic cannot wave it off as the author's hindsight.</p>
+        <p>If the plan was three nights, who wrote night four? General Clark was asking about the end state in the first week, which is the right question, about six days late. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-02">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 2</span>
+        <h3><a href="#h-02">Desert Storm Was a Bad Role Model for Kosovo</a></h3>
+        <p>A past success counts as evidence for a new case only after you compare the conditions that produced it. Henriksen's second chapter applies that test to the Gulf War, and the Gulf War fails it. Since 1991 airmen had been taught that rapid escalation and overwhelming force aimed at the enemy's leadership was the right way to use airpower, and Air Force doctrine said little about coercion, which was the job in Kosovo. Henriksen argues this left the service unprepared for the coercive diplomacy it was meant to support. Politicians were no wiser. Eliot Cohen's line is that airpower seems to offer "gratification without commitment."</p>
+        <p>The evidence starts with Colonel John Warden's Instant Thunder plan, built on his Five Rings model with the enemy leadership at the center. It promised victory over Iraq in six to nine days. Desert Storm took a thirty-eight-day air campaign and a hundred-hour ground war. Henriksen then lists what Kosovo lacked. Kuwait touched a core U.S. interest, oil. More than six hundred thousand troops had massed, which gave airpower a ground threat to work against. UN Security Council Resolution 678 of 29 November 1990 authorized force. President Bush gave planners clear objectives on 8 August 1990, while NATO's came several weeks into the campaign. The coalition was U.S.-led, while NATO was a consensus alliance of sovereign nations.</p>
+        <p>The weak seminar comment is "If the politicians had let General Short hit Belgrade on night one, Kosovo would have gone like Iraq." It builds a rule from one case and ignores the author's own list of differences. The strong version grants Short his sincerity and then uses the list. Short told Congress, "I'm a child of Vietnam, Senator," and says he will go to his grave believing Milosevic should have been hit hard the first night. But Kuwait came with a ground force, a UN mandate, and clear objectives, and Henriksen says overwhelming strikes on the leadership in Belgrade could have undermined several European governments and destroyed the cohesion that gave NATO any leverage. Opinion: Short had the right answer to an Iraq question.</p>
+        <p>The first-order effect of Desert Storm was a simple lesson, that airpower works and costs little. The second-order effect landed at Maxwell, where Warden ran the Air Command and Staff College until 1995 and the 1992 and 1997 doctrines praised airpower's decisiveness, so the airmen advising politicians had been taught to win big wars. In Kosovo, Short wanted to strike the leadership, while the French wanted to save the best targets so Milosevic would fear what came next. NATO ended up attacking fielded forces, which Henriksen calls a political necessity and probably right. The third-order effect was the clock: Warden promised six to nine days, and a few years later officials expected two to four, which chapter 1 shows left NATO with about ninety targets. The argument is hard to rebut because it grants the airmen their strongest point, the Vietnam lesson against gradualism, and still finds the flaw in their doctrine, a flaw Air Force officer Paul Strickland also saw.</p>
+        <p>If Maxwell taught airmen to go after the head of the snake, which course covered nineteen governments that could say no? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-03">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 3</span>
+        <h3><a href="#h-03">One Vietnam, Two Lessons, and a Pentagon with Its Foot on the Brake</a></h3>
+        <p>A doctrine is the last war's lesson written down as a rule, so ask which war wrote it and who read it differently. Henriksen's third chapter argues that Vietnam left Washington with two incompatible lessons. The Pentagon learned to go in only with clear objectives and decisive force. The limited-war school, led by Madeleine Albright, learned that small doses of force could still buy political results. By 1998 the second school held the key jobs, and the first still held the Pentagon's habits.</p>
+        <p>Caspar Weinberger gave his six tests on 28 November 1984, after a car bomb killed 241 marines in Beirut. He rejected force as a companion of diplomacy and called it a tool for when diplomacy failed. Colin Powell carried the rules into the Gulf War, which brought more than six hundred thousand troops and an air plan named Instant Thunder as the opposite of Rolling Thunder. Bosnia was next. The Bush administration judged it not vital, and since nobody would wage a ground war, it chose no force at all. Albright asked Powell what the point was of having a superb military if it could never be used, and Powell thought he would have an aneurysm. Tony Lake answered that Powell's questions were the ones the military never asked in Vietnam. Powell told friends afterward, "Madeleine's at it again."</p>
+        <p>The weak seminar comment is "Vietnam made the military gun-shy, which is why it dragged its feet on Kosovo." It overgeneralizes from one case and ignores the author's own counterevidence: Lake says the military's lesson was that if the country goes in, it must give the troops what they need to win. The strong version says Vietnam taught two lessons, and Kosovo was fought by officials who had read the second one. Henriksen lists them: Gore as vice president, Albright as secretary of state, Vershbow at NATO, Clark as SACEUR. Opinion: "the military" is a phrase that hides a seminar's worth of disagreement, and Henriksen shows the disagreement on page after page.</p>
+        <p>First, Vietnam and Beirut produced rules that raised the price of any commitment, and Bosnia failed them all. Second, Henriksen writes that decisive force was effectively taken off the table in 1993, so the civilians who wanted to act were left with threats from the air, which Albright and Gore pressed. Third, the Pentagon resisted the Balkans for nearly a decade while the services absorbed a 30 to 40 percent contraction, and Secretary Cohen said in 1998 he did not want to add strains in Kosovo. Henriksen adds that Short's taste for overwhelming force came from an institutional focus on big wars. We infer the result: the only tool both schools could tolerate was bombing. That chain pre-empts the claim that the air-only approach was one general's or one service's quirk.</p>
+        <p>A question for the room: If decisive force was Pentagon doctrine for a decade, why did it send airmen into a campaign with eighteen additional sovereign nations demanding influence? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-04">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 4</span>
+        <h3><a href="#h-04">Bosnia Was a Six-Factor Win, and Washington Remembered Only One</a></h3>
+        <p>When someone cites a past success as the model, list every factor that was present then and ask how many are present now. Henriksen runs that test on Bosnia. Policymakers believed the 1995 bombing, Operation Deliberate Force, had forced Milosevic to Dayton, so a similar approach would work in Kosovo within a few days. Henriksen calls the assumption flawed. Six factors came together in August and September 1995, and the air campaign was only one of them.</p>
+        <p>Start with the money. A UN embargo had hit Serbia since 30 May 1992, and Milosevic's printing presses produced inflation of 313 million percent per month. When Holbrooke began his diplomacy, Milosevic approved the 1994 Contact Group plan as a basis for talks on 16 August, two weeks before the first bombs fell on 30 August. On the ground, the Croatian army started its offensive on 4 August and drove some 170,000 Serbs out of Krajina in three days, and Milosevic did nothing to help them. By 19 September Croatian and Bosnian Muslim forces held about 21 percent of the territory the Bosnian Serbs had held, and Holbrooke wrote that the famous 70-30 division had gone to around 50-50. Holbrooke admits that bombing had not been part of any negotiating strategy.</p>
+        <p>The weak seminar comment is "Deliberate Force proves Milosevic folds under bombing." It confuses a first-order effect with the outcome: the Serbs quit after the bombs, but sequence is not cause. The strong version says Milosevic had already signaled before the bombing began, the ground offensive denied the Serbs the chance to wait out the air campaign, and Holbrooke, Owen's interviewees, and Clinton all credit the air campaign as one real contribution among several. Opinion: the fair claim is that bombing helped, which is dull, and it also happens to be what the evidence supports.</p>
+        <p>The effects stack up. First, six factors ended the war, and the air campaign sharpened the pressure. Second, the credit landed on air. William Perry called Deliberate Force the absolute critical step, Milosevic told Clark over dinner that NATO's bombs and technology had beaten him, and Henriksen reports that the prevailing view in 1999 was that a similar approach would work within a few days. Third, NATO went to war in March 1999 on that expectation. A BBC documentary called it the gamble, and Lord Owen said, "Their bluff was called by Milosevic." The precedent also failed to transfer. Henriksen shows the war exhaustion that helped in Bosnia was largely absent in Kosovo, and that Kosovo mattered far more to Milosevic than Bosnian Serb land, which Gelbard called a throwaway. That chain pre-empts the objection that Bosnia was a clean test of air alone.</p>
+        <p>Misha Glenny asserted, "The illusion that he had crumpled after a short sharp bombing campaign" would lead to unreasonable expectations. A question for the room: if Milosevic had already said yes before the bombs fell, what exactly did Washington think it was copying? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-05">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 5</span>
+        <h3><a href="#h-05">Eighty Planes, Forty-Eight Hours Late</a></h3>
+        <p>Never threaten what you cannot carry out the next day. General Klaus Naumann says he learned that rule in this conflict, and chapter 5 shows how NATO learned it the expensive way. In spring 1998 Madeleine Albright decided the Contact Group was a poor tool, because Milosevic could immobilize its members with reassuring gestures and empty words. The United States moved the crisis to NATO, the one institution that could carry out a threat of force. Naumann later called the permanent transfer a mistake. The foreign ministers made threats in Luxembourg on 28 and 29 May, and a couple of weeks later the defense ministers felt they had to top them by adding steps to the ladder of escalation.</p>
+        <p>The best evidence is Operation Determined Falcon. Secretary-General Solana announced it on 11 June 1998. On 15 June eighty aircraft from thirteen NATO countries flew from fifteen bases and from carriers in the Adriatic over Albania and Macedonia. Tim Judah called it a limp gesture, since it proved only that NATO had planes in the region that could fly very fast. Naumann went further and called the order to hold the exercise ridiculous, because Milosevic could see that NATO could not strike within forty-eight hours. In a Senate hearing Naumann said Milosevic "rightly concluded that the NATO threat was a bluff" and finished his summer offensive. That is a lot of hardware to spend on a bluff.</p>
+        <p>Opinion: the weak seminar comment is "NATO's threats in 1998 failed because Milosevic did not take the alliance seriously." It asserts without evidence. It says he doubted NATO and never shows what he saw. The strong version supplies the sighting: an announced exercise that could not become a strike for at least two days, run while Washington was still asking what anyone would do the day after. Sandy Berger had told Albright and Gelbard on 23 April that threatening statements outside a coherent plan made them sound like lunatics, and the Pentagon, Henriksen says, did not believe this would be over quickly. If Milosevic had read only the newspapers, he would have reached the same verdict as the generals.</p>
+        <p>The chain of effects is what makes the point hard to rebut. First order, the exercise showed that NATO owned aircraft and could not strike on short notice. Second order, Milosevic read it as a bluff and finished the offensive, and Henriksen says many took Determined Falcon and the empty threats after it as proof that NATO lacked credibility. Third order, the threats kept coming. Judah is quoted saying that by March 1999, many more threats later, there was still no compromise and no way back, and short of a humiliating climb down, force had to be used. Henriksen puts it flatly: NATO had threatened itself into a corner. That pre-empts the easy reply that threats are free. Each threat NATO could not execute lowered the credibility of the next one and raised the price of backing down.</p>
+        <p>Solana said in May that nothing was excluded. Naumann's complaint is that nothing was ready, either. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-06">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 6</span>
+        <h3><a href="#h-06">The Photo Washington Called an Accident</a></h3>
+        <p>A signal means whatever the receiver takes it to mean. Christopher Hill said as much himself: "signals are in the eye of the beholder." Henriksen argues that in May and June 1998 U.S. policy seems to have shifted toward negotiating with the KLA, which the Contact Group and NATO had been treating as terrorists as late as 13 June. Albright says Washington signaled only the restoring of Kosovo's autonomy. The KLA heard something bigger.</p>
+        <p>The evidence is a photograph and a meeting. In June 1998 Holbrooke and Hill visited a Kosovo village. A man in uniform with a gun squeezed in beside Holbrooke, someone took a picture, and the New York Times ran it on 26 June. The United States called it an unintended mistake. One week later Holbrooke, using a conference as cover, met the KLA's international spokesman, Bardhyl Mahmuti, in Switzerland. Mahmuti says Holbrooke promised independence within three to five years. Asked on camera, Holbrooke said he may have suggested it was a possibility if they handled themselves correctly. Henriksen says that meeting could hardly be called a mistake. Afterward, Xhavit Haliti says, the KLA shaved off its beards and began saluting with an open hand like the Americans. Norway's foreign minister, Knut Vollebaek, declined to name the nation that signaled independence, but grinned that it was "pretty obvious who it was".</p>
+        <p>Opinion: the weak seminar comment is "Washington promised the KLA independence, so the war was America's doing." It ignores the author's own counterevidence. Hill denied any such signal, Dobbins knew of none, and Gelbard says the promise was given but was Holbrooke acting on his own, not U.S. policy. Henriksen himself hedges that the shift only seems to have occurred. The strong version claims what the record supports: Holbrooke's own words, Gelbard's confirmation, and a Balkan logic in which a superpower that does not stamp out a cause must want it to win. Whether the signal was official matters less than whether it was received.</p>
+        <p>The effects ran in a line. First order, the photo and the meeting told the KLA that Washington would deal with it. Second order, Western rhetoric and NATO threats lifted KLA morale, and a pattern emerged: the Serbs withdrew, the KLA moved in, and new crackdowns followed. The KLA seized a coal mine on 23 June and stormed Orahovac on 18 July, and over the summer it killed some eighty policemen and sixty civilians according to BBC2. Many Europeans objected to NATO becoming the KLA's air force. Third order, the Serb counteroffensive sent an estimated two hundred thousand Kosovars into the woods and mountains, television pictures galvanized Western opinion, and the Kosovar moderates lost ground to the KLA. Judah thought a negotiated solution almost impossible, and the allies had agreed independence was off the table. We infer that an independence promise nobody could keep was a poor gift for a movement that already wanted it. That chain pre-empts the reply that the KLA would have fought anyway: it only has to show that the signal made the fighting harder to stop.</p>
+        <p>If the signal was unofficial, who exactly was running Kosovo policy that week? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-07">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 7</span>
+        <h3><a href="#h-07">A Threat Is Worth Only What the Target Thinks It Is Worth</a></h3>
+        <p>Measure a threat's credibility from the target's side of the table, because he decides what it is worth. Chapter 7 covers September to December 1998, when NATO built a real threat on paper. The North Atlantic Council issued an activation warning on 24 September, an activation request on 1 October, and an activation order on 13 October. Henriksen argues the paper was fine and the belief was missing. Milosevic did not think NATO meant it, and the Clinton administration's own air strikes that year gave him reasons.</p>
+        <p>The best evidence is Milosevic himself. After the warning he met his Supreme Defense Council. According to Montenegro's president, Djukanovic, who attended, Milosevic said NATO would bomb for about five to seven days, the international community would then mobilize, NATO would be forced to stop, and the Serbs would become the moral winners. Solana had joked in Portugal that Milosevic's motto seemed to be "A village a day keeps NATO away." Henriksen ties the council remark to Schelling: anticipated damage coerces, so credibility is the whole game. Then he lists what Milosevic could read. Operation Desert Fox against Iraq ran four days from 16 December, with 650 sorties and 415 missiles, and Daalder and O'Hanlon judged such attacks did little for U.S. credibility. A French major, Pierre Bunel, passed NATO war plans to Belgrade and got two years in jail. General Short, after meeting Milosevic, concluded "If you hit that man hard, slapped him upside the head, he'd pay attention."</p>
+        <p>The weak seminar comment is: "The October 1998 threat worked, because Milosevic agreed to a verification mission hours after the activation order." It is weak because it confuses a first-order effect with the outcome. The strong version says the order bought a deal and 2,000 OSCE verifiers on 13 October, yet the KLA was never asked to sign, and Milosevic had already told his council that bombing would be short. Opinion: a threat that works once and teaches the target how long he must wait is a loan at high interest.</p>
+        <p>First order: within hours of the 13 October activation order, Holbrooke announced his deal. Second order: because the deal pressed only Belgrade, the KLA filled the vacuum, rearmed, and prepared for a spring offensive, while Milosevic came to believe Holbrooke had double-crossed him and told Clark he was two weeks from finishing off the KLA. Third order: Henriksen says the Iraq and Bin Laden strikes and the known reluctance of several allies gave Milosevic good reason to expect a short campaign in March 1999, and that Short's picture of a man who buckles would shape the air campaign itself. We infer that October taught both sides the wrong lesson. That chain pre-empts the easy rebuttal that the threat worked, since the deal itself seeded the next crisis. If the threat worked, why was Belgrade planning for five to seven days of bombing? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-08">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 8</span>
+        <h3><a href="#h-08">Racak Was Real. The Plan Built on It Was the Problem</a></h3>
+        <p>When a disputed event triggers a policy, settle the facts first and then argue about what the policy did with them. Henriksen does this with Racak. The massacre happened, but the speed of the verdict and the strategy built on it are fair targets. Chapter 8 runs from Racak on 15 January 1999 to the first bombs on 24 March, and its argument is that Racak produced an ultimatum diplomacy at Rambouillet that nobody had thought through to the end.</p>
+        <p>The KLA killed three Serb policemen on 8 January and two more on 10 January. Serb forces moved on Racak on 15 January, and by the next day forty-five people were dead. William Walker, head of the OSCE mission, called Holbrooke from the scene and said he was about to call it a crime against humanity. Henriksen says Walker reached that conclusion within minutes, with little or no forensic competence. A Finnish team led by Helena Ranta investigated, and she later said the men in the ditch had not been moved, the bullets came from a small number of weapons, and a massacre had taken place. Human Rights Watch agreed. The policy moved faster than the forensics. Within four hours the Deputies Committee met, and Pentagon representatives asked what air strikes were for. Christopher Hill said the mood turned anti-Serb and nobody asked whether the Serbs had a point. At Rambouillet the Serb delegation stayed nearly silent for ten days, the NATO-access annex copied the Dayton text, and the Kosovars signed on 18 March. Milosevic did not.</p>
+        <p>The weak seminar comment is: "Racak was staged, so NATO went to war on a fake." It is weak because it ignores the author's own counterevidence: Ranta's findings and the Human Rights Watch conclusion sit in the same chapter. The strong version grants the massacre and attacks the sequence. Walker's verdict came fast, the mood in Washington went one-sided, and Hill knew that putting NATO into the peace agreement meant the Serbs would never agree. Opinion: doubting the diplomat's timing is fair, but doubting the bodies is a way to dodge the argument.</p>
+        <p>First order: Racak convinced a majority of the Clinton administration that a forceful policy was needed, and Albright linked the air threat to a political settlement. Second order: the threat went into the peace text, the Serbs refused to discuss the military annex, the Kosovars were told to sign because otherwise NATO could not carry out its threat. Third order: the administration came to believe a credible threat would suffice, and Clark admitted his advice had crossed a line "from forecasting to recommending." When bombing began on 24 March, Ralston, the vice chairman of the Joint Chiefs, agreed there probably had been no proper political strategy. That chain pre-empts the rebuttal that Serb stalling alone caused the war: Henriksen documents the stalling, and he documents the design that invited it. If the Pentagon asked on day one what air strikes were for, who answered before March? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-09">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 9</span>
+        <h3><a href="#h-09">Bosnia Was the Study Guide, and Kosovo Was a Different Exam</a></h3>
+        <p>A lesson drawn from one case is a hypothesis about the next one, and Kosovo shows what happens when it gets treated as a law. Henriksen argues that the American response, and then NATO's, was shaped more by the history before the crisis than by events in Kosovo. Albright, Vershbow, Clark, Gelbard, and Holbrooke all believed Milosevic was the source of the trouble, that only force would change his behavior, and that NATO should handle it. Bosnia was their shared lesson, and Kosovo was a second chance to get it right. His complaint is that they credited airpower alone for an ending that needed other factors too.</p>
+        <p>The evidence is Milosevic himself. Henriksen calls him a political opportunist with no long-term vision, and Gelbard, Stoltenberg, Naumann, and Vollebaek all confirmed that from their own meetings with him. In August 1995 he welcomed talks because the war was creating refugees in Serbia, the embargo was hurting, and inflation was skyrocketing. At Dayton he took the benefits on offer. Kosovo planning stressed costs anyway. Tim Judah relays a Belgrade editor's claim that Milosevic believed Holbrooke had promised to close the Albanian border and freeze KLA assets, and felt betrayed when that did not happen. Henriksen could not verify it, and says so. The KLA was never part of the October Agreement. One Western diplomat admitted the alliance lacked leverage on it, calling it "a missing element in our overall strategy."</p>
+        <p>The weak seminar comment is "Bosnia showed that Milosevic bends only to force, so threatening him in 1998 made sense." It is weak because it mistakes the first-order effect, bombing in 1995, for the whole outcome, and it ignores the author's own counterevidence. The strong version says Henriksen finds Milosevic was already squeezed at home in 1995 and gained from a deal at Dayton, so the lesson was costs plus benefits, and Kosovo applied half of it. Opinion: James Dobbins saw nothing unclear in the plan to bomb a little and, if that failed, "we'll bomb them a little bit more," and finally consider invading. We would call that a ladder with no rungs painted on.</p>
+        <p>First order, the Bosnia lesson put airpower at the center and left the KLA outside the bargaining. Second order, Clark told politicians a few days of bombing would do it, which Ralston said was attractive to Albright, and Henriksen shows the same belief in Washington and in London, where the British proposed opening with only twenty to fifty cruise missiles. Smaller allies like Norway rallied behind Washington. Third order, when Milosevic did not fold, NATO used more than a thousand aircraft for over eleven weeks, and Naumann thought a chance to prevent war in fall 1998 was missed because NATO could not influence the KLA. The reply that Milosevic deserved no benefits meets Dayton, where the West had already shown it could be pragmatic.</p>
+        <p>If the plan was to bomb a little more each time, which rung of Dobbins's ladder was the one where somebody called the KLA? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-10">
+        <span class="kicker">Chapter by Chapter · Henriksen, chapter 10</span>
+        <h3><a href="#h-10">NATO Coerced Itself, and the Bill Came Due in 78 Days</a></h3>
+        <p>Credibility binds the coercer as tightly as the target. Henriksen's conclusion defines coercive diplomacy as changing an opponent's behavior by manipulating costs and benefits, with force as only one option, and says Kosovo's circumstances were unique and the effort did not reflect that. NATO issued threats it did not act on and thereby coerced itself into ever more threats, in a spiral that was hard to escape.</p>
+        <p>Milosevic read the weakness well. Greece, Italy, and Germany had strong domestic opposition, and a few days into the campaign Italy signaled a governmental crisis if bombing escalated. In October 1998 the Serb foreign minister told Naumann after midnight, "We know everything about your NATO Council delegations and their views." By Christmas Milosevic had been given much of the air plan by a French officer, had watched Desert Fox stop short of its objectives, expected Russia to block a UN resolution, and judged that NATO could bomb for about a week. His wife said she expected one night. Judah's verdict: leaders of NATO countries thought it would last a few days, and so did Milosevic. Inside the alliance the generals fought too. Short wanted Belgrade, Clark wanted the Third Army, and when Short pointed out they had different jewelers, Clark replied, "My jeweller outranks yours." The friction lasted all war.</p>
+        <p>The weak seminar comment is "The politicians tied the airmen's hands." It is weak because it describes one side of the friction and ignores the author's counterevidence. The strong version says Henriksen agrees Short's textbook approach was outside the political room to maneuver, then adds that when politicians said they had to do something, the military had no adequate reply and must shoulder part of the unpreparedness. Opinion: each camp blamed the other, and Henriksen is harder on the airmen than they are on themselves. He says the airpower community needs more education on coercive strategy at the low end of the intensity range.</p>
+        <p>First order, unfulfilled threats made credibility an issue, and fear of losing it became a political force of its own. Second order, targeting turned inward: Henriksen says it was aimed at domestic publics and allied consensus more than at Milosevic, Jumper described a target list managed day by day without specific desired effects, and Clark admitted sacrificing the basic logic of warfare to keep the Alliance together. Rambouillet shrank to getting the Kosovar Albanians to sign, which would trigger the bombing. Third order, when the first targets near Pristina were hit on 24 March 1999, no one in NATO's military leadership had political guidance or a strategy for Kosovo afterward. Afterward France's General Kelche set up a standing cell to build crisis options, because politicians with no options will wait or do nothing. Every link comes from NATO's own officers, which pre-empts the reply that Milosevic was simply stubborn.</p>
+        <p>If nobody thought it through past a day or two, what exactly did success look like on day three? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · five earlier books against Henriksen</span>
+        <h3><a href="#r1">Five Old Friends Who Saw Kosovo Coming</a></h3>
+        <ol class="qs">
+          <li><b>Clodfelter, North Vietnam.</b> Bombing's value depends on the goals and the kind of war; it failed Johnson's gradual coercion and worked for Nixon's limited aims in 1972. The link: General Short told the Senate "I'm a child of Vietnam," and he wanted to hit Belgrade hard on night one. Henriksen shows that the Vietnam lesson against gradualism ran straight into nineteen governments that wanted gradualism.</li>
+          <li><b>Kitfield, the prodigal soldiers.</b> Officers scarred by Vietnam rebuilt the military and wrote rules for using force, and Desert Storm was the payoff. The link: Henriksen's chapter 3 follows those rules from Weinberger's six tests in 1984, which treated force as a last resort, to Albright asking Powell what the point of a superb military was if it could never be used.</li>
+          <li><b>Olsen, Desert Storm's strategic air campaign.</b> Warden's Instant Thunder shaped the campaign and caused friction at the top, but attacks on Saddam's power base did not change the regime. The link: Henriksen says Instant Thunder promised victory in six to nine days, and a few years later Washington expected Kosovo to take two to four. The habit of expecting quick strategic results came from Iraq.</li>
+          <li><b>Haun, tactical air power.</b> Air power works best against fielded forces alongside a capable ground force. The link: Kosovo had the target and not the partner. Ground forces were ruled out publicly from the start, Clark wanted the fielded forces anyway, and Henriksen calls attacking them a political necessity.</li>
+          <li><b>Fravel, active defense.</b> The PLA changes its strategy when a foreign war shows that its assumptions are wrong. The link: Fravel shows the PLA studying this same air war and concluding that air strikes were now the most likely way China would be attacked. Henriksen shows how improvised the war looked from inside NATO.</li>
+        </ol>
+        <p>Opinion: three of the five would tell Henriksen that the airmen were right about Vietnam. All five would tell him the politicians were right about Europe. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Henriksen's page numbers are ebook pages from the PDF on file; the edition is reflowed and has no printed page numbers.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Bombing began 24 March 1999 and lasted seventy-eight days; no political guidance or postwar strategy: Henriksen, ebook 11.</li>
+          <li>Two to four days expected; Deliberate Force as the precedent; Owen's "bluff was called": Henriksen, ebook 13.</li>
+          <li>"Battering an open door"; Dobbins on bombing "a little bit more": Henriksen, ebook 14.</li>
+          <li>Airmen also unprepared and quick to deflect blame: Henriksen, ebook 15. Book based on a Glasgow PhD dissertation: Henriksen, ebook 16.</li>
+          <li>Coercive diplomacy defined as costs and benefits, force one option: Henriksen, ebook 324.</li>
+          <li>Threats NATO could not carry out; NATO threatened itself into a corner: Henriksen, ebook 243, 333.</li>
+          <li>No UN authorization; nineteen sovereign nations: Henriksen, ebook 13.</li>
+          <li>"Resembled Rolling Thunder far more than it did Instant Thunder": SAASS 628 syllabus, Seminar 14.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter ebook ranges: introduction 10–16; ch. 1, 18–65; ch. 2, 65–120; ch. 3, 120–159; ch. 4, 159–217; ch. 5, 217–246; ch. 6, 246–257; ch. 7, 257–278; ch. 8, 278–300; ch. 9, 300–322; ch. 10, 322–341.</li>
+          <li>About ninety targets, fifty-one on night one; old targets struck by night three: Henriksen, ebook 47–48.</li>
+          <li>Phase Two Plus: Henriksen, ebook 53–55.</li>
+          <li>Determined Falcon, eighty aircraft, forty-eight hours, Naumann's "bluff": Henriksen, ebook 244, 246.</li>
+          <li>Milosevic's five-to-seven-day expectation: Henriksen, ebook 261–262.</li>
+          <li>Milosevic as opportunist; Dayton benefits: Henriksen, ebook 309–311.</li>
+          <li>Military shoulders part of the unpreparedness: Henriksen, ebook 337. Clark's sacrifice of warfare logic: Henriksen, ebook 339.</li>
+          <li>Unverified Belgrade editor's claim, flagged by Henriksen: Henriksen, ebook 302.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 14, "Operation ALLIED FORCE: Airpower Gets its Day?"</li>
+          <li>Single objective of returning to Rambouillet: Henriksen, ebook 29–31. Lists to Paris; target approval: Henriksen, ebook 48–49. Targeting aimed inward: Henriksen, ebook 339.</li>
+          <li>Noble Anvil and Short's warning: Henriksen, ebook 37–42. Move to NATO: Henriksen, ebook 230–231.</li>
+          <li>Short against the French approach: Henriksen, ebook 108, 116–118. Short's lecture; jeweler exchange: Henriksen, ebook 327–332.</li>
+          <li>KLA gains; independence off the table: Henriksen, ebook 251–256. Reasons Milosevic quit: Lambeth, 191–193.</li>
+          <li>"Prepare question four" is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Naumann, chairman of the NATO Military Committee: Henriksen, ebook 57; his bluff verdict: ebook 244.</li>
+          <li>Short in charge of the air campaign: Henriksen, ebook 22; hit hard the first night: ebook 82.</li>
+          <li>Clark as SACEUR: Henriksen, ebook 12; Third Army and jeweler: ebook 331–332; cohesion: ebook 339.</li>
+          <li>Holbrooke and Mahmuti; Gelbard: Henriksen, ebook 248–250. October deal: Henriksen, ebook 267.</li>
+          <li>KLA filling the vacuum: Henriksen, ebook 251, 270.</li>
+          <li>ACTORD 13 October 1998: Henriksen, ebook 266.</li>
+          <li>Coercive diplomacy: Henriksen, ebook 324.</li>
+        </ul>
+        <h3>Bridge from today's seminar</h3>
+        <ul>
+          <li>Kosovo a win and a step backward in efficiency: Lambeth, 181. Short, Ryan, Fogleman, McPeak criticisms: Lambeth, 224, 231. "Can never be more effective than the strategy": Lambeth, 232. "My jeweler outranks yours": Lambeth, 221.</li>
+          <li>"The classic air campaign that we'd all learned at Maxwell": Henriksen, ebook 327. Military had no adequate reply: Henriksen, ebook 337. Jeweller exchange: Henriksen, ebook 331–332.</li>
+          <li>Ralston on the lack of a political strategy: Henriksen, ebook 299.</li>
+          <li>The parenthetical and the framing question are ours.</li>
+        </ul>
+        <h3>Political strategy × Henriksen</h3>
+        <ul>
+          <li>Senate Democrats return tonight; Van Hollen on CNN, "use all our powers right now," and Schumer's disagreement; Schumer and the power of the purse; Iran war powers votes in the 100-day plans; December 11 deadline; 15 public endorsements to five, three more opposed: Punchbowl News AM, November 16, 2026.</li>
+          <li>Trump to meet Xi in Shenzhen Thursday, then a trilateral meeting with Xi and Putin: Punchbowl News AM, November 16, 2026.</li>
+          <li>Rubio's Federalist Society speech on Friday defending the Iran war; Iran must never get a nuclear weapon; Senate map 55 Democrats, 44 Republicans, one tie: electoral-vote.com, November 16, 2026.</li>
+          <li>NATO ambassador on public opinion in their own capitals; Clark on sacrificing the logic of warfare; targeting focused inward: Henriksen, ebook 324, 339.</li>
+          <li>NATO coerced itself into more threats: Henriksen, ebook 333. Threats from the May 1998 Luxembourg meeting onward: Henriksen, ebook 243; bombing began 24 March 1999: ebook 11.</li>
+          <li>The judgments labeled Opinion, the caucus comparison, and the parentheticals are ours.</li>
+        </ul>
+        <h3>Henriksen, chapter 1: Ninety Targets, Three Nights, and No Phase 4</h3>
+        <ul>
+          <li>War began 24 March 1999 and lasted seventy-eight days: Henriksen, ebook 11.</li>
+          <li>Two to four days expected; Deliberate Force in Bosnia as the precedent: Henriksen, ebook 13 and 21.</li>
+          <li>Earlier authors had already said NATO was unprepared: Henriksen, ebook 14.</li>
+          <li>Spokesman Wilby on a ski vacation: Henriksen, ebook 25.</li>
+          <li>Single objective of returning to Rambouillet; no clear political strategy; Clark asked about end state in the first week: Henriksen, ebook 29 and 31.</li>
+          <li>Targeting cell told to select three nights of good targets: Henriksen, ebook 42.</li>
+          <li>Targeting cell took guidance from TV; Phase Two Plus not communicated to the cell: Henriksen, ebook 45 and 56.</li>
+          <li>About ninety targets, fifty-one on the first night, air defenses did not come up, "There is no phase 4": Henriksen, ebook 47.</li>
+          <li>Ninety-one targets, second wave of F-117s canceled on night three, old targets struck again; target-by-target approval from Washington: Henriksen, ebook 48.</li>
+          <li>Lists sent to Paris before 8 PM: Henriksen, ebook 48 and 49.</li>
+          <li>Daalder and O'Hanlon, "a hope, but not a plan": Henriksen, ebook 22.</li>
+          <li>Phase Two Plus and Naumann's account: Henriksen, ebook 53 to 55.</li>
+          <li>Chirac and the Interior Ministry on 3 April, day 11: Henriksen, ebook 56.</li>
+          <li>Joint Task Force Noble Anvil kept from allies; Kelche's phone call and comment on European shortcomings: Henriksen, ebook 37 to 40.</li>
+          <li>Short on never running a U.S.-only structure inside NATO again: Henriksen, ebook 41 and 42.</li>
+          <li>The use-it paragraph and the Opinion line are our opinion; the last-paragraph quip is ours.</li>
+        </ul>
+        <h3>Henriksen, chapter 2: Desert Storm Was a Bad Role Model for Kosovo</h3>
+        <ul>
+          <li>Airmen taught rapid escalation and overwhelming force at the leadership; service unprepared for coercive diplomacy: Henriksen, ebook 68.</li>
+          <li>"Gratification without commitment" (Cohen): Henriksen, ebook 67 and 97.</li>
+          <li>Instant Thunder promised victory in six to nine days: Henriksen, ebook 92; later expectation of two to four days: ebook 93.</li>
+          <li>Thirty-eight-day air campaign and hundred-hour ground war: Henriksen, ebook 95 and 96.</li>
+          <li>Kuwait as core interest; more than 600,000 troops: Henriksen, ebook 97.</li>
+          <li>Resolution 678, Bush's objectives on 8 August 1990, U.S.-led coalition versus consensus alliance: Henriksen, ebook 98.</li>
+          <li>After the Gulf War politicians saw airpower as effective and cost-effective: Henriksen, ebook 99.</li>
+          <li>Short, "I'm a child of Vietnam, Senator": Henriksen, ebook 81; hit hard the first night: ebook 82.</li>
+          <li>Warden at ACSC until 1995; 1997 doctrine: Henriksen, ebook 105 and 106; 1992 doctrine: ebook 100.</li>
+          <li>Strickland on doctrine and coercion: Henriksen, ebook 109 and 110.</li>
+          <li>Strikes on Belgrade could undermine European governments and cohesion; attacking fielded forces a political necessity: Henriksen, ebook 116 and 117.</li>
+          <li>French risk strategy and "save the best targets": Henriksen, ebook 117 and 118.</li>
+          <li>Head of the snake: Henriksen, ebook 108; nineteen member nations: ebook 13 (introduction).</li>
+          <li>Chapter 1 link, about ninety targets: Henriksen, ebook 47.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are our opinion.</li>
+        </ul>
+        <h3>Henriksen, chapter 3: One Vietnam, Two Lessons, and a Pentagon with Its Foot on the Brake</h3>
+        <ul>
+          <li>Two schools after Vietnam; limited-war school in key posts in 1998: Henriksen, ebook 121, 158.</li>
+          <li>Weinberger's six tests, 28 November 1984, after Beirut (241 marines); force as a last resort, not a companion of diplomacy: Henriksen, ebook 128, 129.</li>
+          <li>Gulf War: more than six hundred thousand troops; Instant Thunder versus Rolling Thunder: Henriksen, ebook 131.</li>
+          <li>Bush administration chose no force at all; decisive force effectively taken off the table: Henriksen, ebook 137, 138.</li>
+          <li>Albright and Powell exchange; Lake's reply; Lake on the military's lesson; "Madeleine's at it again": Henriksen, ebook 143, 144, 145.</li>
+          <li>Defense contraction of 30 to 40 percent; Cohen on not adding strains: Henriksen, ebook 152, 153.</li>
+          <li>Short's overwhelming-force view as an institutional product; eighteen additional sovereign nations: Henriksen, ebook 158.</li>
+          <li>The use-it paragraph, the "we infer" sentence, and the closing question are our opinion.</li>
+        </ul>
+        <h3>Henriksen, chapter 4: Bosnia Was a Six-Factor Win, and Washington Remembered Only One</h3>
+        <ul>
+          <li>Assumption flawed; six factors in August and September 1995: Henriksen, ebook 193.</li>
+          <li>Embargo from 30 May 1992; inflation of 313 million percent per month; Milosevic approved the Contact Group plan 16 August, bombing began 30 August: Henriksen, ebook 193, 195.</li>
+          <li>Krajina offensive from 4 August, some 170,000 Serbs driven out in three days; Milosevic did not help: Henriksen, ebook 183, 184, 194.</li>
+          <li>About 21 percent of ground taken by 19 September; Holbrooke's 70-30 to about 50-50 memo: Henriksen, ebook 198.</li>
+          <li>Holbrooke and Smith on bombing not part of a negotiating strategy: Henriksen, ebook 205.</li>
+          <li>Holbrooke called air the most important single factor; Owen's interviewees; Clinton's list: Henriksen, ebook 203, 204.</li>
+          <li>Perry on Deliberate Force; Milosevic to Clark; expectation of results in a few days: Henriksen, ebook 191, 192, 193.</li>
+          <li>BBC "gamble" and Owen on the bluff; Glenny: Henriksen, ebook 208, 209.</li>
+          <li>War exhaustion absent in Kosovo; Kosovo mattered more; Gelbard on "throwaways": Henriksen, ebook 196, 197, 202.</li>
+          <li>The use-it paragraph, the Opinion sentence, and the closing question are our opinion.</li>
+        </ul>
+        <h3>Henriksen, chapter 5: Eighty Planes, Forty-Eight Hours Late</h3>
+        <ul>
+          <li>Albright judged the Contact Group too easy for Milosevic to immobilize, and wanted NATO to carry out the threat: Henriksen, ebook 230-231.</li>
+          <li>Naumann called the permanent transfer to NATO a mistake; Luxembourg meeting 28-29 May, defense ministers topping it: Henriksen, ebook 243.</li>
+          <li>Determined Falcon, 15 June, eighty aircraft, thirteen countries, fifteen bases; Judah's "limp gesture"; Naumann's forty-eight hours and Senate testimony: Henriksen, ebook 244.</li>
+          <li>Solana announced the exercise on 11 June: Henriksen, ebook 242 and 244.</li>
+          <li>Berger on 23 April, "lunatics" and the day after: Henriksen, ebook 235. Pentagon doubt that it would be over quickly: Henriksen, ebook 241.</li>
+          <li>Determined Falcon and empty threats proved lack of credibility: Henriksen, ebook 246.</li>
+          <li>Judah on no way back by March 1999, and "threatened itself into a corner": Henriksen, ebook 243.</li>
+          <li>Solana's "nothing is excluded": Henriksen, ebook 240.</li>
+          <li>The use-it paragraph, the line that Milosevic would have reached the same verdict as the generals, the "threats are free" rebuttal, and the point that each unexecuted threat lowered the credibility of the next are our opinion and inference.</li>
+        </ul>
+        <h3>Henriksen, chapter 6: The Photo Washington Called an Accident</h3>
+        <ul>
+          <li>Policy shift hedged as seeming to have occurred; terrorists label through 13 June; Albright's autonomy-only account: Henriksen, ebook 247.</li>
+          <li>Photo, New York Times 26 June 1998, "unintended mistake", Switzerland meeting with Mahmuti, Holbrooke on camera, KLA symbols and salutes: Henriksen, ebook 248-249.</li>
+          <li>Vollebaek's grin, Hill's "eye of the beholder", Dobbins: Henriksen, ebook 249.</li>
+          <li>Gelbard says the promise was Holbrooke acting on his own: Henriksen, ebook 249-250.</li>
+          <li>KLA morale, the withdraw-and-fill-in pattern, mine seizures, Orahovac, eighty policemen and sixty civilians, "air force of the KLA": Henriksen, ebook 251.</li>
+          <li>Two hundred thousand fled, television pictures galvanizing Western opinion: Henriksen, ebook 253.</li>
+          <li>Moderates weakened and KLA bolstered: Henriksen, ebook 254.</li>
+          <li>Judah on a negotiated solution being almost impossible; allies agreeing independence was not an option: Henriksen, ebook 255-256.</li>
+          <li>The use-it paragraph is our opinion. The point that an unkeepable independence promise was the worst thing to hand the KLA, and the reply to "they would have fought anyway," are our inference.</li>
+        </ul>
+        <h3>Henriksen, chapter 7: A Threat Is Worth Only What the Target Thinks It Is Worth</h3>
+        <ul>
+          <li>ACTWARN 24 September, ACTREQ 1 October, ACTORD 13 October, Henriksen, ebook 260, 263, 266.</li>
+          <li>Supreme Defense Council, Djukanovic account of Milosevic's five-to-seven-day expectation, Schelling and credibility: Henriksen, ebook 261, 262.</li>
+          <li>Solana's "A village a day keeps NATO away": Henriksen, ebook 260.</li>
+          <li>Desert Fox (16 December, four days, 650 sorties, 415 missiles) and the Daalder and O'Hanlon judgment: Henriksen, ebook 276.</li>
+          <li>Bunel leak and two-year sentence: Henriksen, ebook 277.</li>
+          <li>Short's remark about hitting Milosevic hard, and its effect on OAF: Henriksen, ebook 266.</li>
+          <li>13 October deal, 2,000 verifiers, suspension by 27 October without cancellation: Henriksen, ebook 267, 268.</li>
+          <li>KLA left out, filled the vacuum, spring offensive; Milosevic felt double-crossed: Henriksen, ebook 270, 271.</li>
+          <li>Clark's "two weeks" report and Milosevic's reasons to expect a short campaign: Henriksen, ebook 271, 272.</li>
+          <li>The use-it paragraph and the sentence beginning "We infer" are our opinion and inference.</li>
+        </ul>
+        <h3>Henriksen, chapter 8: Racak Was Real. The Plan Built on It Was the Problem</h3>
+        <ul>
+          <li>KLA killings 8 and 10 January, Racak 15 January, forty-five dead: Henriksen, ebook 279, 280.</li>
+          <li>Walker's call to Holbrooke and Henriksen's view of the speed of his verdict: Henriksen, ebook 280.</li>
+          <li>Ranta's findings, Human Rights Watch conclusion: Henriksen, ebook 281, 282.</li>
+          <li>Deputies Committee within four hours and Pentagon questions: Henriksen, ebook 283, 284.</li>
+          <li>Hill on the anti-Serb mood and NATO in the agreement; majority of administration: Henriksen, ebook 282, 283.</li>
+          <li>Belief that a credible threat would suffice: Henriksen, ebook 287.</li>
+          <li>Serb delegation silent for ten days: Henriksen, ebook 289.</li>
+          <li>Clark's "from forecasting to recommending": Henriksen, ebook 291.</li>
+          <li>Military annex modeled on Dayton, Serbs would not discuss it: Henriksen, ebook 292, 293.</li>
+          <li>Kosovars told to sign because NATO could not otherwise carry out its threat: Henriksen, ebook 294.</li>
+          <li>Kosovars signed 18 March, Milosevic did not: Henriksen, ebook 296, 297.</li>
+          <li>First strikes 24 March; Ralston on political strategy: Henriksen, ebook 299.</li>
+          <li>The use-it paragraph is our opinion; the closing question is ours.</li>
+        </ul>
+        <h3>Henriksen, chapter 9: Bosnia Was the Study Guide, and Kosovo Was a Different Exam</h3>
+        <ul>
+          <li>Response shaped by history; Albright, Vershbow, Clark, Gelbard, Holbrooke; Bosnia as second chance: Henriksen, ebook 301.</li>
+          <li>Grubaci claim via Judah, unverified; KLA never in the October Agreement: Henriksen, ebook 302.</li>
+          <li>"A missing element" diplomat quote: Henriksen, ebook 303.</li>
+          <li>Dobbins "bomb them a little bit more"; airpower effective only in combination in Bosnia: Henriksen, ebook 304.</li>
+          <li>British proposal of twenty to fifty cruise missiles; smaller allies rally behind Washington: Henriksen, ebook 305-306.</li>
+          <li>Ralston on Clark's advice and Albright: Henriksen, ebook 307-308.</li>
+          <li>Milosevic as opportunist, confirmed by Gelbard, Stoltenberg, Naumann, Vollebaek: Henriksen, ebook 309-310.</li>
+          <li>August 1995 refugees, embargo, inflation; benefits at Dayton underestimated; Dayton pragmatism: Henriksen, ebook 311.</li>
+          <li>Naumann on the missed chance in fall 1998; more than a thousand aircraft, over eleven weeks: Henriksen, ebook 315.</li>
+          <li>The ladder joke and the closing question are our opinion.</li>
+        </ul>
+        <h3>Henriksen, chapter 10: NATO Coerced Itself, and the Bill Came Due in 78 Days</h3>
+        <ul>
+          <li>Coercive diplomacy defined as costs and benefits; unique circumstances: Henriksen, ebook 324-325.</li>
+          <li>Short and Vicenza wanted Belgrade first: Henriksen, ebook 327-328.</li>
+          <li>Outside the political room to maneuver: Henriksen, ebook 330.</li>
+          <li>Clark and the Third Army; jeweler exchange; friction through the war: Henriksen, ebook 331-332.</li>
+          <li>Coerced itself into more threats; Italy, Greece, Germany: Henriksen, ebook 333.</li>
+          <li>Milutinovic remark, French officer, Desert Fox, Russia, one-week belief, Markovic, Judah: Henriksen, ebook 333-334.</li>
+          <li>Rambouillet reduced to a signature trigger: Henriksen, ebook 335.</li>
+          <li>Kelche's options cell: Henriksen, ebook 336.</li>
+          <li>Military shoulders part of the unpreparedness; low-intensity education: Henriksen, ebook 337.</li>
+          <li>Targeting aimed inward; Jumper; Clark's sacrifice of warfare logic: Henriksen, ebook 339.</li>
+          <li>No political guidance or postwar strategy on 24 March 1999: Henriksen, ebook 341.</li>
+          <li>The use-it paragraph, "harder on the airmen" framing, and the closing question are our opinion and inference.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Clodfelter thesis: Clodfelter, ebook pp. 9–11, 223–225. Short, "I'm a child of Vietnam, Senator": Henriksen, ebook 81; hit hard the first night: ebook 82. Nineteen nations: Henriksen, ebook 13.</li>
+          <li>Kitfield thesis: Kitfield, 24, 434–435. Weinberger's tests, force as a last resort: Henriksen, ebook 128–129. Albright and Powell: Henriksen, ebook 143.</li>
+          <li>Olsen thesis: Olsen, 1–2, 4, 293, 295. Instant Thunder six to nine days; later two to four: Henriksen, ebook 92–93.</li>
+          <li>Haun thesis: Haun, 1–2, 6–7, 224, 228. Ground forces ruled out publicly: Henriksen, ebook 11. Clark and the fielded forces: Henriksen, ebook 331. Political necessity: Henriksen, ebook 117.</li>
+          <li>Fravel: PLA assessment of Kosovo, air strikes the most likely form of attack on China: Fravel, ebook pp. 354–355.</li>
+          <li>The closing opinion is ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>How long did key leaders expect the bombing to last, and what precedent did they cite?</summary><p>Two to four days, because they believed Operation Deliberate Force had moved Milosevic in Bosnia in 1995. The war ran seventy-eight days. <span class="pg">H e13, e21</span></p></details></li>
+          <li><details><summary>What happened to the target list by the third night?</summary><p>NATO had about ninety targets. Short canceled the second wave of F-117s because the ninety-one targets he had been given were struck, and crews hit old targets again. <span class="pg">H e47, e48</span></p></details></li>
+          <li><details><summary>What was Phase Two Plus?</summary><p>A workaround that let Secretary-General Solana approve Phase Three targets one by one, after consulting concerned nations, without formally moving to Phase Three. Naumann says he arranged it. <span class="pg">H e53, e55</span></p></details></li>
+          <li><details><summary>What differences does Henriksen list between Desert Storm and Kosovo?</summary><p>Kuwait was a core U.S. interest; more than 600,000 troops massed; UN Resolution 678 authorized force; Bush gave clear objectives on 8 August 1990; and the coalition was U.S.-led, not a consensus alliance. <span class="pg">H e97, e98</span></p></details></li>
+          <li><details><summary>How long did Warden's Instant Thunder plan expect to take, and why does Henriksen care?</summary><p>Six to nine days. Henriksen notes that a few years later it was believed OAF would be over in two to four days, a habit of expecting swift strategic airpower. <span class="pg">H e92, e93</span></p></details></li>
+          <li><details><summary>How did the French view of airpower differ from Short's?</summary><p>The French favored a gradual risk approach, saving the best targets so Milosevic would fear more to come. Short wanted shock and overwhelming force on the first night. <span class="pg">H e108, e118</span></p></details></li>
+          <li><details><summary>What did Weinberger's tests say about using force alongside diplomacy?</summary><p>He rejected it. He saw force as a last resort for when diplomacy had failed, not as a companion of diplomacy. <span class="pg">H e129</span></p></details></li>
+          <li><details><summary>Why did the Bush administration use no force at all in Bosnia?</summary><p>It judged Bosnia not a vital interest, and since no one would wage a ground war, it chose to use no force. <span class="pg">H e137</span></p></details></li>
+          <li><details><summary>Who held the key posts when Kosovo became an issue in 1998?</summary><p>Limited-force advocates: Gore, Albright, Vershbow at NATO, and Clark as SACEUR. <span class="pg">H e158</span></p></details></li>
+          <li><details><summary>What had Milosevic done on 16 August 1995, before Deliberate Force began?</summary><p>He approved the 1994 Contact Group peace plan as a basis for negotiating with Holbrooke. The bombing began on 30 August. <span class="pg">H e195</span></p></details></li>
+          <li><details><summary>What did Holbrooke say about bombing and his negotiating strategy before the August 1995 mission?</summary><p>None of the discussions had considered bombing as part of a negotiating strategy. It took an outrageous Bosnian Serb action to trigger Deliberate Force. <span class="pg">H e205</span></p></details></li>
+          <li><details><summary>Name two Bosnia conditions that were largely missing in Kosovo.</summary><p>War exhaustion, and Milosevic's low stake: Bosnia mattered much less to him than Kosovo did. <span class="pg">H e196, e202</span></p></details></li>
+          <li><details><summary>What did Operation Determined Falcon consist of, and why did Naumann call it ridiculous?</summary><p>On 15 June 1998 eighty aircraft from thirteen NATO countries flew over Albania and Macedonia. Naumann said Milosevic could see NATO could not strike within forty-eight hours. <span class="pg">H e244</span></p></details></li>
+          <li><details><summary>What did Naumann say Milosevic concluded, and what did he do next?</summary><p>He concluded the NATO threat was a bluff and finished his summer offensive. <span class="pg">H e244</span></p></details></li>
+          <li><details><summary>Why did the United States shift crisis management from the Contact Group to NATO?</summary><p>Albright thought Milosevic could immobilize the Contact Group with reassuring gestures, so the United States wanted leadership, a threat of force, and NATO to carry it out. <span class="pg">H e230-231</span></p></details></li>
+          <li><details><summary>What happened at the Switzerland meeting between Holbrooke and Mahmuti?</summary><p>Mahmuti says Holbrooke said the United States would force Milosevic to accept changes giving Kosovo independence in three to five years. Holbrooke said on camera he may have suggested it was a possibility. <span class="pg">H e248</span></p></details></li>
+          <li><details><summary>How did Gelbard explain the independence promise?</summary><p>He said it was given, but it was Holbrooke acting on his own and not adopted U.S. policy. <span class="pg">H e249-250</span></p></details></li>
+          <li><details><summary>What pattern drove the KLA's summer offensive?</summary><p>When the Serbs withdrew, the KLA moved in and filled the vacuum, which provoked new Serb crackdowns. <span class="pg">H e251</span></p></details></li>
+          <li><details><summary>What did Milosevic tell his Supreme Defense Council to expect from NATO bombing?</summary><p>About five to seven days, after which the international community would mobilize, NATO would be forced to stop, and the Serbs would be the moral winners. <span class="pg">H e261</span></p></details></li>
+          <li><details><summary>Which party did the October 1998 agreement leave unbound, and what did it do?</summary><p>The KLA was never asked to sign. It filled the vacuum as Serb forces withdrew, and reorganized, rearmed, and prepared for a spring offensive. <span class="pg">H e270</span></p></details></li>
+          <li><details><summary>What did Desert Fox, in December 1998, do to NATO's credibility, according to Henriksen?</summary><p>Henriksen says it likely reduced U.S. credibility and bolstered Milosevic's belief that the NATO threat was not credible. It ran four days with 650 sorties and 415 missiles. <span class="pg">H e276-277</span></p></details></li>
+          <li><details><summary>What did Helena Ranta's team conclude about Racak?</summary><p>She said the twenty-three men in the ditch had not been placed there later and that a small number of weapons were used, all indicating a massacre. <span class="pg">H e281-282</span></p></details></li>
+          <li><details><summary>What did Christopher Hill expect once NATO was put into the peace agreement?</summary><p>He knew the Serbs would never agree to it. <span class="pg">H e283</span></p></details></li>
+          <li><details><summary>What did General Ralston say about political strategy before the bombing?</summary><p>He agreed there probably was not a proper one; people had a vague idea and it was too fuzzy. <span class="pg">H e299</span></p></details></li>
+          <li><details><summary>What did Henriksen say the Bosnia lesson left out?</summary><p>It credited airpower alone. In 1995 Milosevic also faced refugees, an embargo, and inflation, and he gained from the Dayton deal, so benefits mattered too. <span class="pg">H e311</span></p></details></li>
+          <li><details><summary>Why does Naumann call the KLA the biggest diplomatic deficiency?</summary><p>He said NATO had no instrument to influence the KLA after the October Agreement, and that a chance to prevent war in fall 1998 was missed. <span class="pg">H e315</span></p></details></li>
+          <li><details><summary>What did the British plan to open with?</summary><p>Twenty to fifty cruise missiles, then a pause so Milosevic could return to talks. <span class="pg">H e305-306</span></p></details></li>
+          <li><details><summary>How did NATO coerce itself?</summary><p>It issued threats it did not carry out, so credibility became a stake, and that forced still more threats in an escalating spiral. <span class="pg">H e333</span></p></details></li>
+          <li><details><summary>What did Milosevic know before the bombing?</summary><p>Much of NATO's internal debate, parts of the air plan from a French officer, Desert Fox's early stop, and Russia's likely UN block. He expected about a week of bombing. <span class="pg">H e334</span></p></details></li>
+          <li><details><summary>What was missing by 24 March 1999?</summary><p>No political guidance or strategy for postwar Kosovo had reached NATO's military leadership. <span class="pg">H e341</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

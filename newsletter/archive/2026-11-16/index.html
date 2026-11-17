@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunrise (morning edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#141a2e;      /* pre-dawn navy */
+  --ink:#f3ece0;        /* warm white */
+  --muted:#b6b2c6;
+  --rule:#2e3654;
+  --accent:#ffb36b;     /* sunrise gold-orange */
+  --accent-soft:#272540;/* violet dawn */
+  --stamp:#ff9a84;      /* rose */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#3a2a4c 0,#24233f 140px,#141a2e 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \2600";color:var(--accent);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-11-16 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>13</b> read · <b>5</b> to go</span>
+    <span>Next seminar: <b>Henriksen, Tuesday</b></span>
+    <span>628 paper due in <b>15</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 6 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-16.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-16.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Monday, November 16, 2026 · Seminar today: Lambeth at 1200 · Henriksen tomorrow</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <p class="toc-after">Tonight's reading prep posts after class: <a href="../2026-11-16-tonight/">The Long Game: Tonight</a> · Course map: <a href="../../map/">every book, one page</a></p>
+        <ol>
+          <li><a href="#a0">Today's seminar questions, answered</a></li>
+          <li><a href="#a1">Lambeth Buries Douhet and Keeps the Shovel</a></li>
+          <li><a href="#a2">Counterpoint: Haun Checks Lambeth's Math on Iraq's Army</a></li>
+          <li><a href="#a3">Questions to ask in seminar</a></li>
+          <li><a href="#a4">The Strait Needs Eyes, and the Eyes Need Somewhere to Land</a></li>
+          <li><a href="#a5">Everyone Grades Desert Storm on a Different Curve</a></li>
+          <li><a href="#a6">Who's Kicking Whom at the Fire Support Coordination Line</a></li>
+          <li><a href="#a7">Augustine's Law Gets a Lame-Duck Session</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
+      </nav>
+
+      <article id="a0">
+        <span class="kicker">Seminar 13 · Lambeth, <i>The Transformation of American Air Power</i> · "Airpower Vision for American Dominance"</span>
+        <h3><a href="#a0">Today's Seminar Questions, Answered</a></h3>
+        <ol class="qs">
+          <li><b>How had technology changed airmen's approach to their craft?</b> It changed what airmen count. Lambeth says they stopped talking about sorties per target killed and started talking about kills per sortie (chapter 1). His Desert Storm arithmetic makes the point: a nonstealthy package needed 38 aircraft so that 8 could bomb three aim points, while 20 F-117s attacked 37 (chapter 5). He credits training as much as hardware: Red Flag gave pilots the equivalent of their first eight or ten combat sorties in peacetime, and fighter pilots' yearly flying time rose from about 150 hours to more than 230 (chapter 3).</li>
+          <li><b>What underlying assumptions are implicit within the text?</b> The biggest one is stated outright: the study covers major theater wars and sets aside smaller operations and irregular conflicts such as urban combat (chapter 1). He also assumes good intelligence, while conceding that air power can kill only what it can see, identify, and engage, and that the 1991 campaign failed to eliminate Iraq's nuclear program (chapter 1). He assumes an army that can be attacked from the air before the ground war, plus nearby bases. His own conclusion admits that Korea, with more than 500,000 troops along the demilitarized zone, would mean close ground combat from the start, and that regional access has to be secured in advance (chapter 9).</li>
+          <li><b>Is Lambeth's argument still persuasive?</b> The narrow version is, and the broad one isn't. Against an armored invasion, he argues, air power can now produce strategic effects from the opening of a joint campaign, so that land power increasingly secures a win rather than achieves it (chapter 9); the Gulf numbers support that. His claim that air power's effects are now a matter of when rather than whether leans on Kosovo, a campaign he himself calls agonizingly slow, and his own list of reasons Milosevic quit includes Russia's shift, the war crimes indictment, and preparations for a ground invasion (chapters 6 and 9).</li>
+          <li><b>What are the new limitations placed on airpower? Are they new, or just altered?</b> Altered, with one new twist. Vietnam's limits came from fear of escalation: MiG bases inside the Hanoi circle were off limits, and SAM sites could be hit only while firing (chapter 2). Kosovo's came from collateral damage and coalition politics: aircrews stayed at medium altitude, ground forces were ruled out before the first bomb, and Lambeth says Congress and public opinion would not have permitted a tougher strategy (chapter 6). The new twist is that precision created its own limit. Once zero noncombatant casualties became the expectation, he writes, air power became a victim of its own success.</li>
+          <li><b>How can this text inform today's strategy in terms of force modernization?</b> Lambeth frames it as a fork. The Air Force could keep stressing fighters, short-range attack, and expeditionary operations, or it could emphasize improved ISR, longer-range attack, and unmanned platforms for the riskiest missions (chapter 9). He warns that runaway cost growth could price the department out of the defense business, and that a technology edge pushes adversaries toward cheap countermeasures against JSTARS, AWACS, and tankers. His sales advice is to let the theater commanders make the case, since they are the most credible witnesses before the Joint Requirements Oversight Council.</li>
+        </ol>
+        <p>Chapter lessons for this book are on <a href="../2026-11-16-tonight/">last night's page</a>. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a1">
+        <span class="kicker">Today's Reading · Lambeth, <i>The Transformation of American Air Power</i></span>
+        <h3><a href="#a1">Lambeth Buries Douhet and Keeps the Shovel</a></h3>
+        <p>Benjamin Lambeth rejects air power's founding prophecy and keeps most of its optimism. He tells airmen to repudiate Douhet's claim that command of the air is victory, which he calls false in 1921 and false now, and he says three separate times that air power cannot win wars single-handedly. Then he argues that it can now produce "the effects of massing without having to mass," which is about as close to Douhet as a RAND study can get with a straight face. The book's real move is a definition: "strategic" names the effect sought, whatever the target. By that test, he concedes, the Baghdad strikes of 1991 did little, and the attacks on Iraq's army did the strategic work.</p>
+        <p>That concession lines him up with Olsen, whose Warden spent 2 percent of the strikes on the inner ring. It also puts him across the table from Fravel. Both men studied Kosovo at the same moment; the PLA called air strikes the most likely way China would be attacked, and Lambeth called the campaign a step backward in efficiency. (The target audience was more impressed than the shooters.) Opinion: Lambeth wrote the best case airmen had in 2000. Whether it holds depends on the assumption he states up front and then rarely revisits, that the next war looks like a major theater war. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">Counterpoint · Haun against Lambeth</span>
+        <h3><a href="#a2">Counterpoint: Haun Checks Lambeth's Math on Iraq's Army</a></h3>
+        <p>Lambeth's central claim is that by 1991 American air power could break an enemy army from the opening of a joint campaign, so that ground forces now secure a win rather than achieve it. His Desert Storm evidence is effort and outcome: 67 percent of weapon releases against discrete aim points went at Iraq's fielded forces, and the ground war took four days.</p>
+        <p>Phil Haun, whom we read on November 9, makes the strongest case against him, using the same war and largely the same survey. His appendix on Desert Storm finds that Instant Thunder and the air interdiction campaign were the only modern air operations where most factors favored air power, "yet both failed." Interdiction cut Iraqi transport capacity from 200,000 tons a day to 20,000, but an army sitting in static defenses needed only 10,000 to 15,000. By the start of the ground war, 25 to 30 percent of the Iraqi army had been attrited, and airstrikes destroyed only about 10 percent of Iraqi armor and artillery; desertions did the rest. The Republican Guard, better supplied and less bombed, could still move: on the night of February 24, three brigades of the Tawakalna division shifted more than fifty kilometers overnight to face VII Corps at 73 Easting. During the 100-hour ground battle, Haun says, air power played only a minor role. Earlier, Horner's ban on low-altitude flying had cut losses to antiaircraft guns and also cut the effectiveness of tactical aircraft against Iraq's fielded forces. (Even the goalposts moved. Lambeth puts Schwarzkopf's precondition at 30 percent attrition of Iraqi forces; Haun puts it at 50 percent of Iraqi armor. Neither says the air campaign reached its number.)</p>
+        <p>Lambeth's evidence can show where the bombs went, and it can't show what they did. Sixty-seven percent is a measure of effort. His rebuttal of the Army claim that tanks and helicopters killed most Iraqi armor rests on the Air Force's own survey plus CIA imagery analysts, and when critics note that more Iraqi equipment was destroyed or captured in four days of ground war than in six weeks of air strikes, he asks whether it had been abandoned. That's a fair question, though a question is not a count. Haun's evidence has its own limit: he grants that direct attack on Iraq's fielded forces, "while not independently decisive," played a primary role in shaping the battlefield. Once you read both closely, they agree on what happened and disagree on what to call it.</p>
+        <p>Opinion: Haun wins the scorecard, and Lambeth wins the definition, and the definition matters less than what came after. First order, direct attack made the Iraqi army disperse and dig in, Haun says, so coalition ground forces met little resistance. Second order, the war cost fewer than 200 American combat deaths, and Lambeth says that near-bloodless win became the standard Americans use to judge every commitment. Third order, Kosovo was judged against it: zero noncombatant casualties became the expectation, and Lambeth's own word for the result is that air power became a victim of its own success. The seminar comment: "Haun and Lambeth agree on what air did to Iraq's army; the bigger effect of that cheap victory was the standard it set, and Kosovo was graded against it." The Gulf War's most durable target turned out to be the American public. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">Questions to Ask in Seminar · Lambeth</span>
+        <h3><a href="#a3">Four Questions for a Booster's Seminar</a></h3>
+        <ol class="qs">
+          <li><b>Is Lambeth's transformation really a transformation in intelligence?</b> He writes that air power "can kill only what it can see, identify, and engage" (Lambeth, chapter 1, page 9). One answer: yes. He calls air power and intelligence opposite sides of the same coin, and his own example of failure, the 1991 campaign's inability to eliminate Iraq's nuclear program, is an intelligence failure the airplanes could not fix (page 10). The other answer: no. The stealth arithmetic is a weapons gain, 20 F-117s attacking 37 aim points while a nonstealthy package needed 38 aircraft for three (page 156), and the targets were known in both cases. The first answer is stronger for the next war, because stealth only matters after someone finds the target.</li>
+          <li><b>Was Kosovo a win for air power or for the strategy around it?</b> Lambeth says air power "can never be more effective than the strategy it is intended to support" (Lambeth, chapter 6, page 232). One answer: air power. Milosevic gave up after 78 days without a NATO ground offensive, and Lambeth counts it as the third regional win of the decade for air power (page 181). The other answer: the strategy, and the parts of it that weren't air. Russia backed the Western position on June 3 (page 191), Milosevic was indicted (page 192), and engineers were strengthening the road from Durres to Kukes for Abrams tanks three days before he quit (page 193). The second answer is stronger, because Lambeth himself says there is good reason to be wary of the air-alone claim (page 191).</li>
+          <li><b>Does land power now just "secure a win rather than achieve it"?</b> That is Lambeth's phrase for the role of land forces against large-scale aggression (Lambeth, chapter 9, pages 320 to 321). One answer: yes. The coalition lost fewer lives to hostile fire in five weeks of fighting than to accidents in five months of workups (page 306), and two of every three weapon releases went at Iraq's fielded forces (page 137). The other answer: only against an enemy who sits still. In Korea, Lambeth concedes, more than 500,000 troops along the demilitarized zone would mean close ground combat from the start (page 300), and Haun finds air destroyed only about 10 percent of Iraqi armor and artillery before the ground war (Haun, appendix B, page 272). The second answer is stronger as a general rule, since Lambeth's own best counterexample is the most likely war on his list.</li>
+          <li><b>Is precision its own worst limitation?</b> Lambeth warns about what happens "once zero collateral damage becomes accepted as a goal of strategy" (Lambeth, chapter 6, page 205). One answer: yes. After the Gulf War's bunker videos, political leaders and the public expected perfection, so each error over Serbia, such as the Djakovica convoy strike that killed as many as 64 refugees, became front-page news and a new constraint (page 205). The other answer: no, the limit is political, as it was in Vietnam. Lambeth says Congress and public opinion would not have permitted a tougher Kosovo strategy (page 226), and in Vietnam John McNaughton advised that leaving the SAM sites alone would signal Hanoi not to use them (page 19). The first answer is stronger, because it explains why the political limit got tighter after the most successful air war in American history. <span class="by">(S)</span></li>
+        </ol>
+      </article>
+
+      <article id="a4">
+        <span class="kicker">The 628 Paper · Hormuz through Lambeth · extrapolation</span>
+        <h3><a href="#a4">The Strait Needs Eyes, and the Eyes Need Somewhere to Land</a></h3>
+        <p>The prompt asks for the most important potential crisis facing the nation and how Airmen should prepare, in ten pages due December 1. Shaun's crisis is keeping the Strait of Hormuz open after the United States withdraws from the war with Iran, and his working answer is sustainable ISR, sensors, drones, and robotics rather than strategic bombing. What follows is our extrapolation from Lambeth, and not Shaun's answer.</p>
+        <p>Lambeth supports the answer in three places. Air power can kill only what it can see, identify, and engage, he writes, so intelligence is an indispensable precondition for results. In his conclusion he describes the Air Force's choice as business as usual with fighters and short-range attack, or a shift to improved ISR, longer-range attack, and unmanned platforms for the higher-risk missions of the new century. He adds that public sensitivity to casualties drives a demand for technology to substitute for human life wherever possible. A drone orbit over the strait checks all three boxes, and no aircrew is in it.</p>
+        <p>He cuts against it in two places. First, he predicts that a technology edge spurs have-nots to build cheap countermeasures, and his examples are attacks on high-value soft targets, JSTARS, AWACS, and tankers. A sustained sensor presence is exactly that kind of target, parked in the same place every day. Second, he warns that neither bombers nor carriers have the numbers and persistence to sustain a campaign-scale air operation, that only land-based aircraft can, and that regional access depends on partnerships built in advance. A withdrawal from a war with Iran is not the obvious moment to ask the neighbors for more ramp space. His study also covers major theater wars, so a years-long patrol falls outside it.</p>
+        <p>Opinion, extrapolated: Lambeth would endorse the sensors and ask two questions about them. Who defends the soft high-value assets when Iran starts hunting them, and whose runway do they fly from? A persistent presence is only as persistent as its basing agreement. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a5">
+        <span class="kicker">The Readings So Far · Lambeth, Kitfield, Fravel, Olsen, and Haun</span>
+        <h3><a href="#a5">Everyone Grades Desert Storm on a Different Curve</a></h3>
+        <p>Four books on the shelf grade the same six weeks of 1991, and each uses a different answer key. Olsen grades Warden's plan against its unstated aim and finds 2 percent of the strikes on the inner ring. Haun grades by mission type and finds the independent missions failed. Fravel grades by what the audience learned, and the PLA concluded it had better survive air strikes. Lambeth grades by effect on Iraq's army and calls it strategic. (Same war, four rubrics, and no two agree on the grade.)</p>
+        <p>Kitfield and Lambeth tell one story from opposite sides of a boundary. Kitfield's Army reformers, Starry and DePuy, came home from studying the 1973 war resolved to win the first battle of the next war. Lambeth's Air Force rebuilt through Red Flag and more flying hours. In 1991 the two reformed services met at the fire support coordination line, and Lambeth's chapter 4 carries McPeak's account of a corps commander keeping the air commander off the main resupply route for 17 hours. Both services reformed after Vietnam, and in 1991 they met at a border neither had drawn to the other's satisfaction.</p>
+        <p>Last week's news keeps pinning itself here. Friday's Starshield item was about a link that a supplier could restrict mid-war; Lambeth warned in 2000 that GPS signals are weak and that JDAM would depend on them entirely. Friday afternoon's funding fight met Lambeth's finding that public support depends on judged stakes and judged competence. Opinion: Lambeth's book reads best as a list of things that worked in 1991, each with a sticky note saying "until someone adapts." <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a6">
+        <span class="kicker">Technical Writing · Week 4, Day 1 · active voice and agency</span>
+        <h3><a href="#a6">Who's Kicking Whom at the Fire Support Coordination Line</a></h3>
+        <p>Every sentence should tell the reader who did what. Helen Sword, in <i>Stylish Academic Writing</i>, borrows Richard Lanham's test question, "Who's kicking whom?", and says stylish writers keep nouns and verbs close together so readers can answer it. Her rule on the passive is practical: a be verb plus a past participle signals a passive construction, a few of them add variety, and too many in one paragraph add up to lifeless, agentless prose. She also asks for at least one sentence per paragraph with a person as the subject and an active verb right behind it.</p>
+        <p>Lambeth's chapter 4 shows why agency matters in military history. Before: "Of the 3,067 targets nominated by the Army, little more than a third were attacked." The sentence hides the decision, and the Army spent years blaming the wrong man for it. After: "The Army nominated 3,067 targets, and Schwarzkopf, who set the apportionment and approved the air commander's targets, sent aircraft against little more than a third of them." Now the reader knows whom to ask. The Gulf War Air Power Survey found exactly that confusion in the field: some ground commanders blamed Horner or Glosson without realizing the apportionment was Schwarzkopf's.</p>
+        <p>Opinion: a passive sentence in a strategy paper is often a hiding place for the most important actor. "Restrictions were imposed" is a different claim from "the president imposed restrictions," and only the second can be argued with.</p>
+        <p>Pro tip, an old editor's trick: run the "by an idiot" test. If you can add "by an idiot" after the verb ("targets were attacked by an idiot") and the sentence still parses, it's passive, and you should decide whether the idiot deserves a name. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a7">
+        <span class="kicker">Acquisition × Lambeth · via <i>War on the Rocks</i>, November 16</span>
+        <h3><a href="#a7">Augustine's Law Gets a Lame-Duck Session</a></h3>
+        <p>The administration's $1.45 trillion defense request for fiscal 2027 is dead, Matt Vallone argues in <i>War on the Rocks</i> this morning, and the midterms killed it. The request paired a $1.1 trillion base budget, which he thinks can be salvaged, with $350 billion through reconciliation, which he thinks can't. Together they would have grown defense spending almost 44 percent over fiscal 2026. Congress has about five legislative work weeks left, the continuing resolution expires December 11, and the House margin is two seats. His most likely outcome is another continuing resolution at fiscal 2026 levels, $857.6 billion, plus the $151.5 billion from the 2025 reconciliation bill still being spent. The Pentagon's $87.6 billion Iran supplemental has seen no action in either chamber, and he rates its prospects as bleak.</p>
+        <p>The casualties are listed by name. Reconciliation carried most of the money for the Defense Autonomous Warfare Group ($53.6 billion), industrial base programs ($40.6 billion), a sovereign AI arsenal ($34 billion), Defense Production Act purchases ($30 billion), and much of Golden Dome. Moving money into regular appropriations means less flexibility and closer oversight, and Vallone expects big prime contractors to fare better than the new entrants that live on private investment. (The startups who pitched speed are about to meet the calendar.)</p>
+        <p>Lambeth saw this problem coming in 2000. In his conclusion he says the precondition for any air and space revolution lies on the affordability front, and he cites Norman Augustine's prediction that by 2054 the entire defense budget would buy a single aircraft, a trend Augustine said was still on track in 2000. He also says the Air Force had yet to make the really hard choices about which long-familiar investments to give up, and he names the alternative: ISR, longer-range attack, and unmanned platforms. Twenty-six years later, the unmanned money sat in the most fragile account on the ledger.</p>
+        <p>Opinion: a continuing resolution is the purest form of business as usual, since it funds last year's choices at last year's rates. Lambeth's advice was to let theater commanders argue for new capability before the Joint Requirements Oversight Council, because a service chief gets heard as a hardware accumulator. A lame-duck Congress with five weeks may not be listening to anyone. Augustine's law, meanwhile, needs no appropriation. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Keyed to the phrase each one supports. Lambeth pages are printed pages: Benjamin S. Lambeth, <i>The Transformation of American Air Power</i> (Ithaca, NY: Cornell University Press, 2000). Haun pages are printed pages: Phil Haun, <i>Tactical Air Power and the Vietnam War</i>, appendix B. Olsen, Fravel, and Kitfield pages are as given in earlier issues. Helen Sword, <i>Stylish Academic Writing</i> (Cambridge, MA: Harvard University Press, 2012), printed pages. <i>Opinion</i> needs no source.</p>
+
+        <h3>Today's episode</h3>
+        <ul>
+          <li>Debate: Lambeth question three, still persuasive. "May now be increasingly to secure a win rather than to achieve it": Lambeth, 320–321. 67 percent of weapon releases at fielded forces: Lambeth, 137. Cannot win single-handedly: Lambeth, 297, 308, 320.</li>
+          <li>About 10 percent of armor and artillery destroyed by air; desertions; armed recce disrupted supply; Tawakalna, three brigades, more than fifty kilometers: Haun, 272. "While not independently decisive"; "yet both failed": Haun, 273.</li>
+          <li>30-percent attrition not reached by the 23,000 sorties alone: Lambeth, 268. Baghdad strikes did little: Lambeth, 8. Russia, indictment, Abrams road: Lambeth, 191–193. "Can never be more effective than the strategy it is intended to support": Lambeth, 232. Korea and fewer than 200 combat deaths: Lambeth, 300.</li>
+          <li>Quiz: "can kill only what it can see, identify, and engage": Lambeth, 9; Iraq's nuclear program: 10. 38 aircraft vs. 20 F-117s: Lambeth, 156. Modernization fork: Lambeth, 318; reconciliation money: War on the Rocks, November 16. Olsen, 2 percent, 740 of 43,123: Olsen, 167, 295. PLA on Kosovo: Fravel, ebook 355, 358; Lambeth, 181.</li>
+        </ul>
+
+        <h3>Today's Seminar Questions, Answered</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 13, "Airpower Vision for American Dominance."</li>
+          <li>Sorties per target killed versus kills per sortie: Lambeth, 9. 38 aircraft for 8 bombers on three aim points; 20 F-117s on 37: Lambeth, 156. Red Flag and the first 10 combat sorties: Lambeth, 62. Flying hours about 150 to more than 230: Lambeth, 71.</li>
+          <li>Major theater wars, not smaller-scale operations or irregular conflicts such as urban combat: Lambeth, 6. "Kill only what it can see, identify, and engage": Lambeth, 9. Iraq's nuclear program: Lambeth, 10. Korea, more than 500,000 combatants, close ground combat from the start; access partnerships: Lambeth, 300.</li>
+          <li>"To secure a win rather than to achieve it": Lambeth, 320–321. Strategic effects from the outset; "when, not whether": Lambeth, 299. Agonizingly slow, burdened by gradualism: Lambeth, 313. Russia, June 3; indictment; ground invasion preparations: Lambeth, 191–193.</li>
+          <li>MiG bases inside the Hanoi circle; SAM sites only when firing: Lambeth, 18. Medium altitude; zero noncombatant casualties as "the expectation"; victim of its own success: Lambeth, 205. Ground forces ruled out: Lambeth, 182. Congress and public opinion would not have permitted a tougher strategy: Lambeth, 226.</li>
+          <li>Fighters, short-range attack, expeditionary operations versus improved ISR, longer-range attack, unmanned platforms: Lambeth, 318. Price themselves out of the defense business: Lambeth, 319. Asymmetric countermeasures against JSTARS, AWACS, tankers: Lambeth, 319. Theater CINCs the most credible witnesses before the JROC: Lambeth, 316–317.</li>
+        </ul>
+
+        <h3>Lambeth Buries Douhet and Keeps the Shovel</h3>
+        <ul>
+          <li>Douhet's axiom false in 1921 and today: Lambeth, 308. Cannot win wars single-handedly: Lambeth, 297, 308, 320. "The effects of massing without having to mass": Lambeth, 299.</li>
+          <li>Strategic as the objective, not the target: Lambeth, 7. Baghdad strikes had little strategic effect: Lambeth, 8.</li>
+          <li>2 percent on the inner ring: Olsen, 167, 295. PLA: air strikes the most likely way China would be attacked: Fravel, ebook 355. Kosovo a step backward in efficiency: Lambeth, 181. Major theater wars: Lambeth, 6. The aside and opinion are ours.</li>
+        </ul>
+
+        <h3>Counterpoint: Haun Checks Lambeth's Math on Iraq's Army</h3>
+        <ul>
+          <li>Land power to secure a win: Lambeth, 320–321. 67 percent of weapon releases against fielded forces: Lambeth, 137. Four-day ground offensive: Lambeth, 4.</li>
+          <li>"Yet both failed": Haun, 273. 200,000 to 20,000 tons a day against a need of 10,000 to 15,000: Haun, 271. 25 to 30 percent attrited; about 10 percent of armor and artillery destroyed by air; desertions: Haun, 272. Tawakalna, three brigades, more than fifty kilometers, 73 Easting: Haun, 272. Minor role in the 100-hour ground battle: Haun, 272–273. Horner's low-altitude restriction: Haun, 274. 50 percent armor attrition never reached: Haun, 274.</li>
+          <li>30-percent attrition level stipulated by Schwarzkopf, not achieved by the 23,000 sorties alone: Lambeth, 268.</li>
+          <li>Rebuttal of Odom rests on GWAPS and CIA imagery analysts: Lambeth, 129–130. Four days versus six weeks; equipment possibly abandoned: Lambeth, 295.</li>
+          <li>"While not independently decisive"; primary role shaping the battlefield; dispersed and dug in; little resistance: Haun, 273. Fewer than 200 U.S. combat fatalities: Lambeth, 300. Low casualties became the norm: Lambeth, 306. Zero noncombatant casualties; victim of its own success: Lambeth, 205.</li>
+          <li>The verdict, the order-of-effects reading, and the seminar comment are our opinion.</li>
+        </ul>
+
+        <h3>Four Questions for a Booster's Seminar</h3>
+        <ul>
+          <li>Pages are given in the questions. Quotes checked against the book text: Lambeth, 9 ("kill only what it can see, identify, and engage"), 232 ("never be more effective than the strategy it is intended to support"), 320–321 ("secure a win rather than to achieve it"), 205 ("once zero collateral damage becomes accepted as a goal of strategy").</li>
+          <li>Opposite sides of the same coin: Lambeth, 9. Wary of the air-alone claim: Lambeth, 191. Gulf War videos and expectations; Djakovica, as many as 64 refugees: Lambeth, 205. McNaughton: Lambeth, 19. Haun on armor: Haun, 272. Which answer is stronger is our opinion.</li>
+        </ul>
+
+        <h3>The Strait Needs Eyes, and the Eyes Need Somewhere to Land</h3>
+        <ul>
+          <li>Paper prompt and due date: SAASS 628 syllabus, "Grading." The crisis and working answer are Shaun's.</li>
+          <li>Kill only what it can see; intelligence an indispensable precondition: Lambeth, 9. Improved ISR, longer-range attack, unmanned platforms for higher-risk demands: Lambeth, 318. Technology to substitute for human life: Lambeth, 307.</li>
+          <li>Asymmetric countermeasures; high-value soft targets such as JSTARS, AWACS, tankers: Lambeth, 319. Bombers and carriers lack the numbers and persistence; only land-based aircraft; access partnerships: Lambeth, 300. Major theater wars: Lambeth, 6.</li>
+          <li>The application to Hormuz and the closing line are our extrapolation and opinion.</li>
+        </ul>
+
+        <h3>Everyone Grades Desert Storm on a Different Curve</h3>
+        <ul>
+          <li>Olsen's unstated aim: Olsen, 1; 2 percent on the inner ring: Olsen, 167, 295. "Yet both failed": Haun, 273. PLA conclusions on air strikes: Fravel, ebook 355, 358. Strategic effects against fielded forces: Lambeth, 268.</li>
+          <li>Starry, DePuy, win the first battle: Kitfield, 152–155. Red Flag: Lambeth, 62; flying hours: Lambeth, 71. Corps commander, 17 hours, main resupply line: Lambeth, 135–136.</li>
+          <li>Starshield: Friday's issue (Reuters via Defense News, November 12). GPS weak; JDAM wholly dependent: Lambeth, 244–245. Funding fight: Friday afternoon's page (Punchbowl News AM, November 13). Stakes and competence: Lambeth, 306. The rest is our opinion.</li>
+        </ul>
+
+        <h3>Who's Kicking Whom at the Fire Support Coordination Line</h3>
+        <ul>
+          <li>Lanham's "Who's kicking whom?"; keep nouns and verbs close together: Sword, 49. Be verb plus past participle; a few passives add variety; too many make lifeless, agentless prose; a human subject with an active verb in each paragraph: Sword, 60–61.</li>
+          <li>3,067 nominations, little more than a third attacked: Lambeth, 131. Schwarzkopf approved the air commander's targets: Lambeth, 132. GWAPS: ground commanders blamed Horner or Glosson, not realizing the apportionment was Schwarzkopf's: Lambeth, 134.</li>
+          <li>The "by an idiot" test is an old editor's trick; the opinion is ours.</li>
+        </ul>
+
+        <h3>Augustine's Law Gets a Lame-Duck Session</h3>
+        <ul>
+          <li>Matt Vallone, "RIP to the $1.45 Trillion FY2027 Defense Budget," War on the Rocks (Cogs of War), November 16, 2026: $1.1 trillion base and $350 billion reconciliation; almost 44 percent growth; about five work weeks; CR expires December 11; two-seat House margin; likely CR at $857.6 billion plus $151.5 billion; $87.6 billion Iran supplemental; program amounts; Golden Dome; flexibility and oversight; primes versus new entrants.</li>
+          <li>Affordability front; Augustine's 2054 chart, still on track: Lambeth, 318–319. Hard choices; ISR, longer-range attack, unmanned platforms: Lambeth, 318. Theater CINCs before the JROC; "hardware accumulator": Lambeth, 316–317.</li>
+          <li>The asides, the reading of the CR, and the closing line are our opinion.</li>
+        </ul>
+      </section>
+
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Sword, <i>Stylish Academic Writing</i></h3>
+        <p class="fine">The rule: find each be verb plus past participle, and make sure at least one sentence per paragraph has a person as the subject followed by an active verb (pp. 60–61). Ask "Who's kicking whom?" (p. 49).</p>
+        <p class="protip">Rewrite with the actors named: "It was decided that ground forces would not be used, and the campaign was prolonged." (Lambeth, 181–182, 196, 225.)</p>
+        <div class="mine">
+          <label for="mine-practice">Your active-voice version:</label>
+          <textarea id="mine-practice" placeholder="NATO's leaders…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible answer</summary><p>"NATO's leaders ruled out ground forces before the first bomb, so Serb units dispersed and hid, and the bombing ran 78 days." Two actors, two active verbs, and the reader can see whose decision stretched the war (Lambeth, 181–182, 196; Sword, 49).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Connect the dots</h3>
+        <ul class="recall">
+          <li><details><summary>War on the Rocks says the money for the Defense Autonomous Warfare Group sat in the reconciliation bill that is now dead. Link it to Lambeth and Fravel.</summary><p>Lambeth: the Air Force had yet to make the hard choices about which familiar investments to give up for ISR, longer-range attack, and unmanned platforms, and cost growth could price the department out of business (318–319). Fravel: the PLA cut its strength ten times since 1949, three cuts totaling a million soldiers since 1997 (ebook 432), so it paid for change by giving something up. New capability needs an old line item to die, and a continuing resolution kills nothing.</p></details></li>
+          <li><details><summary>The $87.6 billion Iran supplemental has no action in either chamber, and Vallone calls the war unpopular. Link it to Lambeth and Randolph.</summary><p>Lambeth: public support depends on perceived stakes and leadership competence, and the public calls force a mistake when America loses or leaves (306). Randolph: Hanoi's Easter Offensive was "a strategic success, despite its ambiguous, or even failed, military outcome" (339), because the war was being decided in American politics. An adversary can win in the appropriations process what it can't win over the strait.</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Lambeth: seminar recall</h3>
+        <ul class="recall">
+          <li><details><summary>What does Lambeth say "strategic" should describe?</summary><p>The effect or objective sought, whatever the target or platform. <span class="pg">L 7, 270</span></p></details></li>
+          <li><details><summary>What can air power kill, and what 1991 failure does Lambeth use to show it?</summary><p>Only what it can see, identify, and engage; the campaign failed to eliminate Iraq's nuclear program. <span class="pg">L 9–10</span></p></details></li>
+          <li><details><summary>What is the Desert Storm stealth arithmetic?</summary><p>A nonstealthy package needed 38 aircraft so that 8 could bomb three aim points; 20 F-117s attacked 37. <span class="pg">L 156</span></p></details></li>
+          <li><details><summary>What attrition level did Schwarzkopf set before the ground push, according to Lambeth, and was it reached by air alone?</summary><p>30 percent; the 23,000 sorties against Iraqi forces did not achieve it on their own. <span class="pg">L 268</span></p></details></li>
+          <li><details><summary>What fork does Lambeth say the Air Force faces in modernization?</summary><p>Business as usual with fighters, short-range attack, and expeditionary operations, or improved ISR, longer-range attack, and unmanned platforms. <span class="pg">L 318</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: what did flexible response in Vietnam assume about force?</summary><p>"Calibration," moving up or down a range of precisely calculated actions without extreme escalation or humiliation (241).</p></details></li>
+          <li><details><summary>Crane: what did the June 1952 hydroelectric strikes achieve?</summary><p>546 Navy and 730 Fifth Air Force sorties destroyed 90 percent of North Korea's electric power potential in four days (119).</p></details></li>
+          <li><details><summary>Zhang: what did Zhou Enlai tell a Soviet general about China's air force in Korea?</summary><p>China could endure losing half a million to a million soldiers, "but we will not sacrifice our newly built air force" (116).</p></details></li>
+          <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
+          <li><details><summary>Schlight: what share of 1966 strike sorties hit enemy troops engaged with allied forces?</summary><p>About 3 percent (216).</p></details></li>
+          <li><details><summary>Clodfelter: how did January 1973's agreement differ from October's?</summary><p>"Largely cosmetic" differences (ch. VI, e217).</p></details></li>
+          <li><details><summary>Randolph: how does he score the Easter Offensive for Hanoi?</summary><p>"A strategic success, despite its ambiguous, or even failed, military outcome" (339).</p></details></li>
+          <li><details><summary>Nguyen: who does she say actually ran Hanoi's war?</summary><p>Le Duan, first secretary from 1960 until his death in 1986, with Le Duc Tho as his right hand (intro, e19–20).</p></details></li>
+          <li><details><summary>Haun: how much Iraqi armor and artillery did airstrikes destroy before the ground war?</summary><p>About 10 percent; desertions accounted for most of the 25 to 30 percent attrition (272).</p></details></li>
+          <li><details><summary>Kitfield: what was the U.S. Army's 1976 doctrine called, and what did it warn?</summary><p>"Active defense," in FM 100-5; it warned the Army to "fight outnumbered and win" (192).</p></details></li>
+          <li><details><summary>Olsen: what share of the air effort went against Warden's inner ring?</summary><p>2 percent; 740 of 43,123 strikes hit the "central nervous system" (167, 295).</p></details></li>
+          <li><details><summary>Fravel: who started eight of China's nine strategies since 1949?</summary><p>Senior military officers, subject only to the chairman's approval (ebook 429).</p></details></li>
+          <li><details><summary>Lambeth: what role does he forecast for land power against large-scale aggression?</summary><p>"To secure a win rather than to achieve it" (320–321).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Name the actor: "Mistakes were made in apportioning sorties during Desert Storm."</summary><p>"Schwarzkopf set the apportionment, and some ground commanders blamed Horner or Glosson for it" (Lambeth, 134). The passive version hides the one person who decided (Sword, 49).</p></details></li>
+          <li><details><summary>Replace the research-as-agent subject: "The data shows air power became strategic in 1991."</summary><p>"Lambeth argues that air power achieved strategic effects against Iraq's army in 1991" (Lambeth, 268). A person as subject, an active verb right behind (Sword, 61).</p></details></li>
+          <li><details><summary>Review (Friday, citations): fix the too-close paraphrase "Air power can only kill what it is able to see, identify, and engage (Lambeth)."</summary><p>Quote it, since the phrasing is his ("can kill only what it can see, identify, and engage"), or rethink it: "Lambeth makes intelligence a precondition for air power, not an accessory" (Lambeth, 9). Add the page (Booth et al., 207–209).</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: one sentence for today's question three, "Is Lambeth's argument still persuasive?", with one Lambeth page in a Chicago-style note (Lambeth, 6, 191–193, 299, 313, 320–321).</label>
+          <textarea id="mine-crane" placeholder="Lambeth's narrow claim…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-done">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>30 Oct</td><td class="st-done">McDougall, <i>…The Heavens and the Earth</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>2 Nov</td><td class="st-done">Schlight (intro, ch. 1–2) + document pack (decision exercise)</td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>3 Nov</td><td class="st-done">Clodfelter, <i>The Limits of Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>5 Nov</td><td class="st-done">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>6 Nov</td><td class="st-done">Nguyen, <i>Hanoi's War</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>9 Nov</td><td class="st-done">Haun, <i>Tactical Air Power and the Vietnam War</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>10 Nov</td><td class="st-done">Kitfield, <i>Prodigal Soldiers</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>12 Nov</td><td class="st-done">Olsen, <i>Strategic Air Power in Desert Storm</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>13 Nov</td><td class="st-done">Fravel, <i>Active Defense</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>16 Nov</td><td class="st-now">Lambeth, <i>The Transformation of American Air Power</i></td><td><span class="pill now">SEMINAR</span></td></tr>
+            <tr><td>17 Nov</td><td>Henriksen, <i>NATO's Gamble</i></td><td><span class="pill now">NEXT</span></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Four more after Henriksen, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Henriksen seminar, 17 Nov</span><b>1</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>15</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: one story, defense, leadership, or conflict (Fridays add Space × Sci-Fi; politics is on the afternoon page)</li>
+          <li>Sources, then Q&amp;A</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, Punchbowl News, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Defense News</i>, <i>Breaking Defense</i>, <i>Air &amp; Space Forces Magazine</i>, SpaceNews, CSIS, and RAND.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+</script>
+
+</body>
+</html>

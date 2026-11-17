@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-10-28 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>2</b> read · <b>16</b> to go</span>
+    <span>Midterms in <b>6</b> days</span>
+    <span>628 paper due in <b>34</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 4½ minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-10-28.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-10-28.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Wednesday, October 28, 2026</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <ol>
+          <li><a href="#a1">Zhang Flips the Map: The Korean Air War from North of the Yalu</a></li>
+          <li><a href="#a7">What Would Zhang Make of Your 628 Paper? Start with Taiwan</a></li>
+          <li><a href="#a2">The Story So Far: Gaddis Set the Budget, Crane Sent the Bill</a></li>
+          <li><a href="#a3">The Implementation of Interdiction Resulted in Sadness: On Precise Language</a></li>
+          <li><a href="#a4">Whose Numbers Do You Trust? Michigan, Israel, and Zhang's Kill Ratios</a></li>
+          <li><a href="#a5">The Iran War's Receipt Arrives, and Most of It Is for Things That Went Boom</a></li>
+          <li><a href="#a6">Loose Bets Sink Fleets: The Pentagon Discovers Prediction Markets</a></li>
+          <li><a href="#a8">Up, Up, and Just Outside: The Army Rediscovers the Balloon</a></li>
+          <li class="toc-sub"><b>Chapter by Chapter: Zhang</b></li>
+          <li><a href="#z-ch01">Ch. 1: An Overnight Air Power, Four Decades in the Making</a></li>
+          <li><a href="#z-ch02">Ch. 2: Built for Taiwan, Shipped to the Yalu, Sixty-Three Hours Included</a></li>
+          <li><a href="#z-ch03">Ch. 3: Stalin Never Broke His Promise. He Just Never Made One.</a></li>
+          <li><a href="#z-ch04">Ch. 4: The MiGs Came to Korea by Way of Shanghai, and Nobody Agrees on the Score</a></li>
+          <li><a href="#z-ch05">Ch. 5: Build It and They Will Bomb It</a></li>
+          <li><a href="#z-ch06">Ch. 6: The Chinese Pilots Who Spoke Russian</a></li>
+          <li><a href="#z-ch07">Ch. 7: Same Bombers, Same Route, Same Time: What Could Go Wrong?</a></li>
+          <li><a href="#z-ch08">Ch. 8: Stalin Dies in March, Bombers Take the Bow in May</a></li>
+          <li><a href="#z-ch09">Ch. 9: Everybody Won the Air War, Which Is How You Know Nobody Counted Right</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A and Comps Bank</a></p>
+      </nav>
+
+      <article id="a1">
+        <span class="kicker">Tomorrow's Reading · Thursday, October 29</span>
+        <h3><a href="#a1">Zhang Flips the Map: The Korean Air War from North of the Yalu</a></h3>
+        <p>Tomorrow's seminar trades the view from the B-29 for the view from the MiG, which is the same war with the subtitles switched. Xiaoming Zhang's <i>Red Wings over the Yalu</i> tells the Korean air war from the Communist side, and mostly from the Chinese side, using newly opened Chinese and Russian archives and oral histories from the Chinese air force. He isn't shy about the goal. He says plainly that the book should significantly modify conventional wisdom about the Korean War. An author who announces that in the introduction is either very confident or about to be very interesting. Zhang manages both.</p>
+        <p>He pulls three threads: China's ideas about airpower and its rush to build an air force from nothing, the odd shape of Soviet help, and how Chinese air operations actually went. Running under all three is an alliance that was less than it looked. Moscow and Beijing were allies, in roughly the way two strangers sharing a cab are traveling companions: each used the war for its own national interests, and the Soviets held back to avoid a direct clash with the United States.</p>
+        <p>Here's the bridge from yesterday's book. Crane spent his pages showing Washington putting limits on American airmen. Zhang's twist is that the American and Soviet air operations were limited mainly by politics, while the Chinese air force was limited by inexperience. China had no aviation industry and depended on Soviet equipment, and its leaders were veterans of ground war with no real idea of air warfare. Opinion: that's the course's second theme in a single comparison. The Americans had the capability and were told not to use all of it. The Chinese had the permission and had to build the capability, at war, in a hurry, taught by Soviet advisers in a language the students didn't speak.</p>
+        <p>Read for four things. First, whose numbers to trust. Zhang warns that the kill ratios he reports are official Chinese and Russian figures that may misrepresent what really happened, and that the two sides' combat reports rarely match. He's just as blunt about the American side, calling U.S. victory claims probably highly inflated. Second, Stalin. Zhang calls the Soviet offer of air support a cryptic promise, and the October telegram in which Stalin asked for Chinese troops said nothing about air support at all. Stalin, it seems, was a firm believer in reading the fine print, provided he was the one who got to leave it out. Meanwhile the Chinese 13th Army Group was telling Beijing that air support was a requirement, and proposed delaying the intervention if the Soviets couldn't guarantee it. Third, doctrine. Chinese air planners saw fighters as defensive weapons and bombers as aggressive ones, which fit China's defensive outlook and pushed them toward a fighter force. Fourth, the lesson China kept: by Zhang's account, the Korean War experience limited the Chinese air force to an air defense role.</p>
+        <p>If time is short tonight, read the introduction and the conclusion first, then chapter three on Stalin, Mao, and the promise of air cover. Skim chapters six and seven for the covert Soviet air war and the Chinese air force in combat. Opinion: no seminar in recorded history has turned on page 140 of chapter six. Plenty have turned on the conclusion. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a7">
+        <span class="kicker">The 628 Paper · through tomorrow's author</span>
+        <h3><a href="#a7">What Would Zhang Make of Your 628 Paper? Start with Taiwan</a></h3>
+        <p>The prompt, for anyone who has been avoiding it: what is the most important potential strategic crisis facing the nation today, and, based on your historical understanding of the Age of Limited War, how should Airmen prepare to face it? One crisis only. The syllabus quotes <i>Highlander</i> on that point: there can be only one. Its examples are an Iranian nuclear test, a Chinese invasion of Taiwan, a Russian invasion of a NATO member, and the dissolution of an alliance. Ten pages, due December 1, which is closer than it appears on the calendar. What follows isn't an answer. It's a guess at how tomorrow's author would read the question.</p>
+        <p>Zhang would probably start where his own story starts, which is Taiwan. By his account, the Chinese Communists' urgent desire for an air force came primarily from Mao's plan to invade Taiwan. Mao asked Stalin's representative for Soviet air and naval support for the "liberation of Taiwan," and Zhou Enlai wrote of forming an offensive air unit to support the cross-strait campaign. The first operational mission assigned to the new air force was support for that projected campaign. Then Korea happened, and by Zhang's reckoning the war left the Chinese air force in an air-defense role.</p>
+        <p>Opinion from here, and an extrapolation rather than anything Zhang wrote. His lens suggests three cautions for an Airman writing about a Taiwan crisis. First, an air force carries its founding purpose. Taiwan isn't a new mission for the Chinese air force; it's the reason the service was created. Second, alliances. Zhang shows Moscow and Beijing each using Korea for its own national interests, with Stalin holding back from a direct clash with the United States. Any thesis about a future crisis should ask what each side's partners would actually risk, and the honest answer is rarely "everything." Third, numbers. If the two sides' combat reports in 1950 rarely matched, be wary of any force-ratio argument that rests on one side's figures.</p>
+        <p>There's a fourth caution, and it cuts closer to home. Zhang argues the Chinese air force of 1950 was limited mainly by inexperience, while the Americans were limited mainly by politics. Opinion: inexperience is the limit that time erodes. Political limits tend to persist. A paper that assumes the adversary is still the 1950 version, while Washington's restraints have somehow vanished, has the history backwards. The same alliance lesson applies if you pick Iran or a NATO crisis instead. Zhang won't write your paper, but he'd ask whose history your thesis quietly assumes. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">The Readings So Far · Gaddis and Crane</span>
+        <h3><a href="#a2">The Story So Far: Gaddis Set the Budget, Crane Sent the Bill</a></h3>
+        <p>Two books in, the course already has a plot. John Lewis Gaddis defines strategy as the process by which ends are related to means, and his history of containment swings between two approaches. The symmetrical version meets the adversary wherever it pushes. The asymmetrical version picks its own ground. George Kennan's original version was asymmetrical. He counted only five centers of industrial and military power that mattered: the United States, Great Britain, Germany and central Europe, the Soviet Union, and Japan. Only one was in hostile hands, so the job was to keep the other four from falling, defended as strongpoints rather than along a perimeter.</p>
+        <p>Truman's people liked that approach for a reason that had little to do with elegance. They were convinced the country had only limited resources, however dangerous the threat. Truman framed it as spending twenty or thirty billion dollars to keep the peace against a hundred billion to fight a war. Dean Acheson told the Senate that recovery was the first objective. The atomic monopoly made the bargain feel safe; James Forrestal called the years before anyone could strike back "our years of opportunity." Kennan's own first rule was that interests come first and threats are measured against them, never the reverse. He then managed to undercut himself in print. His "X" article was anonymous for roughly as long as anything stays secret in Washington: Arthur Krock revealed him as the author, Walter Lippmann took it apart at length, and careless drafting left Kennan agreeing in places more with Lippmann than with his own essay. The article's call for "unalterable counter-force at every point" reads like perimeter defense, from the man who invented the strongpoint.</p>
+        <p>Conrad Crane picks up where the money and the bomb meet Korea. His subject is "the image and reality of American airpower," and the gap between the two is the whole book. Leaders expected too much, partly because the Air Force didn't admit its limits. FEAF's General Smart put it with a candor his successors have rarely matched: "we certainly don't advertise our limitations." (Neither, to be fair, does anyone with a budget.) Washington drew the lines anyway. Air action was held south of the 38th Parallel until Truman approved strikes in the North on June 29, 1950, with orders to stay clear of the Soviet and Manchurian borders. After FEAF bombed Rashin, about twenty miles from the Soviet border, the Joint Chiefs stopped further attacks there in September. In November, the Yalu bridge attacks were limited to the Korean side of the spans.</p>
+        <p>Interdiction, airpower's all-purpose answer to ground war, did not save the day. Fifth Air Force intelligence estimated that as many as 500,000 soldiers and civilians were working to keep enemy transportation routes open. An April 1952 FEAF study found the rail campaign had not worked despite more than 15,000 rail cuts, at a cost of 243 aircraft destroyed, and proposed "air pressure" instead. The June 1952 hydroelectric strikes then knocked out about ninety percent of North Korea's electric power. As for the bomb that made containment feel cheap: Attlee rushed to Washington after Truman's November 30 press conference, Truman sent nuclear weapons toward Okinawa in April 1951, and the HUDSON HARBOR test missions convinced the Air Staff that Korea offered no suitable atomic targets.</p>
+        <p>Opinion: put the two books side by side and the plot writes itself. Gaddis's planners counted on the bomb to make cheap containment safe. Crane's airmen found the bomb had nothing to hit and the war had limits nobody wrote down. A 1953 FEAF study blamed policy makers for never stating limited-war objectives "compatible with air force capabilities." Kennan would have called that skipping step one. And because the war ended ambiguously, Crane argues, the Air Force could believe it had succeeded, went back to planning for general war, and paid for it in Vietnam. Two books, one lesson: the side that never defines its interest ends up defending its budget. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">Technical Writing · Week 1, Day 3</span>
+        <h3><a href="#a3">The Implementation of Interdiction Resulted in Sadness: On Precise Language</a></h3>
+        <p>Helen Sword, who has spent a career diagnosing what ails academic prose, keeps a short list of words that turn up in suspicious quantities in stodgy writing. Two of her categories matter most today: forms of "be," and the little pointing words "it," "this," "that," and "there." A sentence that opens with a bare "this" is almost always pointing back at the sentence before it, and asking the reader to do the remembering. Either fold the two sentences together or put a noun after "this." The vague quantity words belong on the same watch list. "Many" and "most" are trying to sound significant while committing to nothing. How many? Is most fifty-point-one percent? How do you know? These are rude questions, and graders ask them anyway.</p>
+        <p>Here's a paragraph any of us could have written at eleven last night. "Many sorties were flown against the railways, but this did not stop the enemy. Some people thought interdiction was not working. This led to a new strategy." Three sentences, and not one fact an instructor could check. Now the same paragraph after a trip back to the book. "FEAF's rail campaign produced more than 15,000 rail cuts at a cost of 243 aircraft destroyed, yet an April 1952 FEAF study concluded that interdiction had not worked. Fifth Air Force intelligence estimated that as many as 500,000 soldiers and civilians were working to keep enemy transportation routes open. The same study proposed a replacement: air pressure through selective destruction." "Many" became numbers, "some people" became a dated study, and every "this" became the thing it was pointing at.</p>
+        <p>Today's pro tip comes from Helen Sword's <i>Stylish Academic Writing</i>, and it's about the vague word's best friend, the nominalization. That's her term for the long abstract nouns academics build out of verbs and adjectives by bolting on endings like -ion, -ment, -ness, and -ity. Sword actually counted them across disciplines, and there's good news for this building. In higher education research, 78 percent of the articles she sampled were dense with them. In history, only 16 percent were. Historians, it turns out, are the people who still let somebody do something to someone. Try not to ruin it.</p>
+        <p>Her fix is one rule you can check in a minute. Make sure at least one sentence in every paragraph has a concrete noun or a human being as its subject, followed immediately by an active verb. "Weyland opposed." "Truman approved." "Stalin hedged." She also suggests limiting prepositional phrases to three in a row, and running a sample of your prose through her free WritersDiet test, which flags the flab. Compare "The implementation of the interdiction campaign resulted in the destruction of rail lines without the achievement of the desired disruption" with "FEAF cut the rails fifteen thousand times, and the trains kept running." The second one has a subject, a verb, and a point. The first one has a committee. Opinion: vague words feel safe because nobody can prove them wrong. That's also why they never prove you right. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a4">
+        <span class="kicker">Political Strategy · via electoral-vote.com, October 28</span>
+        <h3><a href="#a4">Whose Numbers Do You Trust? Michigan, Israel, and Zhang's Kill Ratios</a></h3>
+        <p>Six days out, Michigan's Senate race appears to have moved four points overnight, which is impressive for a race in which nothing obviously happened overnight. On Tuesday, electoral-vote.com listed a YouGov poll, taken October 2 through 19, with Democrat Abdul El-Sayed at 48 percent and Republican Mike Rogers at 46. Today's table has a Glengariff Group poll, taken October 19 through 22, with El-Sayed at 51 and Rogers at 45. Same race, same month, different pollster. Elsewhere on today's list, Marist has Troy Jackson leading Susan Collins 49 to 47 in Maine, and YouGov has James Talarico ahead of Ken Paxton 50 to 45 in Texas. EV notes that if the three close races all break the same way, Democrats would reach 56 seats, which is the kind of sentence that contains a very large "if."</p>
+        <p>We would gently point out what those three polls have in common, besides the candidates. Marist was in the field October 22 through 25. Glengariff wrapped up on the 22nd. YouGov's Texas numbers run from the 13th to the 21st. Nobody sampled the same voters on the same days with the same method, and a two-point lead like Maine's sits comfortably inside the margin of error of almost any poll you will ever meet. Meanwhile, down in Florida, Activote has the incumbent Ashley Moody up 53 to 47, which is the polling equivalent of a race nobody is bothering to argue about. In other words, today's table is a mosaic, not a photograph, and a campaign that reads it as a trend line is going to have an interesting Tuesday night.</p>
+        <p>Then there's Israel, where EV reports that results are, in its words, "predictably ambiguous." With only about half the ballots counted, exit polls have Likud winning the most seats while the opposition bloc out-totals Netanyahu's coalition, roughly 65 to 55. Both sides, naturally, can find a number in there they like.</p>
+        <p>Opinion: Xiaoming Zhang would recognize the genre. In tomorrow's reading he warns that the kill ratios he reports are official Chinese and Russian figures that may misrepresent what actually happened, and that the two sides' combat reports in Korea rarely matched. A poll isn't a propaganda bulletin, but the strategist's problem is the same one. A single number from a single source is a claim, not a fact, and two numbers from two sources is a range, not a trend. The campaign that reads the Glengariff poll as momentum and the YouGov poll as noise has just done what both air forces did over the Yalu, which is believe the scoreboard it keeps itself. The voters, unlike the MiG pilots, will settle it on November 3. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a5">
+        <span class="kicker">Acquisition × Zhang · via Defense News, October 28</span>
+        <h3><a href="#a5">The Iran War's Receipt Arrives, and Most of It Is for Things That Went Boom</a></h3>
+        <p>Reuters got hold of a Pentagon estimate that hasn't been released publicly, and Defense News ran it this morning: the United States has now spent more than $47 billion on the war with Iran. That's more than 25 percent above the $37.5 billion figure Secretary Hegseth offered in July, which means the estimate grew about as fast as the war it was estimating. We would note that the July number was itself presented as an estimate, so nobody is technically wrong. They're just wrong by about ten billion dollars, which in the Pentagon counts as a rounding error and everywhere else counts as a state budget.</p>
+        <p>The breakdown is the interesting part. More than $29 billion of the total goes to replacing munitions that have already been fired. Another $6 billion or so covers equipment and what the department calls "platform losses," a phrase that means aircraft and drones that won't be coming back. The rest is the cost of actually operating: flight hours, cyber support, and so on. And Reuters notes that the estimate doesn't clearly include what will be a massive bill for repairing American bases hit by Iranian missiles and drones. So the real number is $47 billion plus an asterisk, and the asterisk is shaped like a runway.</p>
+        <p>The war began in February, when the United States and Israel struck jointly. An April ceasefire followed, and since then there has been a naval blockade. That puts the spending at roughly eight months, and the munitions line alone works out to something like three and a half billion dollars a month just to restock the shelves. (These numbers arrive, of course, six days before an election, which is a coincidence in the same way that it's a coincidence when the gas station raises prices before a holiday weekend.)</p>
+        <p>Now go to tomorrow's reading. When Zhang's China went to war in the air over Korea, it had no aviation industry at all. Every airplane, and most of the know-how, came from the Soviet Union. The founding plan for the air force was practically a purchase order: send people to the Soviet Union to train for six to eight months, and buy about a hundred planes. Even the Soviet advisers were on Beijing's tab; under the 1950 agreement, the Chinese paid their living expenses and supplies. A country that can't make what it shoots spends the whole war negotiating with whoever can.</p>
+        <p>The United States is not 1950 China, and it would be silly to pretend otherwise. But the Iran receipt makes Zhang's point in reverse. The most expensive part of a modern air war turns out to be the stuff that gets used up, and $29 billion of munitions is a production problem before it's a strategy problem. Last week's ten-year F-35 framework, which still waits on a Congress that funded 47 jets last year against a request for 85, now has company in the queue. So does the department's fifty-billion-dollar drone wish list. Somebody, eventually, has to decide which of these the factories build first.</p>
+        <p>Opinion: Gaddis spent a whole book arguing that American strategy swings on whether Washington believes its means are limited. The Iran estimate is about to start that argument again, in an election week, with a number that's still growing. Mao learned the hard way that an air force is a production line before it's a doctrine. It would be nice if we learned it from a spreadsheet instead. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a6">
+        <span class="kicker">Leadership × Zhang · via Military Times, October 26</span>
+        <h3><a href="#a6">Loose Bets Sink Fleets: The Pentagon Discovers Prediction Markets</a></h3>
+        <p>Defense Secretary Pete Hegseth has signed a memo, confirmed as authentic by a department official after a copy made the rounds on social media, forbidding everyone in the Department of Defense from making financial transactions based on insider information. That includes, specifically, betting platforms and prediction markets, and the memo names Polymarket and Kalshi as examples. Why it took a memo to establish that you shouldn't wager on classified operations is a question we'll leave to the inspector general, but the examples suggest the answer is "because people were doing it."</p>
+        <p>And the examples are something. An Army Special Forces master sergeant involved in the capture of Nicolás Maduro has been charged with using inside information to win $400,000 betting on Maduro's removal. He has pleaded not guilty, and trial is set for early December. Bets also appeared on Polymarket about the rescue of an F-15E airman shot down over Iran, until the platform removed them for failing its integrity standards. (When a betting site has to explain integrity to you, it's been a long week.) And an anonymous account reportedly cleared $550,000 on trades tied to the first day of strikes in Operation Epic Fury.</p>
+        <p>The memo's real argument isn't about ethics, although it makes that one too. It's about intelligence. A bet on a military outcome is a signal, it says, and hostile foreign intelligence services can watch the markets to anticipate American movements, targets, and timing. In other words, the newest operational security threat isn't a spy with a camera. It's a sergeant with an app and a hunch. Hegseth's own summary is short: the mission is "not entertainment. Not a payout." Violators can face administrative or disciplinary action, or prosecution under the Uniform Code of Military Justice.</p>
+        <p>Now go to tomorrow's reading for a lesson in how secrecy used to work. Zhang devotes part of his story of the young Chinese air force to the Soviet advisers who trained it: commanders, flight instructors, mechanics, and ground crew. For secrecy, they wore civilian clothes. And the secrecy held so well that, half a century later, Zhang found that none of the available archival sources depicted their work at all. He had to sketch their role from fragments of Chinese memoirs. Moscow, Zhang notes elsewhere, was determined to avoid a direct clash with the United States, and keeping its people out of sight was part of the bargain.</p>
+        <p>Put the two side by side. In 1950, a great power hid an entire advisory mission so thoroughly that the paper trail effectively doesn't exist. In 2026, somebody apparently announced the first day of a bombing campaign to anyone watching the odds on Polymarket, and got paid for it. Progress, of a kind.</p>
+        <p>Opinion, and the leadership lesson: operational security has always been a habit before it's a rule. The Soviet advisers changed clothes because the culture around them assumed everything leaked. A memo can set the penalty, but only leaders can set the habit, and the habit now has to cover the phone in every troop's pocket. The commander who briefs this memo by reading it aloud will get compliance. The one who explains why a $50 bet can tell an adversary when the jets are leaving will get believers. Bet on the second one. Figuratively. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a8">
+        <span class="kicker">Defense &amp; Conflict × Zhang · via Defense News</span>
+        <h3><a href="#a8">Up, Up, and Just Outside: The Army Rediscovers the Balloon</a></h3>
+        <p>The most forward-looking idea in the Pacific this week is a technology the Montgolfier brothers would recognize. Defense News reports that the Army is exploring high-altitude balloons that carry payloads to watch the battlefield, relay communications, and even launch strikes, all aimed at China's anti-access network. Major General Bernard Harrington, who commands the 7th Infantry Division and Multi-Domain Command-Pacific, pitched them at the Association of the U.S. Army's annual conference as cheaper and harder to spot than the alternatives, and launchable from dispersed sites. Balloons can now stay up for weeks or months. Above 60,000 feet, their sensors can see deep into a rival's territory while the balloon itself stays in international airspace. The Army has tested them in Guam and Japan, and the European command's commander would like to launch "200, 300 at a time." The flight paths, he notes, vary by season, which makes this the first weapon system whose deployment schedule is set by the jet stream.</p>
+        <p>Now go to tomorrow's reading. Zhang's Chinese air force wasn't born to project power. In early 1950, he writes, the Nationalist air force effectively owned the airspace over China and was raiding Shanghai and other coastal cities. Beijing's plan for its first year called for seven fighter regiments for air defense and four bomber regiments for the Taiwan campaign. The new air force's mission list, in order, was to win air superiority over the Nationalists, support the assault on Taiwan, and then defend China's airspace and waters, which is why fighters got priority. Korea, as we've covered, then left that air force in a defensive role for good.</p>
+        <p>Opinion: put those together and the balloon plan becomes a quiet test of the reflex Zhang describes. An air force forged by watching enemy aircraft over its own coast is being invited to watch American sensors hover just outside it. Note, too, where the Army is careful to park them: in international airspace, on the legal side of the line. Crane's airmen in 1950 were told to hit only the Korean half of the Yalu bridges. Seventy-six years later, the limited-war instinct is the same, and only the altitude has changed. The open question for seminar is whether a line that both sides can see is a limit or just a dare. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Zhang, <i>Red Wings over the Yalu</i></p>
+
+      <article id="z-ch01">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 1</span>
+  <h3><a href="#z-ch01">An Overnight Air Power, Four Decades in the Making</a></h3>
+  <p>Zhang opens with Gen. Hoyt Vandenberg, back from the Far East on November 21, 1951, telling the press that Communist China had become "one of the major air powers of the world." Air Force intelligence counted fourteen hundred Communist planes in Korea, seven hundred of them MiGs. Zhang's answer to "how, overnight?" is that it was not overnight. Sun Yat-sen preached "aviation as the nation's salvation" from 1911, read like Douhet and Mitchell, and concluded that no air force means no national defense. His aviation school had ten students and two Curtiss trainers. The Nationalists did better on paper: more than seven hundred pilots and six hundred aircraft by the end of 1936, over a thousand aircraft by 1945. By mid-1947 fewer than three hundred could fly, and a monopoly on airpower did not keep them on the mainland.</p>
+  <p>The Communist thread is thinner and more stubborn. Forty-three Red Army officers trained in Xinjiang under a Soviet-backed warlord, wearing Nationalist uniforms and pseudonyms, after the literacy test was waived. They built up about three hundred hours each, and then the warlord switched sides in 1942 and arrested 160 Communist personnel, pilots included. The Northeast Aviation School opened on March 1, 1946, with captured Japanese aircraft and Japanese instructors. Cadets ate cornbread and pickles, burned purified alcohol when gasoline ran out, and tied their coats shut with rope in flight. By July 1949 it had trained 126 pilots. In 1947 the Soviet-trained faction won the argument over whose system to copy, and Mao kept insisting that brave men could beat machines.</p>
+  <p>The scene to remember is the Red Army's first combat aircraft. In February 1930 a Nationalist Vought Corsair got lost and landed in Communist territory in Hubei. The Red Army talked the pilot into joining and renamed the plane the Lenin. In September 1931 it dropped leaflets over Wuhan. Two months later it dropped two mortar shells on the Nationalist garrison at Huangan, the defense line collapsed, and the town fell in three days. When Jiang Jieshi's next campaign came in 1932, the Red Army took the plane apart and hid it in the mountains. Local people dug it up in 1951, about the time the MiGs were over the Yalu. Two mortar shells and a defecting pilot, and that was the whole Red air force.</p>
+  <p>Opinion: This chapter is Crane's "image and reality of American airpower" turned around. Vandenberg counted airframes and saw a major air power. Zhang shows pilots who had been machine gunners, with eighty to one hundred hours in Japanese trainers, and a chairman who trusted courage over equipment. FEAF's Gen. Smart said "we certainly don't advertise our limitations," and the Air Force was not advertising China's limitations either. Seminar question: when Vandenberg said China had become a major air power, was he counting aircraft or air power, and which one should an Airman count? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch02">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 2</span>
+  <h3><a href="#z-ch02">Built for Taiwan, Shipped to the Yalu, Sixty-Three Hours Included</a></h3>
+  <p>Zhang's claim in chapter 2 is that the PLAAF was born for one job, invading Taiwan, and built as an arm of the army. On July 10, 1949, Mao wrote that China could send three to four hundred people to the Soviet Union, buy about a hundred planes, and "seize Taiwan next summer." Liu Yalou, the future air force commander, ran the numbers and found the Nationalists still had 150 to two hundred fighters, so he asked for three hundred to 350 fighters instead. Mao approved and told him to be thrifty. In Moscow on August 18, Marshal Vershinin offered 434 aircraft, six aviation schools, and 878 Soviet personnel to staff them. The Chinese worried that the Nationalist P-51 could outrun the La-9 in a dive, took the deal anyway, and later complained about paying new prices for old machinery. Liu wrote in 1951 that the air force should support the ground forces and take their victories as its own. Nobody considered an independent service, and fighters were preferred over bombers because fighters were defensive.</p>
+  <p>The money was raised by every means available. Moscow lent $300 million at 1 percent, and Mao put $20 million of the 1950 installment toward the air force and navy. In 1950 the PLAAF asked for 369.1 million renminbi, 13 percent of the defense budget. A 1951 donation drive collected 556.5 million renminbi, enough for 3,710 fighters. The donations were voluntary in the sense that elementary school students gave their pocket money. Meanwhile Liu required approval for a dinner party or a night at the opera, and he publicly criticized a budget for a dairy farm at an aviation school.</p>
+  <p>The number to remember is sixty-three. The standard for a student pilot was 150 to two hundred flying hours. After Beijing decided to intervene in Korea, the six schools graduated their first class early, in October 1950, with an average of about sixty-three hours, all in Yak-18 and Yak-11 trainers. The bill came due fast. The PLAAF admitted 3.35 serious accidents per ten thousand sorties in 1950, and its former chief of staff counted more than a hundred fatal crashes in the first half of 1951. PLAAF authorities later conceded that more hours would have meant fewer crashes and probably more victories in Korea. Enthusiasm, it turns out, does not log flight time.</p>
+  <p>Opinion: The 628 paper prompt lists a Chinese invasion of Taiwan as a candidate crisis, and this chapter shows it was the PLAAF's original design brief. Gaddis defines strategy as relating ends to means. Mao's end was Taiwan within a year; his means were peasant soldiers, interpreters who did not know aviation terms, and sixty-three hours. Then Korea handed that half-built force a different war. Seminar question: if the PLAAF was designed as a defensive, army-support force for a Taiwan landing, how well did that design suit the air-superiority fight it actually got over the Yalu? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch03">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 3</span>
+  <h3><a href="#z-ch03">Stalin Never Broke His Promise. He Just Never Made One.</a></h3>
+  <p>The big question of chapter 3 is whether Stalin reneged on his promise of air cover for the Chinese in October 1950. Zhang's answer is a lawyer's answer: no, because he never defined it. The promise started on July 5, 1950, when Stalin asked Zhou Enlai to put nine divisions on the Korean border and offered air cover for them. On July 13 he got specific about the hardware, a MiG division of 124 planes, and vague about how it would work with Chinese ground troops. Belov's 151st Guards Fighter Aviation Division was in place at Shenyang, Liaoyang, and Anshan by early August, but Moscow ordered it to train Chinese pilots first and never fly beyond the Yalu. Zhou finally pinned Stalin down at his Black Sea villa on October 11. The answer: Soviet air units would need two to two and one-half months to get ready. On October 14, Moscow ordered 208 jet fighters to China, with pilots "strictly forbidden" to fly at the front. Mao sent his troops across anyway on October 19.</p>
+  <p>The scene to remember is Peng Dehuai's bad week. On October 9, Peng gathered his army commanders in Shenyang and ordered them ready for battle in ten days. Then he learned his troops had exactly thirty-six antiaircraft guns, Japanese-made 76-mm pieces, and that nobody had issued any orders for coordinating ground and air forces. His commanders kept asking about air cover. Peng could not answer, so he cabled Mao in the middle of the meeting: how many bombers and fighters, when, and "who will be in charge?" Mao's answer, on October 11, was that "the air force cannot set off for the time being." At the Politburo meeting on October 13, Peng threatened to resign. Then on October 16 he told his division commanders the enemy air force was not "as fearsome as people think." Commanders have given worse pep talks, but not many with less behind them.</p>
+  <p>Opinion: Crane's chapter 1 has the American side of the same river. On June 29, 1950, Truman cleared strikes north of the 38th Parallel but ordered his pilots to stay clear of the Soviet and Manchurian borders, and in November the Yalu bridge attacks stopped at the Korean side of the spans. Stalin's pilots got the mirror-image order: stay on the Chinese side of the Yalu. Both great powers drew their limit at the same water line, for the same reason, and both left the poor guys on the ground to discover it late. FEAF's General Smart said "we certainly don't advertise our limitations." Stalin didn't advertise his either. He just let Mao assume them away.</p>
+  <p>The 13th Army Group warned on August 31 that China should delay without guaranteed Soviet air support; since Mao went in anyway, was air support ever really the deciding factor, or just Mao's bargaining chip with Moscow? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch04">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 4</span>
+  <h3><a href="#z-ch04">The MiGs Came to Korea by Way of Shanghai, and Nobody Agrees on the Score</a></h3>
+  <p>Chapter 4 argues that Soviet air combat in 1950 was air defense of China wearing a Korean costume. The story starts in Shanghai, where the Nationalist air force hit the city twenty-six times between October 1949 and February 1950; the February 6 raid killed more than fourteen hundred people. Mao, then in Moscow, asked for help. Stalin sent Lt. Gen. Pavel Batitskiy with an air defense corps, including forty-four MiG-15 pilots who swapped into Chinese uniforms and had their identification and party documents removed. On April 28, Maj. Kelenichkov scored the first MiG-15 kill in combat, a P-38. By late 1950, eleven Soviet air divisions had arrived in China, mostly MiG-9s, a retired jet with short range and poor maneuverability that the Chinese suspected was being dumped on them. Over the Yalu, Zhang finds the Soviet pilots stayed within about thirty miles of Andong and never flew in coordination with Chinese ground operations. In November they flew 384 sorties against 2,525 detected enemy sorties. His verdict: they "seem irrelevant" to the CPV's early success.</p>
+  <p>The thing to remember is the fight over who scored the first jet-to-jet kill in history. The USAF official history says November 8, 1950, credited to Lt. Russell Brown. A Russian study says November 1, credited to Lt. Semyen Khomich, though the UN side reported no losses from that encounter. The Soviet records show no MiG losses at all on November 8; Russian scholars suspect Brown saw a MiG drop its external tanks and dive away. But Soviet records do confirm that Navy aviator William Amen's cannons sent Sr. Lt. Mikhail Grachev's MiG into a North Korean hillside on November 9. So after all that, Zhang says the honor should probably go to the Navy. The Air Force will want a recount.</p>
+  <p>Opinion: the scorekeeping problem never went away. On December 23, U.S. pilots claimed six MiGs "definitely destroyed" with no losses; the Soviets claimed three F-86s for the afternoon. For December, Pashkevich's division was credited with forty-one victories against six losses, which the Americans disputed. This is the Michigan Senate race in today's news, YouGov at 48 to 46 and Glengariff at 51 to 45: same race, different pollster. Crane said his subject was the image and reality of American airpower. Zhang shows the Soviets had the same gap between image and reality, and kept it in Russian. For the 628 paper, note something else from Shanghai: the Soviets barred their pilots from flying beyond the coastline so they would not get dragged into a Taiwan campaign. A patron in a Taiwan fight drawing a line at the water is not a new idea.</p>
+  <p>If the Soviets learned their jet tactics against a weak enemy over Shanghai and then struggled over the Yalu, how much should any air force trust lessons from a war against an opponent who can't fight back? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch05">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 5</span>
+  <h3><a href="#z-ch05">Build It and They Will Bomb It</a></h3>
+  <p>Chapter 5 covers the year, November 1950 to August 1951, when China tried and failed to get its own air force into the war. The mismatch was stark. The Americans had some 1,100 combat aircraft flown largely by World War II veterans with more than a thousand hours. The PLAAF had about two hundred aircraft and pilots with under a hundred hours, and nobody, pilot or commander, had ever fought in the air. Mao approved a plan on December 4 giving priority to direct ground support, because Peng Dehuai demanded it. Then reality set in. The first combat practice at Andong, under Soviet cover, produced exactly one American plane shot down; Li Han's late-January kill was claimed as an F-84, and the FEAF records an F-80C lost that day. In February the 12th Aviation Regiment, with fifteen hours in MiGs, lost an entire squadron in a few days without firing a shot. Over little more than two months the 4th Aviation Division flew 145 sorties and saw the enemy on only twenty-four. Entry was postponed to September, then to November, and Peng canceled his planned offensive on August 21. By year's end close air support was dropped from the plan entirely.</p>
+  <p>The one thing to remember is the airfields. On March 1, Mao told Stalin that China was "unable to find a single operational airfield" in Korea, and that it could not build any without air cover it did not have. Stalin's answer was that the Chinese should build four concrete fields for Soviet MiGs, all at once. Zhou Enlai worked out that a jet airfield in China took twenty-four thousand man-days, so four in Korea would take ninety-six thousand. The final bill was some two million man-days, thirty thousand tons of cement, and thirty-six thousand pieces of pierced-steel planking. American bombers attacked the sites seventy-two times. When the last field, at Sunchon, was finished in late July, the Chinese discovered the Soviets could not use any of them, because they were too far from bases in China to be supported. That is a lot of concrete for a parking lot.</p>
+  <p>Opinion: Gaddis says strategy is relating ends to means, and Zhou gave the starkest version of it in an argument with a Soviet general. China could endure losing half a million to a million soldiers, he said, "but we will not sacrifice our newly built air force." Soldiers were cheap and replaceable; pilots and jets were neither. That explains every delay in the chapter better than bad weather does. Stalin, meanwhile, warned that Chinese fliers kept out of combat would be only "paper pilots," which is rich from a leader who fretted about the danger of basing his own air units in Korea. Both patrons and clients were guarding their scarcest asset and calling it prudence.</p>
+  <p>Seminar question: was the PLAAF's caution a failure of nerve, or the correct reading of what a brand-new air force could afford to lose? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch06">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 6</span>
+  <h3><a href="#z-ch06">The Chinese Pilots Who Spoke Russian</a></h3>
+  <p>Chapter 6 makes a simple, uncomfortable claim: the MiG war over the Yalu was mostly a Soviet war. American records claim about 950 enemy aircraft destroyed in the air, more than 850 of them MiGs, against 147 air-to-air losses. The Soviets claimed more than a thousand UN aircraft against some three hundred of their own. Zhang says the gap cannot be reconciled, and spends the chapter showing why. Moscow ran the war in three phases. Elite divisions under Col. Ivan Kozhedub, a top World War II ace, and Maj. Gen. Georgiy Lobov did the damage in 1951; on April 12, thirty-six MiGs hit forty B-29s, and Gen. Stratemeyer suspended B-29 operations around Sinuiju. Then Moscow swapped whole divisions for green ones, and losses climbed. The constraints were political. Soviet MiGs wore North Korean markings, pilots arrived in Chinese uniforms with Chinese pseudonyms and were told to speak Chinese on the radio, though few did. They carried no bombs or rockets, could not fly over enemy territory or the sea, and fought purely on defense while the Americans picked every fight. Kozhedub called it "two regiments against all of imperialism." The 64th IAK finally claimed 1,106 planes by fighters and 212 by flak, for 335 MiGs and 120 pilots lost.</p>
+  <p>The one thing to remember is Black Tuesday, October 23, 1951, over Namsi. Soviet pilots reported meeting twenty-one B-29s and more than two hundred fighters, and claimed twelve bombers and four F-84s for no losses. The FEAF had sent nine B-29s, and one of them turned back with a mechanical problem. So the Soviets claimed four more bombers than actually showed up. The Americans admitted three bombers and one Thunderjet, though four of five badly damaged B-29s crash-landed and two were written off, and they claimed nine MiGs. One American author reconciled this by assuming the dead MiGs were Chinese or North Korean. Zhang points out that no North Korean MiG unit flew before 1952, and the only operational Chinese division had gone to Shenyang for rest three days earlier. Whatever the count, the Americans suspended daylight B-29 operations within days.</p>
+  <p>Opinion: Crane quotes FEAF's Gen. Smart saying "we certainly don't advertise our limitations." Zhang shows that both superpowers made a joint policy of it. USAF leaders knew the MiGs that mauled their bombers were Soviet, Zhang writes, yet credited the Chinese to avoid stirring up public demand for war with Russia. Gen. Vandenberg even announced that China had become a major air power almost overnight. It is the polite fiction that kept a limited war limited. And the dueling kill tallies are this week's Michigan Senate polls with jet engines: same race, different pollster, wildly different numbers.</p>
+  <p>Seminar question: if Washington and Moscow both knew Soviets were flying the MiGs and both kept quiet, was that shared secrecy the most effective escalation control of the war, and would it survive in a Taiwan crisis today? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch07">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 7</span>
+  <h3><a href="#z-ch07">Same Bombers, Same Route, Same Time: What Could Go Wrong?</a></h3>
+  <p>From September 1951 to May 1952, China's air force went to Korea as a student. Operation Strangle opened on August 18, and the Chinese General Staff answered with four decisions: more railway repair troops, more bridge materials, every available ferry, and more antiaircraft guns, plus, at last, the air force. From September 12 to October 19, the 4th Aviation Division flew 508 sorties, claimed 20 kills, and lost 14 planes, while FEAF records show no losses in those fights. Air forces, Zhang notes, tend to be honest about their own losses, if no one else's. By the end of May 1952, 447 Chinese pilots had flown 11,100 sorties, and only 15 percent involved actual combat. Historian Xu Yan puts jet proficiency at 300 hours; Chinese pilots arrived with 50 to 60. Peng Dehuai never got his air support: U.S. aircraft bombed Chinese airfield construction in North Korea 119 times, and in late December 1951 the PLAAF settled for its Chinese bases, leashing its MiGs to about 100 miles from home.</p>
+  <p>The scene to remember is Taehwa-do Island. On November 6, 1951, nine Tu-2 bombers dropped 81 bombs on the South Korean outpost there and met no UN fighters. So the 8th Division planned the next raid with the same number of planes, the same route, and the same takeoff time, and publicized it for days. On November 30, Army intelligence tipped off the 4th Fighter Wing, and Col. Ben Preston brought 31 Sabres. Gao Yueming took off a minute early, his squadron leader turned early, and the bombers reached the rendezvous five minutes ahead of schedule, with only propeller-driven La-11s for escort. The MiGs were still taking off. As Zhang puts it, "In modern air combat, five minutes is a lifetime." The crews mistook the incoming Sabres for friendly MiGs heading home. China lost four Tu-2s, three La-11s, and a MiG, and the surviving bombs churned up sand on the beach. The USAF claimed eight bombers. Inflation was the one thing both sides had in surplus.</p>
+  <p>Opinion: Read this next to Crane for both ends of the same pipe.Crane's April 1952 FEAF study found rail interdiction had failed despite more than 15,000 rail cuts and 243 aircraft lost, and Crane counts up to 500,000 soldiers and civilians keeping the routes open. Zhang shows the order behind that: Beijing's answer to Strangle was repair crews, bridge timber, ferries, and flak, with fighters fifth on the list. The sanctuary cut both ways: Truman kept FEAF clear of the Manchurian border, so the MiGs lived safely at Andong, and FEAF kept bombing the Chinese airfields going up in North Korea, so the MiGs never moved closer. Each side owned its own bank of the Yalu, and the river did most of the limiting.</p>
+  <p>Seminar question: The PLAAF treated Korea as a training ground, rotating divisions through Andong after five to seven big battles; was that smart force development for a limited war, or a steady way to feed rookies to the Sabres? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch08">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 8</span>
+  <h3><a href="#z-ch08">Stalin Dies in March, Bombers Take the Bow in May</a></h3>
+  <p>Chapter 8 runs from June 1952 to the armistice and asks what the PLAAF learned. Mostly air defense, Zhang says, and he doubts even that paid off. Command was so centralized that the CPV Air Force commander gave orders straight to flying group leaders, and his deputy, Duan Suquan, blamed the December 13, 1951 disaster on PLAAF chief Liu Yalou, who was visiting and ordered the MiGs down below an approaching Sabre formation. Liu later pushed four-plane formations. More than 1,070 air force personnel rotated through for experience. Political officers ran morale: red stars painted on the fuselage for each kill, a wingman court-martialed for breaking off after his leader was killed, and five of eight regimental commanders lost to their own brashness. Beijing kept its bombers leashed. Zhou Enlai canceled a night raid on Kimpo minutes before takeoff on February 8, 1952; Peng scrubbed the June 1952 raids on Kimpo and Suwon for fear of reprisal; and Stalin warned that "the air force belongs to the state." By May 1953 the scoreboard was lopsided: 22,639 USAF sorties against 1,164 for the CPV Air Force.</p>
+  <p>The image to keep is the last day of the war. Communist air forces did not rise to meet FEAF's final push. Instead, ground crews from three Chinese air divisions at Andong took MiGs and Il-10s apart and crated them, racing to move North Korean air units south of the Yalu before the truce took effect. When the cease-fire came, about one hundred crated planes sat on trains and river barges. Zhang calls it the first evidence of the Communists violating the truce. Three years of fighting for the sky, and the final Communist air operation was a freight shipment. The cease-fire line, he adds, ran almost where the war had started on June 25, 1950.</p>
+  <p>Opinion: Zhang's timeline is a hard rebuttal to the airpower story Crane describes. Stalin died March 5, 1953. A Soviet resolution on March 19 made ending the war a priority, and on March 28 Beijing accepted the UN's prisoner proposal. The big dam strikes came in May, two months after Moscow had decided to quit, yet Western studies credit them with helping force the deal, and Sabre pilots claimed 163 MiGs for three losses in May and June. Zhang concludes that Stalin's death, not air pressure, broke the logjam. That fits Crane's point that the ambiguous ending let the Air Force believe it had succeeded, and both authors end up in Vietnam. Two books, opposite banks, one bill. Even the Supung strike of June 23, 1952 gets two versions: Crane counts about 90 percent of North Korea's power gone, while the Soviet commander says monsoon storms kept the MiGs grounded. Either way, the lights went out.</p>
+  <p>Seminar question: If Zhang is right that Stalin's death, not the May 1953 bombing, ended the war, what could an air planner in 1953 have measured to tell the difference? <span class="by">(S)</span></p>
+</article>
+
+      <article id="z-ch09">
+  <span class="kicker">Chapter by Chapter · Zhang, chapter 9</span>
+  <h3><a href="#z-ch09">Everybody Won the Air War, Which Is How You Know Nobody Counted Right</a></h3>
+  <p>Zhang opens his conclusion with the scoreboard, and then spends the chapter telling you not to trust it. By the armistice on July 27, 1953, the PLAAF had grown to 27 air divisions and more than 3,000 aircraft. It had flown 26,491 sorties, admitted losing 231 planes, and claimed about 1.42 kills for every loss. The Soviets claimed 1,309 UN aircraft for 335 MiGs, with a ratio of 7.9 to 1 through December 1951 that slid to 1.9 to 1 by 1953. American pilots claimed 8 or 10 to 1. The North Koreans, wisely, mostly stayed home: one Russian source has them flying 12 sorties a month while the Soviets flew 2,500. Zhang's verdict is that the Americans overcounted, because a gun-camera hit earned credit even if nobody saw the MiG go down, while the Soviets figured only 75 percent of filmed hits were real kills. Some American accounts have since cut the ratio to 2 to 1.</p>
+  <p>Then the turn: kill ratios do not explain who won. Even by Chinese reckoning, the USAF held air superiority the whole war. The UN flew 1.04 million sorties, and the Chinese counted roughly 190,000 bombs dropped on railroads, one for every seven meters of track. The PLAAF averaged 50 MiG sorties a day against 900 for the USAF. Chinese ground forces could not mount large daytime operations for three years. Yet Zhang insists the Communist air effort was crucial to keeping supply lines open. Both sides kept it limited. The USAF never hit bases in northeast China, Washington kept Soviet participation from the American public, and Beijing never sent its air force south of the 38th Parallel.</p>
+  <p>The lessons Beijing drew were mostly the convenient ones. Mao, whose own son died in an air raid, was gratified that bombing killed fewer of his soldiers than he had feared, and he never let airpower change his strategy. The PLAAF filed 3,653 combat reports by 1955 and concluded that the human factor was still decisive. It took on Soviet defensive doctrine, put army officers in command, and kept its aircraft busy defending things. Moscow got a tested MiG and a pinned-down America; Beijing got a debt of 3 billion yuan, finally paid in 1964, and the lesson that Stalin was an unreliable ally.</p>
+  <p>The one thing to remember is the myth. Zhang Jihui and Han Dechai became household names in China for shooting down American aces George Davis and Harold Fischer, and PLAAF writers love to quote Vandenberg's line that China had become "one of the major air powers of the world." Veterans remember an unbroken string of victories. The bill came in 1954, when the PLAAF failed to spot 70 percent of intruding Nationalist aircraft. Korea veteran Lin Hu recalled that pilots who believed they had beaten the Americans saw the Nationalists as little threat. Zhang calls it self-delusion that lasted more than forty years. In fairness, at least one man tried: the CPV Air Force deputy commander, Duan Suquan, warned Peng Dehuai that even a 1 to 1 ratio against Sabres was hard and told leaders to stop exaggerating. The myth won anyway.</p>
+  <p>Opinion: this is the chapter where Zhang closes the loop on his introduction, which took aim at Futrell's 7 to 1 kill ratio. Put it next to Crane, whose subject was "the image and reality of American airpower" and whose FEAF commander said "we certainly don't advertise our limitations." Both air forces left Korea with a flattering image, and both paid later: Crane's Air Force went back to planning for general war and paid in Vietnam, while Zhang's PLAAF could not police its own coast. A 10 to 1 claim and a 2 to 1 revision are the Michigan Senate poll problem: same race, different pollster, very different headline. And Crane's 1952 FEAF study saying rail interdiction failed reads differently once you know the other side counted one bomb per seven meters and still kept the trains running.</p>
+  <p>Zhang ends looking forward. After the 1991 Gulf War, the PLAAF decided it must play a major rather than supporting role, and by the late 1990s it was finally turning its back on Korea's defensive legacy. Chinese planners now name Taiwan, the borders, and the South China Sea as likely flashpoints. Zhang's warning is that Washington paid scant attention to Chinese strategic thinking in 1950, and that the will of the Chinese people, more than China's military capability, will likely drive Beijing's decisions. If you are writing the 628 paper on a Taiwan invasion, that is your epigraph. If Zhang is right that Beijing intervened in 1950 with almost no air force at all, how much should American planners discount China's capability gaps when they estimate whether it would fight over Taiwan? <span class="by">(S)</span></p>
+</article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Organized by article, each keyed to the phrase it supports. Page numbers are from your Drive copies: Gaddis, <i>Strategies of Containment</i>, rev. ed. (Oxford, 2005); Crane, <i>American Airpower Strategy in Korea, 1950–1953</i> (Kansas, 2000); Zhang, <i>Red Wings over the Yalu</i> (Texas A&amp;M, 2002). Anything marked <i>unverified</i> still needs a look.</p>
+
+        <h3>Zhang Flips the Map</h3>
+        <ul>
+          <li>Communist side, archives and oral histories; "significantly modify conventional wisdom": Zhang, 8.</li>
+          <li>Three threads: Zhang, 6. Allies with separate interests; Soviets avoiding a direct clash: 7.</li>
+          <li>Politics versus inexperience: Zhang, 8. No aviation industry, Soviet equipment: 7. Ground-war leaders: 6. Students with no Russian taught by Soviet advisers: 43.</li>
+          <li>Kill ratios and mismatched reports: Zhang, 10–11. U.S. claims "probably highly inflated": 5.</li>
+          <li>"Cryptic promise": Zhang, 60. Stalin's strategy: 62. The 13th Army Group: 63. Stalin's October telegram: 65.</li>
+          <li>Fighters defensive, bombers aggressive: Zhang, 46. Air-defense role: 11.</li>
+          <li>Reading plan: chapter pages from the table of contents, Zhang, vii. The chapter articles below are drawn from the full text.</li>
+        </ul>
+
+        <h3>What Would Zhang Make of Your 628 Paper?</h3>
+        <ul>
+          <li>The prompt, the examples, "there can be only one," ten pages, due 1 December: SAASS 628 AY27 Syllabus, "Grading."</li>
+          <li>Air force born of the Taiwan plan: Zhang, 32 (also 6). Mao's request for Soviet air and naval support; Zhou's "offensive unit" for the cross-strait campaign: 33. First operational mission: 39–40.</li>
+          <li>Air-defense role: Zhang, 11. Allies with separate interests; Stalin avoiding a direct clash: 7. Mismatched combat reports: 10–11. Politics versus inexperience: 8.</li>
+          <li>The three cautions and the fourth are my extrapolation, not Zhang's claims.</li>
+        </ul>
+
+        <h3>The Story So Far</h3>
+        <ul>
+          <li>Strategy as ends and means: Gaddis, viii. Symmetrical and asymmetrical: xiii.</li>
+          <li>Five centers: Gaddis, 29. Strongpoint rather than perimeter: 57.</li>
+          <li>Limited resources: Gaddis, 57–58. Truman's figures, Acheson, Forrestal: 61.</li>
+          <li>Interests before threats: Gaddis, 31. The "X" article, Krock, Lippmann: 24–25. "Counter-force at every point": 57.</li>
+          <li>"Image and reality"; Smart's "we certainly don't advertise our limitations": Crane, 6.</li>
+          <li>June 29, 1950 and the border restriction: Crane, 23–24. Rashin: 44–45. Yalu spans: 49–50.</li>
+          <li>500,000 soldiers and civilians: Crane, 82–83. The April 1952 study, 15,000 cuts, 243 aircraft: 115–116. Hydroelectric strikes: 119–120.</li>
+          <li>Attlee: Crane, 58–59. Okinawa: 70. HUDSON HARBOR: 71.</li>
+          <li>"Compatible with air force capabilities": Crane, 155. Ambiguous ending and Vietnam: 9 and vii.</li>
+        </ul>
+
+        <h3>On Precise Language</h3>
+        <ul>
+          <li>Sword's word categories (be-verbs; it, this, that, there): Helen Sword, <i>Stylish Academic Writing</i> (Harvard, 2012), 60. The advice on "many" and "most" is my own.</li>
+          <li>Rewrite facts: Crane, 115–116 and 82–83.</li>
+          <li>Nominalizations defined; 78 percent of higher-education articles versus 16 percent of history articles: Helen Sword, <i>Stylish Academic Writing</i> (Harvard, 2012), 19.</li>
+          <li>WritersDiet test: Sword, 60. Human or concrete subject plus active verb in every paragraph; no more than three prepositional phrases in a row: 61.</li>
+          <li>"Weyland opposed," "Truman approved," and "Stalin hedged" are summary sentences built from Crane, 157–158 and 23–24, and Zhang, 60–65. The "committee" sentence is invented as an example.</li>
+        </ul>
+
+        <h3>Whose Numbers Do You Trust?</h3>
+        <ul>
+          <li>Michigan YouGov 48–46 (Oct. 2–19): <a href="https://www.electoral-vote.com/" target="_blank" rel="noopener">electoral-vote.com</a>, October 27, 2026, "Today's Senate Polls."</li>
+          <li>Michigan Glengariff 51–45 (Oct. 19–22); Maine Marist 49–47 (Oct. 22–25); Texas YouGov 50–45 (Oct. 13–21); Florida Activote 53–47 (Oct. 17–27); the 56-seat scenario: electoral-vote.com, October 28, 2026, "Today's Senate Polls." EV's page doesn't list margins of error. The two-point point is a general rule of thumb about poll sizes, not a sourced figure.</li>
+          <li>Israel: about half the ballots counted, Likud largest at about 27 seats, opposition about 65 versus about 55; "predictably ambiguous": electoral-vote.com, October 28, 2026, "Results in Israel are Predictably Ambiguous," citing Haaretz.</li>
+          <li>Official kill ratios that may misrepresent reality; mismatched combat reports: Zhang, 10–11.</li>
+        </ul>
+
+        <h3>The Iran War's Receipt Arrives</h3>
+        <ul>
+          <li>More than $47 billion; more than 25 percent above the $37.5 billion July estimate; over $29 billion for munitions; more than $6 billion for equipment and "platform losses"; base repairs not clearly included; February start, April ceasefire, naval blockade: Phil Stewart (Reuters), "<a href="https://www.defensenews.com/pentagon/2026/10/28/us-costs-of-iran-war-rise-to-over-47-billion-according-to-pentagon-estimate/" target="_blank" rel="noopener">US costs of Iran war rise to over $47 billion, according to Pentagon estimate</a>," <i>Defense News</i>, October 28, 2026. "About ten billion dollars" and "three and a half billion a month" are my arithmetic.</li>
+          <li>Chinese paid the Soviet advisers' living expenses and supplies: Zhang, 43.</li>
+          <li>Gaddis on the perception of means: Gaddis, 57–58.</li>
+          <li>F-35 framework, 85 versus 47: Michael Scanlon, "<a href="https://www.militarytimes.com/news/pentagon-congress/2026/10/22/pentagon-lockheed-agree-to-10-year-deal-for-850-f-35-jets/" target="_blank" rel="noopener">Pentagon, Lockheed agree to 10-year deal for 850 F-35 jets</a>," <i>Military Times</i>, October 22, 2026.</li>
+          <li>Fifty billion for drones: "<a href="https://www.militarytimes.com/video/2026/10/15/pentagon-looks-for-50b-for-mass-drone-production-hegseth-says/" target="_blank" rel="noopener">Pentagon looks for $50B for mass drone production</a>," <i>Military Times</i>, October 15, 2026 (paraphrase; no direct quote on the page).</li>
+          <li>No aviation industry; dependence on Soviet equipment and training: Zhang, 7. Study in the Soviet Union for six to eight months and buy about one hundred planes: 33.</li>
+        </ul>
+
+        <h3>Loose Bets Sink Fleets</h3>
+        <ul>
+          <li>Hegseth memo, authenticity confirmed, Polymarket and Kalshi named, the Maduro case ($400,000, not-guilty plea, December trial), the F-15E rescue bets removed, $550,000 tied to Operation Epic Fury, foreign intelligence concern, "Not entertainment. Not a payout.", UCMJ penalties: Cristina Stassis, "<a href="https://www.militarytimes.com/pentagon/2026/10/26/pentagon-cautions-personnel-against-betting-using-insider-information/" target="_blank" rel="noopener">Pentagon cautions personnel against betting using insider information</a>," <i>Military Times</i>, October 26, 2026.</li>
+          <li>Soviet advisers (commanders, instructors, mechanics, ground crew) in civilian clothes for secrecy; no archival sources on their work; role sketched from fragmentary Chinese reminiscences: Zhang, 43. Soviets avoiding a direct clash with the United States: 7.</li>
+        </ul>
+
+        <h3>Up, Up, and Just Outside</h3>
+        <ul>
+          <li>Balloons for sensing, relay, and strikes against China's anti-access network; Harrington at AUSA; weeks or months aloft; above 60,000 feet in international airspace; Guam and Japan tests; "200, 300 at a time" (Brig. Gen. Steven Carpenter); seasonal flight paths: Christopher Woody, "<a href="https://www.defensenews.com/industry/techwatch/2026/10/27/us-army-looks-to-high-flying-balloons-to-help-see-strike-along-front-lines-with-china/" target="_blank" rel="noopener">US Army looks to high-flying balloons to help see, strike along front lines with China</a>," <i>Defense News</i>, October 27, 2026.</li>
+          <li>Nationalists owning the airspace and raiding Shanghai in early 1950; seven fighter and four bomber regiments: Zhang, 45. Mission order and fighter priority: 46. Air-defense role: 11.</li>
+          <li>Yalu spans limited to the Korean side: Crane, 49–50.</li>
+          <li>The Montgolfier line is a joke. The brothers flew the first hot-air balloons in 1783, which is common knowledge and not from these sources.</li>
+        </ul>
+        <h3>Zhang, chapter 1: An Overnight Air Power, Four Decades in the Making</h3>
+<ul>
+  <li>Vandenberg, November 21, 1951, "one of the major air powers"; 1,400 planes incl. 700 MiGs: Zhang, 12.</li>
+  <li>Sun Yat-sen, "aviation as the nation's salvation," urged aviation study from 1911: Zhang, 14.</li>
+  <li>Sun adopted Douhet and Mitchell; "no air force means no national defense": Zhang, 15.</li>
+  <li>Sun's school: ten students, two Curtiss trainers, three German instructors: Zhang, 15–16.</li>
+  <li>Nationalist air force: nine squadrons, 700+ pilots, 600 aircraft by end of 1936: Zhang, 17.</li>
+  <li>Over a thousand aircraft by war's end; fewer than 300 airworthy by mid-1947; monopoly gave no advantage: Zhang, 17.</li>
+  <li>Xinjiang unit: 43 officers selected, literacy test waived: Zhang, 20.</li>
+  <li>Nationalist uniforms, pseudonyms: Zhang, 21.</li>
+  <li>About 300 flying hours each by April 1942; Sheng Shicai's switch and arrest of 160 CCP personnel in September 1942: Zhang, 21.</li>
+  <li>Northeast Aviation School founded March 1, 1946, Tonghua, Japanese aircraft; Japanese personnel persuaded to stay: Zhang, 25.</li>
+  <li>Alcohol for gasoline, cornbread and pickles, coats tied with rope; 126 pilots trained by July 1949: Zhang, 26.</li>
+  <li>Candidates were machine gunners, explosives carriers, infantry: Zhang, 26.</li>
+  <li>1947 debate; Soviet-trained faction dominant, Soviet materials adopted: Zhang, 26–27.</li>
+  <li>First-generation pilots averaged eighty to one hundred hours in Japanese aircraft: Zhang, 27.</li>
+  <li>Mao: men could beat weapons; June 1950 "not fear death" remark; human factor over machine: Zhang, 28.</li>
+  <li>The Lenin: Vought Corsair landed in Hubei February 1930, pilot persuaded, renamed; leaflets over Wuhan September 8, 1931; two mortar shells at Huangan, town seized in three days; dismantled and hidden after July 1932 campaign; unearthed 1951: Zhang, 18–19.</li>
+  <li>MiG-15s over the Yalu from early 1951: Zhang, 27.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Crane, American Airpower Strategy in Korea, "the image and reality of American airpower" and Gen. Smart's "we certainly don't advertise our limitations" (6).</li>
+</ul>
+
+        <h3>Zhang, chapter 2: Built for Taiwan, Shipped to the Yalu, Sixty-Three Hours Included</h3>
+<ul>
+  <li>CCP's urgent desire for an air force derived primarily from Mao's Taiwan plan: Zhang, 32.</li>
+  <li>Mao's July 10, 1949, letter: three to four hundred people to the USSR, about a hundred planes, "seize Taiwan next summer": Zhang, 33.</li>
+  <li>Liu Yalou charged with organizing the air force; "the future air force commander": Zhang, 33.</li>
+  <li>Nationalists estimated at 150 to 200 fighters; Liu's July 29 proposal of 300 to 350 fighters; Mao approved, urged thrift: Zhang, 34.</li>
+  <li>Vershinin, August 18: six schools, 434 aircraft, 878 Soviet personnel: Zhang, 35.</li>
+  <li>La-9 vs. P-51 concerns; complaints about new prices for old machinery: Zhang, 35.</li>
+  <li>Air force seen as a support unit of the PLA; no consideration of an independent service: Zhang, 38.</li>
+  <li>Liu's August 1951 article; air force should take ground forces' victories as its own: Zhang, 39–40.</li>
+  <li>Preference for fighters over bombers as defensive: Zhang, 46.</li>
+  <li>Interpreters who did not know aviation terminology: Zhang, 43.</li>
+  <li>Six schools graduated first class early in October 1950; Yak-18 and Yak-11 only; about 63 hours vs. standard 150 to 200; 3.35 accidents per ten thousand sorties in 1950; more than a hundred fatal crashes in first half of 1951; PLAAF later conceded more hours would have meant fewer losses and probably more victories: Zhang, 42.</li>
+  <li>$300 million loan at 1 percent; $20 million, a third of the 1950 installment, to air force and navy: Zhang, 51.</li>
+  <li>1950 PLAAF budget requests of 369.1 million renminbi, 13 percent of defense budget: Zhang, 52.</li>
+  <li>Donation campaign called for June 1951; schoolchildren's pocket money (photo caption): Zhang, 52.</li>
+  <li>Donations coerced in practice; 556.5 million renminbi collected by June 1952, enough for 3,710 fighters: Zhang, 53.</li>
+  <li>Liu's approval rule for dinner parties and operas; dairy farm budget criticized: Zhang, 53.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Gaddis, Strategies of Containment, strategy as relating ends to means (viii); the 628 paper prompt listing a Chinese invasion of Taiwan.</li>
+</ul>
+
+        <h3>Zhang, chapter 3: Stalin Never Broke His Promise. He Just Never Made One.</h3>
+<ul>
+  <li>Stalin "cannot be said to have reneged since he never withdrew his promise"; never defined what air support he would provide: Zhang, 73-74.</li>
+  <li>July 5, 1950 telegram to Zhou: nine divisions on the border, offer of air cover: Zhang, 56.</li>
+  <li>July 13 telegram: MiG division of 124 planes; vague on coordination with ground forces: Zhang, 60.</li>
+  <li>151st GIAD under Belov in place at Shenyang, Liaoyang, Anshan by early August: Zhang, 61.</li>
+  <li>Directive to Belov: train Chinese pilots first; no missions beyond the Yalu: Zhang, 62.</li>
+  <li>August 31 13th Army Group report: air support needed; delay if Soviet air support not guaranteed: Zhang, 63.</li>
+  <li>Zhou at Stalin's Black Sea villa, October 10-11; Stalin: two to two and one-half months to get ready: Zhang, 70-72.</li>
+  <li>October 14 order: four MiG-9 IADs (208 jet fighters) plus Il-10 regiments; pilots "strictly forbidden" to fly at the front: Zhang, 73.</li>
+  <li>Final order October 18; troops crossed October 19: Zhang, 76.</li>
+  <li>October 9 Shenyang conference, ready in ten days, thirty-six Japanese-made 76-mm AA guns, no ground-air coordination orders, Peng's mid-session cable ("who will be in charge?"): Zhang, 68.</li>
+  <li>Mao's October 11 cable: "the air force cannot set off for the time being": Zhang, 70.</li>
+  <li>Peng threatened to resign at October 13 Politburo meeting: Zhang, 74.</li>
+  <li>October 16 Andong speech: air force not "as fearsome as people think": Zhang, 75.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Truman's June 29, 1950 approval with orders to stay clear of Soviet and Manchurian borders, and November 1950 Yalu bridge limits: Crane, 23-24, 49-50. Smart quote: Crane, 6.</li>
+</ul>
+
+        <h3>Zhang, chapter 4: The MiGs Came to Korea by Way of Shanghai, and Nobody Agrees on the Score</h3>
+<ul>
+  <li>Soviet air operations in this period an extension of the air defense of northeast China: Zhang, 96-97.</li>
+  <li>Shanghai: twenty-six raids October 1949-February 1950; February 6 raid killed more than fourteen hundred: Zhang, 79.</li>
+  <li>Mao's request from Moscow; Batitskiy appointed: Zhang, 79-80.</li>
+  <li>Forty-four MiG-15 pilots; Chinese-type uniforms; identifications removed: Zhang, 81.</li>
+  <li>April 28 first MiG-15 combat kill, a P-38, by Maj. Kelenichkov: Zhang, 82.</li>
+  <li>Shanghai tactics learned against a weak foe; 29th GIAP showed weaknesses over the Yalu: Zhang, 83-84.</li>
+  <li>Soviets barred pilots from flying beyond the coastline to avoid the Taiwan campaign: Zhang, 80.</li>
+  <li>Eleven Soviet air divisions arrived November-December 1950: Zhang, 85.</li>
+  <li>MiG-9: short range, poor maneuverability, Chinese suspicions of dumping: Zhang, 86.</li>
+  <li>384 Soviet sorties vs. 2,525 detected enemy sorties in November: Zhang, 92.</li>
+  <li>Soviet pilots limited to about thirty miles of Andong; no coordination with CPV ground operations; irrelevant to CPV early success: Zhang, 97.</li>
+  <li>First jet kill dispute: Brown (Nov. 8) vs. Khomich (Nov. 1); UN reported no losses Nov. 1; no Soviet MiG losses Nov. 8; drop-tank theory; Amen and Grachev Nov. 9; award "should probably" go to the Navy: Zhang, 87-88.</li>
+  <li>December 23: U.S. claimed six MiGs "definitely destroyed," no losses; Soviets claimed three F-86s: Zhang, 95.</li>
+  <li>December: forty-one victories credited to Pashkevich's units, six losses; disputed by Americans: Zhang, 96.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Michigan Senate polls (YouGov 48-46, Glengariff 51-45): electoral-vote.com, Oct 28, 2026. "Image and reality of American airpower": Crane, 6. Taiwan invasion as a 628 paper example: course prompt.</li>
+</ul>
+
+        <h3>Zhang, chapter 5: Build It and They Will Bomb It</h3>
+<ul>
+  <li>Frustrations and failures from November 1950 to August 1951: Zhang, 99&ndash;100.</li>
+  <li>USAF 14 wings, some 1,100 combat aircraft, WWII veterans with 1,000+ hours; PLAAF about 200 aircraft, pilots under 100 hours, no air combat experience: Zhang, 100.</li>
+  <li>Peng demanded maximum effort; Mao approved ground-support priority on December 4: Zhang, 101.</li>
+  <li>"Real combat practice" at Andong; Li Han damaged an F-84 on January 21; a week later claimed an F-84, FEAF concedes an F-80C: Zhang, 103, 106.</li>
+  <li>12th Aviation Regiment had fifteen MiG hours; lost a squadron without firing a shot after February 10: Zhang, 106&ndash;107.</li>
+  <li>4th Aviation Division: 145 sorties, enemy met on twenty-four, one U.S. plane downed, two damaged, two MiGs and one airman lost: Zhang, 107.</li>
+  <li>Postponement to September; then to November after the August 4&ndash;5 meeting: Zhang, 109, 113.</li>
+  <li>Mao's March 1 telegram on no operational airfield and no air cover: Zhang, 110.</li>
+  <li>Stalin's request for four concrete airfields for Soviet MiGs; Soviets insisted on simultaneous construction: Zhang, 110&ndash;111.</li>
+  <li>Zhou's estimate of 24,000 man-days per jet field in China, 96,000 for the four Soviet fields: Zhang, 111.</li>
+  <li>Two million man-days, 30,000 tons of cement, 36,000 pieces of PSP: Zhang, 111&ndash;112.</li>
+  <li>Seventy-two attacks on the fields; Sunchon finished late July; Soviets could not use the fields, too far from support in China: Zhang, 112&ndash;113.</li>
+  <li>Zhou to Zakharov on losing 500 thousand to a million soldiers but not the air force: Zhang, 116.</li>
+  <li>Stalin's "paper pilots" telegram, June 13: Zhang, 118&ndash;119.</li>
+  <li>Peng canceled the offensive on August 21: Zhang, 120.</li>
+  <li>Bomber and attack commands disbanded in December when ground support was dropped; close air support dropped completely: Zhang, 103, 121.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Strategy as relating ends to means: Gaddis, <i>Strategies of Containment</i>, viii.</li>
+</ul>
+
+        <h3>Zhang, chapter 6: The Chinese Pilots Who Spoke Russian</h3>
+<ul>
+  <li>U.S. claims of about 950 destroyed, 850+ MiGs, 147 air-to-air losses; Soviet claims of 1,000+ for some 300 losses; the Soviets, not the PLAAF, fought head-to-head; discrepancy impossible to reconcile: Zhang, 122.</li>
+  <li>Three phases of Soviet operations; veteran units replaced by less-experienced pilots with higher losses: Zhang, 123.</li>
+  <li>Kozhedub, top WWII ace, commanded the 324th IAD; Lobov commanded the 303d IAD: Zhang, 126&ndash;127.</li>
+  <li>April 12, 1951: thirty-six MiGs against forty B-29s; Stratemeyer suspended B-29 operations in the Sinuiju area: Zhang, 128&ndash;129.</li>
+  <li>Black Tuesday, October 23, 1951, over Namsi: Soviet estimates and claims; FEAF sent nine bombers, one turned back; U.S. losses and crash-landings; U.S. claims of nine MiGs: Zhang, 131.</li>
+  <li>Bruning's explanation; no North Korean MiG units before 1952; Chinese 4th Division sent to Shenyang on October 20: Zhang, 131.</li>
+  <li>Americans suspended daylight B-29 operations several days later: Zhang, 132.</li>
+  <li>USAF leaders knew Soviet participation but credited the Chinese to avoid stirring sentiment for war with Russia; Vandenberg's remark: Zhang, 133.</li>
+  <li>North Korean markings, Chinese uniforms and pseudonyms, Chinese on the radio though few did, no flights over enemy territory or sea: Zhang, 139.</li>
+  <li>No bombs, rockets, or napalm; purely defensive; Americans held the initiative: Zhang, 139.</li>
+  <li>Kozhedub's "two regiments against all of imperialism": Zhang, 140.</li>
+  <li>Whole divisions rotated rather than individual pilots: Zhang, 140.</li>
+  <li>64th IAK claims of 1,106 by fighters and 212 by antiaircraft; 335 MiGs and 120 pilots lost: Zhang, 138.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Gen. Smart quote: Crane, <i>American Airpower Strategy in Korea</i>, 6. Michigan Senate polls, YouGov 48&ndash;46 vs. Glengariff 51&ndash;45: electoral-vote.com, Oct 28, 2026. Taiwan invasion as a 628 paper example: course 628 paper prompt.</li>
+</ul>
+
+        <h3>Zhang, chapter 7: Same Bombers, Same Route, Same Time: What Could Go Wrong?</h3>
+<ul>
+  <li>Operation Strangle begins August 18, 1951: Zhang, 143.</li>
+  <li>General Staff's four decisions (repair manpower, bridge materials, ferries, antiaircraft artillery and air force entry): Zhang, 145.</li>
+  <li>4th Division to Langtou September 12: Zhang, 146.</li>
+  <li>4th Division, September 12 to October 19: 508 sorties, 20 kills claimed, 14 lost; FEAF records show no losses; air forces accurate about own losses: Zhang, 148.</li>
+  <li>447 pilots; 11,100 sorties, 15 percent (1,602) in combat; Xu Yan, 300 hours vs. 50 to 60: Zhang, 170.</li>
+  <li>Peng's frustration over lack of ground support: Zhang, 155; airfields bombed 119 times, ground support set aside late December 1951, 100-mile limit: Zhang, 171.</li>
+  <li>November 6 raid: nine Tu-2s, 81 bombs, no UN fighters: Zhang, 157.</li>
+  <li>Second raid repeated the same plan, publicized days ahead: Zhang, 158.</li>
+  <li>Army intelligence warns 4th Fighter Wing November 30: Zhang, 158.</li>
+  <li>Gao Yueming, early takeoff and turn, five minutes early, La-11 escort only, MiGs still taking off, "five minutes is a lifetime": Zhang, 158.</li>
+  <li>Jets mistaken for friendly MiGs: Zhang, 159; 31 F-86s under Col. Ben Preston: Zhang, 159.</li>
+  <li>Bombs landed on the beach: Zhang, 161-162; losses of four Tu-2s, three La-11s, one MiG-15; USAF claim raised to eight: Zhang, 162.</li>
+  <li>Rotation after five to seven large battles: Zhang, 168.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Rail interdiction study (15,000+ cuts, 243 aircraft), 500,000 people keeping routes open, Truman's June 29, 1950 border orders: Crane, 115-116, 82-83, 23-24.</li>
+</ul>
+
+        <h3>Zhang, chapter 8: Stalin Dies in March, Bombers Take the Bow in May</h3>
+<ul>
+  <li>Period June 1952 to armistice; accomplishments: Zhang, 172; experience limited to air defense, doubtful long-run advantage: Zhang, 177.</li>
+  <li>Centralized command, orders to flying group leaders: Zhang, 174; Duan Suquan blames Liu Yalou for December 13, 1951: Zhang, 174.</li>
+  <li>Liu Yalou studies records, small formations, four-aircraft principle: Zhang, 176.</li>
+  <li>More than 1,070 officers and men rotated through Korea: Zhang, 177.</li>
+  <li>Red stars on fuselage: Zhang, 178; Zhang Zhongxiang court-martialed; five of eight regimental commanders killed through brashness: Zhang, 179.</li>
+  <li>Zhou cancels Kimpo raid February 8, 1952: Zhang, 185; Peng scrubs June 13-14 raids on Kimpo and Suwon over reprisal fears: Zhang, 185.</li>
+  <li>Stalin, "the air force belongs to the state": Zhang, 188.</li>
+  <li>May 1953: 22,639 USAF sorties, 1,164 CPV Air Force sorties: Zhang, 193.</li>
+  <li>Last day: crews of three divisions crate MiGs and Il-10s, about one hundred crated planes on trains and barges, first evidence of violating the truce, line near where war began: Zhang, 199.</li>
+  <li>Sabre claims of 163 MiGs for three losses in May and June; Western view that dam strikes helped prompt acceptance: Zhang, 195.</li>
+  <li>Stalin dies March 5; Soviet resolution March 19; Beijing accepts POW proposal March 28: Zhang, 196; Stalin's death rather than air pressure; final campaign began two months after Soviet decision: Zhang, 197.</li>
+  <li>Same mistake in Vietnam: Zhang, 200.</li>
+  <li>Supung raid June 23, 1952; Lobov's storm explanation: Zhang, 187.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Ambiguous ending and Vietnam: Crane, 9, vii; hydroelectric strikes knocked out about 90 percent of power: Crane, 119-120.</li>
+</ul>
+
+        <h3>Zhang, chapter 9: Everybody Won the Air War, Which Is How You Know Nobody Counted Right</h3>
+<ul>
+  <li>Armistice July 27, 1953; 27 air divisions (70 regiments), 3,000+ aircraft; 26,491 sorties; acknowledged 231 aircraft lost; claimed ratio 1:1.42 (claims of 211 F-86s, 72 F-84/F-80s, 47 others = 330 vs. 231 lost): Zhang, 201.</li>
+  <li>Soviet 63,229 sorties, 1,309 UN aircraft claimed, 335 MiGs lost; 7.9:1 Nov 1950&ndash;Dec 1951, 2.2:1 in 1952, 1.9:1 in 1953: Zhang, 202.</li>
+  <li>North Koreans 12 sorties monthly vs. Soviets 2,500 and Chinese 1,500 (one Russian source); avoided combat: Zhang, 202.</li>
+  <li>American claims of about 8:1 or 10:1; UN estimates of victories overestimated: Zhang, 202.</li>
+  <li>US credit for gun-camera hits even if no one saw the MiG go down; Soviets believed only 75 percent of filmed hits destroyed; some American accounts revised to 2:1: Zhang, 203.</li>
+  <li>Duan Suquan, former CPV Air Force deputy commander, reported to Peng Dehuai that a 1:1 ratio against Sabres was difficult and warned against exaggeration: Zhang, 203.</li>
+  <li>Kill ratios do not explain the outcome; USAF overwhelming air superiority even from a Chinese perspective: Zhang, 203.</li>
+  <li>1.04 million UN sorties; ~190,000 bombs on railroads, one per seven meters; no large daytime ground activity for three years; PLAAF 50 MiG sorties/day vs. USAF 900; Communist air involvement crucial to keeping supply lines open: Zhang, 204.</li>
+  <li>USAF prohibited from attacking bases in northeast China; US kept public from knowing about Russian participation: Zhang, 211. Communists refused offensive action south of the 38th Parallel: Zhang, 211.</li>
+  <li>Mao's son killed in an air raid; Mao gratified bombing had less effect than imagined; refused to let airpower affect his strategy: Zhang, 208&ndash;209.</li>
+  <li>3,653 combat reports by end of 1955; human factor emphasized: Zhang, 205; "human factor still is decisive": Zhang, 206.</li>
+  <li>Soviet defensive doctrine exported; army officers chosen to command the air force: Zhang, 210.</li>
+  <li>Moscow kept US pinned down and tested MiGs: Zhang, 207&ndash;208. Debt of 3 billion yuan paid off in 1964; Soviet Union an unreliable ally: Zhang, 208.</li>
+  <li>Zhang Jihui and Han Dechai household names for downing George Davis and Harold Fischer; Vandenberg quote; unbroken string of victories; self-delusion for more than forty years: Zhang, 212&ndash;213.</li>
+  <li>70 percent failure rate spotting intruders in 1954; Lin Hu on believing they had "defeated" the Americans: Zhang, 212.</li>
+  <li>Introduction's target: Futrell's 7:1 kill ratio as the dominant American interpretation: Zhang, 5. Book meant to modify conventional wisdom: Zhang, 8.</li>
+  <li>Gulf War 1991; air force must play a major rather than supportive role; 1994&ndash;1999 exercises; turning its back on Korean War experience: Zhang, 213.</li>
+  <li>Taiwan, ethnic border tension, South China Sea as likely sources of war: Zhang, 213.</li>
+  <li>US paid scant attention to Chinese strategic thinking; will of the Chinese people, not military capability, will play a vital role: Zhang, 214.</li>
+  <li>The hook is my extrapolation, not Zhang's claim. Crane, "image and reality of American airpower" and Smart quote (Crane, 6); April 1952 FEAF study on failed rail interdiction (Crane, 115&ndash;116); Air Force returned to general-war planning and paid in Vietnam (Crane, 9, vii). Michigan Senate polls YouGov 48&ndash;46 vs. Glengariff 51&ndash;45 (electoral-vote.com, Oct 28). 628 paper prompt, Taiwan example (course prompt, due Dec 1).</li>
+</ul>
+      </section>
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Helen Sword, <i>Stylish Academic Writing</i></h3>
+        <p class="fine">Sword's rule: give every paragraph at least one sentence with a human or concrete subject followed right away by an active verb, and keep prepositional phrases to three in a row or fewer (p. 61). Rewrite this sentence her way, then open the model.</p>
+        <p class="protip">"The prioritization of interdiction by FEAF leadership led to the expenditure of significant resources without the achievement of the desired disruption of enemy logistics."</p>
+        <div class="mine">
+          <label for="mine-practice">Your rewrite:</label>
+          <textarea id="mine-practice" placeholder="FEAF bet on interdiction…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible rewrite</summary><p>"FEAF bet on interdiction, cut the rails more than 15,000 times, lost 243 aircraft doing it, and still couldn't stop the trains" (Crane, 115–116). The human subject and four active verbs carry it, and the nominalizations (prioritization, expenditure, achievement, disruption) are gone.</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Crane: seminar recall</h3>
+        <ul class="recall">
+          <li><details><summary>Who limited airpower in Korea, and how?</summary><p>Washington, step by step: air action south of the 38th Parallel until June 29, 1950, then the North with the Soviet and Manchurian borders off-limits (23–24); no more attacks near Rashin after September 1950 (44–45); Yalu bridges hit only on the Korean side (49–50).</p></details></li>
+          <li><details><summary>What was Truman afraid of?</summary><p>A wider, possibly global war. Attlee rushed to Washington after the November 30, 1950 press conference (58–59). In April 1951 Truman sent nuclear weapons and SAC bombers toward Okinawa, though the bombers stayed on Guam (70).</p></details></li>
+          <li><details><summary>Did airpower achieve its objectives?</summary><p>Partly. Interdiction disappointed (82–83). The April 1952 study found more than 15,000 rail cuts hadn't worked, at a cost of 243 aircraft, and launched air pressure (115–116). The hydroelectric strikes cut about 90 percent of the North's power (119–120). Air superiority was "in jeopardy" in September 1951 (83–84).</p></details></li>
+          <li><details><summary>Why no atomic bomb?</summary><p>HUDSON HARBOR found long delays and no suitable targets (71). Weyland opposed atomic use over the Manchurian airfields and the propaganda risk (157–158).</p></details></li>
+          <li><details><summary>What interservice fights did airpower start?</summary><p>Weyland said he fought the Navy as much as the Communists, and Smart spent 40 percent of his time on Army and Navy proposals (7). Close air support: about 10 minutes for the Marines versus about 45 for the USAF (61–62).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Zhang: chapter recall</h3>
+        <ul class="recall">
+          <li><details><summary>What was the Lenin, and what did it accomplish?</summary><p>A Nationalist Vought Corsair that landed lost in Communist territory in 1930 and became the Red Army's first combat aircraft; it dropped leaflets on Wuhan and two mortar shells that helped topple the Huangan garrison in 1931. <span class="pg">Z 18–19</span></p></details></li>
+          <li><details><summary>How many flying hours did the PLAAF's first class of 1950 graduates average, and against what standard?</summary><p>About sixty-three hours, in Yak-18 and Yak-11 trainers only, against a standard of 150 to two hundred hours; more than a hundred fatal crashes followed in the first half of 1951. <span class="pg">Z 42</span></p></details></li>
+          <li><details><summary>What did Zhou learn from Stalin at the Black Sea villa about Soviet air support, and what did Moscow order on October 14, 1950?</summary><p>Stalin said Soviet air units would need two to two and one-half months to get ready; on October 14 Moscow ordered 208 MiG-9 jet fighters to China, with pilots "strictly forbidden" to fly at the front. <span class="pg">Z 71-73</span></p></details></li>
+          <li><details><summary>Per Zhang, who probably deserves credit for the first jet-to-jet kill in history, and why?</summary><p>The U.S. Navy: Soviet records show no MiG losses on November 8 (Lt. Brown's claimed kill) but confirm William Amen shot down Sr. Lt. Grachev's MiG on November 9. <span class="pg">Z 88</span></p></details></li>
+          <li><details><summary>Why did China's two million man-days of airfield building in North Korea go to waste by July 1951?</summary><p>UN bombers hit the sites seventy-two times, and when the last field at Sunchon was finished in late July the Soviets could not use any of them because they were too far from bases in China to be supported. <span class="pg">Z 112&ndash;113</span></p></details></li>
+          <li><details><summary>Why did U.S. Air Force leaders publicly credit the Chinese air force for MiG victories in late 1951?</summary><p>They knew the MiGs that beat their bombers were flown by Soviets, but credited the Chinese to avoid stirring up public sentiment for a war with Russia. <span class="pg">Z 133</span></p></details></li>
+          <li><details><summary>Why did the second Chinese bomber raid on Taehwa-do (November 30, 1951) turn into a massacre?</summary><p>The PLAAF repeated the November 6 plan exactly and publicized it, U.S. intelligence warned the Sabres, and the Tu-2s arrived five minutes early, before their MiG cover, losing four bombers, three La-11s, and a MiG. <span class="pg">Z 158-162</span></p></details></li>
+          <li><details><summary>What does Zhang say finally broke the armistice deadlock in 1953?</summary><p>Stalin's death on March 5, 1953, not U.S. air pressure: Moscow made ending the war a priority on March 19, and Beijing accepted the UN POW proposal on March 28, before the May dam strikes. <span class="pg">Z 196-197</span></p></details></li>
+          <li><details><summary>Why does Zhang say American kill claims in Korea were inflated, and what revised ratio does he cite?</summary><p>US pilots got credit whenever gun-camera film showed hits, even if no one saw the MiG go down, while the Soviets assumed only 75 percent of filmed hits were kills; some American accounts now put the ratio at about 2 to 1. <span class="pg">Z 203</span></p></details></li>
+<li><details><summary>What 1954 number shows the PLAAF's Korean "victory" did not translate into real air defense?</summary><p>The PLAAF failed to spot 70 percent of intruding Nationalist aircraft in 1954, and it did not claim solid control of China's airspace until the 1958 Taiwan Strait crisis. <span class="pg">Z 212</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: what did Kennan say mattered, and why did Truman like it?</summary><p>Five centers of industrial and military power, defended as strongpoints (29, 57). It fit an administration convinced its resources were limited (57–58).</p></details></li>
+          <li><details><summary>Crane: name two Washington limits on airpower in 1950.</summary><p>No more attacks near Rashin after September 1950 (44–45), and the Yalu bridges hit only on the Korean side (49–50).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Fix it: "Several restrictions often limited airmen."</summary><p>Name them and who imposed them: "The JCS barred strikes near the Soviet and Manchurian borders and limited the Yalu bridge attacks to the Korean side of the spans" (Crane, 23–24, 49–50).</p></details></li>
+          <li><details><summary>Fix it: "Most historians agree this was a failure."</summary><p>Which historians, and what failed? "Crane argues that rail interdiction failed despite more than 15,000 cuts" (115–116).</p></details></li>
+          <li><details><summary>Review: "It was decided that interdiction would continue."</summary><p>Passive voice with no actor. Sword's rule applies: put a human subject in front of an active verb. Name the decider your source identifies.</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: write one paragraph on Crane, then check it against Sword's word list.</label>
+          <textarea id="mine-crane" placeholder="Crane argues…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+      <section class="block bank" id="comps" aria-label="Comps question bank">
+        <h2>Comps Bank · cumulative</h2>
+        <div class="bank-head">
+          <h3>Answer First, Then Open</h3>
+          <span class="progress" id="prog" aria-live="polite"><b>0</b> of 20 nailed</span>
+        </div>
+        <p class="howto">Say the answer out loud or jot three bullets in your notebook, then open the question to check. Tick "Nailed it" only if you got the page-level details. Unticked questions are your review list. Ticks save in this browser on this device.</p>
+        <div class="chips" role="group" aria-label="Filter questions">
+          <button type="button" data-f="all" aria-pressed="true">All</button>
+          <button type="button" data-f="gaddis" aria-pressed="false">Gaddis</button>
+          <button type="button" data-f="crane" aria-pressed="false">Crane</button>
+          <button type="button" data-f="cross" aria-pressed="false">Cross-book</button>
+          <button type="button" data-f="zhang" aria-pressed="false">After Zhang</button>
+          <button type="button" data-f="todo" aria-pressed="false">Not nailed yet</button>
+        </div>
+        <ol class="qbank" id="qbank">
+
+          <li data-q="g1" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Recall</span></span>How does Gaddis define strategy, and what distinction organizes the book?</summary><div class="ans">
+            <ul><li>Strategy is "the process by which ends are related to means, intentions to capabilities, objectives to resources." <span class="pg">viii</span></li>
+            <li>The organizing tool is the difference between symmetrical containment (respond wherever challenged) and asymmetrical containment (respond on chosen ground and terms). <span class="pg">xiii</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="g2" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Recall</span></span>What were Kennan's five vital centers, and what did he want done about them?</summary><div class="ans">
+            <ul><li>The United States, Great Britain, Germany and central Europe, the Soviet Union, and Japan, which he presented to National War College students. <span class="pg">29</span></li>
+            <li>Only one was in hostile hands, so the US aim was to keep the other four from falling under Soviet control. <span class="pg">29</span></li>
+            <li>That led to "strongpoint" defense of particular regions and the access to them, rather than "perimeter" defense of fixed lines. <span class="pg">57</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="g3" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Analyze</span></span>What logic connects Kennan's interests, threats, and means?</summary><div class="ans">
+            <ul><li>Because capabilities are finite, interests must be too, so you have to separate the vital from the peripheral. <span class="pg">31</span></li>
+            <li>Means should serve ends, because indiscriminate methods can corrupt the objective. <span class="pg">31</span></li>
+            <li>Interests are the standard for judging threats, never the reverse. A threat has no meaning except in relation to your interests. <span class="pg">31</span></li></ul>
+            <p class="argue">Comps angle: most failures in limited war start when threats begin defining interests.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="g4" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Analyze</span></span>Why did the "X" article create confusion that lasted for decades?</summary><div class="ans">
+            <ul><li>It ran anonymously in <i>Foreign Affairs</i> in 1947, but Arthur Krock revealed Kennan as the author. That made it read like official policy, and Walter Lippmann attacked it at length. <span class="pg">24–25</span></li>
+            <li>Careless drafting contradicted positions Kennan held inside the government, so in places he agreed more with Lippmann than with his own article. He couldn't clarify publicly until his memoirs twenty years later. <span class="pg">25</span></li>
+            <li>Its call for "unalterable counter-force at every point" reads like perimeter defense, even as Kennan was moving toward strongpoints. <span class="pg">57</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="g5" data-t="gaddis"><details><summary><span class="qmeta"><span>Gaddis</span><span>Analyze</span></span>Why did strongpoint defense appeal to the Truman administration before 1950?</summary><div class="ans">
+            <ul><li>It was consistent with the prevailing perception of means: the conviction that resources were limited no matter how dangerous the threat. <span class="pg">57–58</span></li>
+            <li>Kennan partly articulated and rationalized moves the administration was already making. He wasn't its sole author. <span class="pg">57</span></li>
+            <li>Economic aid looked cheaper than war: Truman compared spending $20–30 billion to keep the peace with $100 billion to fight a war. Acheson told Congress that "Recovery is the first objective." <span class="pg">61</span></li>
+            <li>The atomic monopoly let officials accept risks. Forrestal called the years before an adversary could strike back "our years of opportunity." <span class="pg">61</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="c1" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Recall</span></span>State Crane's thesis in three sentences.</summary><div class="ans">
+            <ul><li>The book examines "the image and reality of American airpower." Leaders and the public expected too much, partly because the USAF did not admit its limits. <span class="pg">6</span></li>
+            <li>The USAF planned for quick air superiority followed by strategic bombing. It got the MiG-15, a sanctuary across the border, and a forced turn to interdiction and then "air pressure." <span class="pg">7–8</span></li>
+            <li>The ambiguous ending let the Air Force believe it had succeeded. It drew few lessons and returned to planning for general war, which cost it in Vietnam. <span class="pg">9, vii</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="c2" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Recall</span></span>Trace three Washington-imposed limits on airpower in 1950.</summary><div class="ans">
+            <ul><li>Air action was first limited to south of the 38th Parallel. On 29 June 1950 Truman approved strikes in the North, and the JCS restriction was to stay clear of the Soviet and Manchurian borders. <span class="pg">23–24</span></li>
+            <li>After the bombing of Rashin, about 20 miles from the Soviet border, State Department fears led the JCS to bar further attacks there in September 1950. <span class="pg">44–45</span></li>
+            <li>In November 1950 the Yalu bridge attacks were restricted to the Korean side of the spans. <span class="pg">49–50</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="c3" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Analyze</span></span>Why did FEAF shift from interdiction to "air pressure"?</summary><div class="ans">
+            <ul><li>Interdiction disappointed. FEAF regretted the name STRANGLE, and Communist repair crews of up to 500,000 kept the railways running. <span class="pg">82–83</span></li>
+            <li>An April 1952 FEAF study concluded the rail campaign had not worked despite more than 15,000 rail cuts, at a cost of 243 aircraft destroyed. It proposed air pressure through selective destruction. <span class="pg">115–116</span></li>
+            <li>The June 1952 hydroelectric strikes, run jointly by the Navy and Air Force, destroyed about 90 percent of North Korea's electric power. <span class="pg">119–120</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="c4" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Analyze</span></span>Why wasn't the atomic bomb used in Korea?</summary><div class="ans">
+            <ul><li>Allied fear: after a 30 November 1950 press conference on the bomb, Attlee rushed to Washington. <span class="pg">58–59</span></li>
+            <li>Escalation fear cut both ways. In April 1951 Truman ordered nuclear weapons and more SAC bombers toward Okinawa, fearing global war, but the bombers stayed on Guam. <span class="pg">70</span></li>
+            <li>Practical limits: the 1951 HUDSON HARBOR tests found long delays and weak target evaluation, and the Air Staff concluded there were no suitable atomic targets. <span class="pg">71</span></li>
+            <li>Weyland opposed atomic use. The Manchurian airfields might not be neutralized, and the Soviets would learn from the strikes and use them for propaganda. <span class="pg">157–158</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="c5" data-t="crane"><details><summary><span class="qmeta"><span>Crane</span><span>Recall</span></span>What were the main interservice fights, and was air superiority ever secure?</summary><div class="ans">
+            <ul><li>Weyland said he fought the Navy as much as the Communists. Smart spent 40 percent of his time countering Army and Navy proposals. <span class="pg">7</span></li>
+            <li>On close air support, Marines delivered bombs in about 10 minutes against about 45 for the USAF. Almond carried his complaints to General Collins. <span class="pg">61–62</span></li>
+            <li>Air superiority was never secure: in September 1951 FEAF had about 90 F-86s against 500-plus MiGs and warned that superiority was "in jeopardy." <span class="pg">83–84</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="x1" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></span>The atomic bomb was Truman's deterrent of choice in 1948 and unusable in Korea by 1951. Why?</summary><div class="ans">
+            <ul><li>Gaddis: before 1950 the atomic monopoly underwrote the risks of a cheap, economy-first containment. <span class="pg">G 61</span></li>
+            <li>Crane: in Korea, allied fears (Attlee), escalation fears, and a lack of suitable targets made the bomb a threat rather than a tool. <span class="pg">C 58–59, 70, 71</span></li></ul>
+            <p class="argue">Argue it: a weapon designed for general war has little use in a limited war whose limits exist to prevent general war.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="x2" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></span>Kennan said interests should define threats. Who in Korea failed to define the interest that airpower served?</summary><div class="ans">
+            <ul><li>Kennan's standard: interests first, threats judged against them, and means subordinate to ends. <span class="pg">G 31</span></li>
+            <li>A 1953 FEAF study blamed policy makers for never stating limited-war objectives "compatible with air force capabilities." <span class="pg">C 155</span></li>
+            <li>Airmen weren't candid either: "we certainly don't advertise our limitations." <span class="pg">C 6</span></li></ul>
+            <p class="argue">Argue it: the failure was mutual. Policy makers didn't state the end, and airmen didn't state the limits of their means.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="x3" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Compare</span></span>Kennan's "X" article and Smart's candor problem: what do they share as leadership failures?</summary><div class="ans">
+            <ul><li>Kennan wrote loosely enough that readers took a perimeter strategy from a strongpoint thinker. <span class="pg">G 25, 57</span></li>
+            <li>Smart's Air Force didn't state its limits, so leaders expected more than airpower could deliver. <span class="pg">C 6</span></li></ul>
+            <p class="argue">Argue it: in both cases, what the author left unsaid shaped policy more than what was said.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="x4" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Synthesize</span></span>Was Korea fought as symmetrical or asymmetrical containment?</summary><div class="ans">
+            <ul><li>Commitment: defending South Korea at all reflects the expanded, symmetrical view that follows NSC-68. <span class="pg">G ch. 4, 87 · to check</span></li>
+            <li>Conduct: Washington drew tight geographic limits on airpower (the 38th Parallel, borders, Rashin, the Yalu spans). <span class="pg">C 23–24, 44–45, 49–50</span></li></ul>
+            <p class="argue">Argue it: a symmetrical commitment fought with asymmetrical restraint, and airpower was caught in the gap between the two.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="x5" data-t="cross"><details><summary><span class="qmeta"><span>Gaddis × Crane</span><span>Synthesize</span></span>Why might the New Look have made Korea's lessons easy for the Air Force to ignore?</summary><div class="ans">
+            <ul><li>Crane: the ambiguous ending let the USAF believe it had won, and it returned to planning for general war under the New Look. <span class="pg">C 9</span></li>
+            <li>Gaddis: the New Look is asymmetrical and nuclear-centered. <span class="pg">G ch. 5, 125 · to check</span></li></ul>
+            <p class="argue">Argue it: a strategy that rewards nuclear general-war forces gives an institution little budget reason to study limited war.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="z1" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Compare</span><span class="lock">After Thursday</span></span>Whose limits were political, and whose were self-imposed?</summary><div class="ans">
+            <ul><li>Crane: Washington imposed political and geographic limits on American airpower. <span class="pg">C 23–24, 44–45, 49–50</span></li>
+            <li>Zhang: US and Soviet operations were limited mainly by politics, while the PLAAF was limited by inexperience. <span class="pg">Z 8</span></li>
+            <li>China had no aviation industry and relied on Soviet equipment, and its leaders were ground-war veterans. <span class="pg">Z 6–7</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="z2" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Compare</span><span class="lock">After Thursday</span></span>How should a strategist treat one side's combat statistics?</summary><div class="ans">
+            <ul><li>Zhang warns that his kill ratios are official Chinese and Russian figures that may misrepresent reality, and that the two sides' reports rarely match. <span class="pg">Z 10–11</span></li>
+            <li>He calls American victory claims "probably highly inflated" and criticizes the one-sided US official account. <span class="pg">Z 5</span></li>
+            <li>Compare Crane's F-86-versus-MiG numbers. <span class="pg">C 83–84</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="z3" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></span>Both superpowers feared a direct clash. How did that fear shape the air war on each side of the Yalu?</summary><div class="ans">
+            <ul><li>US side: borders off-limits, Rashin halted, Yalu spans restricted, and the 1951 atomic deployment. <span class="pg">C 23–24, 44–45, 49–50, 70</span></li>
+            <li>Communist side: the Soviets held back to avoid a direct clash with the US, and Moscow and Beijing each pursued their own national interests. <span class="pg">Z 7</span></li>
+            <li>Stalin's "cryptic promise" of air support, and his October telegram asking for Chinese troops that didn't mention it. <span class="pg">Z 60, 62, 65</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="z4" data-t="zhang"><details><summary><span class="qmeta"><span>Crane × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></span>Is airpower inherently defensive? Answer with both books.</summary><div class="ans">
+            <ul><li>Zhang: PLAAF planners saw fighters as defensive and bombers as aggressive. The war left the PLAAF in an air-defense role. <span class="pg">Z 46, 11</span></li>
+            <li>But China's first air-war concept came from planning to invade Taiwan. <span class="pg">Z 6, 53</span></li>
+            <li>Crane: FEAF's ambitions were offensive (strategic bombing, then air pressure), but it spent the war fighting to hold air superiority. <span class="pg">C 7–8, 83–84</span></li></ul></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+
+          <li data-q="z5" data-t="zhang"><details><summary><span class="qmeta"><span>Gaddis × Zhang</span><span>Synthesize</span><span class="lock">After Thursday</span></span>Apply Kennan's five-centers logic from the other side. Why did Korea matter to Moscow and Beijing differently?</summary><div class="ans">
+            <ul><li>Kennan ranked regions by industrial and military power. Korea wasn't one of his five centers. <span class="pg">G 29</span></li>
+            <li>Zhang: Moscow and Beijing each used the war for their own national interests, and Stalin pushed China in while staying out himself. <span class="pg">Z 7, 62</span></li></ul>
+            <p class="argue">Argue it: a peripheral theater for one ally can be a vital one for another, and alliances fracture along that line.</p></div></details>
+            <label class="nail"><input type="checkbox"> Nailed it</label></li>
+        </ol>
+        <ol class="notes">
+          <li><span class="chk">Checked</span>Page numbers: G = Gaddis, <i>Strategies of Containment</i>, rev. ed. (Oxford, 2005). C = Crane, <i>American Airpower Strategy in Korea</i> (Kansas, 2000). Z = Zhang, <i>Red Wings over the Yalu</i> (Texas A&amp;M, 2002). All were read in your Drive copies.</li>
+          <li><span class="tbc">To check</span>Items marked "to check" cite Gaddis chapters past p. 61, which the Drive text doesn't include. "Argue it" lines are suggested theses, not the authors' claims.</li>
+          <li><span class="tbc">Grows</span>New books add questions after each seminar. Older questions stay, so the bank is cumulative through comps.</li>
+        </ol>
+      </section>
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-now">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill now">NEXT</span></td></tr>
+            <tr><td>30 Oct</td><td>McDougall, <i>…The Heavens and the Earth</i></td><td></td></tr>
+            <tr><td>2 Nov</td><td>Schlight + document pack (decision exercise)</td><td></td></tr>
+            <tr><td>3 Nov</td><td>Clodfelter, <i>The Limits of Airpower</i></td><td></td></tr>
+            <tr><td>5 Nov</td><td>Randolph, <i>Powerful and Brutal Weapons</i></td><td></td></tr>
+            <tr><td>6 Nov</td><td>Nguyen, <i>Hanoi's War</i></td><td></td></tr>
+            <tr><td>9 Nov</td><td>Haun, <i>Tactical Air Power and the Vietnam War</i></td><td></td></tr>
+            <tr><td>10 Nov</td><td>Kitfield, <i>Prodigal Soldiers</i></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Eight more after Kitfield, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Midterm Election Day, 3 Nov</span><b>6</b></div>
+        <div class="count"><span>Vietnam decision exercise, 2 Nov</span><b>5</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>34</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: politics, defense, leadership</li>
+          <li>Sources, then Q&amp;A and the Comps Bank</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Politico</i>, ISW.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+(function(){
+  var bank=document.getElementById('qbank'); if(!bank) return;
+  var KEY='tlg-comps-nailed', got={};
+  try{ got=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ got={}; }
+  var items=[].slice.call(bank.querySelectorAll(':scope > li'));
+  var prog=document.getElementById('prog');
+  var filter='all';
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(got)); }catch(e){} }
+  function render(){
+    var n=0;
+    items.forEach(function(li){
+      var id=li.getAttribute('data-q'), t=li.getAttribute('data-t'), on=!!got[id];
+      if(on) n++;
+      li.classList.toggle('got',on);
+      var show = filter==='all' || filter===t || (filter==='todo' && !on);
+      li.hidden=!show;
+    });
+    prog.innerHTML='<b>'+n+'</b> of '+items.length+' nailed';
+  }
+  items.forEach(function(li){
+    var cb=li.querySelector('input[type=checkbox]'), id=li.getAttribute('data-q');
+    cb.id='nail-'+id;
+    cb.checked=!!got[id];
+    cb.addEventListener('change',function(){ if(cb.checked) got[id]=1; else delete got[id]; save(); render(); });
+  });
+  [].forEach.call(document.querySelectorAll('.chips button'),function(b){
+    b.addEventListener('click',function(){
+      filter=b.getAttribute('data-f');
+      [].forEach.call(document.querySelectorAll('.chips button'),function(x){ x.setAttribute('aria-pressed', x===b ? 'true':'false'); });
+      render();
+    });
+  });
+  render();
+})();
+</script>
+
+</body>
+</html>

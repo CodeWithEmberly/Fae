@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-11-05 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>7</b> read · <b>11</b> to go</span>
+    <span>Next seminar: <b>Nguyen, tomorrow</b></span>
+    <span>628 paper due in <b>26</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 5 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-05.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-05.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Thursday, November 5, 2026 · Seminar today: Randolph at 1200 · Nguyen tomorrow</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <ol>
+          <li><a href="#a1">Today's Seminar Questions, Answered: Four Questions, One Prussian</a></li>
+          <li><a href="#a2">One Man, One Hideaway Office, Half a World Away</a></li>
+          <li><a href="#a3">Tonight's Reading: The Man Behind the Bamboo Curtain Was Not Ho Chi Minh</a></li>
+          <li><a href="#a4">How to Lose an Ally While Saving Him: Randolph on Alliance Dissolution</a></li>
+          <li><a href="#a5">Seven Books, Two Sets of Books: Everybody Keeps Their Own Score</a></li>
+          <li><a href="#a6">Although, Because: The Two Words That Turn a Topic into a Thesis</a></li>
+          <li><a href="#a7">Power of the Purse Strings Attached: The New House Eyes the Iran War Budget</a></li>
+          <li><a href="#a8">Shell Game: The Iran War Empties the Magazines, and Zumwalt Saw It Coming</a></li>
+          <li><a href="#r-01">Thieu Had a Stopping Rule, and Abrams Learned It on Day Four</a></li>
+          <li><a href="#r-02">Le Duc Tho Explains Everything, Depending on Who Is Listening</a></li>
+          <li><a href="#r-03">Two Ledgers on the Trail, and They Only Agree on the Trucks</a></li>
+          <li><a href="#r-04">More Jets Than Spotters: The Surge That Outran Its Own Aim</a></li>
+          <li><a href="#r-05">Fifty-Seven Inches of Leverage</a></li>
+          <li><a href="#r-06">Thirty-Six Mines and a Secret Kept From the Secretary</a></li>
+          <li><a href="#r-07">The Plan Kept on the Shelf. The Pilots Who Could Fly It Did Not.</a></li>
+          <li><a href="#r-08">Two Capitals Wrote After-Action Reviews. Only One Blamed Itself.</a></li>
+          <li><a href="#r-09">Twenty-Six Tons Dropped, Twenty-Four Delivered to the Enemy</a></li>
+          <li><a href="#r-10">Hanoi Needed 2,700 Tons a Day, and the Roads From China Carried 3,000</a></li>
+          <li><a href="#r-11">The Rescue Ran on a Clock, and Hanoi Owned a Watch</a></li>
+          <li><a href="#r-12">Two Scorecards, Two Winners, One South Vietnam Left Holding the Bill</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
+      </nav>
+
+      <article id="a1">
+        <span class="kicker">Seminar 7 · Randolph, today at 1200</span>
+        <h3><a href="#a1">Today's Seminar Questions, Answered: Four Questions, One Prussian</a></h3>
+        <ol class="qs">
+          <li><b>What is the relationship between political will and battlefield success?</b> Close, but not one to one, and the side with more will got to decide what the battles meant. Hanoi lost most of the 1972 fights and still reached its minimum aims in Paris, because both sides expected battlefield results to become negotiating results (the conclusion). Randolph ranks the North's "total national commitment" first among its advantages. Washington's will had a deadline: the Christmas bombing was executed largely to finish before a new Congress could cut off the money.</li>
+          <li><b>How effective were the interdiction operations before the Easter Offensive?</b> Good at killing trucks, poor at reading the war. Chapter 4: American intelligence credited Commando Hunt VII with 4,727 trucks and judged only 16 percent of supplies got through; Hanoi's own history roughly agrees on trucks and claims record tonnage delivered. The low American estimate set planners up to expect another brief "high point" offensive, so the favorite statistic blinded the people who compiled it.</li>
+          <li><b>What was more successful: "strategic" bombing, interdiction, or attacking fielded forces?</b> Fielded forces, by Randolph's own ranking. The conclusion says air power had its most powerful effect blunting the offensive in the South, where it caused most NVA casualties. Strategic bombing erased 70 percent of the North's electricity and the war on imports cut them to about 60 percent; both hurt, and the Politburo paid and kept going.</li>
+          <li><b>Did laser-guided bombs represent a "revolution in military affairs"?</b> Tactically yes, strategically not yet. Chapter 14: one aircraft could now destroy what whole Rolling Thunder strike forces could not, and the Thanh Hoa bridge, standing since 1965, lost a span on May 13. Then the North's logistics found ways around it, and the whole revolution ran on four laser pods and clear weather. Call it a revolution in tactics and let the seminar fight over the military affairs.</li>
+        </ol>
+        <p>Pages are in Sources. Counterarguments are at the table, which is what the table is for. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">The Reading · Randolph, <i>Powerful and Brutal Weapons</i></span>
+        <h3><a href="#a2">One Man, One Hideaway Office, Half a World Away</a></h3>
+        <p>Randolph's conclusion has a second verdict that the Clausewitz line tends to crowd out. Nixon, he writes, governed through "a strange parody" of the statutory system, sending the military into a campaign half a world away from a hideaway office, against his cabinet's advice and without consulting Congress. Then the contrast: in totalitarian North Vietnam, no single leader had anything like Nixon's authority over strategy. (The democracy had the dictator's org chart, and the dictatorship had committees.)</p>
+        <p>Tomorrow's author disagrees, or at least complicates it. Nguyen argues that Le Duan stood first among equals and spent the war outmaneuvering rivals behind a calm facade of unity. Gaddis taught us strategy relates ends to means; Randolph and Nguyen add a third question, which is who gets to decide. Opinion: Randolph credits the centralized White House with more coherence in 1972 than during Lam Son 719. It also left almost nobody in the room to say no. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">Tonight's Reading · Nguyen, for seminar Friday, November 6</span>
+        <h3><a href="#a3">Tonight's Reading: The Man Behind the Bamboo Curtain Was Not Ho Chi Minh</a></h3>
+        <p>Lien-Hang T. Nguyen's <i>Hanoi's War</i> opens at 7:15 in the evening on December 18, 1972, when Hanoi's loudspeakers gave residents twenty-five minutes to reach shelter before the B-52s. Her question: how did a limited struggle against Saigon in 1960 become, a dozen years later, the target of the heaviest bombing campaign in American history?</p>
+        <p>Her answer is a person. Le Duan, first secretary from 1960 until his death in 1986, was the war's architect, main strategist, and commander in chief, and he stayed on history's margins partly by choice. With Le Duc Tho, she argues, he stymied rivals, tempered powerful allies, and outlasted a superpower. Her targets are the picture of comrades unified under a grandfatherly Ho Chi Minh and the habit of telling Vietnam's victory as inevitable; she says individuals in Hanoi shaped it as much as structures did. Her receipts: in 2003 she became the first scholar admitted to Vietnam's Foreign Ministry archives. For this course, she gives us the audience for every bombing campaign on the shelf.</p>
+        <p>Read for:</p>
+        <ol class="qs">
+          <li>The introduction, ebook pages 17 to 35: her thesis, and the three American schools on the "flawed" 1973 settlement that she says leave Hanoi out.</li>
+          <li>Chapter 1, "Le Duan's Rise to Power and the Road to War," ebook pages 37 to 78: who was actually in charge.</li>
+          <li>Chapter 2, "Policing the State in a Time of War," ebook pages 79 to 127: the syllabus question on information operations starts at home.</li>
+          <li>Chapter 3, "The Battle in Hanoi for the Tet Offensive," ebook pages 129 to 159: how accurate were the leadership's assumptions?</li>
+          <li>Chapter 7, "War against Détente," ebook pages 321 to 356: set it beside Randolph's Moscow summit and ask who misread whom.</li>
+          <li>Chapter 8, "War for Peace," and the conclusion, ebook pages 357 to 416 and 423 to 433: Linebacker from the receiving end, for the question on bombing and morale.</li>
+        </ol>
+        <p>Short on time? The introduction, chapter 8, and the conclusion. Le Duan avoided the spotlight for decades; he won't mind your skimming. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a4">
+        <span class="kicker">The 628 Paper · through today's author</span>
+        <h3><a href="#a4">How to Lose an Ally While Saving Him: Randolph on Alliance Dissolution</a></h3>
+        <p>The prompt: name the single most important potential crisis facing the nation and say how Airmen should prepare, ten pages, due December 1 at 1630. Today the rotation lands on the syllabus's least cinematic example, the dissolution of an alliance. This is our extrapolation from a 2007 book about 1972, not Shaun's answer.</p>
+        <p>Randolph's evidence is unkind to anyone who thinks alliances run on affection. Nixon cared little for Thieu as leader of a sovereign state and a great deal for America's credibility as an ally. Thieu signed only days before the Paris accord, after Nixon threatened a separate deal with Hanoi and a cutoff of all support, then sweetened it with a promise that the B-52s would return. Meanwhile the fear of failure had driven a "re-Americanization" of fire support and air control, and South Vietnamese units had grown used to American air power playing the primary role in every fight.</p>
+        <p>Opinion, extrapolated: alliances can dissolve from dependence as easily as from quarrels. An ally whose defense rests on your aircraft has a defense that lasts exactly as long as your politics do. Preparing Airmen for that crisis means building partners who can call their own fires and run their own air control, and being honest about which promises the next Congress might not fund. Nixon promised the B-52s would come back. Watergate, Randolph notes, ended any prospect of that. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a5">
+        <span class="kicker">The Readings So Far · Gaddis, Crane, Zhang, McDougall, Schlight, Clodfelter, and Randolph</span>
+        <h3><a href="#a5">Seven Books, Two Sets of Books: Everybody Keeps Their Own Score</a></h3>
+        <p>Seven books in, the shelf's quiet theme is accounting. Zhang showed both sides in Korea inflating kill claims. Crane's 1952 study found rail interdiction had failed despite more than 15,000 cuts, at a cost of 243 aircraft. Twenty years later Commando Hunt VII killed thousands of trucks, and Hanoi's ledger shows record tonnage delivered anyway. Interdiction, it turns out, is a very good way to generate statistics.</p>
+        <p>Even two books on one campaign count differently. Clodfelter has Linebacker I cutting overland imports from 160,000 tons a month to 30,000; Randolph has total imports falling to about 60 percent. Both can be true (overland traffic and all imports are different things), but quote the wrong one and someone will notice. McDougall offers the one case where a better count settled an argument: satellites cut the Soviet missile force to at most fourteen and killed the missile gap.</p>
+        <p>The news web keeps growing. Wednesday's thousand cheap ERAM missiles met Randolph's four scarce laser pods. Today the new House majority's talk of limiting Iran war funds meets the Senate Democrats' 35-to-8 vote in 1972, and the munitions story meets Admiral Zumwalt. Opinion: Gaddis defined strategy as relating ends to means. We'd add a footnote: first agree on how to count the means. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a6">
+        <span class="kicker">Technical Writing · Week 2, Day 4 · the thesis and the argument</span>
+        <h3><a href="#a6">Although, Because: The Two Words That Turn a Topic into a Thesis</a></h3>
+        <p>Thursday is thesis day, and our guide is <i>The Craft of Research</i> by Booth and colleagues, a book that has been telling graduate students their claims are too vague for four editions and shows no sign of tiring. Readers expect a claim to be specific and significant, they write, and vague claims lead to vague arguments. Their trick for explicit logic is two words. Open the working claim with "although" to acknowledge a view you'll answer or a limit on your confidence; close it with "because" to forecast your reasons. Significance they measure by how much a claim asks readers to change what they think, which is a polite way of saying a thesis nobody could disagree with isn't one.</p>
+        <p>Before: "Airpower was important in the Easter Offensive." True, safe, and unfalsifiable, the marks of a sentence headed for a B. After, through the although-because machine with Randolph's evidence: "Although American air power inflicted most North Vietnamese casualties in 1972, the offensive was a strategic success for Hanoi, because both sides expected battlefield results to become negotiating results, and the settlement left the NVA in the South." Now there's a concession, a claim someone will fight, and reasons that tell the reader what the next eight pages hold.</p>
+        <p>Pro tip, an old editor's trick: after drafting the thesis, write the sentence a smart opponent would say back. If you can't, your claim isn't contestable yet. If you can, put it in the "although" clause, where it makes you look fair instead of surprised. A thesis that can't lose an argument can't win one either. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a7">
+        <span class="kicker">Political Strategy × Randolph · via Punchbowl News AM and electoral-vote.com, November 5</span>
+        <h3><a href="#a7">Power of the Purse Strings Attached: The New House Eyes the Iran War Budget</a></h3>
+        <p>Two days after the midterms, Washington is discussing the war through its favorite weapon, the appropriations bill. Punchbowl News talked with Hakeem Jeffries, who heads for the speakership with at least a 255-seat majority and, as of late Wednesday, still hadn't spoken with the President, the Speaker, or anyone in House Republican leadership. Government funding runs out December 11, and Jeffries said he'd talk with his leadership team about whether the spending bill should ban funding for the Iran war, a dilemma Punchbowl compares to Nancy Pelosi's over Iraq in 2007. Adam Smith, in line to chair Armed Services, promised public hearings on the Iran operations, calling the lack of transparency "just a major, major problem."</p>
+        <p>Electoral-vote.com adds the arithmetic: a wave its writers read as more anti-incumbent than pro-Democratic, a vice president blaming the war for his party's losses, and a war bill of "$50 billion and counting." (Everyone in Washington has rediscovered the budget as a weapons system.)</p>
+        <p>Randolph has been here. The day after Nixon's May 8, 1972 speech announcing the mining of Haiphong, the Senate Democratic Caucus voted 35 to 8 to cut off funds for the war, contingent on the release of American prisoners. Southern Democrats cast 7 of the 8 no votes, and the administration contained the revolt. By November Nixon was telling the Joint Chiefs he'd been "one step ahead of the sheriff" on war funding for two years, and Randolph concludes the Christmas bombing was timed largely to finish before the new Congress could cut off the money.</p>
+        <p>Opinion, nonpartisan and old: when Congress changes hands mid-war, the military calendar acquires a second clock, and the executive starts racing it. In 1972 that race shaped the most intense bombing of the war. Whether 2026 runs the same way depends on choices nobody has announced, by people who haven't yet spoken to each other. The sheriff, we'd note, now has a 255-seat posse. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a8">
+        <span class="kicker">Acquisition × Randolph · via Defense News, November 4</span>
+        <h3><a href="#a8">Shell Game: The Iran War Empties the Magazines, and Zumwalt Saw It Coming</a></h3>
+        <p>The Pentagon needs more munitions, and the factories that make them are old. Sonner Kehrt of The War Horse, republished by Defense News, reports that refilling the stockpiles leans on aging Army ammunition plants with long records of environmental and safety violations. A CSIS estimate cited in the piece puts Patriot interceptor inventory at over 2,300 when the Iran war began and about 800 by the end of July, with THAAD stocks down nearly half. The Army's $18 billion modernization won't finish until 2038; one general describes his orders as "hurry up and go fast."</p>
+        <p>The costs land locally. Radford, in Virginia, the only domestic producer of certain artillery and rocket propellants, lost more than a dozen storage containers to Hurricane Helene's floods in 2024, and three are still missing. Every Army ammunition plant and arsenal making weapons components has been cited or flagged for noncompliance in the past five years, and a former EPA official calls the department "effectively self-regulating." The Army says it will never compromise its workers' safety.</p>
+        <p>Randolph's chapter 7 has the receipt. In June 1972 Admiral Elmo Zumwalt warned that if the surge into Southeast Asia lasted beyond September, "world-wide ordnance inventories will be severely depleted," with the bill paid out of modernization and personnel. Seventh Fleet deployments stretched from six months to nine. Randolph's verdict: the splurge contributed greatly to the hollow military of the late 1970s, because Congress never fully replenished what was spent, an invisible corrosion that took years to show.</p>
+        <p>Opinion: 2026's version is less invisible, since the depletion now comes with a CSIS spreadsheet. The question is Zumwalt's: who pays for the refill, and out of which account? A war fought from inventory sends the bill to the next decade, and the factories send part of it to the neighbors. The refill plan has a 2038 finish date, which is a long time to hope nobody else needs a Patriot. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Today's seminar: Randolph, <i>Powerful and Brutal Weapons</i>, chapter by chapter</p>
+
+      <article id="r-01">
+        <span class="kicker">Chapter by Chapter · Randolph, introduction and chapter 1</span>
+        <h3><a href="#r-01">Thieu Had a Stopping Rule, and Abrams Learned It on Day Four</a></h3>
+        <p>Before a coalition attack, ask your partner what will make him stop, because he has an answer whether he shares it or not. The Introduction sets the stage: Richard Nixon took office on January 20, 1969, and inherited a war engaging over half a million Americans. Chapter 1, "Nixon's War," tests the idea on Lam Son 719, the February 1971 drive by South Vietnam's three best divisions down Route 9 into Laos.</p>
+        <p>The South Vietnamese attacked on February 8 and stalled on February 11. President Nguyen Van Thieu had ordered the force to halt when casualties reached 3,000, and the order caught Abrams unawares. The enemy was better briefed. By early January, agents inside the Joint General Staff had smuggled the plan out of Saigon, and Randolph thinks it very possible that Hanoi knew more about ARVN planning than Washington did. The Introduction quotes Nixon saying he was "playing a Russia game, a China game, and an election game," so he had little patience for a general surprised by his own ally. He ordered Haig to Saigon to take command, cooled off, and never trusted Abrams again. Hanoi concluded the ARVN could not stand up to the NVA, a major element in its decision to attack in 1972.</p>
+        <p>The weak seminar comment is "Lam Son 719 failed because the ARVN wasn't ready." The strong one is "Lam Son 719 lost its momentum on day four because Thieu had a 3,000-casualty halt order his American partner never heard about, while Hanoi had held the plan for a month." That version puts the failure in the coalition's plumbing, where Randolph puts it. Opinion: an allied plan in which the enemy holds the freshest copy has a distribution problem. For any combined plan, ask: what number ends this, and who knows it? Thieu knew. Hanoi had the plan. Washington found out from the map. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-02">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 2 and 3</span>
+        <h3><a href="#r-02">Le Duc Tho Explains Everything, Depending on Who Is Listening</a></h3>
+        <p>When a source explains a failure, ask who was listening before you ask whether it is true. Chapter 2, "The Politburo's Strategic Calculus," shows a ten-member Politburo approving the offensive only by a narrow majority. Chapter 3, "The NVA Prepares," shows the army that vote produced: a light infantry force remade into a Soviet-style mechanized army in about two years.</p>
+        <p>Shortly before the attack, the Politburo warned its commanders that Nixon, a daring man, might answer with "even more powerful and brutal weapons." In May 1972, Le Duc Tho told French Communists that Hanoi had considered Nixon's actual response and ruled it out as impossible in a summit and election year. He also blamed Chinese pressure. Randolph checks the record, finds Mao advising Pham Van Dong in November 1971 to accept a settlement leaving Thieu in power, and judges that Tho expected his story to reach Moscow through the French Party. His account of the Soviets matches their archives, so it survives. Chapter 3 supplies the ground truth. The 6th Company of the 397th Battalion got about ten days to learn its new T-54s, and drivers overturned some and bogged down others. Randolph calls the battalion representative of the erratic NVA armor of 1972.</p>
+        <p>The weak comment is "Tho admitted China pushed Hanoi into the offensive." The strong one is "Tho said China pushed, to French Communists with close ties to Moscow, while Mao was urging Hanoi to settle. Believe the parts something else confirms." Opinion: a man explaining a miscalculation is also choosing a culprit, and a large neighbor makes a convenient one. Tho graded the error "a mistake, but not a catastrophic one," the kind of grade students award themselves. Ask of any memoir: who was the audience, and what did the speaker need them to believe? Tho needed Moscow to look at Peking, and he needed the Politburo to have been almost right. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-03">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 4 and 5</span>
+        <h3><a href="#r-03">Two Ledgers on the Trail, and They Only Agree on the Trucks</a></h3>
+        <p>Randolph keeps two sets of books: when the American and North Vietnamese counts agree, trust the number, and when they split, the gap is the finding. Chapter 4, "Commando Hunt VII," applies that to the 1971 to 1972 air war on the Ho Chi Minh Trail, which he treats as the offensive's first battle. Chapter 5, "The Initial Surges," sets an American rescue beside how the South Vietnamese saw it.</p>
+        <p>On trucks, the ledgers roughly match: 4,727 destroyed by the American count, 4,228 by Hanoi's trail history. On cargo they part company. American intelligence figured 5,024 of 30,947 tons got through, about 16 percent. The NVA history claims 132,518 tons delivered in calendar 1972, with a loss rate of 10.12 percent. Randolph reads the bombing's effect in Hanoi's behavior: less than three weeks before launch, it moved its main attack to the DMZ. In Chapter 5, when Lieutenant Colonel Iceal Hambleton came down on Easter Sunday, the rescue center in Saigon, with no idea an invasion was under way, imposed a 27-kilometer no-fire zone. The South Vietnamese found it incredible that the Americans would risk the whole ARVN defense for a single pilot. Jolly Green 66 went down on April 6 with six men.</p>
+        <p>The weak comment is "Interdiction worked: 4,727 trucks killed and only 16 percent got through." The strong one is "Both sides agree on the trucks and disagree wildly on the tonnage, and the low American estimate told planners to expect another brief, political offensive. They got an invasion." Opinion: a statistic that tells its own side something comfortable deserves a second audit, preferably by the enemy. Randolph scores it a Pyrrhic victory for Hanoi, paid for in trucks. When a briefing hands you one number, ask what the other side's clerk wrote down. Hanoi's clerk was counting tons, and his ledger showed up in the spring. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-04">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 6 and 7</span>
+        <h3><a href="#r-04">More Jets Than Spotters: The Surge That Outran Its Own Aim</a></h3>
+        <p>Before you surge the shooters, count the people who will aim them. Chapter 6, "Nixon Takes Charge," shows a president seizing the war after learning that Laird had been editing the reports. Chapter 7, "The Forces Flow Forward," shows the military delivering aircraft faster than it could direct them, and paying for the haste long afterward.</p>
+        <p>On April 3 Nixon opened a meeting with Admiral Moorer: "I am the commander in chief, and not the secretary of defense." He demanded unsanitized briefings and scolded the Air Force for timidity until Moorer noted that Abrams had received authority to hit the missile sites only the day before. Then the jets came. Fighter sorties in Southeast Asia rose from 326 a day to over 600 within a month. Forward air controllers had shrunk during Vietnamization from about 425 to 160, and the Navy reckoned only 60 percent of its first-month sorties were controlled by one. The Air Force flew 206 fighter sorties a day in early April, against 204 in March, because its support arrived days after its jets. So that Nixon could claim 500,000 troops withdrawn, Marine F-4s moved to Thailand and flew with 500 fewer pounds of bombs, a press release measured in ordnance.</p>
+        <p>The weak seminar comment is "Nixon's surge saved the South." The strong one is "Sorties doubled, but only 60 percent of Navy sorties had a forward air controller, and the Air Force barely beat its March rate until the maintainers caught up." Before any surge, count the controllers and the support, then the tails. Opinion: Nixon fixed his information problem in one fifteen-minute meeting, brisk work for a man who almost never confronted a subordinate. Randolph ties the stocks Congress never replaced to the hollow military of the late 1970s. A surge is a loan, and the next decade made the payments. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-05">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 8, 9, and 10</span>
+        <h3><a href="#r-05">Fifty-Seven Inches of Leverage</a></h3>
+        <p>Grade a weapon first by what it stops the other side from doing, then count the wreckage. Chapter 8, "B-52s over the North," shows a big raid that took little away from anyone. Chapter 9, "Attack in the Highlands," and Chapter 10, "The Fall of Quang Tri," show small weapons taking away a great deal.</p>
+        <p>The first B-52 raid on the North hit Vinh on April 10 with a 70-aircraft strike force. The defenders fired 35 missiles and hit nothing. The bombers destroyed at most 50 tons of fuel, and, Laird later reported, missed by a kilometer because the American charts of North Vietnam were off by a kilometer. At Tan Canh on April 24, one of the first Sagger antitank missiles collapsed the command bunker. The division commander, Colonel Le Duc Dat, was unhurt, decided the fight was lost, and took no further part. Near Quang Tri in early May, the SA-7 Strela, a shoulder-fired missile 57 inches long, brought down an O-1 and three A-1s. Fixed-wing aircraft climbed above 10,000 feet in known SA-7 areas, where forward air controllers spent their time watching for missiles, and C-130 loadmasters rode the open ramp on their stomachs with flares.</p>
+        <p>The weak seminar comment is "The SA-7 shot down a few slow planes." The strong one is "It downed four aircraft and then pushed the controllers so high they could barely find the enemy." General Slay described "propaganda launches," a missile fired just to make the Americans restrict themselves, which may be the cheapest air superiority ever bought. MACV found a seller asking $50,000 for a Strela before South Vietnamese Rangers captured two for free, a rare bargain. Ask of any source: what did the other side stop doing? Opinion: by that measure the Sagger's best kill was a colonel without a scratch. Vinh, meanwhile, cost Hanoi a fuel dump and exposed America's maps. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-06">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 11 and 12</span>
+        <h3><a href="#r-06">Thirty-Six Mines and a Secret Kept From the Secretary</a></h3>
+        <p>When a source lets you hear a decision being made, write down who was in the room and who found out last. That is Randolph's method in Chapter 11, "The Path to Linebacker," which plays the Nixon tapes on the decision to mine Haiphong and then rules on how it was made. Chapter 12, "Closing the Ports," shows the result, which Randolph counts among the few unambiguous American successes of the war.</p>
+        <p>On May 4 the room held Nixon, Kissinger, Al Haig, and John Connally, who briefly turned it into a Kiwanis Club luncheon of oil-man anecdotes. Haig's hint that they convene the Joint Chiefs went nowhere. Admiral Moorer was called in to receive orders and an oath: "Nothing is to go to the secretary. Nothing is to go to Vietnam." The full National Security Council met on May 8 for more than three hours, after the decision was made, and nobody mentioned the precision weapons, operational since 1968, that would do the real work against the railroads. On May 9 nine aircraft laid thirty-six mines in two minutes. Of the thirty-six ships in Haiphong, nine left during the grace period and twenty-seven stayed for the rest of the war. The night before, the naval gun line sailed north without anyone telling Abrams, who vented at a dinner for visiting officials.</p>
+        <p>The weak seminar comment is "Nixon decided to mine Haiphong." The strong one is "Four men decided it on May 4, the defense secretary was walled off, and nobody told the theater commander his gun support was leaving." Then run his split screen: Hanoi bet that the Moscow summit and the election would restrain Nixon, and both pushed him to act. Opinion: the small room got the mines right and forgot its best bombs; even Moorer, the air campaign's champion, left them out. Secrecy worked so well it also covered the man running the war. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-07">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 13 and 14</span>
+        <h3><a href="#r-07">The Plan Kept on the Shelf. The Pilots Who Could Fly It Did Not.</a></h3>
+        <p>A plan can sit on a shelf for three years and come back intact, while the skill to fly it decays on a one-year tour, so audit the crews before you trust the paper. Chapter 13 shows Linebacker running on Pruning Knife, a 1969 air plan shelved when Nixon gave his "Silent Majority" speech instead. Chapter 14 shows Seventh Air Force flying that plan in May 1972 with crews who had lost the service's memory of the Red River Delta.</p>
+        <p>The paperwork aged well. Moorer, Vogt, and Haig were all back in 1972 with better jobs, and the Joint Chiefs had already warned that 1,458 sorties against the northeast rail line in 1967 closed it for a grand total of seven days. The people aged badly. On May 10 the Air Force sent 120 aircraft so that 32 could bomb the Paul Doumer Bridge. Of the electro-optical bombs, one never left its airplane and seven wandered off: "None hit the bridge. It was a miserable performance." The next day a strike force that had lost its chaff, SAM suppression, and escort crossed Hanoi alone and dropped the bridge. One-year tours had cycled three generations of pilots through Southeast Asia since Rolling Thunder.</p>
+        <p>Opinion: run this check on any plan with a date on its cover. The weak seminar comment is "Linebacker worked because Nixon finally took the gloves off." The strong one is "Linebacker's first week shows a ready plan and an unready force: 120 airplanes launched for 32 bombers, and the bridge fell only after the package fell apart." Then ask who in the wing has done this before, and how recently. If the answer is a generation of pilots who have rotated home, the plan is a museum piece with a classification stamp. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-08">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 15 and 16</span>
+        <h3><a href="#r-08">Two Capitals Wrote After-Action Reviews. Only One Blamed Itself.</a></h3>
+        <p>Read an after-action review for whom it blames, because the side that indicts its own training is usually the side about to get better. Chapter 15 sits in Hanoi with the Air Defense Command's official history, and Chapter 16 sits in the Oval Office with the tapes, during the same week of May 1972.</p>
+        <p>In Hanoi, the 361st Air Defense Division fired 41 missiles on May 10 and 11 and reported that "no enemy aircraft crashed on the spot." The inspection team found problems in every area it examined, which, given the scoreboard, was not a hard search. Only two of the division's operators had fought in the first war of destruction, and the rest had trained from old manuals. By mid-May they were running live-fire training against the new American tactics. In Washington on May 19, Agnew mentioned that an Air Force general felt some remorse about the bombing restrictions, and Nixon yelled over Kissinger: "Ryan is out, out, out, out, out!" Moorer phoned the Pacific all afternoon. Nobody owned up, and the whole chain of command professed satisfaction, a rare moment of unanimity in that war. Nixon then dictated a memo conceding that blaming the bureaucracy is easy, before blaming the bureaucracy.</p>
+        <p>Opinion: borrow the author's method. The weak seminar comment is "Nixon was furious and Hanoi was in trouble." The strong one is "Randolph sets two reviews side by side. Hanoi's blames its own manuals and its own intelligence. Nixon's memos blame the press, Congress, the military, the CIA, and the State Department." Ask of any single-archive source what the other capital was saying that week. The tapes give Randolph the color, and the Vietnamese records give him a control group. Without them, Chapter 16 is a transcript of a temper. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-09">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 17, 18, and 19</span>
+        <h3><a href="#r-09">Twenty-Six Tons Dropped, Twenty-Four Delivered to the Enemy</a></h3>
+        <p>When someone cites sorties, ask what arrived, because air power is measured at the receiving end. In Chapters 17, 18, and 19, Randolph credits American air power with saving An Loc, Hue, and Kontum, and in each case the turn came when somebody fixed the delivery: riggers at An Loc, a new commander at Hue, the removal of an overwhelmed one at Kontum.</p>
+        <p>At An Loc, by early May the Americans had lost 3 C-130s, with 37 damaged and 15 men dead, and only 8 to 10 percent of the supplies reached the defenders. On April 20, 24 of 26 tons went to the North Vietnamese, because Army advisors had given the wrong drop-zone coordinates, so better aim meant worse results. A captured NVA officer explained the menu: "The first thing he asked for was a can of fruit cocktail." Then riggers arrived, gunships fired test rounds at wrecked trucks to read the wind, and within a week recovery hit 90 percent. At Hue, Ngo Quang Truong took I Corps on May 3 and had a workable plan by his third day. At Kontum, Colonel Ly Tong Ba's units reported through nine chains of command, about eight more than a defense requires, and Thieu removed the corps commander, General Dzu, on May 10.</p>
+        <p>Opinion: the weak seminar comment is "Air power saved An Loc: 297 fighter and 15 gunship sorties on May 11." The strong one is "Air power saved An Loc once it could deliver: recovery went from about a tenth to 90 percent in a week." Match every sortie count with a number delivered or destroyed. If the briefer has only the first, he is grading himself on attendance. So which saved Hue, the bombers or the new general? The NVA, at least, had no complaints about the April deliveries. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-10">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 20, 21, and 22</span>
+        <h3><a href="#r-10">Hanoi Needed 2,700 Tons a Day, and the Roads From China Carried 3,000</a></h3>
+        <p>Before you believe a bombing campaign starved the enemy, set the enemy's daily need beside the capacity of the routes still open, and strike where that margin is thinnest. Chapters 20, 21, and 22 run that test at both ends of the line. Chapter 20 shows interdiction biting near the front. Chapter 21 shows it sliding off at the Chinese border. Chapter 22 visits Hanoi, which took the blows with unsettling calm.</p>
+        <p>The CIA supplied the arithmetic. North Vietnam needed about 2,700 tons a day. The border roads from China could carry 10,000 tons a day in the dry season and 3,000 in the wet one, which conveniently ran June through September. Hanoi had 18,000 to 23,000 trucks, and Navy A-7 crews counted 30 to 40 per mile on Route 1. Vogt told his wing commanders, "We all know we can not stop truck traffic." Near Hue the margin ran the other way: under constant air attack, NVA logisticians delivered only about 30 percent of planned supplies. In Hanoi, the British consul found three pontoon bridges already standing in for the Paul Doumer Bridge, and ice cream still on sale.</p>
+        <p>Opinion: The weak comment is "Linebacker cut Hanoi off." The strong one is "The CIA put Hanoi's need at 2,700 tons a day against 3,000 tons of wet-season road, and Vogt conceded the trucks could not be stopped. Interdiction bit near Hue, where NVA logisticians got about 30 percent of plan." A 300-ton margin is thin, but Hanoi had built spare roads for exactly this occasion. Bombs do their best work where the enemy has no slack, usually far from the capital and close to the infantry. So what were the raids on Hanoi itself buying? The ice cream vendors did not seem worried about the answer. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-11">
+        <span class="kicker">Chapter by Chapter · Randolph, chapters 23 and 24</span>
+        <h3><a href="#r-11">The Rescue Ran on a Clock, and Hanoi Owned a Watch</a></h3>
+        <p>If your operation repeats on a schedule, assume the enemy has a copy, and build the debrief that catches the pattern first. Chapter 23, "One of Those Days," shows a small North Vietnamese air force beating a far larger American one by studying its habits. Chapter 24, "Toward the Peace Path," shows the Americans finally building the feedback loop while the Politburo turned to negotiating.</p>
+        <p>On June 27, 1972, Seventh Air Force sent sixty-five aircraft into North Vietnam. Hanoi answered with three flights of two MiG-21s. Four Phantoms went down, three to MiGs, and no MiG fell in return. Rescue F-4s cycled through the area every twenty minutes, ran low on fuel, and left for the tankers, and Hanoi timed its attacks to the fuel gauge. General Ryan sent General Talbott to take over Seventh Air Force operations, and Talbott's verdict was brisk: "That place was a shambles." By Chapter 24, crews debriefed after every Linebacker mission, and a new warning center called Teaball plotted its data by hand in grease pencil, roughly as in the Battle of Britain.</p>
+        <p>Opinion: The weak comment is "The MiGs got lucky." The strong one is "Six MiG sorties beat a sixty-five-plane package because the rescue ran on a twenty-minute clock and Hanoi read the fuel gauges. The fix was a debrief after every mission." Run the same check on any plan: what happens here at a fixed interval, and who besides us can see it? The cheapest weapon of the summer was a meeting after landing, which an air force with better jets took two months to schedule. Vogt, on the phone with Kissinger, kept his job; his director of operations went to run a training center in Colorado. In the chain of command, as over Hanoi, the predictable target took the hit. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r-12">
+        <span class="kicker">Chapter by Chapter · Randolph, conclusion</span>
+        <h3><a href="#r-12">Two Scorecards, Two Winners, One South Vietnam Left Holding the Bill</a></h3>
+        <p>Before you call a war won or lost, say whose aims you are scoring and how long the scorekeeper is willing to wait. That is Randolph's method in the Conclusion, and it is why he comes back with two winners. Judged by Nixon's goals, Nixon won his bigger game. Judged by Hanoi's, the Easter Offensive was a strategic success despite an ambiguous, or even failed, military outcome. Randolph calls the campaign the finest example he can find of Clausewitz's line that war extends politics by other means, since both sides expected the battlefield to settle the bargaining table, and both were right.</p>
+        <p>Nixon's scorecard looks splendid. He got the United States out of an unpopular war with its credibility as a great power intact, reshaped the Cold War with the summits in Moscow and Beijing, and beat George McGovern with 60.7 percent of the vote. On November 30, 1972, he sold the deal to the Joint Chiefs as a victory, while admitting that for two years Congressional funding for the war had been a close escape. Hanoi's scorecard looks worse on paper and better in practice. Air power wiped out North Vietnam's industry and 70 percent of its electrical capacity in two months, cut imports to about 60 percent of their level before the mining, and caused most of the NVA's casualties in the South. Hanoi still kept supplies moving, met its minimum objectives, and set up its 1975 victory. The peace itself could not agree on a verb: the English text said the new reconciliation council would be "promoting" elections, the Vietnamese text "supervising" them.</p>
+        <p>Opinion: The weak seminar comment is "Linebacker worked," or its mirror image, "Linebacker failed." The strong one names the scorecard: "Linebacker met Nixon's aim, a way out with American credibility intact. Hanoi met its minimum aim and positioned itself for 1975. Randolph says Nixon cared little for Thieu as the leader of a sovereign state, so Saigon never got a scorecard." Run that check on every verdict you read, including Randolph's: whose objective, and as of what year? Washington kept its own books with a tiny staff: Nixon consulted the National Security Council once during the whole offensive, on May 8, mostly for show; Randolph notes that no single leader in totalitarian Hanoi held that much authority. Randolph's last word is that time and local dynamics "proved to have power of their own." If both sides won their games, who lost the war, and what did air power buy? The scorekeeper in Saigon was not consulted either. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Keyed to the phrase each one supports. Randolph pages are printed pages: Stephen P. Randolph, Powerful and Brutal Weapons: Nixon, Kissinger, and the Easter Offensive (Cambridge, MA: Harvard University Press, 2007). Nguyen pages are ebook PDF pages: Lien-Hang T. Nguyen, Hanoi's War: An International History of the War for Peace in Vietnam (Chapel Hill: University of North Carolina Press, 2012). Clodfelter pages are ebook PDF pages, cited by chapter. Gaddis, Crane, Zhang, McDougall, and Schlight pages are printed pages. Wayne C. Booth et al., The Craft of Research, 4th ed. (Chicago: University of Chicago Press, 2016), printed pages. <i>Opinion</i> needs no source.</p>
+
+        <h3>Today's episode</h3>
+        <ul>
+          <li>Air power's most powerful effect was blunting the offensive in the South; seventy percent of electrical capacity; imports to about sixty percent; bombing a depressant, a price the Politburo would pay; North met its minimum objectives; "total national commitment": Randolph, 338. Clausewitz verdict: Randolph, 339.</li>
+          <li>Overland imports from 160,000 to 30,000 tons a month: Clodfelter, ch. V, ebook p. 184.</li>
+          <li>CIA estimate of 2,700 tons a day against 3,000 tons of wet-season road capacity: Randolph, 288. Vogt, "We all know we can not stop truck traffic": Randolph, 292. About 30 percent of planned supplies near Hue: Randolph, 277.</li>
+          <li>Quiz: four laser pods, Randolph, 209. Sixteen percent reached the South, Randolph, 55. Senate caucus vote 35 to 8, Southern Democrats 7 of 8, Randolph, 179. Rail interdiction failed despite 15,000 cuts at a cost of 243 aircraft, Crane, 115–116. Moscow's pilots not beyond the Yalu, Zhang, 62. Russia and China would not cut off arms to Hanoi, Randolph, 335.</li>
+        </ul>
+        <h3>Today's Seminar Questions, Answered</h3>
+        <ul>
+          <li>Seminar 7 questions: SAASS 628 syllabus, Seminar 7.</li>
+          <li>Battlefield results became negotiating results; strategic success despite failed military outcome: Randolph, 339. "Total national commitment": Randolph, 338. Most thoroughly mobilized society: Randolph, 339. Christmas bombing executed to end the war before the new Congress could cut off funding: Randolph, 336.</li>
+          <li>Commando Hunt VII: 4,727 trucks destroyed, 5,882 damaged; 16 percent of 30,947 tons reached the South; NVA history 4,228 trucks destroyed: Randolph, 55. 132,518 tons delivered in 1972, nearly 50 percent higher than any campaign; low estimates fed expectation of a "high point" offensive: Randolph, 56.</li>
+          <li>Most powerful effect blunting the offensive in the South; most NVA casualties; fear of B-52s: Randolph, 338. Industry wiped out, 70 percent of electrical capacity in two months; imports to about 60 percent; price the Politburo was willing to pay: Randolph, 338. Chapter titles 17 to 19: Randolph, contents.</li>
+          <li>Single aircraft vs. entire Rolling Thunder strike forces; four pods; lasers need better weather; tactics untested: Randolph, 209. Thanh Hoa bridge withstood strikes from 1965; span dropped May 13; supplies kept moving: Randolph, 207–208.</li>
+        </ul>
+
+        <h3>One Man, One Hideaway Office</h3>
+        <ul>
+          <li>"A strange parody" of the statutory system; secretaries of state and defense without effective role: Randolph, 341.</li>
+          <li>Hideaway office, small circle, against cabinet advice and without consultation with Congress; no single Hanoi leader had Nixon's authority: Randolph, 341–342.</li>
+          <li>Lam Son 719 led the White House to pay more attention to military activity: Randolph, 341.</li>
+          <li>Le Duan as primus inter pares who stymied domestic opponents behind a calm facade: Nguyen, introduction, ebook PDF pp. 19–20. Strategy relates ends to means: Gaddis, viii.</li>
+        </ul>
+
+        <h3>Tonight's Reading: The Man Behind the Bamboo Curtain</h3>
+        <ul>
+          <li>7:15 p.m., December 18, 1972; twenty-five minutes to reach shelters; twelve days, nearly 36,000 tons: Nguyen, introduction, ebook PDF p. 17.</li>
+          <li>From limited armed conflict in 1960 to heaviest bombing campaign; Le Duan as architect, main strategist, and commander in chief; first secretary 1960 to 1986; self-cultivated obscurity: Nguyen, introduction, ebook PDF pp. 18–19.</li>
+          <li>Le Duc Tho; stymied opponents, tempered allies; unified-comrades image; individuals as much as structures: Nguyen, introduction, ebook PDF pp. 20–21.</li>
+          <li>First scholar admitted to the Foreign Ministry archives, 2003: Nguyen, introduction, ebook PDF p. 23. Three schools on the flawed settlement: Nguyen, introduction, ebook PDF pp. 24–25.</li>
+          <li>Chapter titles: Nguyen, contents; ebook page ranges from the PDF. Seminar 8 questions: SAASS 628 syllabus.</li>
+        </ul>
+
+        <h3>How to Lose an Ally While Saving Him</h3>
+        <ul>
+          <li>Paper prompt and example crises: SAASS 628 syllabus, "Grading."</li>
+          <li>Nixon cared little for South Vietnam or Thieu, much for credibility; nations would test U.S. resolve: Randolph, 340–341.</li>
+          <li>Thieu accepted days before January 27; threat of bilateral settlement and cutoff; promise of B-52s' return: Randolph, 333.</li>
+          <li>"Re-Americanization" of fire support and air control; air power inflicted most casualties; reliance on air power: Randolph, 337. Watergate eliminated any prospect of an American return: Randolph, 336.</li>
+          <li>The application to alliance dissolution is our extrapolation.</li>
+        </ul>
+
+        <h3>Seven Books, Two Sets of Books</h3>
+        <ul>
+          <li>Kill claims inflated on both sides: Zhang, 202–203. Rail interdiction failed despite 15,000 cuts, 243 aircraft: Crane, 115–116.</li>
+          <li>Truck counts match, tonnage diverges: Randolph, 55–56.</li>
+          <li>Overland imports from 160,000 to 30,000 tons a month: Clodfelter, ch. V, ebook p. 184. Imports to about 60 percent: Randolph, 338.</li>
+          <li>Sortie counting: Schlight, 290. Missile gap ended by satellites: McDougall, 327–330. Ends and means: Gaddis, viii.</li>
+          <li>Earlier news links: issues of November 2 and 4. Senate caucus vote: Randolph, 179. Zumwalt: Randolph, 116.</li>
+        </ul>
+
+        <h3>Although, Because</h3>
+        <ul>
+          <li>Claims should be specific and significant; vague claims lead to vague arguments; precise language and explicit logic: Booth et al., <i>The Craft of Research</i>, 4th ed. (Chicago: University of Chicago Press, 2016), 124–125.</li>
+          <li>Although and because clauses; "Although I acknowledge X, I claim Y because of reason Z"; final claim only as specific as readers need: Booth et al., 125–126.</li>
+          <li>Significance measured by how much readers must change what they think: Booth et al., 127.</li>
+          <li>The "after" thesis uses Randolph, 337, 339, and 333. The opponent's-sentence trick is our advice.</li>
+        </ul>
+
+        <h3>Power of the Purse Strings Attached</h3>
+        <ul>
+          <li>Jeffries interview; at least a 255-seat majority; hadn't spoken with Trump, Johnson, or GOP leaders; "reckless and costly war of choice"; funding runs out December 11; spending bill and Iran war funding; Pelosi and Iraq in 2007: Jake Sherman and John Bresnahan, Punchbowl News AM, November 5, 2026.</li>
+          <li>Smith to hold public hearings on Iran operations; "just a major, major problem": Briana Reilly, Punchbowl News AM, November 5, 2026.</li>
+          <li>Anti-incumbent wave; Vance blamed the war; "$50 billion and counting"; nearly $4 billion Israel aid cut; Impoundment Control Act of 1974: electoral-vote.com, November 5, 2026.</li>
+          <li>May 8 speech: Randolph, 173. Senate Democratic Caucus 35 to 8 to cut off funds, contingent on POW release; 29 to 14 condemnation; Southern Democrats 7 of 8; frustration contained: Randolph, 179.</li>
+          <li>"One step ahead of the sheriff": Randolph, 331. Christmas bombing before the new Congress could cut off funding: Randolph, 336.</li>
+        </ul>
+
+        <h3>Shell Game</h3>
+        <ul>
+          <li>Aging plants; Patriot from over 2,300 to about 800 by end of July (CSIS estimate); THAAD nearly halved from about 450; $18 billion modernization to 2038; "hurry up and go fast"; Radford flood, containers, only domestic producer, incinerator delayed to 2027; all plants cited or flagged in five years; "effectively self-regulating"; Army statement; unresolved pollution question: Sonner Kehrt (The War Horse), "The Pentagon needs more ammo for the Iran war. Small communities are paying the price," Defense News, November 4, 2026.</li>
+          <li>Zumwalt in June 1972: "world-wide ordnance inventories will be severely depleted"; costs to modernization and personnel: Randolph, 116. Six- to nine-month deployments; hollow military; Congress never fully replenished; invisible corrosion: Randolph, 117.</li>
+        </ul>
+
+        <h3>Randolph, introduction and chapter 1: Thieu Had a Stopping Rule, and Abrams Learned It on Day Four</h3>
+        <ul>
+          <li>Inauguration January 20, 1969; over half a million servicemen: Randolph, 1.</li>
+          <li>Nixon's "Russia game, a China game, and an election game": Randolph, 3.</li>
+          <li>Lam Son 719 plan: three best divisions; Route 9 into Laos: Randolph, 13.</li>
+          <li>February 8 attack, February 11 stall; Thieu's 3,000-casualty halt order on his own counsel; caught Abrams unawares: Randolph, 14.</li>
+          <li>Agents in the Joint General Staff smuggle the plan out by early January: Randolph, 16.</li>
+          <li>Hanoi very possibly knew more about ARVN planning than Washington: Randolph, 17.</li>
+          <li>Hanoi concludes the ARVN cannot stand up to the NVA; element in the 1972 decision: Randolph, 17-18.</li>
+          <li>Nixon directs Haig to take command, reverses, never regains confidence in Abrams: Randolph, 18.</li>
+          <li>The lesson and the opinion are ours.</li>
+        </ul>
+
+        <h3>Randolph, chapters 2 and 3: Le Duc Tho Explains Everything, Depending on Who Is Listening</h3>
+        <ul>
+          <li>Ten-member Politburo: Randolph, 23.</li>
+          <li>Tho to French Communists, May 1972; Chinese pressure blamed: Randolph, 24.</li>
+          <li>Nixon's response ruled out as impossible in summit and election year; "a mistake, but not a catastrophic one"; Mao's November 1971 advice to Pham Van Dong; Tho's account aimed at Moscow to shift blame; Soviet account tracks archives: Randolph, 25.</li>
+          <li>Politburo warning: "even more powerful and brutal weapons"; Nixon a daring individual: Randolph, 29.</li>
+          <li>Narrow majority in the Politburo: Randolph, 30.</li>
+          <li>Transformation in about two years: Randolph, 32.</li>
+          <li>6th Company, 397th Battalion; ten days with the T-54s: Randolph, 36.</li>
+          <li>Tanks overturned and bogged down; battalion representative of erratic NVA armor: Randolph, 37.</li>
+          <li>Light infantry remade as a Soviet-style mechanized army: Randolph, 39.</li>
+          <li>The lesson and the opinion are ours.</li>
+        </ul>
+
+        <h3>Randolph, chapters 4 and 5: Two Ledgers on the Trail, and They Only Agree on the Trucks</h3>
+        <ul>
+          <li>Commando Hunt VII as the first battle of the Easter Offensive: Randolph, 41.</li>
+          <li>Main attack moved to the DMZ less than three weeks before the offensive; interdiction and long wet season: Randolph, 51-52.</li>
+          <li>4,727 trucks destroyed; 30,947 tons in, 5,024 (16 percent) through: Randolph, 55.</li>
+          <li>NVA figures: 4,228 trucks destroyed: Randolph, 55.</li>
+          <li>NVA figures: 132,518 tons in calendar 1972; 10.12 percent loss rate; low U.S. estimate reinforced expectation of a brief "high point" offensive: Randolph, 56.</li>
+          <li>Pyrrhic victory for the North Vietnamese: Randolph, 59.</li>
+          <li>Hambleton down Easter Sunday: Randolph, 67.</li>
+          <li>27-kilometer no-fire zone; rescue center unaware of invasion; South Vietnamese reaction: Randolph, 68-69.</li>
+          <li>Jolly Green 66 lost April 6 with six men: Randolph, 69.</li>
+          <li>The lesson and the opinion are ours.</li>
+        </ul>
+
+        <h3>Randolph, chapters 6 and 7: More Jets Than Spotters: The Surge That Outran Its Own Aim</h3>
+        <ul>
+          <li>Kissinger learns Laird was editing the reports: Randolph, 85.</li>
+          <li>April 3 meeting with Moorer; "I am the commander in chief, and not the secretary of defense"; unsanitized briefing; Nixon on Air Force risk-taking: Randolph, 87–88.</li>
+          <li>Moorer: Abrams had repeatedly asked for authority to hit the missile sites, given only the day before: Randolph, 88.</li>
+          <li>Fifteen-minute conversation; among the remarkably few times Nixon confronted a subordinate: Randolph, 88–89.</li>
+          <li>Fighter sorties in Southeast Asia from 326 to over 600 a day in the month after the offensive opened: Randolph, 111.</li>
+          <li>Forward air controllers down from about 425 to 160; Navy estimate of only 60 percent FAC-controlled in the first month; atrophied command system: Randolph, 111.</li>
+          <li>Air Force 206 fighter sorties a day in the first half of April versus 204 in March; support base arrived days later; rate doubled once it was in place: Randolph, 110–111.</li>
+          <li>April 26 speech sized to claim 500,000 withdrawn; new manpower ceiling moves Marine air from Danang to Nam Phong: Randolph, 112.</li>
+          <li>Nam Phong, Thailand; bomb loads reduced by 500 pounds per sortie: Randolph, 112–113.</li>
+          <li>Congress never fully replenished the matériel; hollow military of the late 1970s: Randolph, 117.</li>
+          <li>The lesson and the seminar comments are our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 8, 9, and 10: Fifty-Seven Inches of Leverage</h3>
+        <ul>
+          <li>Vinh raid April 10: 70-aircraft strike force, 35 missiles fired, none hit, at most 50 tons of fuel destroyed: Randolph, 120–121.</li>
+          <li>Laird: missed by a kilometer because the charts of North Vietnam were off by that amount: Randolph, 121.</li>
+          <li>Tan Canh April 24: first Saggers; command bunker collapsed; Colonel Le Duc Dat physically uninjured, takes no further part: Randolph, 138.</li>
+          <li>O-1 hit May 1 near Quang Tri City; one A-1 lost that evening, two more the next morning: Randolph, 149–150.</li>
+          <li>First confirmed SA-7 use; 57 inches long; effects on FACs and C-130 airdrops: Randolph, 150.</li>
+          <li>$50,000 controlled source; Rangers capture two; fixed-wing aircraft above 10,000 feet; C-130 loadmaster on the open ramp with flares; FACs watching for SA-7s instead of directing strikes: Randolph, 151.</li>
+          <li>Slay's "propaganda launches" to make the Americans restrict operations: Randolph, 151.</li>
+          <li>The lesson and the seminar comments are our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 11 and 12: Thirty-Six Mines and a Secret Kept From the Secretary</h3>
+        <ul>
+          <li>May 4 meeting: Connally and Haig join; Kiwanis Club luncheon of oil-man anecdotes: Randolph, 162.</li>
+          <li>Moorer sworn to secrecy, "Nothing is to go to the secretary. Nothing is to go to Vietnam": Randolph, 163.</li>
+          <li>Moorer called in only to execute a decision already made; circle of Nixon, Kissinger, Haig, Connally; State and Defense excluded; Haig's hint to convene the JCS not accepted: Randolph, 164.</li>
+          <li>Politburo calculus on the summits and the election opposite to Nixon's thinking: Randolph, 165.</li>
+          <li>NSC meeting May 8, more than three hours; precision weapons operational since 1968 never mentioned, even by Moorer: Randolph, 169.</li>
+          <li>Nine aircraft laying thirty-six mines: Randolph, 175.</li>
+          <li>Mines dropped 8:59 to 9:01 (two minutes); 36 ships in harbor, 9 leave during the grace period, 27 remain for the war: Randolph, 176.</li>
+          <li>Gun line redeployed northward May 8 without notice; Abrams vents at a dinner for the visiting delegation; no one informed the theater commander: Randolph, 180–181.</li>
+          <li>Pocket Money one of the few unambiguous successes: Randolph, 181.</li>
+          <li>The reading of Randolph's method and the seminar comments are our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 13 and 14: The Plan Kept on the Shelf. The Pilots Who Could Fly It Did Not.</h3>
+        <ul>
+          <li>Pruning Knife, 1969 air plan: Randolph, 185.</li>
+          <li>"Silent Majority" speech instead; plans back on the shelf: Randolph, 186-187.</li>
+          <li>Moorer, Vogt, and Haig involved in both 1969 and 1972: Randolph, 187.</li>
+          <li>1967 rail effort: 1,458 sorties, line closed seven days: Randolph, 186.</li>
+          <li>May 10 Air Force package of 120 aircraft, 32 attackers: Randolph, 201.</li>
+          <li>EO bombs: one hung, seven missed; "None hit the bridge. It was a miserable performance.": Randolph, 203.</li>
+          <li>May 11 strike arrived without chaff, SAM suppression, or escort and dropped the bridge: Randolph, 206.</li>
+          <li>One-year tours; three generations of pilots; corporate memory of the Red River Delta lost: Randolph, 211.</li>
+          <li>The lesson and the seminar comments are our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 15 and 16: Two Capitals Wrote After-Action Reviews. Only One Blamed Itself.</h3>
+        <ul>
+          <li>361st Air Defense Division, 41 missiles, "no enemy aircraft crashed on the spot.": Randolph, 222.</li>
+          <li>Inspection team found problems in every area; only two experienced operators; old training manuals; intelligence gap on new countermeasures; mid-May live-fire training: Randolph, 222.</li>
+          <li>Nixon's May 19 return to Washington: Randolph, 230.</li>
+          <li>Agnew's remark; "Ryan is out, out, out, out, out!": Randolph, 230.</li>
+          <li>Moorer summoned, phoned the Pacific, nobody owned up, chain of command professed satisfaction: Randolph, 231.</li>
+          <li>Memo conceding it is easy to blame the bureaucracy, then blaming it: Randolph, 231.</li>
+          <li>Nixon's memos target press, Congress, military, CIA, State: Randolph, 227.</li>
+          <li>The lesson and the seminar comments are our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 17, 18, and 19: Twenty-Six Tons Dropped, Twenty-Four Delivered to the Enemy</h3>
+        <ul>
+          <li>3 C-130s lost, 37 damaged, 15 dead: Randolph, 238-239.</li>
+          <li>Only 8-10 percent of C-130 drops reached the defenders: Randolph, 239.</li>
+          <li>April 20: 26 tons dropped, 24 to the North Vietnamese; wrong drop-zone coordinates from Army advisors: Randolph, 239.</li>
+          <li>Captured officer, "The first thing he asked for was a can of fruit cocktail": Randolph, 239.</li>
+          <li>Riggers, gunship test rounds for wind data, 90 percent recovery within a week: Randolph, 243.</li>
+          <li>297 fighter and 15 gunship sorties on May 11: Randolph, 247.</li>
+          <li>Truong named to I Corps May 3; plan by his third day: Randolph, 253.</li>
+          <li>Ba's forces reported through nine chains of command: Randolph, 261.</li>
+          <li>Thieu removed Dzu May 10: Randolph, 265.</li>
+          <li>The lesson and the seminar comments are our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 20, 21, and 22: Hanoi Needed 2,700 Tons a Day, and the Roads From China Carried 3,000</h3>
+        <ul>
+          <li>NVA logisticians provided only about 30 percent of planned supplies under constant attack as the attack on Hue neared: Randolph, 277.</li>
+          <li>CIA: about 2,700 tons a day needed; border roads carry 10,000 tons a day in the dry season, 3,000 in the wet season (June to September); some roads built in preparation for another air offensive: Randolph, 288.</li>
+          <li>18,000 to 23,000 trucks: Randolph, 288.</li>
+          <li>Navy A-7 crews estimate 30 to 40 trucks per mile on Route 1: Randolph, 287.</li>
+          <li>Vogt, "We all know we can not stop truck traffic": Randolph, 292.</li>
+          <li>Three pontoon bridges already in place as alternatives to the Paul Doumer Bridge; ice cream still available: Randolph, 302.</li>
+          <li>The 300-ton margin is our arithmetic from Randolph's figures. The takeaway is our opinion.</li>
+        </ul>
+
+        <h3>Randolph, chapters 23 and 24: The Rescue Ran on a Clock, and Hanoi Owned a Watch</h3>
+        <ul>
+          <li>Vogt's "one of those days" wrap-up, June 27; four aircraft lost, three to MiGs, no MiGs downed: Randolph, 309.</li>
+          <li>Three flights of two MiG-21s; sixty-five U.S. aircraft: Randolph, 310.</li>
+          <li>Rescue F-4s cycling every twenty minutes, then leaving low on fuel; attacks timed to fuel states; six MiG sorties, three kills: Randolph, 315.</li>
+          <li>Ryan sends Talbott to replace Slay as Seventh Air Force director of operations; "That place was a shambles": Randolph, 317.</li>
+          <li>American aircraft superior to the MiG-21 in avionics and performance: Randolph, 310.</li>
+          <li>Ryan orders a critique of every mission; Slay to Lowry Technical Training Center in Colorado; Vogt on the phone to Kissinger, beyond Ryan's ability to remove: Randolph, 318.</li>
+          <li>Politburo moves "toward the peace path," pursuing negotiations seriously: Randolph, 320.</li>
+          <li>Debriefings after every Linebacker mission: Randolph, 321.</li>
+          <li>Teaball warning center; data plotted in grease pencil, roughly as in the Battle of Britain: Randolph, 322.</li>
+          <li>"Two months" is our reckoning from the opening of Linebacker in May to Ryan's order after June 27. The takeaway is our opinion.</li>
+        </ul>
+
+        <h3>Randolph, conclusion: Two Scorecards, Two Winners, One South Vietnam Left Holding the Bill</h3>
+        <ul>
+          <li>November 30, 1972 meeting with the JCS; Nixon presents the agreement as a victory and admits two years of narrowly obtaining Congressional funding: Randolph, 331.</li>
+          <li>Nixon won his bigger game; out of an unpopular war with credibility intact; Moscow and Beijing summits; McGovern, 60.7 percent: Randolph, 333.</li>
+          <li>NCNRC "promoting" vs. "supervising" elections: Randolph, 335.</li>
+          <li>Industry wiped out and 70 percent of electrical capacity eliminated in two months; imports cut to about 60 percent of pre-mining level; air power caused most NVA casualties: Randolph, 338.</li>
+          <li>Hanoi kept supplies moving, achieved minimum strategic objectives, set conditions for 1975: Randolph, 338.</li>
+          <li>Strategic success despite ambiguous or failed military outcome; Clausewitz's dictum; both sides expected battlefield results to translate to the negotiating table: Randolph, 339.</li>
+          <li>Nixon cared little for Thieu as leader of a sovereign state, much for American credibility: Randolph, 340.</li>
+          <li>NSC consulted only once, May 8, to present the outward form of deliberation: Randolph, 341.</li>
+          <li>No single North Vietnamese leader held authority like Nixon's: Randolph, 341-342.</li>
+          <li>"time and local dynamics proved to have power of their own": Randolph, 342.</li>
+          <li>The takeaway is our opinion.</li>
+        </ul>
+      </section>
+
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Booth et al., <i>The Craft of Research</i></h3>
+        <p class="fine">The rule: make a claim specific with precise language and explicit logic, opening with "although" to acknowledge another view or a limit and closing with "because" to forecast your reasons (pp. 125–126); a claim is significant to the degree it asks readers to change what they think (p. 127). Turn this topic into a thesis someone at the seminar table would argue with.</p>
+        <p class="protip">"Linebacker was effective."</p>
+        <div class="mine">
+          <label for="mine-practice">Your thesis:</label>
+          <textarea id="mine-practice" placeholder="Although…, Linebacker…, because…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible thesis</summary><p>"Although Linebacker wiped out North Vietnam's industry and 70 percent of its electrical capacity in two months, its decisive effect came in the South, because air power there accounted for most NVA casualties while Hanoi kept its supplies moving north of the DMZ" (Randolph, 338). The although clause concedes the strategic-bombing case; the because clause forecasts the evidence (Booth et al., 125–126).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Connect the dots</h3>
+        <ul class="recall">
+          <li><details><summary>The incoming House majority is weighing limits on Iran war funding in the December spending bill. Link it to Randolph and Nguyen.</summary><p>Randolph: the day after the May 8, 1972 speech, the Senate Democratic Caucus voted 35 to 8 to cut off war funds (179); Nixon told the Chiefs he had been "one step ahead of the sheriff" on funding (331); the Christmas bombing aimed to finish before the new Congress could cut off the money (336). Nguyen: scholars of the endgame show how far the White House went to shield decisions from Congress and public opinion (introduction, ebook PDF p. 25). Punchbowl News AM, Nov 5.</p></details></li>
+          <li><details><summary>Patriot interceptor stocks fell from over 2,300 to about 800 during the Iran war, and refilling them runs through aging plants. Link it to Randolph and Zhang.</summary><p>Randolph: Zumwalt warned in June 1972 that "world-wide ordnance inventories will be severely depleted" (116), and Congress never fully replenished the matériel (117), while Hanoi's patrons pushed its imports to three times the 1971 rate (332). Zhang: in 1950 Moscow told its pilots to retrain the Chinese first and not fly beyond the Yalu, so the promised air cover never arrived (62). The side with the deeper, more willing supplier wins the refill race (Defense News, Nov 4).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Randolph: chapter recall</h3>
+        <ul class="recall">
+          <li><details><summary>Why did Lam Son 719 stall on February 11, 1971?</summary><p>Thieu, without telling Abrams, had ordered his force to halt once casualties reached 3,000. <span class="pg">R 14</span></p></details></li>
+          <li><details><summary>Why does Randolph doubt Le Duc Tho's claim that Chinese pressure drove the 1972 offensive?</summary><p>Nothing else confirms it, Mao had urged Hanoi in November 1971 to accept a settlement leaving Thieu in power, and Tho likely expected his words to the French Communists to reach Moscow and shift the blame to China. <span class="pg">R 25</span></p></details></li>
+          <li><details><summary>Where did American and North Vietnamese figures for Commando Hunt VII agree, and where did they diverge?</summary><p>They roughly agreed on trucks destroyed, 4,727 against 4,228, but diverged on cargo: the Americans estimated 16 percent got through, while the NVA history claims 132,518 tons delivered in 1972 with a 10.12 percent loss rate. <span class="pg">R 55-56</span></p></details></li>
+          <li><details><summary>Why did the Marine F-4s leave Danang for Nam Phong, Thailand, in 1972, and what did it cost?</summary><p>A new manpower ceiling tied to Nixon's 500,000 withdrawal claim pushed them out of South Vietnam; from 340 miles away their sorties doubled from one hour to two, needed refueling, and carried 500 fewer pounds of bombs. <span class="pg">R 112–113</span></p></details></li>
+          <li><details><summary>Why did the first B-52 raid on North Vietnam, at Vinh on April 10, 1972, miss its target?</summary><p>The American charts of North Vietnam were off by about a kilometer, so the bombs missed by that much; later strikes used the bombers' onboard radar until the charts were fixed. <span class="pg">R 121</span></p></details></li>
+          <li><details><summary>How many mines closed Haiphong harbor on May 9, 1972, and what happened to the ships inside?</summary><p>Nine aircraft laid thirty-six mines; of the thirty-six ships in the harbor, nine left during the three-day grace period and twenty-seven stayed for the rest of the war. <span class="pg">R 175-176</span></p></details></li>
+          <li><details><summary>How did the Paul Doumer Bridge finally come down in May 1972?</summary><p>After the May 10 strike left it damaged but standing, a May 11 strike that had lost its chaff, SAM suppression, and escorts flew across Hanoi alone and dropped it. <span class="pg">R 203-206</span></p></details></li>
+          <li><details><summary>How many missiles did Hanoi's 361st Air Defense Division fire on May 10 and 11, 1972, and with what result?</summary><p>It launched 41 missiles, and by its own account no enemy aircraft crashed on the spot; many missiles flew past their targets and self-destructed. <span class="pg">R 222</span></p></details></li>
+          <li><details><summary>At An Loc, why did more precise airdrops in April deliver less to the garrison?</summary><p>Army advisors had given the Air Force the wrong drop-zone coordinates, so accurate drops landed with the NVA; on April 20, 24 of 26 tons went to the enemy. <span class="pg">R 239</span></p></details></li>
+          <li><details><summary>What did the CIA estimate North Vietnam needed each day, and what could the roads from China carry?</summary><p>About 2,700 tons a day; the border roads could carry 10,000 tons a day in the dry season and 3,000 in the wet season, enough to meet the need by that route alone. <span class="pg">R 288</span></p></details></li>
+          <li><details><summary>How did the North Vietnamese exploit the American rescue effort on June 27, 1972?</summary><p>Rescue F-4s cycled through the area every twenty minutes and then left for the tankers, so Hanoi timed MiG attacks for when the Phantoms were low on fuel. Six MiG sorties produced three kills. <span class="pg">R 315</span></p></details></li>
+          <li><details><summary>What one-word difference between the English and Vietnamese texts of the Paris agreement does Randolph highlight?</summary><p>The English text said the National Council of National Reconciliation and Concord would be "promoting" elections; the Vietnamese text said "supervising" them. <span class="pg">R 335</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Nguyen: preview recall (answer after tonight's reading)</h3>
+        <ul class="recall">
+          <li><details><summary>Who does Nguyen say was the architect of Hanoi's war, and how long did he hold the top Party post?</summary><p>Le Duan, first secretary from 1960 until his death in 1986 (introduction, ebook PDF pp. 18–19).</p></details></li>
+          <li><details><summary>What archive did Nguyen enter first, and when?</summary><p>Vietnam's Ministry of Foreign Affairs archives, in 2003; she says she is still the only scholar admitted (introduction, ebook PDF p. 23).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: where did "flexible response" get its public name?</summary><p>From Maxwell Taylor's book <i>The Uncertain Trumpet</i> (213).</p></details></li>
+          <li><details><summary>Crane: what did the April 1952 FEAF study find about rail interdiction?</summary><p>It had failed despite more than 15,000 rail cuts, at a cost of 243 aircraft (115–116).</p></details></li>
+          <li><details><summary>Zhang: what did Moscow order Belov's 151st Air Division in 1950?</summary><p>To retrain Chinese pilots first and not to fly beyond the Yalu, so Chinese troops did not get the air cover they counted on (62).</p></details></li>
+          <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
+          <li><details><summary>Schlight: what share of 1966 strike sorties hit enemy troops engaged with allied forces?</summary><p>About 3 percent (216).</p></details></li>
+          <li><details><summary>Clodfelter: how much did Linebacker I cut North Vietnam's overland imports?</summary><p>From 160,000 to 30,000 tons a month, with 155,548 tons of bombs dropped (ch. V, e184).</p></details></li>
+          <li><details><summary>Randolph: what does he call the finest example of Clausewitz's dictum, and why?</summary><p>The Easter Offensive: a strategic success for Hanoi despite an ambiguous or failed military outcome, because battlefield results translated directly into negotiating results (339).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Add an "although" clause: "Laser-guided bombs revolutionized the air war in 1972."</summary><p>"Although only four high-threat laser pods were in theater and the beam needed clear weather, laser-guided bombs let a single aircraft destroy targets entire Rolling Thunder strike forces could not" (Randolph, 209; Booth et al., 125–126).</p></details></li>
+          <li><details><summary>Add a "because" clause: "Commando Hunt VII misled American planners."</summary><p>"…because its estimate that only 16 percent of supplies got through led them to expect another brief 'high point' offensive, while Hanoi's own records claim record deliveries" (Randolph, 55–56).</p></details></li>
+          <li><details><summary>Review (Wednesday, Shore's chop shop): "It is important to note that the mining of Haiphong had a significant impact on shipping."</summary><p>"Of the thirty-six ships in Haiphong when the mines went in, twenty-seven stayed for the rest of the war" (Randolph, 175–176; Shore, 66–67).</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: one although-because thesis on whether laser-guided bombs were a revolution in military affairs. Use Randolph's chapter 14 and his conclusion.</label>
+          <textarea id="mine-crane" placeholder="Although… (Randolph, 207–209), … because … (340)"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-done">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>30 Oct</td><td class="st-done">McDougall, <i>…The Heavens and the Earth</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>2 Nov</td><td class="st-done">Schlight (intro, ch. 1–2) + document pack (decision exercise)</td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>3 Nov</td><td class="st-done">Clodfelter, <i>The Limits of Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>5 Nov</td><td class="st-now">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill now">SEMINAR</span></td></tr>
+            <tr><td>6 Nov</td><td>Nguyen, <i>Hanoi's War</i></td><td><span class="pill now">NEXT</span></td></tr>
+            <tr><td>9 Nov</td><td>Haun, <i>Tactical Air Power and the Vietnam War</i></td><td></td></tr>
+            <tr><td>10 Nov</td><td>Kitfield, <i>Prodigal Soldiers</i></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Eight more after Kitfield, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Nguyen seminar, 6 Nov</span><b>1</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>26</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: politics, defense, leadership</li>
+          <li>Sources, then Q&amp;A</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Politico</i>, ISW.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+</script>
+</body>
+</html>

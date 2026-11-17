@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-10 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Tuesday, November 10, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-10/">This morning's issue and podcast</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Olsen, <i>Strategic Air Power in Desert Storm</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Thursday's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from Kitfield</a></li>
+          <li><a href="#t7">Political strategy × Olsen</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#o-00">Introduction: Grading a Campaign on the Aim Nobody Wrote Down</a></li>
+          <li><a href="#o-01">Ch. 1, part 1: The Policy Was Working Because We Said So</a></li>
+          <li><a href="#o-02">Ch. 1, part 2: On August 2, Saddam and the Pentagon Shared One Opinion</a></li>
+          <li><a href="#o-03">Ch. 2, part 1: Warden's Plan Was Two Years Old When the Phone Rang</a></li>
+          <li><a href="#o-04">Ch. 2, part 2: Everyone Said Yes to Instant Thunder. Nobody Bought the Same Plan.</a></li>
+          <li><a href="#o-05">Ch. 3, part 1: Instant Thunder Survived by Changing Its Name</a></li>
+          <li><a href="#o-06">Ch. 3, part 2: The Colonel Who Kept Turning Right</a></li>
+          <li><a href="#o-07">Ch. 4, part 1: Coup-Proofed Long Before the First Bomb</a></li>
+          <li><a href="#o-08">Ch. 4, part 2: Five Rings, Seven Agencies, One Tribe</a></li>
+          <li><a href="#o-09">Ch. 5, part 1: Forty-Three Survivors and a Lot of Walkie-Talkies</a></li>
+          <li><a href="#o-10">Ch. 5, part 2: Saddam Haggled Over the Rug While Washington Raised the Price</a></li>
+          <li><a href="#o-11">Conclusions: Instant Thunder Had a Target List and No Successor</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Thursday's seminar</span>
+        <h3><a href="#t1">Olsen, <i>Strategic Air Power in Desert Storm</i>: Right Target, Wrong Theory</a></h3>
+        <p>Olsen argues that the strategic air campaign against Saddam Hussein's regime worked as a military operation and fell short as a political one. It degraded Iraqi war-making and put fog and friction into the regime's decisions. The heart of the plan, attacks on Saddam's power base, did not reach its hoped-for but unstated aim of changing the regime. His explanation fits in one line: Washington did not understand the regime it was bombing. American intelligence counted divisions and tanks, and nobody mapped how Saddam actually held power. (Counting tanks told Washington nothing about who guarded the palace.)</p>
+        <p>The book argues against two camps at once. Against the triumphalists, it says paralysis did not topple anyone, and the Republican Guard walked home in good order. Against Robert Pape and the critics, it says Saddam's survival does not prove the concept failed, because regime change was never a declared Coalition objective and so never got the intelligence or resources it needed. Olsen, a Norwegian airman, gives Warden full credit as an innovator and then grades the promise as overreach.</p>
+        <p>For this course, Olsen opens the "Unipolar Moment" section. Kitfield told you Desert Storm was redemption. Olsen says the campaign that most impressed the world was also the start of a habit: in the decade after 1991, air power became the instrument of choice against stubborn regimes, partly because it seems to offer, in a phrase he borrows, "the pleasures of gratification without the burdens of commitment." Read it as the first test of whether bombing for political effect can deliver a political result. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Three Hundred Pages, Sorted by Payoff</a></h3>
+        <p>The introduction and conclusions carry the argument, so start there.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> Introduction, pp. 1–4 (thesis and chapter map). Conclusions, pp. 286–295 (Pape answered, Warden graded, no plan for war termination).</li>
+          <li><b>60 minutes.</b> Add chapter 2, pp. 87–102 (Goldwater-Nichols, Schwarzkopf's call, the August 10 and 11 briefings), and chapter 5, pp. 253–255 (the al-Firdos halt and the Republican Guard that got away).</li>
+          <li><b>2 hours.</b> Add chapter 1, pp. 47–48 (the 31 Initiatives and the Internal Look exercise); chapter 2, pp. 107–114 (Horner sends Warden home); chapter 3, pp. 127–130 and 148–167 (the Black Hole, the Washington sales campaign, the target list growing); chapter 4, pp. 209–224 (the security agencies the plan never named); and chapter 5, pp. 265–269 (Primakov and the end of the war).</li>
+        </ol>
+        <p>Skip most of chapter 1's Middle East history and chapter 4's tribal detail if time runs out. The chapter lessons below cover both, so you can listen instead of read. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Introduction, p. 1, and conclusions, p. 288.</b> The two-part verdict: success at degrading and confusing the regime, failure at the unstated aim of changing it. Every seminar question hangs on that split.</li>
+          <li><b>Chapter 1, pp. 47–48.</b> Tactical Air Command accepted a supporting role for air power in 1984, and CENTCOM's July 1990 exercise allowed strikes into Iraq only on its final two days. Horner's note: build a hose and point it where the ground commander needs it.</li>
+          <li><b>Chapter 2, pp. 99–107.</b> Schwarzkopf and Powell approve Instant Thunder fast, as a retaliation option. Schwarzkopf never believed air power could win alone and had his staff draft a four-phase plan with Instant Thunder as Phase I.</li>
+          <li><b>Chapter 3, pp. 158 and 167.</b> The target list grew from 84 to 481, and only 740 of 43,123 strikes went against what Olsen calls the central nervous system.</li>
+          <li><b>Chapter 4, p. 224.</b> Instant Thunder never mentioned the Republican Guard, the Special Republican Guard, the Amn al-Khass bodyguard, or the security network, the very things that linked Warden's outer rings to the leader.</li>
+          <li><b>Chapter 5, pp. 253–255.</b> After the al-Firdos bunker strike on February 13, Powell and Schwarzkopf approved every Baghdad strike themselves, and bombing shifted from the Republican Guard to frontline conscripts. The Guard escaped and helped crush the southern uprising.</li>
+        </ol>
+        <p>Kitfield called him "Jack." Olsen and the syllabus say John Warden, and so should you. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Thursday's Seminar Questions</span>
+        <h3><a href="#t4">Seven Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 11, "Cold War Airpower begins 'Unipolar Moment.'" The morning issue answers them; tonight, just know where to look.</p>
+        <ol class="qs">
+          <li><b>How did the strategy evolve from conception to implementation?</b> Chapter 2 for Checkmate and the August briefings; chapter 3 for Glosson, Deptula, and the growth from 84 to 481 targets.</li>
+          <li><b>Did Col Warden's strategy achieve its promise?</b> The conclusions, pp. 288–292, and chapter 5, pp. 259 and 265 (all 43 top leaders alive; leadership largely ineffective).</li>
+          <li><b>Were Tactical Air Command's doctrinal concepts more effective than the premise behind Instant Thunder?</b> Chapter 1, pp. 47–48, for TAC's AirLand role; the conclusions, p. 289, on the TAC and Army doctrine alliance that hamstrung the Air Force.</li>
+          <li><b>How much did the Goldwater-Nichols Act reforms affect interservice cooperation?</b> Chapter 2, pp. 87–88 (power to the chairman and the theater commander, so Checkmate had no planning mandate), and chapter 3, p. 153 (chiefs no longer met the President unless invited).</li>
+          <li><b>Were there any strategic mistakes made during the war?</b> Chapter 5, pp. 253–255 (the Guard left untargeted), and the conclusions, pp. 293–294 (no war-termination plan, no psychological campaign, Bush's call for an uprising he did not back).</li>
+          <li><b>Why did it end when it did?</b> Chapter 5, pp. 265–269 (Primakov, February 11, and Washington's rising terms); chapter 3, p. 166, on why a ground war became politically unavoidable.</li>
+          <li><b>What was the perception of Saddam Hussein and his military?</b> Chapter 1, pp. 22 and 30–31 (Washington's misreading); chapter 4, pp. 177 and 183 (rational, calculating, misinformed by his own council).</li>
+        </ol>
+        <p>Opinion: question four is the trap. Kitfield credited Goldwater-Nichols for Horner's control of the air; Olsen shows the same law shutting the Air Staff out, and Warden working around it. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>John Warden.</b> Air Staff colonel whose Checkmate office built Instant Thunder; sent home from Riyadh by Horner on August 20 (pp. 64, 111).</li>
+          <li><b>David Deptula.</b> Warden's co-author on the Five Rings who stayed in Riyadh and kept the concept alive inside Horner's planning cell (pp. 87, 289).</li>
+          <li><b>Buster Glosson.</b> Brigadier general Horner put in charge of offensive planning on August 22; converted to Instant Thunder by Deptula (pp. 128–129).</li>
+          <li><b>Checkmate.</b> Air Staff war-gaming division slated for shutdown before Warden took it over in 1988 (p. 80).</li>
+          <li><b>The Black Hole.</b> Horner's secret planning cell in Riyadh, named because people and information went in and never came out (p. 129).</li>
+          <li><b>Five Rings.</b> Warden's model of the enemy: leadership at the center, then energy, infrastructure, population, and fielded forces (pp. 83–85).</li>
+          <li><b>Instant Thunder.</b> The original plan, 84 targets over six to nine days, which became the core of Desert Storm's first phase (p. 64).</li>
+          <li><b>Special Republican Guard and Amn al-Khass.</b> Saddam's protection forces, about 26,000 and 5,000 men; the plan never mentioned either (pp. 209, 211, 224).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Kitfield to Olsen</span>
+        <h3><a href="#t6">Kitfield Saw a Joint Plan; Olsen Found the Back Channel</a></h3>
+        <p>Kitfield tells you Horner was angry when he heard a plan had come out of the Pentagon, warned Schwarzkopf against Washington picking targets as in Vietnam, and then let Glosson build on it with two of Warden's officers until the air campaign was Central Command's own. He credits Horner's control of every aircraft in theater mainly to Goldwater-Nichols. Olsen covers the same weeks from the other end of the phone line. Deptula kept a secret back channel to Warden, the faxes carried as little address as possible, and the trio hid the arrangement from Horner. Kitfield's version is a story of the system working. Olsen's is a story of a few officers getting around it.</p>
+        <p>Keep one question in mind while reading: when Olsen says individuals mattered more than the line diagrams, is he refuting Kitfield's reform story or just adding the footnote Kitfield left out? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Olsen · via Punchbowl News AM and electoral-vote.com, November 10</span>
+        <h3><a href="#t7">The Vote Count Nobody Can Bomb</a></h3>
+        <p>The House vote on impeaching Defense Secretary Pete Hegseth may turn on attendance more than on conviction. Punchbowl reports that Republican absences in the week after the midterm losses, more than open dissent, look likely to decide whether the narrowly divided House impeaches. Rep. Thomas Massie, who leads the effort, concedes he has no confirmed Republican votes. Rep. Don Bacon, previously undecided, says he will probably vote no. Rep. Steve Womack predicts Hegseth will be impeached "and it probably ends there." Even if the resolution passes, the Speaker can delay sending it, and Majority Leader John Thune can move to dismiss it by simple majority, the route Democrats used for Alejandro Mayorkas. Sen. Thom Tillis says he would "most likely" support it and calls it a vote of no confidence. Sen. John Cornyn warns that everything is a precedent.</p>
+        <p>The Senate math moved too. Electoral-vote.com puts the chamber at 54 Democrats, 44 Republicans, and 2 races still tied, with Sherrod Brown to be seated early because his was a special election. EV also counts the president's explanations for the midterm results, three in six days, and the first was the Iran war. (Pollsters will be studying this one for years. So will historians of explanations.)</p>
+        <p>Olsen's introduction has the framework. He argues that the political outcome of the 1991 bombing had little to do with sorties flown, buildings struck, and tanks destroyed, and much to do with the intangibles of politics. His conclusions add that the Bush administration never had a plan to end the war, and that senior officers told the air planners war termination was not their job. The military campaign ended on a clean timeline. The political argument about it did not.</p>
+        <p>Opinion: the lesson for an officer is that the military record and the political verdict run on separate clocks. The first-order effect of a war is what the strike reports measure. The second order arrives at the ballot box, where voters grade the war on terms no targeting cell controls. The third order lands back on the department, in oversight votes, confirmation fights, and funding deadlines, and it holds no matter which party runs the House. Riyadh had no slide for that phase in 1991. Washington does not appear to have one now. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Olsen, <i>Strategic Air Power in Desert Storm</i></p>
+
+      <article id="o-00">
+        <span class="kicker">Chapter by Chapter · Olsen, introduction</span>
+        <h3><a href="#o-00">Grading a Campaign on the Aim Nobody Wrote Down</a></h3>
+        <p>Judge a strategic air campaign against the aim it was really meant to achieve, even when nobody put that aim on paper. That is Olsen's opening move, and any planner can reuse it. His subject is the first of Desert Storm's four phases, the strategic air campaign against the Iraqi regime, and he gives it real credit: it degraded Iraqi war-making capability and induced fog and friction at the strategic level. The heart of the strategy, the attacks on Saddam Hussein's political power base, did not meet the "hoped for, but unstated, objective of changing the regime." His explanation is blunt. Washington did not understand the regime it was bombing.</p>
+        <p>The declared aims were tidy. On 8 August 1990, six days after Iraq invaded Kuwait, President George Bush named four national objectives, from Iraqi withdrawal to Gulf security. The UN Security Council passed 12 resolutions, ending with authority to use all means necessary if Iraq stayed past 15 January 1991. Regime change appears in none of it. Meanwhile, American intelligence cared more about order of battle than about how regimes are built, so planners got little insight into how Saddam held power. Olsen's fourth chapter fills that gap with five overlapping pillars, from the Ba'ath Party to the kinship complex, and names the center of gravity as the relationship between the sole leader and that power base. (Counting tanks is easier. It also answers a different question.)</p>
+        <p>The weak seminar comment is "Strategic bombing failed because Saddam stayed in power." The strong version: Olsen credits the campaign with degrading Iraqi war-making and imposing strategic fog and friction. It fell short against a regime-change aim that was never declared, and his fifth chapter names three drags on the concept: a thin grasp of the regime, inadequate intelligence and political restraints from Washington. Opinion: an unstated aim is the most comfortable kind a planner can have, since nobody gets fired for missing it. The question for any account of Instant Thunder or the Five Rings Model is short. Success at what, judged by whom?</p>
+        <p>The chain of effects makes the argument hard to answer. First order, planners aimed at a political system while their intelligence described a military one. Second order, the regime held, because Saddam's structure was far more complicated and resistant to precision bombing than assumed. Third order, Olsen concludes that the political outcome had little to do with sorties flown, buildings struck or tanks destroyed. Yet over the next decade air power became the instrument of choice in Deliberate Force, Desert Fox, Allied Force and Enduring Freedom, and we infer the untested assumption about regimes was carried into each of them. Politicians like the tool, Olsen notes, because it seems to offer "the pleasures of gratification without the burdens of commitment." Since he concedes the military success up front, the stock reply that the war was won anyway has nowhere to land.</p>
+        <p>Did the planners know what they were trying to break? A target list is a poor substitute for a theory of the enemy's politics. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-01">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 1, part 1</span>
+        <h3><a href="#o-01">The Policy Was Working Because We Said So</a></h3>
+        <p>A policy judged by belief instead of evidence will keep working right up until the tanks cross the border. Olsen's first chapter shows Washington courting Saddam Hussein for most of a decade and then misreading him in 1990. The Reagan tilt toward Iraq made realpolitik sense against Iran, he argues, but the Bush decision to keep improving relations was a serious misreading of Saddam's ambitions once the Iran war and the Cold War ended. Olsen borrows Bruce Jentleson's diagnosis, a perfect circle: "We know the policy is working because we believe it is the right policy."</p>
+        <p>The record is specific. On 26 February 1982 the Reagan administration took Iraq off the list of state sponsors of terrorism. In 1984 NSDD-99 authorized limited intelligence sharing. After the gassing of Halabja in March 1988, Secretary of State George Shultz called sanctions premature. On 2 October 1989 President Bush signed NSD-26, offering incentives for better Iraqi behavior, and a State Department memo soon recommended $1 billion in loan guarantees. Meanwhile Iraq owed some $80 billion and still kept over 1 million men in uniform. On 12 April 1990 Senator Robert Dole met Saddam in Mosul and reported a leader the United States could easily be in a position to influence. (Saddam, presumably, reached the same conclusion about Washington.)</p>
+        <p>The weak seminar comment is "Nobody saw it coming." The strong version: By late July 150,000 Iraqi troops sat on the border, all eight Republican Guard divisions were massed in one place, and the DIA climbed from Watchcon III to Watchcon I. The White House trusted Arab leaders who said Saddam had given his word, and the surprise was the scope of the invasion. Opinion: the most dangerous intelligence product is the one that confirms the policy. Saddam fed Ambassador April Glaspie false information and read her mild reply as a green light. She later admitted, "We never expected they would take all of Kuwait."</p>
+        <p>The chain runs straight into the air war. First order, years of credits, technology and intelligence sharing helped Iraq outlast Iran and emerge a major military power, broke and over-armed. Second order, Saddam was reluctant to demobilize an army that might stir unrest at home, and Kuwait's money and coastline looked like the answer, while Washington's faith in its policy muffled the alarms. Third order, oil revenue had let the regime pay for big army and security forces without taxing its people, and Olsen says the resulting regime proved so resilient that the 1991 air and ground campaign did not alter it. The United States, he adds dryly, helped enable that process. Because Olsen builds his case from Washington's own cables, alerts and reports, the excuse that nobody could have known has nowhere to stand.</p>
+        <p>Even the invasion misfired. The Emir escaped with some 25 family members, and Iraq could not find one senior Kuwaiti politician to front its puppet government, so it promoted a 31-year-old to colonel and put him in charge. Ten years of friendship had bought Washington plenty of access and very little understanding. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-02">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 1, part 2</span>
+        <h3><a href="#o-02">On August 2, Saddam and the Pentagon Shared One Opinion</a></h3>
+        <p>Read the plan on the shelf before you praise the plan that replaced it, because the shelf plan shows what the institution believed war was. Saddam Hussein misjudged almost everyone's reaction to his grab of Kuwait, yet his belief that air power could not decide a war did "coincide with overall US military thinking at the time." From 1973 on, Army-led doctrine cast air power as fire support for the ground commander, and the contingency plan for Iraq said so in writing.</p>
+        <p>In 1984 the Army and Air Force chiefs accepted the 31 Initiatives, which created battlefield air interdiction against targets the ground commander nominated, and Tactical Air Command, the keeper of air doctrine, agreed to the subordinate role. CENTCOM's OPLAN 1002-90 ran several hundred pages, assumed 30 days of warning, and covered where the soldiers would get their water. It never mentioned a distinct offensive air campaign. The exercise Internal Look, 23 to 28 July 1990, rehearsed a six-division Iraqi invasion, and Horner's margin note summed up his job: "Build a hose and point it where the ground commander sees that it's needed." Strikes on the homeland of RED (the exercise's code name for Iraq) were allowed only on the final two days.</p>
+        <p>The weak seminar comment is "Instant Thunder was the Air Force's plan all along." The strong version: the Air Force's own tactical command had signed up for a supporting role, and CENTCOM's war game held strikes into Iraq until the last hours, which Olsen reads as nervousness about bombing an Arab state plus a missing doctrine for conventional strategic attack. The strategic campaign broke with the plan, so ask who broke it. Opinion: a precedent sat on file. In April 1986 the Libya raid hit the Bab al-Aziziyya complex, Qaddafi's nerve center, to cut his means to operate whether or not he was home. Only two of nine planned F-111s bombed it, and Reagan's approval rating still rose to 70 per cent. (Leadership targeting with shaky precision and good polls: hold that thought for Baghdad.)</p>
+        <p>First order: doctrine written for a Soviet attack across the inter-German border defined air power as support for ground maneuver, and TAC accepted that. Second order: the Gulf plan and its July exercise inherited the idea, so when Iraq invaded, air power's planned role was to support arriving ground forces, with little thought for strategic targets in Iraq proper. Third order: on 4 August Horner briefed the National Security Council at Camp David on air options drawn from the unfinished plan, and four days later Schwarzkopf telephoned the Air Staff asking for a broader set of targets, opening the door for chapter 2's Checkmate planners. The evidence is the military's own paperwork, which pre-empts the comfortable claim that the strategic air campaign was simply doctrine finally applied.</p>
+        <p>Powell ordered the Gulf plans updated for an Iraqi threat in October 1989, so why did the plan still lack an offensive air campaign ten months later? It knew where every soldier would find water and had nothing to say about Baghdad. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-03">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 2, part 1</span>
+        <h3><a href="#o-03">Warden's Plan Was Two Years Old When the Phone Rang</a></h3>
+        <p>An idea wins in a crisis only if someone built it before the crisis and someone senior asks for it. Olsen argues that Instant Thunder was the product of two years of work in an Air Staff office called Checkmate, and that it reached the war because Colonel John Warden kept working after his boss told him to stop. On 8 August 1990 the customer phoned, and the product was on the shelf.</p>
+        <p>Warden arrived at that office bruised. As commander of the 36th Tactical Fighter Wing at Bitburg he issued some 90 initiatives of equal weight, from war plans to reserved parking and coat and tie after 16:00, and six months in General Kirk sent him to a Pentagon project. From July 1988 his directorate included Checkmate, a war-gaming division that reviews had said should be shut down. There he and David Deptula built the Five Rings: leadership at the center, then energy, infrastructure, population, and fielded forces, with the outer rings hit only as far as needed to expose the leadership. Lieutenant General James Adams told them to terminate the project. They declined. Then Schwarzkopf, with Horner swamped in Riyadh, called the Air Staff for a broader set of targets. General John Loh took the call, already knew a team was at work, and got a briefing within 24 hours; Schwarzkopf heard it on 10 August and Powell on 11 August. For Warden the call was heaven sent: "The man and the moment met and jumped as one."</p>
+        <p>The weak seminar comment is "Warden was a lone genius who saved the Air Force from itself." The strong version is that the idea had two years of staff work behind it and entered the war on an Army four-star's request, after his own staff could offer only AirLand operations. Opinion: getting fired was Warden's best professional education. Bitburg taught him to involve the people affected early, and in August he opened a big Pentagon briefing room and put everyone in on almost everything. Then run Olsen's check on the plan. Its fourth objective, rendering Saddam ineffective, began life as killing him, and Warden saw a high probability of a coup within a week, a belief Olsen says rested on intuition. On how paralysis becomes surrender, Warden "remained quite vague." General Loh, to his credit, felt uncomfortable with the optimism.</p>
+        <p>First order: Adams's order to stop was ignored, so the Five Rings and the Global Reach, Global Power white paper of June 1990 were alive in August. Second order: a concept of 84 targets over six to nine days reached the theater commander within two days of the call. Third order: the plan changed several times before execution, but its core stayed at the heart of the strategic air campaign that opened Desert Storm. That dated chronology pre-empts the claim that Instant Thunder was a hasty improvisation.</p>
+        <p>If the plan depended on someone in Baghdad overthrowing Saddam within a week, what was the plan for week two? Warden lost a wing partly over parking spaces and won an air campaign over the telephone. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-04">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 2, part 2</span>
+        <h3><a href="#o-04">Everyone Said Yes to Instant Thunder. Nobody Bought the Same Plan.</a></h3>
+        <p>When several bosses approve one plan, find out what each of them thinks he is buying, because the plan will be rebuilt around the answer of whoever holds the most power. In August 1990, Col. John Warden's Instant Thunder won fast approval from Gen. Norman Schwarzkopf and Gen. Colin Powell, and Olsen shows they approved it for reasons Warden did not share. Warden's Checkmate team thought it had sold an air campaign that could win the war by itself. Schwarzkopf and Powell thought they had bought a retaliation option for the President.</p>
+        <p>The briefings make the gap plain. Schwarzkopf had asked for retaliation options beyond the ones Lt. Gen. Charles Horner offered at Camp David on Aug. 4, and had not asked for a plan to throw Iraq out of Kuwait. He gave the 30-minute briefing on Aug. 10 his complete approval, partly because the Joint Staff had just judged that a ground campaign would cost unacceptably high casualties. Sixteen hours later Powell heard the same pitch, liked it, said he wanted Iraqi tanks left smoking all the way to Baghdad, and ordered the planning made joint and widened to hit ground forces. Tactical Air Command's operations director, Maj. Gen. Michael Ryan, Warden's Academy classmate, said he liked "everything after the last slide." By Aug. 17 the plan had 84 targets in ten categories and wide acceptance at the top, and Olsen says that acceptance came for different reasons.</p>
+        <p>The weak seminar comment is "Schwarzkopf bought Warden's plan." The strong version: Schwarzkopf bought a reprisal campaign, never believed air power could win a war alone, and while he sent Warden to Riyadh he had his own staff secretly draft a four-phase plan. Horner, on Aug. 20, heard Warden call him overly pessimistic about Iraqi tanks, got an apology, and called the briefing an academic study: "Now I need to turn that into reality." Olsen gives both memories of the question period: Horner says Warden could not answer, Warden says Horner never let him. (Kitfield told this war largely through Horner's eyes.) Opinion: Warden told Schwarzkopf how Nelson at Copenhagen put the telescope to his patched eye to avoid seeing the signal to break off. Horner proved he could also choose what not to see.</p>
+        <p>The second- and third-order effects show an approval given for one purpose getting spent on another. First order, Schwarzkopf and Powell approved Instant Thunder as retaliation. Second order, going joint grew the team from 20 to over 100, and the Aug. 17 briefing led Schwarzkopf to a four-phase strategy with Instant Thunder as Phase I. Third order, Horner kept the plan and three of its planners, sent Warden home, and handed the offensive to Brig. Gen. Buster Glosson, while Schwarzkopf and Powell grew reluctant to let air power be the only show as other options appeared. That chain answers anyone who says Warden was rejected: his concept went to war while its author went back to Washington.</p>
+        <p>Would Horner have kept anything had Schwarzkopf asked for a war winner? Warden got his plan into the war. He just had to watch it from Washington. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-05">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 3, part 1</span>
+        <h3><a href="#o-05">Instant Thunder Survived by Changing Its Name</a></h3>
+        <p>A plan survives a hostile new owner when its authors let the owner believe the plan is his. Olsen opens chapter 3 by arguing that the strategic air campaign hung on a very thin thread, and that individuals mattered far more than the organization's line diagrams. These pages show a few officers keeping Warden's ideas alive after Horner sent him home, by phone and unlabeled fax, while letting the theater planners feel the plan was theirs.</p>
+        <p>On Aug. 22, 1990, Horner put Brig. Gen. Buster Glosson in charge of a secret Special Planning Group with five days to produce an air tasking order. Glosson asked around for an offensive option and learned that nothing existed beyond defending Saudi Arabia, except Instant Thunder. He found it naive and thought "strategic" meant nuclear. Lt. Col. David Deptula converted him by late August, and said the planners now had "a 500-pound locomotive going in the right direction." (Small locomotive. It still pulled.) Deptula kept his contact with Warden secret, the faxes carried as little address as possible, and the trio hid the arrangement from Horner. Deptula called this the CENTAFisation of the plan. Horner banned the name Instant Thunder and the sign on the planners' door, then gave in on the word "strategic" with "All right. Just don't use it very often."</p>
+        <p>The weak seminar comment is "Horner killed Instant Thunder when he sent Warden home." The strong version: Schwarzkopf's Aug. 25 plan made Phase I a strategic air campaign based on Instant Thunder, the target list grew from 84 to 127 in four days, and the Sept. 2 operations order still aimed at the Iraqi leadership. Horner removed the label and kept the content. Ask of any planning history who was on the phone, since the org chart rarely says. (Kitfield credits Goldwater-Nichols for Horner's control; here the links run through back channels.) Opinion: it worked, at a price. The cell was nicknamed the Black Hole because people and information went in and never came out, and the back channel bred tension with the intelligence staff in Riyadh.</p>
+        <p>The chain of effects shows why the network mattered. First order, Checkmate fed the Black Hole intelligence that was sometimes unavailable in theater and sometimes arrived a day or two early. Second order, the plan won approval: Schwarzkopf called it the most impressive planning effort of his career, and after the Sept. 13 briefing he and Powell made the air campaign their primary response to further Iraqi offensive action. Third order, when Bush agreed on Oct. 30 to send Schwarzkopf's reinforcements, the objective grew to destroying the Iraqi armed forces, and the same network modeled 50 per cent attrition, letting Glosson promise it within 21 days. Schwarzkopf then ruled out a ground war until that figure was reached. The chain pre-empts the claim that the formal structure carried the plan: the structure had nothing offensive on the shelf until a few officers supplied it.</p>
+        <p>If officers hide their phone calls from the commander, who owns the plan? Instant Thunder lost its name, its author and its door sign, and still went to war. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-06">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 3, part 2</span>
+        <h3><a href="#o-06">The Colonel Who Kept Turning Right</a></h3>
+        <p>A plan that needs civilian approval needs its own campaign, and the briefing that wins approval can approve the rival plan too. Olsen follows John Warden running the political campaign in Washington while Buster Glosson and David Deptula run the operational one in Riyadh. Warden won his audience. He did not win the thing he most wanted, which was no ground war at all.</p>
+        <p>Warden's methods earned him a nickname, Right Turn, per David Halberstam: told no by a superior, he went one level higher, then another. Lt. Gen. James Adams called him uncontrollable. In early September, Warden and Secretary Donald Rice got Under Secretary Paul Wolfowitz down to Checkmate for a session they insisted was not a briefing. When Gen. Colin Powell objected to a second one in November, Warden went to Rice, Rice went to Cheney, and Cheney said yes. Cheney himself got the briefing on 6 November. Warden's arithmetic: military plans are five percent convincing soldiers and 95 percent convincing civilians. After Edward Luttwak phoned Sen. John Warner, Gen. Merrill McPeak was at Camp David on 1 December telling President Bush the war would take 37 days and cost at most 2,000 Iraqi civilians and 100 aircraft. Bush asked Brent Scowcroft who this McPeak was. (Fair question.)</p>
+        <p>The weak seminar comment is "Warden's lobbying sold Washington on air power." The strong one points to Glosson's briefing of 11 October 1990. Olsen calls it the moment the leadership accepted the strategic air campaign, and also the moment Schwarzkopf and Powell won acceptance for ground reinforcement. Once the shooting started, skipping a ground war became politically unacceptable. Powell had already called air-only strategies "designed to hope to win; they are not designed to win." Opinion: Warden lobbied for confidence while the decision rode on troops, and a corps arriving from Germany was going to be used. NSD 54, signed 15 January 1991, never mentioned needing ground forces. It did not need to.</p>
+        <p>Warden's salesmanship worked on belief more than on bombs. First order, Warden's end runs put the air plan in front of Wolfowitz, Cheney and, through McPeak, the President. Second order, Olsen suggests with labeled caution that the team's accumulated confidence in air power may have been one factor in Bush's decision to go to war. Third order, the plan that went to war had grown from 84 targets to 481, with as many rail and bridge targets as leadership targets, and only 740 of 43,123 strikes hit what Olsen calls the central nervous system. We infer that winning the audience did not mean owning the execution. The chain is hard to rebut because it measures Warden's influence on belief and on bombs separately, which answers fans and critics alike. Asked how the final plan differed from Instant Thunder, Horner replied, "How does a butterfly differ from a larva?"</p>
+        <p>Olsen calls Horner's decision to send Warden home on 20 August fortunate. Would the plan have survived Warden in Riyadh, or would Warden? Horner later compared the credit-seekers to 10,000 ants on a log, each sure he was steering. One ant kept walking to the front. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-07">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 4, part 1</span>
+        <h3><a href="#o-07">Coup-Proofed Long Before the First Bomb</a></h3>
+        <p>Before you aim at a regime's center of gravity, ask what that regime was built to survive. Olsen concedes that the official mission was to isolate and incapacitate, yet key Black Hole and Checkmate planners hoped the bombing would help remove Saddam Hussein by coup or popular revolt. The Coalition, he writes, did not understand how the regime worked, and its structure did not lend itself to collapse through air power. Since 1968 Saddam had made sure nobody could topple him, including the people the planners were counting on.</p>
+        <p>The regime was engineered against its own officers. Olsen describes five overlapping pillars: the state, the security and intelligence networks, the military, the Ba'ath Party and an informal kinship system, each a backup for the others. The Party grew from fewer than 1,000 members and supporters in 1968 to almost 2 million in 1990. On 16 July 1979, the day Saddam took the presidency, five of 22 senior Revolutionary Command Council members and some 50 senior Party officials were executed, and the surviving members performed the executions. The Party's Military Bureau controlled promotions and postings. On 10 December 1990, Saddam dismissed 12 senior officers and ordered some 16 executions for allegedly plotting. (Priorities.)</p>
+        <p>The weak seminar comment is "Saddam was an irrational madman, so decapitation was the obvious play." Olsen judges Saddam rational and calculating, a man who trusted nobody and misjudged his adversaries. When he asked his council about the UN withdrawal ultimatum, one member offered, "I saw you in my dream. You were victorious on your white horse." He did not grasp how bad the bombing was until the Russian envoy Yevgeny Primakov showed him pictures in mid February 1991. The strong comment: the planners were right that Saddam was the problem (his cousin Ali Hasan al-Majid put it as "Iraq is Saddam; Saddam is Iraq"), and that same centralization had already removed anyone who could replace him. Opinion: the target was right and the theory of collapse was wrong.</p>
+        <p>Coup-proofing cost Saddam an army and bought him a regime. First order, he put the Party in charge of the military and removed anyone who grew too popular. Second order, Olsen says this weakened Iraqi combat performance and left the army without combat intelligence, since Saddam feared informed subordinates, but it also reduced the chance that officers would turn on him. Organized opposition had been driven abroad by the 1980s, so when the leadership was most vulnerable, early in the campaign, nobody inside pushed. Third order, the regime survived the postwar uprising, and the rebels were massacred in the tens of thousands. The chain pre-empts the obvious rebuttal, more bombs on Baghdad: regime change needs a credible successor group, and the Party had made sure none existed. No sortie count manufactures one.</p>
+        <p>How do you grade an air campaign against an aim the planners never wrote down? Olsen notes that to Saddam, defeat in a foreign war probably mattered less than losing face before his own people. He lost Kuwait and kept Baghdad, which by his own accounting was the cheaper half. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-08">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 4, part 2</span>
+        <h3><a href="#o-08">Five Rings, Seven Agencies, One Tribe</a></h3>
+        <p>Before you bomb a regime's "leadership," draw the bodyguard system that keeps the leader alive, because that system is the real target and it never appears on an order-of-battle chart. Olsen maps Saddam Hussein's agencies and tribe in loving, slightly terrifying detail, then turns on the planners. When Instant Thunder was drafted, he writes, the airmen had "very limited understanding of the true centres of gravity."</p>
+        <p>The map is worth memorizing. Seven agencies reported straight to the Office of the Presidential Palace, bypassing the ministries of Interior and Defence, and their jobs overlapped on purpose so they would compete and spy on one another. The Amn al-Khass was a 5,000-man bodyguard; the Special Republican Guard ran to some 26,000 by 1990. Saddam used doubles, had dinner cooked in five or six places, and staged fake attacks on himself to see who would die for him. (Loyalty tests, Baghdad edition.) Even the air force was built mainly to prevent coups. Underneath sat the tribe of al-Bu Nasir, no more than 25,000 people, and an active core around Saddam of a few hundred. Since 1968, Olsen says, Iraq ran more or less as a family business.</p>
+        <p>The weak seminar comment is "Instant Thunder aimed at the leadership, so it understood the regime." The strong version notes that the plan never mentioned the Republican Guard, the Special Republican Guard, the Amn al-Khass, or the security network, the very things that linked the outer and inner rings of Warden's Five Rings model. The blind spot had causes. A 1988 memo from Secretary of State George Shultz barred US officials from contact with Iraqi opposition groups, and US military intelligence fixed on the order of battle and left the regime's construction alone. The Cockburns claim no analyst from State, CIA, DIA, or NSA had ever been inside Iraq. Opinion: a target list built from the order of battle will find the army every time and the regime almost never. Ask of any plan: which ring do the bodyguards live in?</p>
+        <p>The chain of effects explains why the regime survived. First order, Saddam split the armed forces between loyal non-Tikritis and Tikritis, so any coup needed groups that never worked together. Second order, the opposition was totally unprepared when its moment came in March 1991; the Shia uprising in the south gained momentum only after Iraqi radio was knocked off the air and replaced by BBC broadcasts. Third order, the clan network kept the elite in power through the Gulf War and the civil war that followed, and chapter 5 tests the air campaign against this unusually durable regime. The chain also pre-empts the excuse that nobody could have known. Olsen says the regime's overall architecture was nothing new, and his endnotes point to opposition sources and a book on the regime first printed in 1989.</p>
+        <p>Ordinary Iraqis, Olsen suggests, were "more afraid of Saddam Hussein than of the bombers." A precision bomb hits one building; the secret police typically kept a branch in every police station. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-09">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 5, part 1</span>
+        <h3><a href="#o-09">Forty-Three Survivors and a Lot of Walkie-Talkies</a></h3>
+        <p>Grade a strike on a regime's leadership by the friction it piles up in aggregate, and by how much of the plan the commanders actually let it fly. Toppling Saddam sat at the heart of Instant Thunder, yet it was never a declared aim, so Olsen cannot score it as a simple hit or miss. He measures it against Saddam's theory of the war and against what was really flown.</p>
+        <p>Saddam's theory was a ground war of blood. He told April Glaspie that American society could not accept 10,000 dead in one battle, and he ordered his commanders to sit still under the bombing because the ground battle would decide. The opening night of 17 January wrecked the premise: decoy drones baited the SAM radars, anti-radiation missiles killed them, and within three days Iraqi radar activity fell by over 90 percent. Deciding that sitting it out was failing, Saddam attacked al-Khafji on 29 January. His 3rd Corps commander asked to withdraw, was told to make it the mother of all battles, and replied, "Sir, the mother is killing her children." Iran ended up with 148 Iraqi aircraft. (A neighbourly favour, minus the returning part.)</p>
+        <p>The weak seminar comment is "Decapitation failed; Pape shows all 43 top Iraqi leaders were alive after 1 March." Olsen grants it and adds up the bill. Saddam met in farmhouses, his elite gave up cellular phones, the leadership fell back on walkie-talkies anyone could monitor, and food and clothes sat in Kuwait with no way to distribute them. Leadership and communications targets drew only 2 percent of all strikes. Weather cut Glosson to fewer than 100 Baghdad sorties by 28 January against 300 planned. Powell thought restriking only made the "rubble bounce." Opinion: you cannot fail Warden's promise on a test the inner ring only half took. Olsen adds an argument tool: the planners had made no provision for measuring their own effectiveness, and the intelligence community was built for battlefield assessment. Ask who was keeping score, and with what ruler?</p>
+        <p>The al-Firdos bunker shows how one constraint breeds the next. First order, the strike of 13 February killed some 300 people, and afterward Powell and Schwarzkopf approved every Baghdad strike, in effect a nine-day halt; F-117s hit 25 targets in metropolitan Baghdad in the two weeks before and five in the two weeks after. Second order, 90 percent of the air effort went to the Kuwaiti theatre, and by mid February the division commanders pressed Schwarzkopf into shifting bombs from the Republican Guard to frontline conscripts (we infer the two pressures fed each other). Third order, the Guard escaped largely intact and helped crush the southern uprising after the cease-fire, which Olsen says undermined the strategic campaign. That chain blocks the easy verdict that the theory simply failed: Schwarzkopf named the Guard a centre of gravity, then let it go untargeted in a systematic way. (Haun, recall, credits direct attack on the fielded army; here the best of that army got away.)</p>
+        <p>Saddam lost his phones, his radars, and the use of his air force, and stayed alive. The Guard went home largely intact. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-10">
+        <span class="kicker">Chapter by Chapter · Olsen, chapter 5, part 2</span>
+        <h3><a href="#o-10">Saddam Haggled Over the Rug While Washington Raised the Price</a></h3>
+        <p>When coercion starts to work, check whether the side doing the coercing still wants it to. Olsen applies that test to the end of the Gulf War. By mid-February 1991, he argues, the bombing had pushed Saddam Hussein toward leaving Kuwait, and by then Washington no longer wanted the war to end that way. The air planners came close to a win by coercion, and the Army got its ground war anyway.</p>
+        <p>The evidence runs on a tight calendar. Saddam toured his troops in Kuwait on 23 January and Basra four days later and saw the bombing of his formations getting worse. Until early February he believed he could sit out the bombing and then inflict heavy casualties; after that he looked for a way out. On 11 February the Soviet envoy Yevgeni Primakov met him in Baghdad, and Saddam agreed to withdraw without economic or territorial compensation. While Primakov was there, Cheney and Powell were in Riyadh reviewing the ground plan, and Washington was by now demanding that the Iraqi Army leave its tanks and artillery behind. Olsen gives two motives: an ending without the massed ground forces might have undercut the case for a large active Army, and it would have handed Moscow much credit. Warden's diagnosis of the Iraqis: "They were still trying to sell rugs."</p>
+        <p>Seminar question 6, why the war ended when it did, has two halves, and most answers grade only Iraq's. The weak seminar comment is "Saddam was stubborn, so the ground war was necessary." The strong version: Saddam was slow and lost valuable days bargaining, but the price rose while he haggled, and Olsen concludes Washington would not let the war end without ground forces seizing territory. Opinion: moving the goalposts is also a bargaining style; it just gets better press. (Haun would like that Saddam's change of heart followed a look at his battered troops.)</p>
+        <p>The second- and third-order effects show why the argument holds. First order, Washington's tougher terms meant Saddam's offer fell short, so he bargained. Second order, Iraq lost several days, and when it thought a Moscow deal was done its forces set Kuwait's oilfields on fire, which helped Washington argue for a ground war; even after that war began, Saddam took two more days to accept unconditional withdrawal. Third order, the divisions he had kept in the north and outside Baghdad saved the regime: those in the north slowed the Kurdish revolt, and those sent south crushed the Shia uprising, and the Coalition chose not to back the revolt for fear of a political vacuum. Built on Iraqi witnesses and Washington's own words, the chain means anyone claiming Saddam never meant to leave has to explain away Primakov.</p>
+        <p>Olsen's verdict on the strategic campaign itself is modest. It left the Iraqi leadership largely ineffective, came nowhere near changing the regime on its own, and used 2 per cent of air strikes, which he calls worthwhile. Overthrow was never a declared aim, so grading the campaign on it is grading a test nobody set. Rug merchants, it turns out, sit on both sides of the table. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="o-11">
+        <span class="kicker">Chapter by Chapter · Olsen, conclusions</span>
+        <h3><a href="#o-11">Instant Thunder Had a Target List and No Successor</a></h3>
+        <p>A plan to strike the enemy's leadership owes an answer to one question: who governs afterward, and will that person meet your terms? Olsen's conclusions say Instant Thunder never answered it, and neither did Washington. He still grades the concept a success in relative terms. It injected fog, friction and uncertainty into Iraqi decision-making and kept Saddam Hussein from decisive action, while leaving the regime free to secure its own survival.</p>
+        <p>The record shows where the theory ran out. Instant Thunder, as briefed between 9 and 20 August 1990, was bold and imaginative and out of step with what was politically acceptable and operationally attainable. Forty-three days of bombing against several hundred targets failed to collapse the regime's command and control; the Republican Guard withdrew in good order and the regime put down two revolts. The planners knew little about Iraq beyond the locations of buildings and communications, and they ignored the security agencies guarding the regime. Powell told the Senate in December 1990: "Such strategies are designed to hope to win; they are not designed to win." Then there was the successor: any new leader would have to look strong at home, so none could afford the concessions demanded.</p>
+        <p>The weak seminar comment on question 2 is "Warden promised paralysis, Saddam survived, so strategic airpower failed." That is Robert Pape's case, and Olsen answers it: survival does not prove paralysis was ineffectual, and regime change was never a Coalition objective, so the intelligence and resources for it never showed up. The strong comment concedes the overreach. Warden at first thought Instant Thunder alone could compel withdrawal, and Peter Faber judged that, for Warden, the elegance of the argument outran reality. Opinion: Warden's promise failed and his idea survived, largely because Deptula kept it alive in late August 1990 and shaped it into something Horner, Schwarzkopf and Powell would accept. Even General Michael Ryan, who opposed it in 1990, later called massive force from the opening moment classic doctrine. Converts are always the loudest.</p>
+        <p>The second- and third-order effects show the failure was political. First order, the planners hit buildings and communication lines with no theory of who would replace Saddam. Second order, when they raised war termination, senior military leaders replied it was not their job; Schwarzkopf's chief foreign policy advisor said the administration "never did have a plan to terminate the war," and Schwarzkopf dictated the cease-fire without State Department instructions. Third order, Bush urged Iraqis in late February 1991 to take matters into their own hands and did not act, and by the time they rose the bombing had stopped. Saddam lived to fight another day, Olsen notes. The chain pre-empts the claim that more bombing would have done it: Iraqi troops interviewed for the book said more of the same on the inner ring would not have mattered much.</p>
+        <p>Olsen's fix is homework: study the enemy's culture and how its value and power systems work, because strategic paralysis is no surgical exercise with clean cause and effect. Saddam called it the Mother of all Battles, not of all Wars, and Olsen suspects he understood the difference better than Washington did. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · five earlier books against Olsen</span>
+        <h3><a href="#r1">Five Old Friends Weigh In on Instant Thunder</a></h3>
+        <ol class="qs">
+          <li><b>Crane, Korea.</b> The Air Force entered Korea with inflated expectations, could not reach the real sources of enemy power, and tried interdiction and then "air pressure" to force a settlement. The link: Crane's planners also had to find a way to use airpower to influence enemy decision makers, the same problem Warden aimed at the inner ring.</li>
+          <li><b>Clodfelter, North Vietnam.</b> Bombing's value is its contribution to war aims, and that depends on the goals and the kind of war. The link: Olsen has to grade a campaign whose biggest hope, regime change, was never a stated war aim, which is Clodfelter's test with the answer key missing.</li>
+          <li><b>Randolph, the Easter Offensive.</b> Nixon's bombing blunted the 1972 invasion and met his near-term goals, but Hanoi paid the price and kept its minimum aims. The link: Saddam, like Hanoi, treated the bombing as a cost he could absorb, and Olsen thinks Saddam understood what kind of war he was in better than Washington did.</li>
+          <li><b>Nguyen, Hanoi's war.</b> Le Duan bet three times on a general offensive and general uprising, and the uprising failed each time. The link: Instant Thunder's planners bet on a coup or revolt in Iraq, and Olsen shows the regime had spent two decades making sure no organized opposition existed.</li>
+          <li><b>Haun, Vietnam.</b> Direct attack on fielded forces with a capable ground partner works; strategic bombing and interdiction rarely do. The link: Olsen agrees the strategic campaign could not change the regime, and his chapter 5 shows the best of the fielded army, the Republican Guard, escaping largely intact.</li>
+        </ol>
+        <p>Opinion: Clodfelter, Randolph, and Haun all find bombing does best when the demand is modest or the target is an army in the field. Olsen's planners tried it with the biggest demand there is, a new government, and never said so out loud. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Degraded war-making, fog and friction; attacks on the power base did not meet the "hoped for, but unstated, objective of changing the regime"; US did not appreciate the nature of the regime: Olsen, 1.</li>
+          <li>Intelligence focused on order of battle, little insight into the political system: Olsen, 1–2.</li>
+          <li>Orderly Republican Guard withdrawal: Olsen, 288.</li>
+          <li>Pape's argument; survival does not prove strategic paralysis ineffectual: Olsen, 286–287.</li>
+          <li>Regime change not a Coalition objective, so the intelligence and resources were absent: Olsen, 288.</li>
+          <li>Author's affiliation, Royal Norwegian Air Force: Olsen, 4.</li>
+          <li>Instant Thunder bold, imaginative, innovative; Warden a unique conceptualiser; Faber on elegance over reality: Olsen, 288–290.</li>
+          <li>Air power the instrument of choice in the following decade; "the pleasures of gratification without the burdens of commitment": Olsen, 2.</li>
+          <li>Kitfield's redemption arc and the "Unipolar Moment" framing: SAASS 628 syllabus, Seminars 10 and 11.</li>
+          <li>The census aside is our opinion.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter page ranges: Olsen, introduction 1; ch. 1, 7; ch. 2, 64; ch. 3, 127; ch. 4, 175; ch. 5, 233; conclusions 286.</li>
+          <li>31 Initiatives, 1984; TAC accepts a subordinate role; Internal Look, cross-border strikes on the final two days; Horner's "hose" note: Olsen, 47–48.</li>
+          <li>Retaliation options; August 10 and 11 briefings; Schwarzkopf never believed air power could win alone; four-phase plan with Instant Thunder as Phase I: Olsen, 99–107.</li>
+          <li>Targets grew from 84 to 481: Olsen, 158. 740 of 43,123 strikes against the central nervous system: Olsen, 167.</li>
+          <li>Instant Thunder never mentioned the Republican Guard, Special Republican Guard, Amn al-Khass, or security network: Olsen, 224.</li>
+          <li>Al-Firdos, February 13; Powell and Schwarzkopf approve every Baghdad strike; shift from the Republican Guard to conscripts; Guard escapes and helps quell the southern uprising: Olsen, 253–255.</li>
+          <li>Kitfield's "Col. Jack Warden": Kitfield, 362. Col John Warden: SAASS 628 syllabus, "SAASS Competencies" and Seminar 11.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 11, "Cold War Airpower begins 'Unipolar Moment.'"</li>
+          <li>All 43 top leaders alive after March 1 (Pape): Olsen, 259. Leadership largely ineffective: Olsen, 265.</li>
+          <li>USAF hamstrung by the alliance between TAC and the Army's doctrine command: Olsen, 289.</li>
+          <li>Goldwater-Nichols gave unprecedented power to the CJCS and the CINCs; the Air Staff not part of the planning chain: Olsen, 87–88.</li>
+          <li>Chiefs did not meet the President unless the Chairman or President suggested it: Olsen, 153.</li>
+          <li>No war-termination plan; "not our job": Olsen, 293. Psychological campaign never explored; Bush's late-February call: Olsen, 294.</li>
+          <li>Primakov, February 11, 1991; Washington's terms; no end without ground forces seizing territory: Olsen, 267–269.</li>
+          <li>Ground operations politically unavoidable after the October 11 briefing: Olsen, 166.</li>
+          <li>Washington's misreading of Saddam: Olsen, 22, 30–31. Rational and calculating; the white horse dream: Olsen, 177, 183.</li>
+          <li>Horner's control credited mainly to Goldwater-Nichols: Kitfield, 381.</li>
+          <li>The "trap" line is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Warden and Checkmate: Olsen, 64, 80; sent home August 20: Olsen, 111, 161.</li>
+          <li>Deptula, the Five Rings, and Adams's order to stop: Olsen, 83–87; Deptula kept the idea alive: Olsen, 289–290.</li>
+          <li>Glosson appointed August 22; converted by Deptula: Olsen, 128–129.</li>
+          <li>Black Hole nickname: Olsen, 129.</li>
+          <li>Five Rings: Olsen, 83–85.</li>
+          <li>Instant Thunder, 84 targets, six to nine days: Olsen, 64.</li>
+          <li>Amn al-Khass, 5,000: Olsen, 209. Special Republican Guard, about 26,000 by 1990: Olsen, 211. Not mentioned in Instant Thunder: Olsen, 224.</li>
+        </ul>
+        <h3>Bridge from today</h3>
+        <ul>
+          <li>Horner angered by a Pentagon plan; warned against Washington picking targets as in Vietnam; Glosson expanded it with two of Warden's officers; became Central Command's own: Kitfield, 362.</li>
+          <li>Horner's centralized control "a result primarily of the Goldwater-Nichols reforms": Kitfield, 381.</li>
+          <li>Secret contact with Warden; faxes with little address; hidden from Horner: Olsen, 130.</li>
+          <li>Individuals more important than line diagrams: Olsen, 127.</li>
+        </ul>
+        <h3>Political strategy × Olsen</h3>
+        <ul>
+          <li>Republican absences likely to decide the vote; Massie has no confirmed GOP votes; Bacon probably no; Womack "he'll be impeached, and it probably ends there": Punchbowl News AM, November 10, 2026.</li>
+          <li>Speaker can delay sending the resolution; Thune can move to dismiss by simple majority, as with Mayorkas; Tillis "most likely" support, "a vote of no confidence"; Cornyn on precedent: Punchbowl News AM, November 10, 2026.</li>
+          <li>Senate at 54 Democrats, 44 Republicans, 2 tied; Brown seated early after a special election; three explanations in six days, the first the Iran war: electoral-vote.com, November 10, 2026.</li>
+          <li>Political outcome had little to do with sorties flown, buildings struck, and tanks destroyed: Olsen, 4.</li>
+          <li>No plan to terminate the war; "war termination is not our job": Olsen, 293.</li>
+          <li>The separate-clocks argument, the first-, second-, and third-order chain, and the closing lines are our opinion.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Crane's thesis and the need to influence enemy decision makers: Crane, 6–9, 8.</li>
+          <li>Clodfelter's thesis: Clodfelter, 9–11, 223–225 (paper extract page cites).</li>
+          <li>Randolph's thesis: Randolph, 333, 337–342.</li>
+          <li>Nguyen on the general offensive and uprising, 1964, 1968, 1972: Nguyen, ebook 430–431.</li>
+          <li>Haun's thesis: Haun, 1–2, 6–7, 224, 228.</li>
+          <li>Planners hoped for a coup or revolt; organized opposition driven abroad: Olsen, 175, 293.</li>
+          <li>Saddam may have understood Clausewitz's dictums better than his opponents: Olsen, 295.</li>
+          <li>Republican Guard escaped largely intact: Olsen, 254–255.</li>
+          <li>The closing opinion is ours.</li>
+        </ul>
+        <h3>Olsen, introduction: Grading a Campaign on the Aim Nobody Wrote Down</h3>
+        <ul>
+          <li>Four phases of Desert Storm; strategic air campaign aimed at the regime: Olsen, 1.</li>
+          <li>Degraded war-making, fog and friction; "hoped for, but unstated, objective of changing the regime": Olsen, 1.</li>
+          <li>US establishment did not appreciate the regime; more complicated and resistant to precision bombing than assumed: Olsen, 1.</li>
+          <li>Bush's four objectives on 8 August 1990, six days after the invasion: Olsen, 1.</li>
+          <li>Twelve UN resolutions; authority to use all means necessary; 15 January 1991 deadline: Olsen, 1.</li>
+          <li>Intelligence focused on order-of-battle; little insight into the political system: Olsen, 1 to 2.</li>
+          <li>Air power as instrument of choice in Desert Storm, Deliberate Force, Desert Fox, Allied Force, Enduring Freedom: Olsen, 2.</li>
+          <li>"the pleasures of gratification without the burdens of commitment": Olsen, 2.</li>
+          <li>Five Rings Model and Instant Thunder: Olsen, 3.</li>
+          <li>Five overlapping pillars of power: Olsen, 3.</li>
+          <li>Center of gravity as the relationship between the sole leader and his power base: Olsen, 4.</li>
+          <li>Chapter 5's three factors; outcome had little to do with sorties, buildings, tanks: Olsen, 4.</li>
+          <li>The seminar-comment paragraph and the closing line are our opinion; the claim that the regime assumption carried into the later operations is our inference.</li>
+        </ul>
+        <h3>Olsen, chapter 1, part 1: The Policy Was Working Because We Said So</h3>
+        <ul>
+          <li>Reagan tilt made sense as realpolitik; Bush continuation a serious misreading; Jentleson's "We know the policy is working because we believe it is the right policy": Olsen, 32.</li>
+          <li>Iraq removed from the terrorism list on 26 February 1982; NSDD-99 intelligence sharing in 1984: Olsen, 20.</li>
+          <li>US arming Iraq to keep Iran from winning: Olsen, 20.</li>
+          <li>Halabja gassing in March 1988; Shultz called sanctions premature: Olsen, 21.</li>
+          <li>NSD-26 signed 2 October 1989; $1 billion in CCC loan guarantees recommended: Olsen, 22.</li>
+          <li>Iraq emerged from the Iran war a major military power, economically impoverished: Olsen, 22.</li>
+          <li>Debts of some $40 billion to Gulf states and $40 billion to others; over 1 million still in uniform; reluctance to demobilize for fear of unrest: Olsen, 23.</li>
+          <li>Invasion as a mission to keep the army away from the cities (Mohamedou): Olsen, 24.</li>
+          <li>Dole delegation in Mosul on 12 April 1990; Saddam a leader the US could easily be in a position to influence: Olsen, 27.</li>
+          <li>Kuwait as Iraq's port: Olsen, 28. A lung open to the sea: Olsen, 33.</li>
+          <li>150,000 troops on the border; DIA Watchcon III and II; Arab leaders said Saddam had given his word, and Washington followed their advice: Olsen, 29.</li>
+          <li>Saddam fed Glaspie false information and took her response as the US position; Watchcon I after Jedda: Olsen, 30.</li>
+          <li>All eight Republican Guard divisions in one place; the scope of the invasion was the surprise; Glaspie's "We never expected they would take all of Kuwait": Olsen, 31.</li>
+          <li>Oil revenue paid for army and security forces; regime resilience; US helped enable it; air campaign plus ground operations did not alter the regime: Olsen, 18.</li>
+          <li>Emir escaped with some 25 family members: Olsen, 34.</li>
+          <li>Puppet regime as precondition; no senior Kuwaiti politician would serve; 31-year-old promoted to colonel: Olsen, 35.</li>
+          <li>The seminar-comment paragraph and the closing line are our opinion; the link from Washington's faith in its policy to muffled alarms is our reading of Olsen, 29 to 32.</li>
+        </ul>
+        <h3>Olsen, chapter 1, part 2: On August 2, Saddam and the Pentagon Shared One Opinion</h3>
+        <ul>
+          <li>Saddam's view of air power matched US military thinking: Olsen, 39.</li>
+          <li>Army reform from 1973; TRADOC established July 1973: Olsen, 39–40.</li>
+          <li>Air power seen as fire support for ground forces: Olsen, 47.</li>
+          <li>31 Initiatives accepted in 1984; Initiative 21 and battlefield air interdiction: Olsen, 47.</li>
+          <li>TAC agreed to air power's subordinate role: Olsen, 47.</li>
+          <li>Powell ordered contingency plans updated on 16 October 1989: Olsen, 46.</li>
+          <li>OPLAN 1002-90: no distinct offensive air campaign; 30 days of warning; several hundred pages; soldiers' water: Olsen, 47.</li>
+          <li>Internal Look, 23–28 July 1990; six-division scenario; Horner's "hose" note; RED for Iraq; cross-border authority on final two days; sensitivity about bombing an Arab state and lack of doctrine: Olsen, 48.</li>
+          <li>Little thought to strategic targets in Iraq proper: Olsen, 48.</li>
+          <li>Doctrine aimed at the Warsaw Pact and the inter-German border: Olsen, 40.</li>
+          <li>Eldorado Canyon: nerve center theory, two of nine F-111s, 70 per cent approval: Olsen, 44.</li>
+          <li>Horner's 4 August options at Camp David from the unfinished OPLAN 1002-90: Olsen, 89–90.</li>
+          <li>Schwarzkopf's call to the Air Staff for a broader set of targets, 8 August: Olsen, 92.</li>
+          <li>The use-it paragraph and the Libya-to-Baghdad link are our opinion.</li>
+        </ul>
+        <h3>Olsen, chapter 2, part 1: Warden's Plan Was Two Years Old When the Phone Rang</h3>
+        <ul>
+          <li>Instant Thunder as solidification of two years of Checkmate work; an innovation that almost did not happen; 84 targets; six to nine days; concept at the heart of the strategic air campaign, the first phase of Desert Storm: Olsen, 64.</li>
+          <li>Bitburg: 72 F-15s, some 90 initiatives, coat and tie after 16:00, reserved parking: Olsen, 77–78.</li>
+          <li>Removed by General Kirk six months into command: Olsen, 78.</li>
+          <li>Lesson of Bitburg, involve affected people early: Olsen, 79.</li>
+          <li>XOXW from July 1988, about 80 officers in six divisions; Checkmate slated for shutdown: Olsen, 80.</li>
+          <li>Five Rings and attacking outer rings only to expose leadership: Olsen, 83–85.</li>
+          <li>Warden remained vague on how paralysis would produce surrender: Olsen, 86.</li>
+          <li>Global Reach, Global Power published June 1990: Olsen, 86.</li>
+          <li>Adams told Warden and Deptula to terminate the project: Olsen, 87.</li>
+          <li>Horner swamped with 18 to 20 hour days; Schwarzkopf's 8 August call; Loh already had a team; AirLand operations plan but no broader target set: Olsen, 92.</li>
+          <li>Briefings within 24 hours, Schwarzkopf 10 August, Powell 11 August; "the man and the moment": Olsen, 93.</li>
+          <li>Open planning in a Pentagon basement briefing room: Olsen, 93.</li>
+          <li>Four objectives; "kill Saddam" as original wording; coup within a week: Olsen, 94.</li>
+          <li>Warden's coup belief based on intuition; Loh uncomfortable with Warden's optimism: Olsen, 95.</li>
+          <li>The use-it paragraph's judgment on Bitburg is our opinion.</li>
+        </ul>
+        <h3>Olsen, chapter 2, part 2: Everyone Said Yes to Instant Thunder. Nobody Bought the Same Plan.</h3>
+        <ul>
+          <li>Schwarzkopf asked for retaliation options beyond Horner's Camp David ones, not a plan to eject Iraq: Olsen, 99.</li>
+          <li>Thirty-minute briefing, full approval; Joint Staff ground-campaign casualty estimate: Olsen, 100.</li>
+          <li>Powell briefed sixteen hours later: Olsen, 101.</li>
+          <li>Powell's smoking tanks; planning made joint and widened to ground forces: Olsen, 102.</li>
+          <li>Ryan, Academy classmate, "everything after the last slide": Olsen, 96.</li>
+          <li>84 targets in ten categories: Olsen, 105.</li>
+          <li>Acceptance for different reasons by 17 August: Olsen, 106.</li>
+          <li>Schwarzkopf never believed air power could win alone; secret four-phase plan by J-5; four-phase strategy with Instant Thunder as Phase I: Olsen, 107.</li>
+          <li>Warden calls Horner overly pessimistic, apologises; rival memories of the question period: Olsen, 109–110.</li>
+          <li>"Now I need to turn that into reality": Olsen, 111.</li>
+          <li>Nelson at Copenhagen story told to Schwarzkopf: Olsen, 101.</li>
+          <li>Team grew from 20 to over 100 after going joint: Olsen, 103.</li>
+          <li>Horner kept Deptula, Harvey and Stanfill, sent Warden home, appointed Glosson; Warden on his way to Washington: Olsen, 111, 114.</li>
+          <li>Schwarzkopf and Powell grew reluctant to let air power be the only show: Olsen, 113.</li>
+          <li>The Kitfield aside, the Nelson jab, and the closing line are our opinion and inference.</li>
+        </ul>
+        <h3>Olsen, chapter 3, part 1: Instant Thunder Survived by Changing Its Name</h3>
+        <ul>
+          <li>Thin thread; individuals more important than line diagrams: Olsen, 127.</li>
+          <li>Glosson appointed 22 August, five days for an ATO; nothing beyond defence except Instant Thunder; "naive," "too optimistic": Olsen, 128.</li>
+          <li>Glosson thought strategic meant nuclear; Deptula converted him; "a 500-pound locomotive going in the right direction": Olsen, 129.</li>
+          <li>Black Hole nickname; people and information went in and never came out: Olsen, 129.</li>
+          <li>Secret contact with Warden, faxes with little address, hidden from Horner; CENTAFisation: Olsen, 130.</li>
+          <li>Phase I based on Instant Thunder in Schwarzkopf's 25 August plan: Olsen, 130–131.</li>
+          <li>Targets from 84 to 127 in four days: Olsen, 132.</li>
+          <li>Horner drops the title, the door sign, "All right. Just don't use it very often.": Olsen, 133.</li>
+          <li>Back channel intelligence, sometimes a day or two earlier; tension with Riyadh intelligence: Olsen, 134.</li>
+          <li>2 September operations order focused on leadership: Olsen, 135.</li>
+          <li>Schwarzkopf's "most impressive planning effort": Olsen, 136.</li>
+          <li>13 September briefing; air campaign as primary response: Olsen, 137.</li>
+          <li>30 October reinforcement decision; objective becomes destruction of Iraqi forces: Olsen, 144.</li>
+          <li>Checkmate turns to Phase III; 50 per cent attrition modelling; Glosson's 21 days: Olsen, 145–146.</li>
+          <li>Schwarzkopf would not start a ground war until 50 per cent attrition: Olsen, 147.</li>
+          <li>The planning became the content of Desert Storm's first phase: Olsen, 114.</li>
+          <li>The use-it paragraph, the Kitfield aside and the locomotive jab are our opinion.</li>
+        </ul>
+        <h3>Olsen, chapter 3, part 2: The Colonel Who Kept Turning Right</h3>
+        <ul>
+          <li>Political Washington campaign vs. operational Riyadh effort; Glosson and Deptula run the second: Olsen, 148.</li>
+          <li>Warden's aim throughout the war to prevent a ground war: Olsen, 154.</li>
+          <li>Right Turn nickname per Halberstam; Adams calls him uncontrollable: Olsen, 150.</li>
+          <li>Wolfowitz brought to Checkmate in early September as a non-briefing, arranged with Rice: Olsen, 150.</li>
+          <li>Powell opposes the November briefing; Warden to Rice to Cheney; Cheney briefed 6 November; five percent vs. 95 percent: Olsen, 151.</li>
+          <li>Luttwak calls Warner; McPeak at Camp David 1 December; 37 days, 2,000 Iraqi civilians, 100 aircraft; Bush asks Scowcroft; confidence in air power possibly a factor in Bush's decision: Olsen, 153.</li>
+          <li>Powell quote on strategies designed to hope to win: Olsen, 153.</li>
+          <li>11 October briefing as acceptance point, ground reinforcement accepted, ground operations politically unavoidable; second corps from Germany: Olsen, 166.</li>
+          <li>NSD 54 signed 15 January 1991; necessity of ground forces not mentioned: Olsen, 156.</li>
+          <li>Targets grew from 84 (Instant Thunder) to 481 (15 January 1991); rail and bridge targets equal leadership targets: Olsen, 158.</li>
+          <li>740 of 43,123 strikes against the central nervous system: Olsen, 167.</li>
+          <li>Butterfly and larva: Olsen, 166.</li>
+          <li>Sending Warden back on 20 August proved fortunate: Olsen, 161.</li>
+          <li>Horner's 10,000 ants on a log: Olsen, 165.</li>
+          <li>The use-it paragraph and the inference that winning the audience did not mean controlling the execution are our opinion.</li>
+        </ul>
+        <h3>Olsen, chapter 4, part 1: Coup-Proofed Long Before the First Bomb</h3>
+        <ul>
+          <li>Isolate and incapacitate; unofficial hope for coup or revolt; opposition massacred in the tens of thousands: Olsen, 175.</li>
+          <li>Coalition did not understand the regime; structure did not lend itself to collapse through air power: Olsen, 175.</li>
+          <li>Five overlapping pillars giving redundancy and endurance: Olsen, 176.</li>
+          <li>Party grew from fewer than 1,000 in 1968 to almost 2 million in 1990: Olsen, 187.</li>
+          <li>16 July 1979 executions of five of 22 RCC members and some 50 Party officials, performed by remaining RCC members: Olsen, 190.</li>
+          <li>Military Bureau responsible for promotions and postings: Olsen, 198; rivals who became too popular removed: Olsen, 191.</li>
+          <li>10 December 1990 dismissal of 12 senior officers and some 16 executions; no combat intelligence because Saddam feared informed subordinates: Olsen, 203.</li>
+          <li>Saddam trusted nobody, miscalculated adversaries, rational and calculating: Olsen, 177.</li>
+          <li>White horse dream quote; Primakov's pictures in mid February 1991: Olsen, 183.</li>
+          <li>Planners correct to identify Saddam as the heart of the problem; al-Majid quote: Olsen, 186.</li>
+          <li>Party control weakened combat performance but reduced chance of officers turning; opposition driven abroad; leadership most vulnerable early with no pressure; regime survival in the uprising; succession needs a strong group and the Party ensured none: Olsen, 193.</li>
+          <li>Defeat in a foreign war mattered less than loss of face before his own people: Olsen, 186.</li>
+          <li>The use-it paragraph and the closing jab are our opinion.</li>
+        </ul>
+        <h3>Olsen, chapter 4, part 2: Five Rings, Seven Agencies, One Tribe</h3>
+        <ul>
+          <li>Planners had "very limited understanding of the true centres of gravity": Olsen, 224.</li>
+          <li>Seven agencies reported to the Office of the Presidential Palace, not the Interior or Defence ministries: Olsen, 207.</li>
+          <li>Agency responsibilities duplicated to ensure competition: Olsen, 207.</li>
+          <li>Amn al-Khass a 5,000-man bodyguard: Olsen, 209.</li>
+          <li>Special Republican Guard about 26,000 by 1990: Olsen, 211.</li>
+          <li>Doubles and fake attacks to test loyalty: Olsen, 211.</li>
+          <li>Dinner prepared in five or six places: Olsen, 213.</li>
+          <li>Air force designed for coup prevention: Olsen, 204.</li>
+          <li>Al-Bu Nasir no more than 25,000; active core a few hundred: Olsen, 218.</li>
+          <li>Iraq run more or less as a family business since 1968: Olsen, 215.</li>
+          <li>Instant Thunder never mentioned the Republican Guard, Special Republican Guard, Amn al-Khass, or security network, which linked the outer and inner rings: Olsen, 224.</li>
+          <li>Shultz 1988 memorandum; US intelligence focus on order of battle; Cockburns on analysts never inside Iraq: Olsen, 214.</li>
+          <li>The order-of-battle line and the bodyguard question are our opinion.</li>
+          <li>Bifurcation of the armed forces between non-Tikritis and Tikritis; coups needed cooperating groups: Olsen, 222.</li>
+          <li>Opposition totally unprepared in March 1991: Olsen, 214.</li>
+          <li>Shia Intifada gained momentum only after Iraqi radio was replaced by the BBC: Olsen, 223.</li>
+          <li>Network kept the elite in power through the 1991 war and the civil war: Olsen, 219.</li>
+          <li>An extremely resilient regime; Chapter 5 to examine it; nothing new about the regime's architecture: Olsen, 224.</li>
+          <li>Structure known to the opposition in 1990-91; Makiya's Republic of Fear first printed 1989: Olsen, 231 (note 148).</li>
+          <li>"More afraid of Saddam Hussein than of the bombers": Olsen, 223.</li>
+          <li>Amn al-Amm branch typically in every police station: Olsen, 212.</li>
+        </ul>
+        <h3>Olsen, chapter 5, part 1: Forty-Three Survivors and a Lot of Walkie-Talkies</h3>
+        <ul>
+          <li>Regime change at the heart of Instant Thunder, never a declared aim: Olsen, 233.</li>
+          <li>Saddam told Glaspie American society could not accept 10,000 dead in one battle: Olsen, 234.</li>
+          <li>Saddam told commanders to stay motionless during the air operations; the ground battle would decide: Olsen, 239.</li>
+          <li>Opening night 17 January; decoys, HARMs, radar activity down over 90 percent in three days: Olsen, 242.</li>
+          <li>Saddam concluded sitting out the bombing was not working; pre-emptive ground attack: Olsen, 248.</li>
+          <li>Al-Khafji attacked 29 January; "Sir, the mother is killing her children": Olsen, 249.</li>
+          <li>Iran received 148 Iraqi aircraft, fighters still not returned: Olsen, 251.</li>
+          <li>Pape: all top 43 leaders alive after 1 March: Olsen, 259.</li>
+          <li>Farmhouses, cellular phones, walkie-talkies, undistributed food and clothes: Olsen, 259.</li>
+          <li>Leadership and command-and-control targets only 2 percent of strikes: Olsen, 256.</li>
+          <li>Glosson journal, 28 January, fewer than 100 Baghdad sorties against 300: Olsen, 247.</li>
+          <li>Powell: restriking made the "rubble bounce": Olsen, 257.</li>
+          <li>The test-the-inner-ring-only-half-took line is our opinion.</li>
+          <li>Planners made no provision for measuring their own effectiveness; intelligence geared to battlefield assessment: Olsen, 244.</li>
+          <li>Al-Firdos, 13 February, some 300 killed; Powell and Schwarzkopf approve every Baghdad strike; nine days; 90 percent to the KTO; F-117 Baghdad targets 25 then five: Olsen, 253.</li>
+          <li>Division commanders pressed Schwarzkopf to shift bombing from the Republican Guard to conscripts; Guard escaped and helped quell the southern uprising; undermined the strategic campaign; Guard a centre of gravity not targeted systematically: Olsen, 254-255.</li>
+          <li>The link between the Firdos restrictions and the Guard shift is our inference; the Haun aside is our comparison.</li>
+        </ul>
+        <h3>Olsen, chapter 5, part 2: Saddam Haggled Over the Rug While Washington Raised the Price</h3>
+        <ul>
+          <li>Saddam visited troops in Kuwait on 23 January and Basra four days later; bombing of military formations increasingly devastating: Olsen, 267–268.</li>
+          <li>Until early February he believed he could sit out the bombing and inflict substantial casualties; then looked for a way out: Olsen, 267.</li>
+          <li>Primakov meeting, 11 February 1991, withdrawal without economic or territorial compensation: Olsen, 267.</li>
+          <li>Cheney and Powell in Riyadh reviewing the ground plan: Olsen, 268.</li>
+          <li>Washington demanding the Iraqi Army leave tanks and artillery behind: Olsen, 267.</li>
+          <li>United States determined to have its ground war; rationale for a large active Army; credit to the Soviet Union: Olsen, 268.</li>
+          <li>Warden's "sell rugs" remark: Olsen, 267.</li>
+          <li>Washington would not let the war end without ground forces seizing and holding territory: Olsen, 269.</li>
+          <li>Iraq lost several days; oilfield fires helped the United States argue for ground engagement; two more days to accept unconditional withdrawal: Olsen, 268.</li>
+          <li>Republican Guard divisions kept in the north and outside the capital; slowed the Kurdish revolt, crushed the Shia uprising: Olsen, 265–266.</li>
+          <li>Coalition decision not to support the revolt, over concern about a political vacuum: Olsen, 269.</li>
+          <li>Leadership largely ineffective; little to support the idea the campaign came close to changing the regime alone; 2 per cent of strikes, worthwhile: Olsen, 265.</li>
+          <li>Overthrow never a declared objective: Olsen, 269.</li>
+          <li>The goalposts jab, the Haun aside, and the closing line are our opinion.</li>
+        </ul>
+        <h3>Olsen, conclusions: Instant Thunder Had a Target List and No Successor</h3>
+        <ul>
+          <li>Fog, friction and uncertainty into Iraqi decision-making: Olsen, 293.</li>
+          <li>Successful only in relative terms; prevented decisive offensive action, did not prevent precautions for survival: Olsen, 295.</li>
+          <li>Instant Thunder as presented 9–20 August 1990, bold and imaginative, not in accord with what was politically acceptable and operationally attainable: Olsen, 288.</li>
+          <li>43 days of bombing against several hundred targets; orderly Republican Guard withdrawal; two revolts put down: Olsen, 288.</li>
+          <li>Security agencies (Mukhabarat, Amn al-Amm, Amn al-Khass, Special Republican Guard) not taken into account: Olsen, 288.</li>
+          <li>Planners knew little beyond locations of buildings and communications: Olsen, 290.</li>
+          <li>Powell to the Senate, December 1990: Olsen, 291.</li>
+          <li>Successor question and the face-saving contradiction: Olsen, 291.</li>
+          <li>Pape's argument and Olsen's reply that survival does not prove paralysis ineffectual: Olsen, 286–287.</li>
+          <li>Regime change not a Coalition objective, so intelligence and resources were absent: Olsen, 288.</li>
+          <li>Warden initially saw Instant Thunder as sufficient; Faber on elegance over reality; final plan a huge improvement: Olsen, 290.</li>
+          <li>Deptula kept the idea alive in late August 1990 and made it acceptable to Horner, Schwarzkopf and Powell: Olsen, 289–290.</li>
+          <li>Ryan opposed Instant Thunder in 1990, later called it "classic air power doctrine": Olsen, 288.</li>
+          <li>War termination "not our job"; Gordon Brown quote; Schwarzkopf dictated the cease-fire without State instructions: Olsen, 293.</li>
+          <li>Bush's late-February encouragement, the sense of betrayal, bombing stopped when Iraqis acted: Olsen, 294.</li>
+          <li>Saddam lived to fight another day; "Mother of all Battles" and his grasp of Clausewitz: Olsen, 295.</li>
+          <li>Iraqi troops: more of the same on the inner ring would not have made much difference: Olsen, 292.</li>
+          <li>Study the enemy's culture and value and power systems; no surgical exercise: Olsen, 295.</li>
+          <li>The "converts" jab and the opinion on Warden's promise are ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>According to Olsen, what did the strategic air campaign achieve, and what did it miss?</summary><p>It degraded Iraqi war-making capability and induced strategic fog and friction, but the attacks on Saddam's power base did not meet the hoped-for, unstated objective of changing the regime. <span class="pg">O 1</span></p></details></li>
+          <li><details><summary>Why, in Olsen's view, did planners misjudge the Iraqi regime?</summary><p>US intelligence focused on order-of-battle assessments over the nature of political regimes, so planners had little insight into Saddam's political system. <span class="pg">O 1</span></p></details></li>
+          <li><details><summary>What does Olsen name as the Iraqi regime's center of gravity?</summary><p>The relationship between Saddam Hussein, the sole leader, and his personal and political power base. <span class="pg">O 4</span></p></details></li>
+          <li><details><summary>What tautology did Jentleson find in the Bush administration's Iraq policy?</summary><p>We know the policy is working because we believe it is the right policy, and we believe it is right because we know it is working. <span class="pg">O 32</span></p></details></li>
+          <li><details><summary>What, according to Olsen, actually surprised Washington in August 1990?</summary><p>The scope of the invasion. The White House had trusted Arab leaders who argued a full occupation of Kuwait was not conceivable. <span class="pg">O 31</span></p></details></li>
+          <li><details><summary>How did oil shape the Iraqi regime's resilience?</summary><p>Oil revenue let it pay for large army and security forces without taxes or foreign subsidies, making the state independent of society. <span class="pg">O 18</span></p></details></li>
+          <li><details><summary>What did CENTCOM's OPLAN 1002-90 say about an offensive air campaign?</summary><p>Nothing distinct. It was mainly a deployment plan of several hundred pages that assumed 30 days of warning. <span class="pg">O 47</span></p></details></li>
+          <li><details><summary>What was Horner's margin note during Internal Look in July 1990?</summary><p>Build a hose and point it where the ground commander sees that it's needed. Strikes on Iraq (RED) came only in the final two days. <span class="pg">O 48</span></p></details></li>
+          <li><details><summary>How did the 1986 Libya raid preview leadership targeting?</summary><p>It struck Qaddafi's Bab al-Aziziyya complex to cut his means to operate, but only two of nine planned F-111s hit it. <span class="pg">O 44</span></p></details></li>
+          <li><details><summary>What are Warden's Five Rings, from the center out?</summary><p>Leadership, energy, infrastructure, population, and fielded forces. The outer rings were to be hit only as far as needed to expose the leadership. <span class="pg">O 83</span></p></details></li>
+          <li><details><summary>Who called the Air Staff on 8 August 1990, and what did he want?</summary><p>Schwarzkopf, asking General Loh for a broader set of targets than his AirLand plan offered. Warden briefed Loh within 24 hours. <span class="pg">O 92</span></p></details></li>
+          <li><details><summary>What did Warden learn from being removed at Bitburg?</summary><p>To involve the people affected by new ideas early, which became his open planning for Instant Thunder. <span class="pg">O 79</span></p></details></li>
+          <li><details><summary>What did Schwarzkopf think he was getting from Instant Thunder in August 1990, and what did Warden think he was selling?</summary><p>Schwarzkopf (and Powell) wanted a retaliation option to give the President; Warden believed he was offering an air campaign that could win on its own. Olsen says acceptance was widespread but came for different reasons. <span class="pg">O 106</span></p></details></li>
+          <li><details><summary>What did Powell add to the plan on 11 August 1990?</summary><p>He wanted Iraqi ground forces destroyed as a political signal, and he ordered the planning made joint and widened to target ground forces. <span class="pg">O 102</span></p></details></li>
+          <li><details><summary>How did Horner resolve his clash with Warden after the 20 August briefing?</summary><p>He kept the plan and three planners (Deptula, Harvey and Stanfill), sent Warden home, and gave the offensive planning to Glosson. <span class="pg">O 111</span></p></details></li>
+          <li><details><summary>What was the "CENTAFisation" of the plan?</summary><p>Warden and Deptula's effort to make the Black Hole staff in Riyadh feel the plan was their own, while Deptula secretly kept Checkmate feeding it. <span class="pg">O 130</span></p></details></li>
+          <li><details><summary>What did Glosson find when he asked for an existing offensive option in August 1990?</summary><p>Nothing existed beyond the defence of Saudi Arabia, except Instant Thunder. <span class="pg">O 128</span></p></details></li>
+          <li><details><summary>What condition did Schwarzkopf set before starting a ground war?</summary><p>He would not engage in a ground war until air power had achieved 50 per cent attrition of Iraqi forces. <span class="pg">O 147</span></p></details></li>
+          <li><details><summary>Which briefing does Olsen name as the moment the strategic air campaign was accepted, and what else did it settle?</summary><p>Glosson's 11 October 1990 briefing. It also gave Schwarzkopf and Powell acceptance for ground reinforcement, so a ground war became politically unavoidable once the war began. <span class="pg">O 166</span></p></details></li>
+          <li><details><summary>What was Warden's nickname, and why?</summary><p>Right Turn, per Halberstam: when a superior rejected an idea, he went to the next higher level. <span class="pg">O 150</span></p></details></li>
+          <li><details><summary>How many Desert Storm strikes hit the "central nervous system"?</summary><p>Only 740 of 43,123. <span class="pg">O 167</span></p></details></li>
+          <li><details><summary>What were the five pillars of Saddam's power in Olsen's model?</summary><p>The formal state, the security and intelligence networks, the military, the Ba'ath Party and an informal kinship system, overlapping to give the regime redundancy. <span class="pg">O 176</span></p></details></li>
+          <li><details><summary>Why did letting the Party run the military help Saddam survive Desert Storm?</summary><p>It weakened combat performance but reduced the chance that officers would turn on him, and it helped him survive the uprising that followed. <span class="pg">O 193</span></p></details></li>
+          <li><details><summary>Who planned the full invasion of Kuwait with Saddam?</summary><p>Only three: Hussein Kamil, Ali Hasan al-Majid and Republican Guard commander Iyad al-Rawi. The RCC and Regional Command were not told. <span class="pg">O 198</span></p></details></li>
+          <li><details><summary>What did Olsen say Instant Thunder left out of its picture of the Iraqi regime?</summary><p>It never mentioned the Republican Guard, Special Republican Guard, Amn al-Khass, or the security network that linked the Five Rings model's outer and inner rings. <span class="pg">O 224</span></p></details></li>
+          <li><details><summary>Why did US planners know so little about Saddam's inner workings?</summary><p>Shultz's 1988 memo barred contact with Iraqi opposition groups, and US military intelligence focused on the order of battle. <span class="pg">O 214</span></p></details></li>
+          <li><details><summary>How big was the tribal core that ran Iraq?</summary><p>Al-Bu Nasir numbered no more than 25,000, and the active core in politics and security was a few hundred people. <span class="pg">O 218</span></p></details></li>
+          <li><details><summary>What did Pape's count of Iraqi leaders show, and how does Olsen answer it?</summary><p>All 43 top leaders were alive after 1 March; Olsen counts the aggregate friction instead, from walkie-talkies to food stuck in Kuwait. <span class="pg">O 259</span></p></details></li>
+          <li><details><summary>What changed in Baghdad targeting after al-Firdos?</summary><p>Powell and Schwarzkopf approved every Baghdad strike, and F-117 targets there fell from 25 to five across two-week windows. <span class="pg">O 253</span></p></details></li>
+          <li><details><summary>Why did the Republican Guard escape largely intact?</summary><p>Division commanders pressed Schwarzkopf to shift bombing to frontline conscripts in mid February, so the Guard was never targeted systematically. <span class="pg">O 255</span></p></details></li>
+          <li><details><summary>What did Saddam agree to when Primakov visited Baghdad on 11 February 1991, and what was Washington demanding by then?</summary><p>He agreed to withdraw from Kuwait without economic or territorial compensation; Washington was by then demanding the Iraqi Army leave its tanks and artillery behind. <span class="pg">O 267</span></p></details></li>
+          <li><details><summary>What two reasons does Olsen give for Washington wanting a ground war?</summary><p>Ending without the massed ground forces might have undercut the rationale for a large active Army, and it would have given the Soviet Union much credit. <span class="pg">O 268</span></p></details></li>
+          <li><details><summary>What share of air strikes went to the inner-ring leadership target sets, and how does Olsen judge it?</summary><p>About 2 per cent; far from getting Saddam, reasonably successful at strategic incapacitation, and worthwhile. <span class="pg">O 265</span></p></details></li>
+          <li><details><summary>What did Powell tell the Senate about strategies like Instant Thunder in December 1990?</summary><p>That they were designed to hope to win, not designed to win; the planners had no idea how the regime would fall beyond assuming paralysis would do it. <span class="pg">O 291</span></p></details></li>
+          <li><details><summary>Who kept Instant Thunder alive in theater in late August 1990, according to Olsen?</summary><p>Deptula, who helped form it, joined the Black Hole cell, and adapted it into a plan Horner, Schwarzkopf and Powell would accept; Glosson became its advocate. <span class="pg">O 289</span></p></details></li>
+          <li><details><summary>Why can no new Iraqi leader simply accept Coalition terms, in Olsen's view?</summary><p>Face-saving: a successor would have to look strong before his own people, so he could not afford the concessions demanded. <span class="pg">O 291</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

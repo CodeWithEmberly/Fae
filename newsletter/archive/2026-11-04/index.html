@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-11-04 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>6</b> read · <b>12</b> to go</span>
+    <span>Next seminar: <b>Randolph, tomorrow</b></span>
+    <span>628 paper due in <b>27</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 6 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-04.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-04.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Wednesday, November 4, 2026 · No seminar today · Randolph tomorrow at 1200</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <ol>
+          <li><a href="#a1">Tonight's Reading: Nixon Plays Three Games at Once, and Hanoi Plays the Long One</a></li>
+          <li><a href="#a2">Four Pods and No More on the Way: Randolph Reads a Taiwan Crisis</a></li>
+          <li><a href="#a3">Seven Books In: The Enemy Keeps Reading Our Mail, and Our Elections</a></li>
+          <li><a href="#a4">Take It to the Chop Shop: Shore on Saying Exactly What You Mean</a></li>
+          <li><a href="#a5">The Politburo Would Like a Word About Your Exit Polls</a></li>
+          <li><a href="#a6">Affordable Mass, Laser Optional: The Air Force Shops for a Thousand Cruise Missiles</a></li>
+          <li><a href="#a7">Flares at a Helicopter, Fog in the Rules: What Lavelle Would Tell the Danes</a></li>
+          <li><a href="#a8">After the Election, Said Everyone, Always: Iran Strikes and Nixon's Calendar</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
+      </nav>
+
+      <article id="a1">
+        <span class="kicker">Tonight's Reading · Randolph, for seminar Thursday, November 5, 1200</span>
+        <h3><a href="#a1">Tonight's Reading: Nixon Plays Three Games at Once, and Hanoi Plays the Long One</a></h3>
+        <p>Stephen Randolph's <i>Powerful and Brutal Weapons</i> is the book about the one part of the Vietnam War that looked like the war airmen had always wanted. In the spring of 1972 the North Vietnamese Army came south in the open, with tanks, artillery, and supply lines, which the syllabus notes is the kind of conventional problem Slessor and others thought ideal for air power. American air power then did a great deal of damage. Randolph's argument is that it still wasn't the whole story, and possibly not even the main plot. The title comes from a Politburo cable of March 27, 1972, warning that Nixon "might employ even more powerful and brutal weapons." He did. Hanoi kept going anyway.</p>
+        <p>The thesis in plain words: Nixon ran this campaign personally, more closely than any other period of the war, because the offensive landed on top of the presidential campaign, the opening to China, and the eve of the Moscow summit. In his own words he was playing "a Russia game, a China game, and an election game." Randolph follows three threads: presidential leadership and whether the military would carry out guidance from a president who no longer trusted it; military effectiveness, where the Americans had a galaxy of new technology but lacked the command systems, doctrine, and training to use it; and the action and reaction between two intelligent enemies. His verdict, in the conclusion, is that the Easter Offensive was a military failure for Hanoi and a strategic success anyway, the finest example he can find of Clausewitz's dictum that war extends politics. (Yes, we have now read two Vietnam books in a row that end on Clausewitz. The Prussian is having a very good week.)</p>
+        <p>What it argues against is the tidy airman's version, in which unrestrained bombing finally broke Hanoi. It also complicates Tuesday's book. Clodfelter told us bombing worked in 1972 because the aims were limited and the war was conventional. Randolph agrees the bombs hit hard, and then shows the North Vietnamese reaching their minimum objectives through it all. For this course, that's the whole first theme in one campaign: how much did air power actually buy?</p>
+        <p>Read for:</p>
+        <ol class="qs">
+          <li>Chapter 2, pages 22 to 31: the Politburo's forecast of Nixon's response, and why it bet the elections and summits would hold him back.</li>
+          <li>Chapter 4, pages 40 to 60: Commando Hunt VII, the interdiction campaign before the offensive (a syllabus question), and the Lavelle episode at its end.</li>
+          <li>Chapters 6 and 11, pages 80 to 106 and 153 to 171: Nixon takes charge, then decides to hit Hanoi and Haiphong even at the risk of the Moscow summit. Watch who applies the limits now.</li>
+          <li>Chapters 13 and 14, pages 183 to 213: Linebacker planning and the first strikes with laser-guided bombs, for the "revolution in military affairs" question.</li>
+          <li>Chapters 17 to 19, pages 235 to 270: An Loc, Hue, and the Central Highlands, where air power attacked fielded forces directly. Compare it with interdiction and "strategic" bombing.</li>
+          <li>The conclusion, pages 331 to 342: political will against battlefield success, and why the Politburo's biggest mistake was misreading Nixon.</li>
+        </ol>
+        <p>Short on time? Read the introduction, the conclusion, and chapter 11, in that order. The rest is 300 pages of the war refusing to cooperate with either side's plan. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">The 628 Paper · through tomorrow's author</span>
+        <h3><a href="#a2">Four Pods and No More on the Way: Randolph Reads a Taiwan Crisis</a></h3>
+        <p>The prompt, once more: name the single most important potential crisis facing the nation and say how Airmen should prepare for it, in ten pages, by December 1 at 1630. We've run it through Clodfelter for Iran and for a Russian move on NATO. Today the rotation lands on another of the syllabus examples, a PRC invasion of Taiwan, and the author is Randolph. What follows is our extrapolation from a book about 1972, written in 2007. It isn't Shaun's answer, and Randolph never mentions Taiwan.</p>
+        <p>Start with his second thread, because it's the one an Air Staff planner should lose sleep over. In 1972, he writes, American forces had precision weapons, satellite communications and imagery, computer-based mission planning, sensors, and night imagery, all developed at different times by different communities, and many had sat largely dormant through the quiet years before the offensive. The Americans had a wealth of technology and lacked the command systems, doctrine, and training to exploit it. Then the precise part got scarce. At the start of the Linebacker offensive, only four of the advanced laser pods that allowed operations in high-threat areas were in theater, with no more on the way, so the whole operational strategy depended on protecting them. A force can be very advanced and very thin at the same time. Ask anyone who has managed a high-demand, low-density fleet.</p>
+        <p>Opinion from here. Randolph's lens would ask an Airman preparing for Taiwan two uncomfortable questions. First, which of our new systems have been integrated with each other, and which merely exist? A campaign is fought with the command system you have on the first day, and in 1972 the first day exposed the gaps. Second, how many of the scarce enablers do we have, and what happens to the plan when the enemy kills one? Four pods drove the campaign design in 1972. Today's version might be tankers, long-range munitions, or a few satellites, and the paper-writer should name which.</p>
+        <p>His third thread, the action and reaction between adversaries, cuts the other way. He calls it remarkable how well the North Vietnamese countered American technology by patiently studying American systems and tactics, testing counters, and shaping battles to their advantage, and he singles out how carefully they studied American search and rescue. The PLA has had a much longer quiet period to study us than Hanoi did. Randolph also records Hanoi's mistakes: it underestimated how far American technology had advanced during the bombing pause, and it misread Nixon. An Airman's preparation, through his eyes, includes making sure the adversary's studies are out of date.</p>
+        <p>And the big one. Hanoi lost the battles and still achieved its minimum strategic aims, because both sides expected battlefield results to become results at the negotiating table, and they did. Nixon, Randolph concludes, could pummel the North and still could not compel a stable agreement or persuade Hanoi's communist sponsors to stop resupplying it. The paper's takeaway, by our extrapolation: preparing Airmen for Taiwan means preparing them for a war whose air campaign can go well while the war does not. Randolph's last word goes to time and local dynamics, which, he says, proved to have power of their own. Neither shows up on a sortie count. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">The Readings So Far · Gaddis, Crane, Zhang, McDougall, Schlight, Clodfelter, and Randolph</span>
+        <h3><a href="#a3">Seven Books In: The Enemy Keeps Reading Our Mail, and Our Elections</a></h3>
+        <p>Seven books in, counting tonight's, and the shelf is starting to argue with itself, which is what a good shelf does. Gaddis defined strategy as the process of relating ends to means. Crane showed Korea's ambiguous ending letting the Air Force believe it had succeeded. Zhang showed both sides inflating their kill claims. McDougall's satellites killed the missile gap. Schlight's Air Force counted sorties in the South. Clodfelter told us the 1972 bombing worked because the aims were limited, the patrons gave Nixon a free hand, and Hanoi chose a conventional war that ran on supplies. Randolph arrives tomorrow to say, in effect: yes, and Hanoi got what it needed anyway.</p>
+        <p>That's the new link, and it's the best argument of the week. Clodfelter's preface grades the bombing by its contribution to war aims, and by that test Linebacker scores well against Nixon's narrow ones. Randolph grades the whole offensive the same Clausewitzian way, from Hanoi's side of the table, and gets the reverse answer: a military failure for the North that was still a strategic success. Both can be true. They're grading different students on the same exam. The seminar that figures out which grade matters more for a strategist will have earned its lunch.</p>
+        <p>Then Zhang and Randolph, linked by patrons. In 1950, Moscow ordered its pilots not to fly beyond the Yalu, so the Chinese armies didn't get the air cover they were counting on. In 1972, Randolph writes, Nixon could not offer Hanoi's communist sponsors enough incentives and threats to make them stop supplying the North. One patron's promise was smaller than advertised; the other two patrons' supply lines were bigger than Washington could bend. Either way, the war's outcome was partly decided in capitals that weren't fighting it.</p>
+        <p>The news web keeps growing. Monday's Australian undersea minelayer met Nixon's mining of Haiphong, which Randolph covers in chapter 12. Tuesday's "Don't confuse them losing with us winning" met Clodfelter's warning about the Air Force reading Linebacker II as proof of its doctrine. Tuesday's Patriot sale, with missiles due in the 2030s, met Nixon's promise to Thieu. Today the election that Morgan Jackson was warning about actually happened, and we take it to the Politburo's planning cell in 1971, which had its own forecast for an American election.</p>
+        <p>Opinion: the running theme is that every side reads results through its own hopes. Crane's Air Force read Korea as success. Clodfelter's read Linebacker II as vindication. Randolph's Politburo read the American calendar as a restraint on Nixon, when he read it as a deadline. Next comes Nguyen on Friday, with Hanoi's own politics. We expect the misreadings to be better documented and no less frequent. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a4">
+        <span class="kicker">Technical Writing · Week 2, Day 3 · precise language</span>
+        <h3><a href="#a4">Take It to the Chop Shop: Shore on Saying Exactly What You Mean</a></h3>
+        <p>Wednesday is precise-language day, and our guide is Zachary Shore's <i>Grad School Essentials</i>, a crash course in scholarly skills written by a professor who has clearly read thousands of student papers and survived, though not unscathed. His style chapter borrows George Orwell's 1946 rules for clear writing and adds his own commentary. The first is a cliché check: if a phrase comes readily to mind, don't use it. The second: never use a long word where a short one will do. Students, he says, shovel up weighty words to sound intelligent and are usually hiding behind them.</p>
+        <p>The third rule is the one Shore loves most. If it's possible to cut a word, cut it. He calls this the chop shop, and his model is a bloated sentence about stress-inducing factors that coalesce to produce frenetic behavior patterns among people pursuing advanced degrees, which he reduces to four words: grad students are often anxious. (Several SAASS students just felt seen.) He adds a caution worth keeping. The goal is not the fewest words possible. It's the fewest words necessary to carry your meaning. And on jargon, he allows that you'll need your field's vocabulary until you get tenure, which is the most honest sentence in any writing book on the shelf.</p>
+        <p>Randolph is a good model, because his best sentences put a number where a lesser writer would put an adjective. Before, the way a tired paper puts it: "Airpower played a key role in significantly impacting the overall outcome of the Easter Offensive." After, in Randolph's own words: "American air power inflicted the vast majority of North Vietnamese casualties during the Easter Offensive." The first sentence has "key," "role," "significantly," "impacting," and "overall," and says nothing a reader can check. The second names who did what, and how much of it. One is a press release; the other you can footnote.</p>
+        <p>Pro tip, an old editor's trick: keep a Ctrl+F list of the words that sound precise and aren't. Start with "impact," "key," "role," "significant," "various," and "overall." Every time one turns up, ask what number, name, or verb it is standing in for, and swap it in. Opinion: in a paper about air power, the vaguest words cluster right where the claim is weakest, which is not a coincidence. "Played a key role" usually means "I don't know how much." Shore would send that sentence to the chop shop. We would send it back with a question mark. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a5">
+        <span class="kicker">Political Strategy × Randolph · via electoral-vote.com, November 4</span>
+        <h3><a href="#a5">The Politburo Would Like a Word About Your Exit Polls</a></h3>
+        <p>The midterms happened, and electoral-vote.com stayed up for all of it: more than 11 hours of liveblogging, over 300 posts, and about 14,000 words, signed off at 5:27 this morning by (V), (Z), (L), and (A). (We assume coffee was involved. We are not given to understand how much.) The headline result is a large Democratic win. NBC and The New York Times projected about 258 House seats for Democrats and 177 for Republicans, CNN had 260 to 175, and Speaker Mike Johnson conceded the House before midnight. In the Senate, EV lists Democratic calls in Georgia, Iowa, Maine, Michigan, North Carolina, Ohio, South Carolina, Texas, Kansas, and others, and Republican calls in Nebraska, Louisiana, Montana, Tennessee, and others, with Alaska and Mississippi still uncalled. Mississippi was tied at 48.9 percent each near 95 percent reporting, and EV notes the state has no laws defining recount procedures. That should be fun.</p>
+        <p>Now the reading of the results, which is where EV earns its keep. The writers say the outcomes mostly matched expectations, so the "polling is broken" genre may get a night off. They think they were vindicated in saying money is no longer instructive as an indicator. A reader offered a rule of thumb: when Trump is on the ballot, Republicans overperform their polls, and when he isn't, they underperform. And the team made a forecast about the forecasts: by Thursday, they predict, the media story will pivot to "Democrats in disarray." The winners, in other words, have roughly 48 hours before the narrative turns on them. That's about average.</p>
+        <p>EV also looked ahead. The writers argue the 2028 Republican primaries now have two lanes, and that it is no longer plausible for Trump simply to bless a successor and end the contest. Whatever you make of that, the point for strategists is that an election result is instantly turned into a forecast of the next one, by everyone, including people who have never set foot in the country.</p>
+        <p>Now go to tomorrow's reading. In 1971 the North Vietnamese Politburo built an American election into its war plan. Randolph writes that Hanoi expected the bloodshed of the offensive to widen the split between Washington and Thieu and revive the antiwar movement, with Nixon's defeat in the fall election as the best case. Its planners assumed the coming elections and the summits in Moscow and Beijing would constrain the American response, and they expected, at most, a Marine division sent in to steady things until the storm passed. Then Randolph delivers the punchline. The Politburo's calculus, he writes, was exactly opposite to Nixon's thought patterns. The summit was one of the stimulants to tough action, and the election calendar imposed urgency on aggressive action that might not otherwise have existed.</p>
+        <p>He goes further in the conclusion. Vietnamization was supposed to take eight to ten years; instead, propelled by the demands of the American electoral cycle, the South Vietnamese forces went through a hothouse growth in size and quality. The election clock didn't just shape the bombing. It set the pace of an entire army's development, which is a lot to ask of a calendar.</p>
+        <p>Opinion: the nonpartisan lesson is that foreign governments read American elections, and they read them the way they want to. Hanoi read the 1972 campaign as a leash on Nixon. He treated it as a deadline. Any adversary studying last night's returns will reach some conclusion about American resolve, and history suggests it will be a confident one. Whether it's right is a separate question.</p>
+        <p>EV gives the pundits until Thursday to misread the election. The Politburo got a full year, and it still managed. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a6">
+        <span class="kicker">Acquisition × Randolph · via Defense News, November 3</span>
+        <h3><a href="#a6">Affordable Mass, Laser Optional: The Air Force Shops for a Thousand Cruise Missiles</a></h3>
+        <p>The Air Force wants to know who can build a lot of small cruise missiles very fast, and Ukraine is the customer. Michael Peck of Defense News reports that the service issued a request for information on the Extended Range Attack Munition, or ERAM, a small air-launched standoff missile designed for mass production. Responses are due November 19. This is a request for information, not a contract, which in acquisition terms is the stage where everyone is still friends.</p>
+        <p>The requirements are specific. ERAM is a 500-pound-class weapon with a range of more than 250 nautical miles and a speed above Mach 0.6. It has to hit within 10 meters of its target even when GPS is degraded by jamming, with blast and fragmentation effects and limited penetration. The Air Force describes it as a next-generation cruise missile "designed to provide affordable mass to the fight." The schedule is the eyebrow-raiser: contractors must start delivering the first of more than 1,000 ERAMs no later than three months after contract award and finish all deliveries within 15 months.</p>
+        <p>There's history here too. The first request went out in January 2024. Prototype contracts went to two small firms, Zone 5 Technologies and CoAspire, and a live warhead test followed at Eglin in January 2026. In August 2025 the administration announced an 825 million dollar sale of 3,350 ERAMs to Ukraine. Ukrainian media reported in June 2026 that Ukraine may have used a variant, the AGM-188A "Rusty Dagger," against a semiconductor plant in Voronezh that makes parts for Russian missiles. Peck notes the Iran war has depleted American inventories of expensive missiles, and he leaves open how much the U.S. military will use ERAM itself. That last question is doing a lot of quiet work.</p>
+        <p>Now go to tomorrow's reading, where precision arrived and immediately ran short. Randolph writes that as the bombing halt began in 1968, laser-guided bombs appeared and promised to revolutionize air-to-ground tactics. The accuracy gain was dramatic: a flight of four could beat what larger strike forces achieved with unguided bombs, release altitude no longer mattered, and the bomb became the Colt 45 of the air war, a "great equalizer" that made every fighter crew an effective bomber. Pinpoint accuracy, in his phrase, was now up to the bomb, not the bomber. Then the catch. When Linebacker began, only four of the advanced pods that let the laser bombers work in high-threat areas were in theater, with no more on the way, and lasers needed even better weather than visual bombing.</p>
+        <p>Opinion: ERAM is the Pentagon trying to solve the 1972 problem from the other end. Randolph's precision was exquisite and scarce, so the whole campaign bent around protecting four pods. ERAM accepts a 10-meter miss distance in exchange for numbers, jamming resistance, and a delivery schedule measured in months. That's a reasonable trade, and it's the right question for tomorrow's seminar, which asks whether laser-guided bombs were a revolution in military affairs. A revolution you can't produce in quantity is mostly a demonstration.</p>
+        <p>In 1972 the Air Force had a miracle weapon and four pods. In 2026 it wants a thousand good-enough missiles in 15 months. Progress, it turns out, is learning to settle for good enough, in bulk. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a7">
+        <span class="kicker">Leadership × Randolph · via Defense News, November 3</span>
+        <h3><a href="#a7">Flares at a Helicopter, Fog in the Rules: What Lavelle Would Tell the Danes</a></h3>
+        <p>The Baltic was called a NATO lake when Sweden and Finland applied to join the alliance in 2022, and the lake has been eventful since. Christopher Woody of Defense News reports on Nordic commanders trying to manage Russian hybrid warfare: damaged pipelines and cables that Western officials often call sabotage, frequent GPS jamming, airspace violations, drone incursions over bases and airports, and warships escorting sanctions-dodging "shadow fleet" tankers. Denmark's defense intelligence service said in September that "the hybrid war is escalating." The most serious recent example was September 14, when a Russian frigate near Denmark's coast fired flares at a Danish military helicopter.</p>
+        <p>The commanders were candid about how hard the response is. Maj. Gen. Peter Boysen, chief of the Danish army, called it "a very difficult question, because you don't want to escalate." His answer was to de-escalate while refusing to accept a new normal, and he argued that detecting adversary activity and letting the adversary know it is being watched is itself a way to de-escalate. Finland's Lt. Gen. Kari Nisula said Russia's wartime footing and its fear of Ukrainian long-range strikes make escalation control difficult. Sweden has authorized its military to help Finland with surveillance after drone incursions. Dutch intelligence warned earlier this year of "a real risk of unintended and therefore difficult-to-control escalation."</p>
+        <p>So the leaders on the scene are being asked to hold a line that nobody has drawn precisely, against an opponent who keeps nudging it. Commanders have a word for that situation, and it is not printable.</p>
+        <p>Now go to tomorrow's reading, which has the cautionary tale. In the months before the Easter Offensive, Seventh Air Force under General John Lavelle flew reconnaissance over southern North Vietnam under rules that allowed ordnance only in response to enemy fire. Abrams told him that any SAM or AAA firing or activation justified "immediate protective reaction strikes." Lavelle decided the North's air defenses were activated every time American aircraft entered the country, and he believed his superiors, all the way up to the Secretary of Defense, had urged the most aggressive interpretation. But the policy required Seventh Air Force to falsify routine mission reports. An enlisted intelligence debriefer at Udorn caught it and wrote to Senator Harold Hughes. General Ryan recalled Lavelle to Washington on March 23, days before the offensive opened, which left Seventh Air Force without its commander in the first critical days.</p>
+        <p>Randolph's diagnosis is the leadership lesson. The episode could only happen, he writes, in a cancerous political-military climate in which civilian policymakers and commanders had grown dangerously distant, and obscure rules of engagement, with creeping implicit reinterpretation over time, are a recipe for disaster. Lavelle felt hung out to dry: his superiors had encouraged him, and when criticism arrived they were nowhere to be found. Nixon wanted to hit the North but feared the domestic price; Kissinger worried the strikes would disrupt his negotiations. Lavelle knew neither.</p>
+        <p>Opinion: Boysen's instinct is the right one, and Lavelle shows why it has to be written down. "Don't escalate, but don't accept a new normal" is a sound intent and a terrible rule of engagement, because two honest commanders can read it two ways. Leaders who send people into gray zones owe them clear rules, honest reporting, and backing when the rules are followed. Randolph's enlisted debriefer was the only person in the chain who did all of his job.</p>
+        <p>The Danes, we'd note, are trying to let Russia know it's being watched. Lavelle's lesson is that your own side needs to be watching too, and preferably reading the reports. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a8">
+        <span class="kicker">Defense &amp; Conflict × Randolph · via Air &amp; Space Forces Magazine, November 3</span>
+        <h3><a href="#a8">After the Election, Said Everyone, Always: Iran Strikes and Nixon's Calendar</a></h3>
+        <p>The United States struck Iran again on November 2, the day before the midterms, and nobody announced it. Chris Gordon of Air &amp; Space Forces Magazine reports that the limited strikes hit Qeshm Island, home to Iranian military sites just outside the Strait of Hormuz and a frequent American target. They were the latest in a series over recent weeks that had not been publicly disclosed. The Wall Street Journal reported them first, U.S. officials confirmed them to the magazine, and CENTCOM declined to comment. (ISW's Iran Update for November 3 is in this morning's feed; its site blocked us, so we won't guess what it says.)</p>
+        <p>The details are partial. Iranian forces fired at U.S. aircraft. The IRGC claimed it downed an MQ-9 Reaper, and a U.S. official said no American aircraft is believed lost. The article doesn't name the aircraft or units involved, and it doesn't say why the strikes went unannounced. President Trump acknowledged them on Fox News on November 3: "It was just a minor attack; it wasn't war." He said Iran had built an anti-aircraft facility that took about two months. Iran's deputy foreign minister, Kazem Gharibabadi, answered the same day: "We are still in a state of war."</p>
+        <p>The context matters. The two countries have been at war since February. A ceasefire in April ended the all-out U.S. and Israeli campaign, Operation Epic Fury, though smaller tit-for-tat strikes continued, and the U.S. has kept up a blockade of Iranian ports and tighter sanctions. The last publicly announced strikes, in early September, hit five Iranian tankers, and Iran answered with a missile attack on Muwaffaq Salti Air Base in Jordan that damaged some U.S. aircraft. Trump has said he is considering a return to large-scale combat after the midterms, and CENTCOM's Adm. Brad Cooper met last week with Trump, Defense Secretary Hegseth, and Gen. Dan Caine. The magazine notes that strikes on air defenses could help set up a larger operation. Quiet strikes on air defenses, followed by a decision after the vote: we have seen this movie, and the credits are long.</p>
+        <p>Now go to tomorrow's reading, where the calendar runs the war. In late April 1972, Nixon dictated a memorandum to Kissinger that laid out the timing problem in blunt terms, while pushing for a three-day strike on Hanoi with at least 100 B-52s. Unless the United States hit the Hanoi-Haiphong complex that weekend, it probably couldn't hit it before the election at all: next came the Russian summit, which would tie American hands for weeks, then the middle of June with the Democratic convention three to four weeks away, plus the risk that Congress would act and that public support for a hard line would erode day by day. So the strike would go in the first weekend of May. Randolph adds that the greatest deterrent to striking was the risk of losing the Moscow summit, and Nixon had already reconciled himself to losing it.</p>
+        <p>The lesson Randolph draws is about how adversaries read that calendar. The Politburo assumed the summits and the election would restrain Nixon. His thinking ran exactly the other way: the summit was a stimulant to tough action, and the election timetable made aggressive action urgent. In the conclusion he lists the Politburo's most serious error as misreading American decisionmaking, and Nixon above all.</p>
+        <p>Opinion, and nonpartisan, since the pattern belongs to the office: political calendars shape the timing of force, in both directions, and the side watching from abroad usually guesses wrong about which direction. Tehran now has a President on record saying a larger campaign is under consideration after the midterms, and the midterms are over. Gharibabadi says Iran is still at war. Trump says the latest strike wasn't war. Randolph would note that both statements can be useful at once, which is not the same as both being true.</p>
+        <p>In 1972 the window was "this weekend or not before the election." In 2026 the election is done, so the window is open. Calendars, unlike adversaries, are very easy to read. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Keyed to the phrase each one supports. Randolph pages are printed pages: Stephen P. Randolph, Powerful and Brutal Weapons: Nixon, Kissinger, and the Easter Offensive (Cambridge, MA: Harvard University Press, 2007). Clodfelter pages are ebook PDF pages, cited by chapter. Gaddis, Crane, Zhang, McDougall, and Schlight pages are printed pages. Zachary Shore, Grad School Essentials: A Crash Course in Scholarly Skills (Oakland: University of California Press, 2016), printed pages. <i>Opinion</i> needs no source.</p>
+
+        <h3>Today's episode</h3>
+        <ul>
+          <li>Cold open and the big question: "American air power inflicted the vast majority of North Vietnamese casualties during the Easter Offensive": Randolph, 337. Strategic success despite a failed military outcome; battlefield results became negotiating results: Randolph, 339.</li>
+          <li>"A Russia game, a China game, and an election game": Randolph, 3.</li>
+          <li>"Time and local dynamics proved to have power of their own": Randolph, 342.</li>
+          <li>Qeshm Island strikes November 2; larger combat under consideration after the midterms: Air &amp; Space Forces Magazine, November 3, 2026.</li>
+          <li>Option C "was controllable": Clodfelter, ch. II, ebook p. 71.</li>
+          <li>Nixon's late-April memo to Kissinger on hitting Hanoi-Haiphong before the summit and election: Randolph, 156. Politburo calculus "exactly opposite" to Nixon's: Randolph, 165.</li>
+          <li>Pop quiz: the enlisted debriefer at Udorn, Senator Hughes, Lavelle recalled March 23: Randolph, 59–60. "A recipe for disaster": Randolph, 60.</li>
+          <li>Danish army chief on escalation and the new normal: Defense News, November 3, 2026.</li>
+          <li>Writing fix, the chop shop and "fewest words necessary": Shore, 66–67.</li>
+        </ul>
+
+        <h3>Tonight's Reading: Nixon Plays Three Games at Once</h3>
+        <ul>
+          <li>Conventional Easter Offensive, Slessor's ideal problem; frustrations with the Air Force; seminar questions on political will, interdiction, strategic bombing vs. fielded forces, and laser-guided bombs as an RMA: SAASS 628 syllabus, Seminar 7.</li>
+          <li>Politburo Guidance Cable 119, March 27, 1972, "might employ even more powerful and brutal weapons": Randolph, epigraph (front matter, before p. 1).</li>
+          <li>No other period Nixon directed so closely; campaign, China opening, eve of Moscow Summit; military leadership that had forfeited his trust: Randolph, 1–2.</li>
+          <li>Galaxy of weapons; lacked command systems, doctrine, and training: Randolph, 2.</li>
+          <li>Three threads; "a Russia game, a China game, and an election game": Randolph, 2–3.</li>
+          <li>Strategic success despite ambiguous or failed military outcome; Clausewitz's dictum; minimum essential outcome: Randolph, 339.</li>
+          <li>Clodfelter on 1972: Clodfelter, preface, ebook pp. 8–9.</li>
+          <li>Chapter page ranges: Randolph, table of contents.</li>
+        </ul>
+
+        <h3>Four Pods and No More on the Way</h3>
+        <ul>
+          <li>Paper prompt and the four example crises: SAASS 628 syllabus, "Grading."</li>
+          <li>New systems developed at different times by different communities, dormant; lacked command systems, doctrine, training: Randolph, 2.</li>
+          <li>Only four advanced pods in theater, no more on the way; strategy depended on preserving them; lasers need better weather: Randolph, 209.</li>
+          <li>North Vietnamese patiently studied American systems and tactics; search and rescue example: Randolph, 339.</li>
+          <li>Underestimated American technological progress during the bombing pause; misread Nixon: Randolph, 340.</li>
+          <li>Battlefield results translated into negotiating results: Randolph, 339. Could not compel a stable agreement or induce the sponsors to deny materials; "time and local dynamics proved to have power of their own": Randolph, 342.</li>
+          <li>The application to a PRC invasion of Taiwan is our extrapolation.</li>
+        </ul>
+
+        <h3>Seven Books In</h3>
+        <ul>
+          <li>Strategy relates ends to means: Gaddis, viii.</li>
+          <li>Korea's ambiguous ending: Crane, 9, vii. Kill claims: Zhang, 202–203. Missile gap ended by satellites: McDougall, 327–330. Sortie counting: Schlight, 290.</li>
+          <li>Clodfelter's test and his explanation of 1972: Clodfelter, preface, ebook pp. 8–10.</li>
+          <li>Strategic success despite military failure: Randolph, 339.</li>
+          <li>Moscow ordered pilots not to fly beyond the Yalu: Zhang, 62. Nixon could not induce Hanoi's sponsors to deny materials: Randolph, 342.</li>
+          <li>Earlier news links: issues of November 2 and 3. Chapter 12 is "Closing the Ports": Randolph, contents.</li>
+          <li>Politburo read the calendar as restraint; Nixon read it as urgency: Randolph, 28–29, 165.</li>
+        </ul>
+
+        <h3>Take It to the Chop Shop</h3>
+        <ul>
+          <li>Orwell's 1946 rules; cliché check: Shore, 65–66.</li>
+          <li>Never use a long word where a short one will do; students hiding behind weighty words: Shore, 66.</li>
+          <li>Cut words, the "chop shop"; fewest words necessary, not fewest possible; the anxious grad students example: Shore, 66–67.</li>
+          <li>Jargon until tenure: Shore, 70.</li>
+          <li>"American air power inflicted the vast majority of North Vietnamese casualties during the Easter Offensive": Randolph, 337.</li>
+          <li>The Ctrl+F list and its words are our advice.</li>
+        </ul>
+
+        <h3>The Politburo Would Like a Word About Your Exit Polls</h3>
+        <ul>
+          <li>11+ hours, 300+ posts, about 14,000 words; signed (V), (Z), (L), (A); "Democrats in disarray" by Thursday; network House projections; Johnson conceded; Senate calls; Alaska and Mississippi uncalled; Mississippi tied at 48.9 percent with no recount laws; polls mostly matched expectations; money "no longer instructive as an indicator"; reader B.W. on Trump on the ballot; two 2028 Republican lanes: electoral-vote.com, November 4, 2026.</li>
+          <li>Hanoi expected the offensive to widen the U.S.-Thieu split, revive the antiwar movement, and at best defeat Nixon; assumed elections and summits would constrain him; expected at most a Marine division: Randolph, 28–29.</li>
+          <li>Politburo calculus "exactly opposite" to Nixon's; summit a stimulant; election calendar imposed urgency: Randolph, 165.</li>
+          <li>Vietnamization expected to take eight to ten years; hothouse growth propelled by the electoral cycle: Randolph, 336.</li>
+        </ul>
+
+        <h3>Affordable Mass, Laser Optional</h3>
+        <ul>
+          <li>ERAM request for information; responses due November 19; 500-pound class, more than 250 nautical miles, above Mach 0.6, within 10 meters under jamming; "designed to provide affordable mass to the fight"; first of more than 1,000 within three months, all within 15 months; January 2024 RFI; Zone 5 and CoAspire; Eglin test January 2026; $825 million, 3,350 ERAMs for Ukraine, August 2025; Rusty Dagger and Voronezh report; depleted inventories: Michael Peck, "US Air Force asks industry for new cruise missile for Ukraine," Defense News, November 3, 2026.</li>
+          <li>Laser-guided bombs appeared as the 1968 halt began; flight of four; release altitude; Colt 45, "great equalizer"; accuracy up to the bomb, not the bomber: Randolph, 45.</li>
+          <li>Four pods in theater, no more on the way; lasers need better weather: Randolph, 209.</li>
+          <li>RMA seminar question: SAASS 628 syllabus, Seminar 7.</li>
+        </ul>
+
+        <h3>Flares at a Helicopter, Fog in the Rules</h3>
+        <ul>
+          <li>NATO lake; hybrid activity; sabotage, GPS jamming, airspace violations, drones, shadow fleet escorts; Danish assessment "the hybrid war is escalating"; September 14 flare incident; Boysen, Nisula, Pekkari remarks; Dutch intelligence warning: Christopher Woody, "On 'NATO's lake,' Nordic allies worry about escalation with Russia," Defense News, November 3, 2026.</li>
+          <li>Lavelle, restrictive rules, Abrams's message on "immediate protective reaction strikes"; Lavelle's interpretation; superiors urged aggressive reading; falsified reports; enlisted debriefer at Udorn wrote to Senator Hughes; recalled March 23: Randolph, 59–60.</li>
+          <li>"Cancerous political-military climate"; obscure rules and creeping reinterpretation; "hung out to dry"; Nixon's and Kissinger's concerns; Seventh Air Force without a commander: Randolph, 60.</li>
+        </ul>
+
+        <h3>After the Election, Said Everyone, Always</h3>
+        <ul>
+          <li>November 2 strikes on Qeshm Island; series of undisclosed strikes; WSJ first; CENTCOM declined comment; Iran fired at U.S. aircraft; MQ-9 claim and denial; Trump on Fox, "It was just a minor attack; it wasn't war"; Gharibabadi, "We are still in a state of war"; war since February; April ceasefire ended Epic Fury; blockade; September tanker strikes and Muwaffaq Salti; Trump considering large-scale combat after the midterms; Cooper meeting; air-defense strikes could facilitate a larger operation: Chris Gordon, "US Conducts Airstrikes on Iran, Latest in Series of Undisclosed Attacks," Air &amp; Space Forces Magazine, November 3, 2026.</li>
+          <li>ISW Iran Update, November 3, 2026: headline only; page blocked (403), not read.</li>
+          <li>Nixon's memorandum to Kissinger: three-day strike, at least 100 B-52s, "unless we hit the Hanoi-Haiphong complex this weekend…"; first weekend of May; summit risk; Nixon reconciled to losing it: Randolph, 156.</li>
+          <li>Politburo calculus "exactly opposite": Randolph, 165. Most serious error to misread Nixon: Randolph, 340.</li>
+        </ul>
+      </section>
+
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Shore, <i>Grad School Essentials</i></h3>
+        <p class="fine">The rule: if a word can be cut, cut it, aiming for the fewest words necessary rather than the fewest possible (pp. 66–67), and never use a long word where a short one will do (p. 66). Take this sentence to the chop shop. Keep every fact, and replace the vague words with an actor and a verb.</p>
+        <p class="protip">"It is important to note that the utilization of laser-guided munitions had a significant impact on the overall effectiveness of tactical air operations in 1972."</p>
+        <div class="mine">
+          <label for="mine-practice">Your rewrite:</label>
+          <textarea id="mine-practice" placeholder="In 1972, laser-guided bombs let…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible rewrite</summary><p>"In 1972, laser-guided bombs let a flight of four do better than larger strike forces had done with unguided bombs" (Randolph, 45). Twenty-six words became twenty. "It is important to note," "utilization," "significant impact," and "overall effectiveness" went to the chop shop; the comparison carries the meaning (Shore, 66–67).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Connect the dots</h3>
+        <ul class="recall">
+          <li><details><summary>The Air Force wants more than 1,000 ERAM cruise missiles within 15 months, for "affordable mass." Link it to Randolph and Clodfelter.</summary><p>Randolph: laser-guided bombs made every fighter crew an effective bomber (45), but only four high-threat pods were in theater in 1972, and the campaign bent around protecting them (209). Clodfelter: three laser-guided bombs hit three warehouses at Son Tay, yet he refuses to let technology carry the argument, since the same doctrine failed in 1965 (C ch. V, e176; ch. VII, e225). ERAM trades exquisite precision for numbers (Defense News, Nov 3).</p></details></li>
+          <li><details><summary>Undisclosed U.S. strikes on Iran came the day before the midterms, with a larger campaign under consideration afterward. Link it to Randolph and Clodfelter.</summary><p>Randolph: the 1972 White House reasoned that unless it hit Hanoi-Haiphong that weekend it could not before the election, and the calendar imposed urgency the Politburo misread as restraint (156, 165). Clodfelter: Johnson's 1964 Working Group picked Option C because it "was controllable," a calibrated menu that left Hanoi to wait for another day (C ch. II, e71). Limited strikes on air defenses look like the opening of a menu (Air &amp; Space Forces Magazine, Nov 3).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Randolph: preview recall (answer after tonight's reading)</h3>
+        <ul class="recall">
+          <li><details><summary>Where does the title come from?</summary><p>Politburo Guidance Cable 119, March 27, 1972, warning that Nixon "might employ even more powerful and brutal weapons" (epigraph).</p></details></li>
+          <li><details><summary>What three "games" did Nixon say he was playing?</summary><p>"A Russia game, a China game, and an election game" (3).</p></details></li>
+          <li><details><summary>Name Randolph's three conceptual threads.</summary><p>Presidential leadership and the implementation of strategic guidance; the dynamics of military effectiveness; and the action-reaction cycle between adversaries (2–3).</p></details></li>
+          <li><details><summary>What did the Politburo assume the elections and summits would do, and what did they actually do?</summary><p>It assumed they would constrain Nixon's response; instead the summit stimulated tough action and the election calendar imposed urgency (28–29, 165).</p></details></li>
+          <li><details><summary>Why did Ryan recall Lavelle, and when?</summary><p>Seventh Air Force's strikes under Lavelle's reading of the rules required falsified mission reports, which an enlisted debriefer reported to Senator Hughes; Ryan recalled him March 23, 1972, days before the offensive (59–60).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Clodfelter: seminar recall</h3>
+        <ul class="recall">
+          <li><details><summary>What is Clodfelter's test for whether a bombing campaign worked?</summary><p>Its contribution to the nation's war aims (preface, e10).</p></details></li>
+          <li><details><summary>Why did bombing "work" in 1972, in Clodfelter's preface?</summary><p>Nixon's aims were limited, the Chinese and Soviets gave him a free hand, and Hanoi chose a sustained conventional war needing vast logistics (preface, e8–9).</p></details></li>
+          <li><details><summary>How much tonnage did Linebacker I drop, and what happened to overland imports?</summary><p>155,548 tons, a quarter of Rolling Thunder's total; overland imports fell from 160,000 to 30,000 tons a month (ch. V, e184).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: where did "flexible response" get its public name?</summary><p>From Maxwell Taylor's book <i>The Uncertain Trumpet</i> (213).</p></details></li>
+          <li><details><summary>Crane: what did the April 1952 FEAF study find about rail interdiction?</summary><p>It had failed despite more than 15,000 rail cuts, at a cost of 243 aircraft (115–116).</p></details></li>
+          <li><details><summary>Zhang: what did Moscow order Belov's 151st Air Division in 1950?</summary><p>To retrain Chinese pilots first and not to fly beyond the Yalu, so Chinese troops did not get the air cover they counted on (62).</p></details></li>
+          <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
+          <li><details><summary>Schlight: what share of 1966 strike sorties hit enemy troops engaged with allied forces?</summary><p>About 3 percent (216).</p></details></li>
+          <li><details><summary>Clodfelter: why did the 1964 Working Group recommend Option C?</summary><p>Because it "was controllable," and Option B risked Chinese intervention (ch. II, e70–71).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Cliché check: "Linebacker was a game changer that moved the needle in Paris."</summary><p>Two clichés. Say what changed: "Linebacker's results helped shape the terms Hanoi accepted in Paris," then cite your evidence (Randolph, 339; Shore, 65–66).</p></details></li>
+          <li><details><summary>Short word: "Nixon endeavored to facilitate the utilization of air assets."</summary><p>"Nixon sent more aircraft." Then add the number or the date the paper needs (Shore, 66).</p></details></li>
+          <li><details><summary>Review (Tuesday, Ruppo): fill in the third column for "Nixon said he was playing a Russia game, a China game, and an election game."</summary><p>Add your evaluation: "…and Randolph shows the election game set the timing of the Hanoi-Haiphong strikes, the opposite of what the Politburo expected" (Randolph, 3, 156, 165; Ruppo, 13–14).</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: one paragraph answering "Was the Easter Offensive a failure for Hanoi?" Use Randolph's conclusion and cite Clodfelter once.</label>
+          <textarea id="mine-crane" placeholder="Militarily yes, strategically no. Randolph… (339; Clodfelter, preface, e8–9)"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-done">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>30 Oct</td><td class="st-done">McDougall, <i>…The Heavens and the Earth</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>2 Nov</td><td class="st-done">Schlight (intro, ch. 1–2) + document pack (decision exercise)</td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>3 Nov</td><td class="st-done">Clodfelter, <i>The Limits of Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>5 Nov</td><td class="st-now">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill now">NEXT</span></td></tr>
+            <tr><td>6 Nov</td><td>Nguyen, <i>Hanoi's War</i></td><td></td></tr>
+            <tr><td>9 Nov</td><td>Haun, <i>Tactical Air Power and the Vietnam War</i></td><td></td></tr>
+            <tr><td>10 Nov</td><td>Kitfield, <i>Prodigal Soldiers</i></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Eight more after Kitfield, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Randolph seminar, 5 Nov</span><b>1</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>27</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: politics, defense, leadership</li>
+          <li>Sources, then Q&amp;A</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Politico</i>, ISW.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+</script>
+</body>
+</html>

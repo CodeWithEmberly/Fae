@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Long Game: Archive</title>
+<meta name="description" content="Every edition of The Long Game, a daily SAASS 628 study newsletter, by date. Each link is a full HTML page.">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+<style>
+.day h2{font-family:var(--font-head);font-size:22px;margin:26px 0 6px;border-bottom:1px solid var(--rule);padding-bottom:4px}
+.day ul{list-style:none;margin:0;padding:0}.day li{margin:0 0 10px;font-size:19px}
+.meta{color:var(--muted);font-size:15px}.heads{color:var(--muted);font-size:15px;line-height:1.4}
+.lede{color:var(--muted);max-width:68ch}
+</style></head>
+<body><div class="wrap">
+<header class="mast"><h1>Archive</h1><p class="tag">The Long Game · every edition, newest first · 22 pages</p></header>
+<main style="max-width:72ch">
+<p class="toc-after"><a href="../">Latest issue</a> · <a href="../tonight/">Tonight</a> · <a href="../map/">Course map</a></p>
+<p class="lede">Morning issues prepare for that day's seminar; evening editions prepare for that night's reading. Each link is a complete page with its own sources.</p>
+<section class="day"><h2>Tuesday, November 17, 2026</h2><ul><li><a href="2026-11-17/">Morning issue</a> <span class="meta">Seminar today: Henriksen at 1200 · Fuller Thursday</span><br><span class="heads">Today's Seminar Questions, Answered · NATO Bet Three Nights and Got Seventy-Eight · Counterpoint: Lambeth Says Leave the Airmen Out of It · Four Questions for an Alliance That Couldn't Agree on a Fifth …</span></li></ul></section>
+<section class="day"><h2>Monday, November 16, 2026</h2><ul><li><a href="2026-11-16/">Morning issue</a> <span class="meta">Seminar today: Lambeth at 1200 · Henriksen tomorrow</span><br><span class="heads">Today's Seminar Questions, Answered · Lambeth Buries Douhet and Keeps the Shovel · Counterpoint: Haun Checks Lambeth's Math on Iraq's Army · Four Questions for a Booster's Seminar …</span></li><li><a href="2026-11-16-tonight/">Tonight (evening edition)</a> <span class="meta">Afternoon Edition</span><br><span class="heads">Henriksen, NATO's Gamble: The Alliance That Bet Three Days and Paid for Seventy-Eight · Ten Chapters, One Evening, Sorted by Payoff · Six Things to Mark in the Margin · Four Questions and Where the Answers Live …</span></li></ul></section>
+<section class="day"><h2>Friday, November 13, 2026</h2><ul><li><a href="2026-11-13/">Morning issue</a> <span class="meta">Seminar today: Fravel at 1200 · Lambeth Monday</span><br><span class="heads">Today's Seminar Questions, Answered · China's Strategy Waits for Two Signals, and One of Them Is the Politburo · Counterpoint: Zhang Says the Air Force Copied Moscow After All · Four Questions That Start a Fight …</span></li><li><a href="2026-11-13-tonight/">Tonight (evening edition)</a> <span class="meta">Afternoon Edition</span><br><span class="heads">Lambeth, The Transformation of American Air Power: The Booster's Brief, With Receipts · Nine Chapters, One Weekend, Sorted by Payoff · Six Things to Mark in the Margin · Five Questions and Where the Answers Live …</span></li></ul></section>
+<section class="day"><h2>Thursday, November 12, 2026</h2><ul><li><a href="2026-11-12/">Morning issue</a> <span class="meta">Seminar today: Olsen at 1200 · Fravel tomorrow</span><br><span class="heads">Today's Seminar Questions, Answered · Olsen Grades the Bombing From the Receiving End · Counterpoint: Haun Says the Army Got the Bombs and the Credit · Saddam Got His Battle Damage Assessment From a Russian …</span></li><li><a href="2026-11-12-tonight/">Tonight (evening edition)</a> <span class="meta">Afternoon Edition</span><br><span class="heads">Fravel, Active Defense: Nine Strategies, One Rule About When They Change · Ten Chapters, One Evening, Sorted by Payoff · Six Things to Mark in the Margin · Five Questions and Where the Answers Live …</span></li></ul></section>
+<section class="day"><h2>Wednesday, November 11, 2026</h2><ul><li><a href="2026-11-11/">Morning issue</a> <span class="meta">Veterans Day · No seminar today · Olsen tomorrow at 1200</span><br><span class="heads">Counterpoint: Linebacker Coerced a Schedule. Randolph Asks What Else. · Olsen's Best Evidence for Drones Is a Thirteen-Foot Decoy · Three Wars of Turning Off the Lights · "Render Ineffective" Was the Polite Way to Write "Kill Saddam" …</span></li><li><a href="2026-11-11-tonight/">Tonight (evening edition)</a> <span class="meta">Veterans Day · Afternoon Edition</span><br><span class="heads">Olsen, Strategic Air Power in Desert Storm: Right Target, Wrong Theory · One Night Left, Sorted by Payoff · Six Things to Mark in the Margin · Seven Questions and Where the Answers Live …</span></li></ul></section>
+<section class="day"><h2>Tuesday, November 10, 2026</h2><ul><li><a href="2026-11-10/">Morning issue</a> <span class="meta">Seminar today: Kitfield at 1200 · Olsen Thursday</span><br><span class="heads">Today's Seminar Questions, Answered: Five Questions, One Hundred Hours · Twenty Years of Homework, Graded in a Hundred Hours · Counterpoint: Haun Audits the Victory Parade · In the Strait, Kitfield Would Ask Who Fixes the Airplanes …</span></li><li><a href="2026-11-10-tonight/">Tonight (evening edition)</a> <span class="meta">Afternoon Edition</span><br><span class="heads">Olsen, Strategic Air Power in Desert Storm: Right Target, Wrong Theory · Three Hundred Pages, Sorted by Payoff · Six Things to Mark in the Margin · Seven Questions and Where the Answers Live …</span></li></ul></section>
+<section class="day"><h2>Monday, November 9, 2026</h2><ul><li><a href="2026-11-09/">Morning issue</a> <span class="meta">Seminar today: Haun at 1200 · Kitfield tomorrow</span><br><span class="heads">Today's Seminar Questions, Answered: Four Questions, Twenty-Three Campaigns · Haun Grades the Whole War and Gives the Bombers an Incomplete · Tonight's Reading: Kitfield's Majors Swore "Never Again," Then Rewrote the Manuals · If Russia Crosses a NATO Border, Haun Would Send the Air Force After the Tanks …</span></li><li><a href="2026-11-09-tonight/">Tonight (evening edition)</a> <span class="meta">Afternoon Edition</span><br><span class="heads">Kitfield, Prodigal Soldiers: Twenty Years to Fix One War · Four Hundred Pages, Triaged · Six Things to Catch With a Pencil · Five Questions and Where the Answers Live …</span></li></ul></section>
+<section class="day"><h2>Friday, November 6, 2026</h2><ul><li><a href="2026-11-06/">Morning issue</a> <span class="meta">Seminar today: Nguyen at 1200 · Haun on Monday</span><br><span class="heads">Today's Seminar Questions, Answered: Four Questions, One First Secretary · Hanoi Had a Boss, and He Kept His Name Off the Door · Weekend Reading: Haun Says Air Power Wins When the Enemy Is Too Scared to Move · If Tehran Tests: Read the Regime's Org Chart Before the Target List …</span></li></ul></section>
+<section class="day"><h2>Thursday, November 5, 2026</h2><ul><li><a href="2026-11-05/">Morning issue</a> <span class="meta">Seminar today: Randolph at 1200 · Nguyen tomorrow</span><br><span class="heads">Today's Seminar Questions, Answered: Four Questions, One Prussian · One Man, One Hideaway Office, Half a World Away · Tonight's Reading: The Man Behind the Bamboo Curtain Was Not Ho Chi Minh · How to Lose an Ally While Saving Him: Randolph on Alliance Dissolution …</span></li></ul></section>
+<section class="day"><h2>Wednesday, November 4, 2026</h2><ul><li><a href="2026-11-04/">Morning issue</a> <span class="meta">No seminar today · Randolph tomorrow at 1200</span><br><span class="heads">Tonight's Reading: Nixon Plays Three Games at Once, and Hanoi Plays the Long One · Four Pods and No More on the Way: Randolph Reads a Taiwan Crisis · Seven Books In: The Enemy Keeps Reading Our Mail, and Our Elections · Take It to the Chop Shop: Shore on Saying Exactly What You Mean …</span></li></ul></section>
+<section class="day"><h2>Tuesday, November 3, 2026</h2><ul><li><a href="2026-11-03/">Morning issue</a> <span class="meta">Election Day</span><br><span class="heads">Same Bombs, Different War: Clodfelter Comes to Seminar · Fifteen Hours From England: Clodfelter Reads a Russian Move on NATO · Six Books In: Everybody Learned Something, Mostly the Wrong Thing · Take the Note, Then Talk Back: Ruppo's Third Column …</span></li></ul></section>
+<section class="day"><h2>Monday, November 2, 2026</h2><ul><li><a href="2026-11-02/">Morning issue</a><br><span class="heads">July 1965, Party of Two: The Decision Exercise Orders Off Schlight's Menu · Tomorrow's Reading: Clodfelter Wants a Receipt for Every Bomb · Negative Objectives, Positive Thinking: Clodfelter Reads the Iran War · Five Books In, One War Down: The Air Force Keeps Grading the Wrong Exam …</span></li></ul></section>
+<section class="day"><h2>Friday, October 30, 2026</h2><ul><li><a href="2026-10-30/">Morning issue</a><br><span class="heads">Lost in Space, Found in Translation: McDougall Goes to Seminar · Close Air Support: The Mission Nobody Wanted, Delivered by the Ton · Perception Is Nine-Tenths of the Alliance: McDougall Reads a NATO Crisis · Four Books, One Theme: Everybody Was Bluffing, Some Better Than Others …</span></li></ul></section>
+<section class="day"><h2>Thursday, October 29, 2026</h2><ul><li><a href="2026-10-29/">Morning issue</a><br><span class="heads">Red Wings, Red Ink: Zhang's Scoreboard Goes to Seminar · Till Debt Do Us Part: Zhang and the Alliance That Sent a Bill · Three Books, One River: The Yalu from Washington, Andong, and Moscow · They Say Airpower Won; I Say Check the Gun Camera: On the Thesis …</span></li></ul></section>
+<section class="day"><h2>Wednesday, October 28, 2026</h2><ul><li><a href="2026-10-28/">Morning issue</a><br><span class="heads">Zhang Flips the Map: The Korean Air War from North of the Yalu · What Would Zhang Make of Your 628 Paper? Start with Taiwan · The Story So Far: Gaddis Set the Budget, Crane Sent the Bill · The Implementation of Interdiction Resulted in Sadness: On Precise Language …</span></li></ul></section>
+<section class="day"><h2>Tuesday, October 27, 2026</h2><ul><li><a href="2026-10-27/">Morning issue</a><br><span class="heads">The Air Force Didn't Advertise Its Limits. Korea Did. · What You've Read So Far · Zhang: The Same Air War, from North of the Yalu · Nebraska Is Running the Strongpoint Play …</span></li></ul></section>
+
+</main>
+<footer>The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.</footer>
+</div></body></html>

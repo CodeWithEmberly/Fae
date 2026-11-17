@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-13 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Friday, November 13, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-13/">This morning's issue and podcast</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Lambeth, <i>The Transformation of American Air Power</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Monday's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar</a></li>
+          <li><a href="#t7">Political strategy × Lambeth</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#l-01">Ch. 1: Call It Strategic After It Works</a></li>
+          <li><a href="#l-02">Ch. 2: The Hands Were Tied, and the Grip Was Weak</a></li>
+          <li><a href="#l-03">Ch. 3: The Jet Is the Easy Part</a></li>
+          <li><a href="#l-04">Ch. 4: Who Gets the Sorties Decides Who Gets the Blame</a></li>
+          <li><a href="#l-05">Ch. 5: SAC Had to Die So the Bombers Could Go to War</a></li>
+          <li><a href="#l-06">Ch. 6: My Jeweler Outranks Yours: Kosovo and the Myth of Air Alone</a></li>
+          <li><a href="#l-07">Ch. 7: Space Joined the Fight When the Fighter Pilots Took the Keys</a></li>
+          <li><a href="#l-08">Ch. 8: The Air Power Debate Is Two Fights, and Only One Still Matters</a></li>
+          <li><a href="#l-09">Ch. 9 (conclusion): Lambeth's Last Word to Airmen: Stop Saying "Dominant"</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Monday's seminar</span>
+        <h3><a href="#t1">Lambeth, <i>The Transformation of American Air Power</i>: The Booster's Brief, With Receipts</a></h3>
+        <p>Lambeth argues that between the mid-1970s and 2000, American air power made a nonlinear jump in what it can do in a major theater war. Three things converged: stealth, accurate attack on fixed targets from safe standoff ranges, and the battlespace awareness that better command, control, and surveillance systems provide. The result, he says, is an air arm that can set the conditions for victory from the opening hours of a joint campaign, by taking away an enemy's capacity for organized military action. He wrote it as a RAND analyst with roughly 280 training sorties in more than 35 aircraft types, so expect an advocate who has actually pulled Gs.</p>
+        <p>The book argues against two camps at once. Against the Army partisans who called the Gulf air war a sideshow, he says air power did most of the work against Iraq's fielded army. Against his own side, he says the old fight over strategic bombing of cities and industry is moot. "Strategic" should name the effect sought, and by that test the Baghdad target list in 1991 did little. He even scolds Robert Pape for filing all this under "tactical" air power.</p>
+        <p>For this course, Lambeth is the high-water mark of the airman's claim, written before September 11. The syllabus pairs him with the theme of technological promise and asks whether his argument still persuades. Read him for the assumptions: a major theater war, an armored enemy, good intelligence, and a public that wants few casualties. Each of those assumptions held in 1991, and the rest of the course tests each one. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Nine Chapters, One Weekend, Sorted by Payoff</a></h3>
+        <p>Read the argument first, then the Kosovo chapter, because the seminar will live there. Page numbers are printed pages.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> Chapter 1, pp. 1–11 (the whole argument in eleven pages), then chapter 9, pp. 297–300 and 305–313 (the claims, the concessions, and the advice to airmen).</li>
+          <li><b>60 minutes.</b> Add chapter 6 on Kosovo: pp. 181–193 (what NATO planned and why Milosevic quit) and pp. 224–232 (Lambeth's verdict). Then chapter 8, pp. 260–275 (the two air power debates).</li>
+          <li><b>2 hours.</b> Add chapter 4, pp. 117–138 (attacking Iraq's army and the fight over sorties); chapter 2, pp. 12–18 and 48–53 (Vietnam's lessons); chapter 5, pp. 153–167 (the end of SAC); and chapter 7, pp. 233–241 (space).</li>
+        </ol>
+        <p>Chapter 3 on the 1980s can wait; Kitfield covered that ground and the lesson below covers the rest. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 1, pp. 7–8.</b> The definition that carries the book: strategic is a matter of the objective, not the target. He follows it with the concession that the Baghdad strikes had little strategic effect.</li>
+          <li><b>Chapter 1, pp. 9–10.</b> Air power can kill only what it can see, identify, and engage. Lambeth's own example is the failure to eliminate Iraq's nuclear program in 1991, which he files as a failure of air power and intelligence together.</li>
+          <li><b>Chapter 4, pp. 131–138.</b> The Army nominated 3,067 targets and a little more than a third were attacked, while 67 percent of weapon releases hit Iraq's fielded forces. Watch who set the priorities.</li>
+          <li><b>Chapter 6, pp. 191–193.</b> Lambeth's list of reasons Milosevic gave up, which is longer than "the bombing worked."</li>
+          <li><b>Chapter 6, pp. 204–205 and 226.</b> Zero civilian casualties became an expectation, and neither Congress nor public opinion would have allowed a tougher strategy. These are the new limits on air power.</li>
+          <li><b>Chapter 9, pp. 306–307 and 312.</b> Public tolerance for casualties, and his advice to stop calling air power "dominant."</li>
+        </ol>
+        <p>Read the footnotes too. In chapter 3 one of them quietly disagrees with the text above it. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Monday's Seminar Questions</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 13, "Airpower Vision for American Dominance." Monday morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>How had technology changed airmen's approach to their craft?</b> Chapter 1, pp. 6–7 (stealth, standoff precision, information); chapter 5, pp. 155–156 (the stealth arithmetic); chapter 3, pp. 62 and 71, for the argument that training mattered as much as hardware.</li>
+          <li><b>What underlying assumptions are implicit within the text?</b> Chapter 1, p. 6, where he limits the study to major theater wars and sets aside irregular conflicts; p. 9 on intelligence; chapter 9, p. 300, on Korea.</li>
+          <li><b>Is Lambeth's argument still persuasive?</b> Chapter 9, pp. 297–299 and 313, and test it against chapter 6, pp. 181 and 191–193.</li>
+          <li><b>What is the new limitations placed on airpower? Are they new, or just altered?</b> Chapter 6, pp. 204–205 and 226; chapter 9, pp. 306–307. Compare chapter 2, pp. 18–19, on Vietnam's rules.</li>
+          <li><b>How can this text inform today's strategy in terms of force modernization?</b> Chapter 9, pp. 305–306, 311, and 316–318; chapter 8, p. 294, for the budget shares.</li>
+        </ol>
+        <p>Opinion: question two is the one to prepare. Lambeth states his biggest assumption out loud on page 6, and most readers skim right past it. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>Merrill McPeak.</b> Air Force chief of staff after the Gulf War who called it the first time a field army was defeated by air power, and set off the credit fight (p. 4).</li>
+          <li><b>Colin Gray.</b> Strategist Lambeth borrows for the line that there is no such beast as strategic air power (p. 7).</li>
+          <li><b>C4ISR.</b> Command, control, communications, computers, intelligence, surveillance, and reconnaissance; the source of "information dominance," the third leg of his argument (pp. 6–7).</li>
+          <li><b>Red Flag.</b> Realistic combat training at Nellis, approved in 1975, built on the finding that a pilot's first ten combat sorties decide whether he survives (p. 62).</li>
+          <li><b>Lee Butler.</b> The general who judged SAC a nuclear outfit and proposed abolishing it; SAC and TAC went away in June 1992 (pp. 165–166).</li>
+          <li><b>Fire support coordination line.</b> The boundary between ground and air control of fires; once about 20 miles out, later pushed hundreds of miles forward (p. 292).</li>
+          <li><b>Halt phase.</b> The Air Force concept of stopping an armored invasion mainly from the air; a defense panel declined to endorse it (pp. 290, 299).</li>
+          <li><b>Task Force Hawk.</b> The Army's Apache deployment to Albania in 1999: 5,350 people, 24 helicopters, no combat missions (pp. 208–209).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Fravel to Lambeth</span>
+        <h3><a href="#t6">Same War, Two Readers, Opposite Moods</a></h3>
+        <p>Fravel and Lambeth studied the Kosovo air war at the same time and reached different moods about the same facts. In March 2000, the PLA's National Defense University concluded that NATO's surveillance and command systems gave it total information dominance, that air strikes were deadlier than China had imagined, and that air strikes were now the most likely way China would be attacked. The PLA's answer was countermeasures, with more research on defending against air raids. Lambeth, writing the same year, calls Kosovo a win for air power and also a step backward in efficiency from Desert Storm, slowed by gradualism. (The people being bombed were more impressed than the people doing the bombing.)</p>
+        <p>Keep one question in mind while reading: of Lambeth's three advantages, stealth, standoff precision, and information, which one is easiest for an enemy to take away? Lambeth gives you a hint in chapter 7, where he notes that GPS signals are weak and that JDAM will depend on them entirely. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Lambeth · via Punchbowl News AM and electoral-vote.com, November 13</span>
+        <h3><a href="#t7">The War Goes on the Appropriations Ballot</a></h3>
+        <p>Congress is drifting toward a funding fight over the Iran war, according to Punchbowl News this morning. Government funding runs out December 11, and Punchbowl says a full-year bill is almost certain not to pass by then. Sen. Chris Van Hollen, who announced Thursday night that he will challenge Chuck Schumer for majority leader, says Democrats should shut the government down if needed to end the war. Sen. John Kennedy answered that if funding is made contingent on "cutting and running in Iran," there will be a shutdown. Rep. Adam Smith, the incoming Armed Services chair, wants one sentence: "No money can be in this bill to fund the war in Iran." He also concedes the White House would never accept it. Punchbowl lists four exits, from a short stopgap into next year, which Sen. Patty Murray prefers, to a full shutdown at Christmas. It would be the third shutdown fight in just over a year. (Appropriators have had a long year.)</p>
+        <p>Electoral-vote.com supplies the arithmetic. Its Senate tally stands at 55 Democrats, and Alaska's Senate race is the last major one the AP has not called. Schumer, 75, says he has the votes; the caucus elects its leader December 1.</p>
+        <p>Lambeth wrote about this exact pressure, from the military side. In his conclusion he says the belief that Americans will not accept casualties is oversimplified, and that public support depends on how people judge the stakes of a commitment and the competence of the leaders running it. He cites a pollster's rule from 1999: the public applauds force when the country wins and calls it a mistake when it loses or leaves. Before Desert Storm, not one poll in seven found a majority for immediate action; after a good start, 68 to 84 percent approved. On Kosovo he says Congress and public opinion would never have permitted a tougher strategy than the one NATO chose.</p>
+        <p>Opinion: Lambeth's model says the December fight is about judged stakes and judged competence more than about the number of casualties. That makes the funding bill a referendum both parties think they can win, which is how shutdowns get started. Lambeth's other lesson applies to the planners: air power can never be more effective than the strategy it serves, and Congress votes on the strategy. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Lambeth, <i>The Transformation of American Air Power</i></p>
+
+      <article id="l-01">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 1</span>
+        <h3><a href="#l-01">Call It Strategic After It Works</a></h3>
+        <p>An attack is strategic because of what it achieves, whatever the label on the target. Lambeth uses that tool in his opening chapter to declare the old fight between airmen and land warriors over strategic bombing largely moot. For most of the Cold War, strategic air power meant nuclear bombers whose reason for being was never to be used. His central claim is that since the mid-1970s, stealth, accurate standoff attack and better battlespace awareness have given American air power a nonlinear jump in what it can contribute to a major theater war. Colin Gray supplies the slogan: "There is no such beast as 'strategic' air power."</p>
+        <p>Desert Storm is the test case. Models predicted allied casualties in the thousands, and the order President George Bush endorsed allowed that losses could reach 10 percent of fielded ground troops. On opening night some 800 sorties hit Iraq's command and control and air defenses, and the coalition lost one aircraft, a Navy F/A-18. Within three days it owned the air and could strike Iraq's fielded forces with near impunity. Lambeth then makes the concession that gives his definition teeth: attacks on so-called strategic targets in and around Baghdad, power plants among them, had little strategic effect on the outcome. (An airman admitting the downtown target list underperformed is rarer than an F-117 on Iraqi radar.)</p>
+        <p>The weak seminar comment is "Desert Storm proved air power can win a war by itself." It overgeneralizes from one case and ignores the author's own counterevidence: Lambeth concedes the Baghdad strikes did little, and even Merrill McPeak, the Air Force chief who called Desert Storm the first defeat of a field army by air power, granted that ground forces moved in and dictated terms. The strong version: "Lambeth's claim is narrower. Air power achieved strategic effects against Iraq's army, so the word should name the result sought, and by that test the Baghdad list was the least strategic part of the campaign." Opinion: this is the most reusable idea in the chapter, and it lets airmen keep their favorite word. Lambeth, who has flown some 280 training missions in more than 35 aircraft types, is an open advocate, and his case so far rests on one short war.</p>
+        <p>The narrow claim survives because each effect led to the next. First order, the opening strikes on Iraq's defenses and command network succeeded for the price of one jet. Second order, the coalition owned the sky within three days, and a 37-day air war was followed by a ground offensive of four. Third order, that success set off a budget war. McPeak spoke of an air "campaign" but only a ground "operation," the Army called the air war a sideshow, and the Pentagon's report to Congress ran nearly three months late amid hundreds of disputes, giving 135 pages to the air war, 100 to the ground war and 85 to naval operations. Measuring strategic effect by what Iraq's army could still do pre-empts the reply that air power merely softened up the enemy. Unable to agree on who won, the services counted pages. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-02">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 2</span>
+        <h3><a href="#l-02">The Hands Were Tied, and the Grip Was Weak</a></h3>
+        <p>When a campaign fails, sort the causes into limits placed on the force and limits of the force. Richard Hallion blamed Vietnam's results on limits placed on air power, and Lambeth calls that fair as far as it goes, which is about halfway. Strategy failed first, he grants, but the air weapon itself had real deficiencies in equipment, use and organization. The 1972 air war worked better because the war had turned conventional and laser-guided bombs had arrived.</p>
+        <p>The first column is long. Targets were picked at Tuesday lunches, MiGs sat in sanctuary at five bases inside the 25-mile Hanoi circle, and SAM sites could be hit only while firing. John McNaughton advised McNamara, "We won't bomb the sites, and that will be a signal to North Vietnam not to use them." (Hanoi read the signal differently.) The second column is just as long. The F-105 was designed as a nuclear bomber whose side-by-side hydraulic lines let one round kill both flight controls. A 1961 PACAF manual ordered that "Nuclear training will in every instance take precedence" and held some units to one conventional event per aircrew per year. The F-4 had no internal gun, and through March 1968 Air Force crews fired 224 AIM-7s for 20 kills.</p>
+        <p>The weak seminar comment is "Air power failed in Vietnam because the politicians tied the airmen's hands." It is half the ledger and ignores the author's own counterevidence. Even Linebacker, with most restrictions lifted, destroyed an estimated 489 vehicles near the DMZ against only 38 farther north, and breaking the siege at Khe Sanh took 2.5 sorties per enemy soldier killed. The strong version: "Lambeth splits the failure in two. Washington's restrictions were real, and the Air Force also went to war with a nuclear bomber, a fighter without a gun and a manual that put conventional training last. Once laser-guided bombs arrived, the Thanh Hoa bridge went down in a day after hundreds of inconclusive sorties." Opinion: Lambeth's rule that civilians should stay out of operational details once objectives are set is easier to write than to follow at a Tuesday lunch.</p>
+        <p>The lesson outlived the war because each effect fed the next. First order, gradualism gave Hanoi time to grow from about 1,400 antiaircraft guns in August 1964 to 7,000 to 10,000 guns and more than 200 SA-2 sites by early 1967. Second order, the SAMs pushed American fighters below 3,000 feet, where more than 80 percent of U.S. losses occurred, and jamming pods and new tactics helped cut the Air Force loss rate from 3.2 per 1,000 sorties in 1965 to 1.6 in 1967. Third order, aircrews learned to fight inside a dense air defense, a legacy Lambeth says put all four services on a path to Desert Storm. That chain pre-empts the tied-hands excuse: the restrictions bred a threat the force had to beat with its own gear and tactics. So ask why the Navy kill ratio rose from 3.7 to 1 to, for a time, 13 to 1 after Topgun while the Air Force all but dropped dissimilar air combat training. The Navy's best weapon of 1972 was a 480-page report. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-03">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 3</span>
+        <h3><a href="#l-03">The Jet Is the Easy Part</a></h3>
+        <p>A new airplane buys a chance to win, and the crew that flies it and the chain of command above it decide whether that chance gets cashed. Lambeth's third chapter covers the two decades between Vietnam and the Gulf, when a Soviet buildup in Europe left NATO unable to match the Warsaw Pact weapon for weapon and hunting for force multipliers. Of his three areas of gain, he puts aircrew proficiency first.</p>
+        <p>The training numbers carry the argument. General Robert Dixon approved Colonel Moody Suter's Red Flag in 1975 on the finding that a pilot's first 10 combat sorties largely decide whether he survives the war, so Nellis would hand him the first 8 or 10 in peacetime. One account called it "the heart-pumpinest, palm-sweatinest war we have." Annual flying time for Air Force fighter pilots rose from about 150 hours in the mid-1970s to more than 230 by the mid-1980s, over twice the Soviet average. Class A mishaps across the services fell from 309 in 1975 to 76 in 1995, so harder training also made safer pilots, a dividend nobody had planned for. Lebanon is the control case. In December 1983, after one SA-7 was fired at an F-14 over Lebanon, President Reagan ordered a reprisal, and at 0330 the European Command moved the launch up to 0630. Twenty-eight A-6s and A-7s went, none with the proper munitions and no crews properly briefed. One A-6 pilot died and his bombardier-navigator was taken prisoner. Lambeth's verdict: merely possessing capable weaponry "meant nothing."</p>
+        <p>The weak seminar comment is "The Air Force won in the Gulf because it bought F-15s, F-117s, and smart bombs in the 1980s." It ignores the author's own counterevidence: the chapter includes a raid where capable aircraft failed, and a 1982 air battle Lambeth says Israel would likely have won with Syria's equipment. The strong version: "Lambeth's control case is Lebanon in 1983, where the hardware was fine and the planning was pure Vietnam; the payoff came from flying hours and Red Flag." Opinion: the Bekaa equipment swap is a counterfactual nobody can test, and his Libya account says every target was hit effectively while his own footnote cites a count of only 4 of 18 F-111 laser-guided bombs on target. Read his footnotes, because they sometimes argue with his text.</p>
+        <p>The Lebanon fiasco paid off later, in Nevada and over Iraq. First order, a botched strike cost a pilot and handed Syria's proxies a prisoner for propaganda. Second order, two years later Navy Secretary John Lehman got the Navy its own Red Flag at Fallon, Nevada, where each air wing would spend three weeks before deploying, and the Navy also set up a threat cell called SPEAR. Third order, SPEAR correctly appraised Iraq's air defenses on the eve of Desert Storm, in what the Gulf War Air Power Survey called perhaps the best assessment of them. That chain pre-empts the claim that the 1980s were just a procurement boom, because the payoff that mattered grew out of a humiliation and a schoolhouse. The Navy learned the most from the raid it would most like to forget. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-04">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 4</span>
+        <h3><a href="#l-04">Who Gets the Sorties Decides Who Gets the Blame</a></h3>
+        <p>When a ground commander says the air commander ignored him, first ask who set the priorities, because friction at a seam usually traces to the command structure. Lambeth's fourth chapter argues that air power's decisive act in Desert Storm came after air control was won: engaging an entire army with precision, at night, from medium altitude. The ugly fight over who owned the sorties, he says, grew mostly out of General Schwarzkopf serving as his own land component commander.</p>
+        <p>The Army's complaint has numbers behind it. In the first two weeks the Army nominated 1,185 targets, 202 made the air tasking order, and 137 were hit. Over the whole war it nominated 3,067, and little more than a third were attacked. The other ledger is bigger. Of 23,430 weapon releases against discrete aim points, 67 percent went at fielded Iraqi ground forces. Schwarzkopf had approved the air commander's targets, and he told his division commanders back in November that Horner alone was in charge of the air. The corps commanders, in Gordon and Trainor's phrase, saw the battlefield as a "giant bowling alley," caring about the Iraqis in front of them, while Schwarzkopf wanted the Republican Guard behind them. The Gulf War Air Power Survey found that some ground commanders blamed Horner or Glosson without realizing the apportionment was Schwarzkopf's.</p>
+        <p>The weak seminar comment is "Desert Storm proved airmen fight their own war and ignore the ground commander." It asserts a grievance and ignores the counterevidence, since two of every three bombs and missiles went at the Iraqi army. The strong version: "The corps targets lost to Schwarzkopf's theater priorities. With no separate land component commander, nobody between the corps and the CINC could explain that, so the corps blamed the airman." Opinion: Lambeth is an advocate here. His rebuttal of William Odom's claim that Army tanks and helicopters killed 70 to 80 percent of Iraqi tanks leans on the Air Force's own survey, plus CIA imagery analysts. Expect the Army to notice whose survey it is.</p>
+        <p>The friction traces back to one command decision. First order, Schwarzkopf kept the land component for himself and, for most of the war, short-circuited his own targeting board by telling Horner and Glosson directly what to hit. Second order, corps commanders who could not see that logic used the fire support coordination line as a fence. The survey dates the XVIII Airborne Corps push north of the Euphrates to February 27. Separately, McPeak told the Commission on Roles and Missions that on the third day of the ground operation that corps commander kept the air commander off the main resupply line between Baghdad and Kuwait for 17 hours, and that a VII Corps extension gave Republican Guard units a sanctuary to escape to Basra. McPeak blamed what happens when "boundaries are set by people who do not have full authority" on both sides. Third order, the grudge outlived the war: in 1994 a senior airman still reported Army distrust at every level. The chain needs no villain, which pre-empts the charge of Air Force selfishness. Lambeth likens the credit fight to asking which scissor blade cut the paper. Schwarzkopf later admitted he knew little of the line debate, so the scissors were missing a hand. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-05">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 5</span>
+        <h3><a href="#l-05">SAC Had to Die So the Bombers Could Go to War</a></h3>
+        <p>The word "strategic" belongs to effects, and a service that pins it to a weapon will misuse the weapon. Lambeth's fifth chapter covers the 1990s, when the Air Force shrank and got better at once. Fighter wing equivalents fell from 39 to 20, yet stealth, satellite-guided bombs, and bombers cut loose from the nuclear mission made the smaller force more capable. The best passage is about an org chart: the Air Force had to abolish its most famous command before its bombers counted in a conventional war.</p>
+        <p>General John Chain, SAC's commander in chief, named the problem in 1988. Three pillars of conventional wisdom kept bombers out of theater war, among them the belief that "strategic" meant "nuclear." Lambeth calls this an abiding flaw: Americans attached the word to weapons and targets when it should describe actions and effects. Desert Storm proved the point. B-52s dropped Mk 82s by the thousands, yet General Lee Butler judged their proficiency close to the level of the end of World War II. Show up at the next war with the same act, he warned, and "we would not be invited to participate." Butler decided SAC was "a nuclear outfit, had always been, was, and would always be," and proposed abolishing it. SAC and TAC went away in June 1992. The stealth arithmetic made his case: in Desert Storm a nonstealth package needed 38 aircraft so that 8 could bomb three aim points, while 20 F-117s hit 37.</p>
+        <p>The weak seminar comment is "Stealth and precision transformed the Air Force after the Cold War." It is true but unarguable, and it credits the hardware with work the institution had to do. The strong version: Chain had the conventional bomber idea in 1988 and got 31 bombers committed before, by Butler's account, the system refused to go further. It took a mediocre Gulf War showing and a dead command to finish the job. Opinion: Chain's three pillars are the most portable tool in the chapter, and any service can run its own vocabulary through them.</p>
+        <p>Abolishing SAC paid off over Kosovo. First order, abolishing SAC put the bombers under Air Combat Command. Second order, the Weapons School added B-52 and B-1 divisions, fighter and bomber crews began training together, and the B-1B went conventional only. Third order, over Kosovo 21 heavy bombers dropped 11,000 of the 23,000 bombs and missiles expended, and the B-2 dropped a third of the precision munitions on fewer than 1 percent of the sorties. That chain heads off the reply that bombers were always conventional assets in waiting. They flew conventional missions over Vietnam for eight years, and in Butler's telling the experience was lost once they came home.</p>
+        <p>Lambeth admits the soft spots. He calls it an open question whether reform would have happened had the nuclear competition continued, and concedes fighter and bomber crews still do not speak a common language. Seminar question: if the Berlin Wall had stood, would SAC still exist? Some organizations reform, and others have to be dissolved so their successors can. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-06">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 6</span>
+        <h3><a href="#l-06">My Jeweler Outranks Yours: Kosovo and the Myth of Air Alone</a></h3>
+        <p>Air power can be no better than the strategy it serves, and "air alone won" is the weakest way to defend it. Lambeth's sixth chapter covers Operation Allied Force, NATO's 78-day air war against Yugoslavia in 1999. He counts it as the third regional win of the decade decided by air power, and as a step backward in efficiency from Desert Storm. NATO ruled out ground forces before the first bomb, expected Milosevic to fold within days, and got a war nobody had planned for.</p>
+        <p>The numbers show a campaign rationed by committee. The first week averaged about 50 strike sorties a night; Desert Storm's first week ran as high as 1,000 combat sorties a day. With no ground threat to fear, Serb units dispersed and hid, and three weeks in NATO could not confirm a single destroyed tank. NATO later claimed 150 tanks disabled, and Clark cut that to 110 after finding decoys, some made of milk-carton material. The Americans fought each other, too. General Short wanted Belgrade's power plants and ministries, General Clark wanted the fielded forces, and Clark settled one exchange with "My jeweler outranks yours." The Army sent 5,350 people to support 24 Apaches, at a cost of $234 million, and the Apaches flew no combat missions.</p>
+        <p>The weak seminar comment is "Kosovo proved air power alone can win a war." It overgeneralizes from one case and ignores the author's own counterevidence. Lambeth, who is about as pro-air as RAND analysts come, says there is good reason to be wary of that claim. The strong version names the other pressures: Russia backing the Western position on June 3, Milosevic's indictment as a war criminal, and cronies whose business interests kept getting bombed. Then it adds the signs of a coming ground war: engineers strengthening the road from Durres to Kukes for Abrams tanks three days before he quit, and a plan for a 170,000-strong invasion force. Opinion: the bombs did the punishing, and the prospect of ground troops made the punishing count.</p>
+        <p>The decision to rule out ground forces echoed through the whole war. First order, Serb units could disperse and hide, so attacks on fielded forces mostly failed while ethnic cleansing got worse. Second order, Clark asked for 300 more aircraft, drawing scarce AWACS and Prowlers from the Persian Gulf and Korea, and moving jets from Incirlik halted patrols over northern Iraq. Third order, Lambeth warns that gradualism may be here to stay in coalition wars, and that it risked squandering the reputation air power earned in Desert Storm. The argument is hard to rebut because his witnesses are airmen. Short, Ryan, Fogleman, and McPeak all faulted the strategy, which heads off the charge that only jealous soldiers doubt air power.</p>
+        <p>Lambeth's verdict is one line: air power "can never be more effective than the strategy it is intended to support." Seminar question: would a Desert Shield-style force on the Albanian and Macedonian borders have shortened the 78 days? Somewhere a 5,350-person task force is still waiting for its Apaches to fly. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-07">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 7</span>
+        <h3><a href="#l-07">Space Joined the Fight When the Fighter Pilots Took the Keys</a></h3>
+        <p>Culture follows command: put the customer in charge of the supplier, and the supplier starts building what the customer needs. Until 1991, Air Force space officers came from secret reconnaissance and nuclear deterrence, trained as engineers, and lived apart from flyers who called them space geeks. Desert Storm showed both camps what satellites could do, and a run of fighter pilots at the head of U.S. Space Command then pulled space into the warfighting mainstream. Lambeth wants air and space to grow together and, as of 2000, calls a separate space service counterproductive.</p>
+        <p>The Gulf war supplied the evidence. GPS went to war five satellites short of full coverage, and handheld receivers went from a few hundred to thousands. A communications satellite was moved from the Pacific to the Indian Ocean, a first for combat, and satellites carried 85 percent of theater communications. Missile-warning satellites caught Scud plumes within 30 seconds of launch, after the Iraqis obligingly ran three practice launches. After the war, Horner, the Desert Storm air commander, took over U.S. Space Command. The Space Warfare Center opened on November 1, 1993, and in a 1994 test an F-15E attacked a simulated mobile Scud launcher at night using satellite coordinates. Ashy, Estes, Myers, and Eberhart followed Horner: five fighter pilots in a row.</p>
+        <p>The weak seminar comment is "Desert Storm was the first space war." It treats McPeak's slogan as a finding, and Lambeth himself grants that purists might object, since space only did support work. The strong comment names the mechanism: the hardware was in orbit by 1991, and what changed afterward was who ran it. The ICBM crews joined Air Force Space Command and lent the space technicians a shooter's credentials, and the old space push became operator pull. Opinion: the sharpest evidence comes from a critic. Senator Bob Smith said in 1998 that the Space Warfare Center mostly helped aircraft drop bombs: "this is not space warfare; it is using space to support air warfare." Lambeth calls that correct. So the integration he celebrates is the Air Force using space for the Air Force.</p>
+        <p>Putting pilots in charge changed how every service used space. First order, pilots running Space Command made space an operator's tool, with space training at the Weapons School and Red Flag. Second order, the other services came to lean on it, and the head of Navy Space Command admitted the Navy is "functionally dead in the water without space." Dependence also made space a target: GPS signals are weak, and JDAM would rely wholly on them. Third order, reliance outran skill: after Kosovo in 1999, the director of the National Reconnaissance Office complained that allied commanders made parts of the campaign harder on themselves through underdeveloped space literacy. We infer that this pre-empts the better-satellites objection: the satellites were up before 1991, and habits changed only when the command did.</p>
+        <p>Smith faulted the Air Force for promoting too few space officers to the top, while Lambeth credits its progress to fighter pilots running space. Can both be right? Space became a warfighting medium the day the pilots arrived, which tells you who was keeping score. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-08">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 8</span>
+        <h3><a href="#l-08">The Air Power Debate Is Two Fights, and Only One Still Matters</a></h3>
+        <p>Before you argue about air power, ask which argument you are in. Lambeth says the American debate is two fights that people lump together. One is classic theory: does strategic bombing work, and can air power win alone? The other is roles and money: who fights the deep battle, on whose budget. Lambeth calls the first largely moot and the second the real fight. His tool for ending the first is a definition: strategic describes the effect on an enemy's ability to fight, whatever the target.</p>
+        <p>The Gulf numbers carry the case. Infrastructure attacks took no more than 10 percent of allied strike sorties, and destroying nearly all of Iraq's petroleum capacity produced no significant military results, because the war ended before fuel shortages could bite. The heavy work fell on Iraq's army; the Republican Guard was a strategic target from the start. So Lambeth says Robert Pape, who studied 33 strategic air campaigns and concluded that "strategic bombing cannot be decisive," split the war into strategic and theater halves it never had. The money fight is messier. McPeak carved a theater into rear, close, deep, and high battles, giving airmen the last two; the Army's Jay Garner summed up the Air Staff line as "Air Force uber alles." The fire support coordination line, once assumed to sit about 20 miles out, had been extended hundreds of miles forward, and the Army used that to claim control of all fires over land.</p>
+        <p>The weak seminar comment is "Desert Storm proved air power can win alone." It walks into a question Lambeth calls a nonissue and ignores his own counterevidence: the 23,000 sorties against Iraqi ground forces never reached the 30 percent attrition Schwarzkopf wanted before the ground push. The strong comment says air power seized the air, then broke Iraq's fielded army and made the ground endgame relatively painless, a strategic effect that required nothing in downtown Baghdad. Opinion: Lambeth wins the definition fight and is shakier on the scorecard. When critics say more Iraqi equipment was captured or destroyed in four days of ground war than in six weeks of air strikes, he asks whether it had already been abandoned. Good question. A question is still not a count.</p>
+        <p>The second fight matters more because its effects kept compounding. First order, air power gutted Iraq's deployed forces and made the four-day ground war cheap. Second order, the Army dug in to protect its doctrine and programs, then moved into deep attack itself with ATACMS, the stealthy Comanche helicopter, and the Army After Next plan. Third order, a standoff the civilians would not referee: a $4.5 million National Defense Panel declined to endorse the Air Force halt phase. The budget explains the heat; in 1998 the Army drew 25 percent of obligational authority against about 30 percent each for the Air Force and Navy. That chain pre-empts the rice-bowl dismissal; Lambeth calls it honest disagreement, and his numbers show why each side felt cornered.</p>
+        <p>If the Army's new vision quietly borrowed air power's speed, range, and precision fires, who won the theory argument? The Army insisted that boots win wars, then went shopping for a stealth helicopter to win them from farther away. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="l-09">
+        <span class="kicker">Chapter by Chapter · Lambeth, chapter 9</span>
+        <h3><a href="#l-09">Lambeth's Last Word to Airmen: Stop Saying "Dominant"</a></h3>
+        <p>An argument for a new weapon wins when it is pitched to the commander who must use it, with the limits conceded first and the benefits stated in the other service's terms. That is Benjamin Lambeth's closing advice, aimed at his own side. Over two decades, he argues, American air power became truly strategic, able to shape a joint campaign from the opening blow, producing "the effects of massing without having to mass." Land power's role against large-scale aggression may increasingly be "to secure a win rather than to achieve it."</p>
+        <p>The concessions come first, and they are real. Bombers from the continental United States are too few to run the halt-phase strategy alone. Korea would not repeat the Gulf: more than 500,000 troops along the demilitarized zone, a regime fighting for survival, and no hope of keeping American combat deaths under 200, the Desert Storm figure. He tells airmen to repudiate Douhet's claim that command of the air is victory (false in 1921, false now) and to stop boasting about dominant air and space power, a habit that put the other services on the defensive in the budget wars. The audience he wants is the theater commanders in chief, who worry about their war plans and their reputations and are the most credible witnesses before the Joint Requirements Oversight Council. The Air Force chief of staff, however eloquent, gets heard there as a man shopping for his own service's hardware. (Lambeth never says the perception is wrong.)</p>
+        <p>The weak seminar comment is "Lambeth shows that air power can now win wars." It ignores the author's own counterevidence: the chapter says three times that air power cannot win wars single-handedly. The strong comment is narrower: against an armored invasion, air does the heavy killing and ground forces finish and hold. His best number is that the Gulf coalition lost fewer lives to hostile fire in five weeks of fighting than to accidents in five months of workups. Opinion: his evidence runs thin in one place. The claim that air power's effects are now a question of when, not whether, leans on Kosovo, a campaign he calls agonizingly slow and burdened by gradualism. One slow win is one data point. (Still one more than Douhet had.)</p>
+        <p>His advice is about salesmanship because the fight moved from the battlefield to the budget. First order, precision and stealth let a few aircraft do what Vietnam's huge strike packages could not. Second order, air power became a rival for deep attack, and the land warfare community claimed the new paradigm for itself just as a balanced budget forced triage among duplicative deep-attack programs. Third order, the fight moved to Pentagon models like TACWAR, which makes air power kill every surface-to-air missile along the front before a strike can pass, the attrition bias General Ronald Fogleman protested in a 1996 memorandum. We infer that an airman who shouts about dominance in that room loses twice, once to the model and once to the Army. The chain pre-empts the charge of Douhet-style zealotry, because Lambeth buries Douhet before the Army can.</p>
+        <p>Seminar question: Lambeth notes the Air Force still preferred the F-22, joint strike fighter, and C-17 over more B-2s. Is that the parochialism he scolds, or a service quietly hedging against his optimism? His final advice to airmen comes down to talking about the other fellow's problems, which also works at dinner parties. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · six earlier books against Lambeth</span>
+        <h3><a href="#r1">Six Old Friends Who Already Graded Lambeth's Homework</a></h3>
+        <ol class="qs">
+          <li><b>Gaddis, containment.</b> American strategy swung between meeting every threat and choosing the terrain, and the swings followed how leaders saw their means. The link: Lambeth's conclusion says a balanced budget forced triage among the services' overlapping deep-attack programs. His case for air power is partly a case about scarce money, which is Gaddis's engine.</li>
+          <li><b>Crane, Korea.</b> The Air Force entered Korea expecting too much, turned to interdiction and then "air pressure," and claimed the ambiguous armistice as success. The link: Lambeth's own forecast for a second Korean war is sober. He expects more than 500,000 troops along the DMZ, a regime fighting for survival, and no hope of keeping American combat deaths under the Gulf's figure of 200.</li>
+          <li><b>Clodfelter, North Vietnam.</b> Bombing's value depends on the goals and the kind of war; it failed Johnson and worked for Nixon's limited aims in 1972. The link: Lambeth cites Clodfelter for Rolling Thunder's misuse, then adds a second column of blame for the Air Force's own nuclear-era jets, tactics, and training.</li>
+          <li><b>Haun, tactical air power.</b> Air power works best attacking fielded forces alongside a capable ground force; strategic bombing and interdiction rarely succeed. The link: Lambeth agrees on the target. In the Gulf, 67 percent of weapon releases went at Iraq's fielded forces, and he builds on Pape's finding that air power can destroy a dug-in army.</li>
+          <li><b>Kitfield, the prodigal soldiers.</b> Officers scarred by Vietnam reformed training, leadership, and joint command, and Desert Storm was the payoff. The link: Lambeth puts numbers on the reform. Fighter pilots' annual flying hours rose from about 150 to more than 230, and Red Flag gave pilots their first ten combat sorties in peacetime.</li>
+          <li><b>Olsen, Desert Storm's strategic air campaign.</b> The campaign degraded Iraq and caused friction at the top, but the attacks on Saddam's power base did not achieve the unstated aim of changing the regime. The link: Lambeth reaches the same verdict in one sentence, that the strikes in and around Baghdad had little strategic effect, and builds his definition of "strategic" on it.</li>
+        </ol>
+        <p>Opinion: five of the six would sign Lambeth's chapter 1 and argue with his chapter 9. Gaddis would ask who is paying. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Lambeth's page numbers are printed pages, read from the bracketed page numbers in the scanned edition.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Nonlinear growth since the mid-1970s; stealth, standoff precision on fixed targets, battlespace awareness and C4ISR: Lambeth, 6–7.</li>
+          <li>Set the conditions of victory; neutralizing capacity for organized military action: Lambeth, 7. Strategic effects from the earliest moments of a joint campaign: Lambeth, 11.</li>
+          <li>Some 280 training missions in more than 35 aircraft types: Lambeth, xii.</li>
+          <li>Army response that the air campaign was a sideshow: Lambeth, 4. Concurs with Pape that air power "can do most of the work"; objects to Pape's "theater" or "tactical" label: Lambeth, 7.</li>
+          <li>Strategic bombing dispute largely moot; strategic a matter of the objective: Lambeth, 7. Baghdad strikes had little strategic effect: Lambeth, 8.</li>
+          <li>Seminar framing, written before September 11, technological promise, casualty concerns: SAASS 628 syllabus, Seminar 13.</li>
+          <li>The list of assumptions is our reading of chapter 1 (major theater wars, p. 6; intelligence, p. 9) and chapter 9 (casualties, p. 306).</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter page ranges: preface ix–xiii; ch. 1, 1–11; ch. 2, 12–53; ch. 3, 54–102; ch. 4, 103–152; ch. 5, 153–180; ch. 6, 181–232; ch. 7, 233–259; ch. 8, 260–296; ch. 9, 297–322.</li>
+          <li>Air power can kill only what it can see, identify, and engage; air power and intelligence opposite sides of the same coin: Lambeth, 9. Failure against Iraq's nuclear program; Meilinger on air power and intelligence: Lambeth, 10.</li>
+          <li>3,067 Army nominations, a little more than a third attacked: Lambeth, 131. 67 percent of releases against fielded forces: Lambeth, 137.</li>
+          <li>Reasons Milosevic gave up: Lambeth, 191–193.</li>
+          <li>Zero noncombatant casualties as goal and expectation: Lambeth, 204–205. Congress and public opinion would not have permitted a more aggressive strategy: Lambeth, 226.</li>
+          <li>Casualties and public support: Lambeth, 306–307. Stop talking of dominant air and space power: Lambeth, 312.</li>
+          <li>Libya text versus footnote (4 of 18 F-111 bombs): Lambeth, 101–102.</li>
+          <li>Kitfield's coverage of the 1980s reforms: Kitfield, thesis, 24, 434–435.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 13, "Airpower Vision for American Dominance."</li>
+          <li>Stealth arithmetic, 38 aircraft for 8 bombers versus 20 F-117s on 37 aim points: Lambeth, 155–156. Red Flag and flying hours: Lambeth, 62, 71.</li>
+          <li>Focus on major theater wars, not irregular conflicts or urban combat: Lambeth, 6. Korea forecast: Lambeth, 300.</li>
+          <li>Claims and concessions: Lambeth, 297–299, 313. Kosovo as a step backward in efficiency: Lambeth, 181.</li>
+          <li>Vietnam rules of engagement and McNaughton memo: Lambeth, 18–19.</li>
+          <li>Budget triage: Lambeth, 305–306. TACWAR and Fogleman: Lambeth, 311. CINCs and the JROC; F-22, JSF, C-17 over B-2: Lambeth, 316–318. Budget shares in 1998: Lambeth, 294.</li>
+          <li>"Question two is the one to prepare" is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>McPeak, "first time in history that a field army has been defeated by air power": Lambeth, 4.</li>
+          <li>Colin Gray quote: Lambeth, 7. C4ISR and information dominance: Lambeth, 6–7.</li>
+          <li>Red Flag, 1975, first 10 combat sorties: Lambeth, 62.</li>
+          <li>Butler, SAC "a nuclear outfit"; SAC and TAC disestablished June 1992: Lambeth, 165–166.</li>
+          <li>FSCL, about 20 miles, extended hundreds of miles: Lambeth, 292.</li>
+          <li>Halt phase; National Defense Panel would not endorse it: Lambeth, 290, 299.</li>
+          <li>Task Force Hawk, 5,350 people, 24 Apaches: Lambeth, 208; no combat missions: Lambeth, 209.</li>
+        </ul>
+        <h3>Bridge from today's seminar</h3>
+        <ul>
+          <li>March 2000 NDU assessment; NATO's C4ISR and "total information dominance"; lethality of air strikes; air strikes the most likely way China would be attacked: Fravel, ebook pp. 354–355.</li>
+          <li>Air strikes more powerful than previously imagined; countermeasures, not offensive air; counter-air raid research: Fravel, ebook p. 358.</li>
+          <li>Kosovo a win and a step backward in efficiency: Lambeth, 181. Agonizingly slow, burdened by gradualism: Lambeth, 313.</li>
+          <li>GPS signals weak; JDAM to depend wholly on GPS: Lambeth, 244–245.</li>
+          <li>The bracketed joke and the framing question are ours.</li>
+        </ul>
+        <h3>Political strategy × Lambeth</h3>
+        <ul>
+          <li>Funding runs out December 11; full-year bill almost certain not to pass; Van Hollen's challenge and shutdown stance; Kennedy quote; Smith quote and his concession about the White House; four scenarios, Murray's preference for a short-term CR; third shutdown fight in just over a year; Schumer, 75, says he has the votes; leadership elections December 1: Punchbowl News AM, November 13, 2026.</li>
+          <li>Senate tally of 55 Democrats; Alaska Senate the last major race uncalled by the AP: electoral-vote.com, November 13, 2026.</li>
+          <li>Casualty-aversion assumption oversimplified; support depends on stakes and competence; Harris chairman's rule; polls before and after the start of Desert Storm: Lambeth, 306.</li>
+          <li>Congress and public opinion would not have permitted a more aggressive Kosovo strategy: Lambeth, 226.</li>
+          <li>Air power "can never be more effective than the strategy": Lambeth, 232.</li>
+          <li>The judgments labeled Opinion and the parenthetical are ours.</li>
+        </ul>
+        <h3>Lambeth, chapter 1: Call It Strategic After It Works</h3>
+        <ul>
+          <li>Strategic bombing dispute largely moot; strategic is a matter of the objective, not the target; Gray quote: Lambeth, 7.</li>
+          <li>Cold War meaning of strategic air power as nuclear bombers whose reason for being was not to be used: Lambeth, 1.</li>
+          <li>Central argument on stealth, standoff precision, battlespace awareness and nonlinear growth since the mid-1970s: Lambeth, 6-7.</li>
+          <li>Casualty models in the thousands; authorizing order's 10 percent figure: Lambeth, 2.</li>
+          <li>Some 800 opening-night sorties, one F/A-18 lost, air control within three days, near impunity against fielded forces: Lambeth, 3.</li>
+          <li>Baghdad strikes on power plants, leadership and transportation had little strategic effect; strategic effects against Iraq's force capabilities: Lambeth, 8.</li>
+          <li>McPeak on the first defeat of a field army by air power, and ground forces dictating terms; campaign versus operation; 37-day air war and 4-day ground offensive; Army's sideshow reply; infighting as defense spending declined: Lambeth, 4.</li>
+          <li>Title V report delayed nearly three months over hundreds of disputes: Lambeth, 5.</li>
+          <li>Page counts of 135 air, 100 ground, 85 naval: Lambeth, 5-6.</li>
+          <li>Some 280 training missions in more than 35 aircraft types: Lambeth, xii.</li>
+          <li>The seminar-comment paragraph and the judgments labeled Opinion are ours.</li>
+        </ul>
+        <h3>Lambeth, chapter 2: The Hands Were Tied, and the Grip Was Weak</h3>
+        <ul>
+          <li>Hallion's limits on versus limits of air power; Lambeth says it accounts for only part; flawed strategy first; deficiencies in the weapon, its use and its organization: Lambeth, 13-14.</li>
+          <li>1972 operations against regular forces with laser-guided bombs and improved electronic warfare: Lambeth, 14.</li>
+          <li>Tuesday lunch target selection: Lambeth, 31.</li>
+          <li>MiG sanctuary at five bases inside the 25-mile Hanoi circle; SAM sites attackable only when firing: Lambeth, 18.</li>
+          <li>McNaughton memo quote: Lambeth, 19.</li>
+          <li>F-105 as nuclear bomber; side-by-side hydraulic lines: Lambeth, 35-36.</li>
+          <li>1961 PACAF F-100 manual quote and one conventional event per aircrew per year: Lambeth, 36.</li>
+          <li>F-4 designed without an internal cannon: Lambeth, 42.</li>
+          <li>224 AIM-7s fired for 20 kills through March 1968: Lambeth, 43.</li>
+          <li>489 vehicles near the DMZ versus 38 farther north: Lambeth, 27.</li>
+          <li>2.5 sorties per enemy soldier killed at Khe Sanh: Lambeth, 52.</li>
+          <li>Thanh Hoa bridge dropped in a single day on May 13, 1972, after hundreds of inconclusive Rolling Thunder sorties: Lambeth, 26.</li>
+          <li>Political leaders should stay out of operational details once objectives and rules are set: Lambeth, 50.</li>
+          <li>Air defense growth from about 1,400 guns to 7,000 to 10,000 guns and more than 200 SA-2 sites: Lambeth, 17.</li>
+          <li>Fighters forced below 3,000 feet; more than 80 percent of U.S. losses there: Lambeth, 18.</li>
+          <li>Jamming pods and pod-formation tactics: Lambeth, 37-38. Loss rate falling from 3.2 to 1.6 per 1,000 sorties: Lambeth, 39.</li>
+          <li>The legacy put all four services on a vector toward Desert Storm: Lambeth, 53.</li>
+          <li>Ault report of 480 pages leading to Topgun; Navy kill ratio 3.7 to 1 before and 13 to 1 after; Air Force all but discontinued dissimilar air combat training: Lambeth, 48.</li>
+          <li>The seminar-comment paragraph, the judgment labeled Opinion and the closing question are ours.</li>
+        </ul>
+        <h3>Lambeth, chapter 3: The Jet Is the Easy Part</h3>
+        <ul>
+          <li>Soviet buildup; NATO unable to match the Pact weapon for weapon; force multipliers: Lambeth, 54, 59.</li>
+          <li>Gains in aircrew proficiency, equipment, and concepts of operations: Lambeth, 56.</li>
+          <li>Dixon, Suter, Red Flag in 1975; first 10 combat sorties; first 8 or 10 missions: Lambeth, 62.</li>
+          <li>"The heart-pumpinest, palm-sweatinest war we have": Lambeth, 63.</li>
+          <li>Flying hours 150 to more than 230, over twice the Soviet average: Lambeth, 71.</li>
+          <li>Class A mishaps 309 to 76, 1975 to 1995; unplanned dividend: Lambeth, 71.</li>
+          <li>Lebanon reprisal after SA-7 at an F-14; launch moved to 0630 at 0330; 28 aircraft, wrong munitions, crews not briefed: Lambeth, 97.</li>
+          <li>A-6 pilot killed, bombardier-navigator captured: Lambeth, 98.</li>
+          <li>"Merely possessing capable weaponry meant nothing": Lambeth, 92.</li>
+          <li>Bekaa outcome likely even with equipment reversed: Lambeth, 96.</li>
+          <li>Libya: all targets hit effectively: Lambeth, 101. Footnote, only 4 of 18 F-111 laser-guided bombs hit: Lambeth, 102.</li>
+          <li>Lehman, Fallon, Strike U, two years later: Lambeth, 98. Three weeks at Fallon per air wing; SPEAR in Suitland, Maryland; its correct appraisal of Iraq's air defenses: Lambeth, 99.</li>
+          <li>GWAPS called SPEAR's work perhaps the best assessment of Iraq's air defenses: Lambeth, 113.</li>
+          <li>The weak and strong seminar comments, the doubts about the Bekaa counterfactual, and the closing line are our opinion.</li>
+        </ul>
+        <h3>Lambeth, chapter 4: Who Gets the Sorties Decides Who Gets the Blame</h3>
+        <ul>
+          <li>Air power's real leverage: engaging an enemy army wholesale with precision after air control: Lambeth, 117. Night infrared attacks from medium altitude: Lambeth, 124.</li>
+          <li>Army nominations 1,185, 202 in the tasking order, 137 hit; 3,067 over the war, a little more than a third attacked: Lambeth, 131.</li>
+          <li>23,430 weapon releases, 67 percent against fielded ground forces: Lambeth, 137.</li>
+          <li>Schwarzkopf approved all the air commander's targets; November instruction that Horner was the one in charge of the air: Lambeth, 132.</li>
+          <li>"Giant bowling alley"; corps commanders focused on forces in front of them; Republican Guard priority: Lambeth, 131.</li>
+          <li>GWAPS: ground commanders blamed Horner or Glosson, not realizing it was Schwarzkopf's apportionment: Lambeth, 134.</li>
+          <li>Odom's 70 to 80 percent claim; rebuttal from the Air Force's GWAPS and CIA imagery analysts: Lambeth, 129 to 130. GWAPS is the Air Force's survey: Lambeth, 103.</li>
+          <li>Schwarzkopf short-circuited his targeting board; no separate land component commander: Lambeth, 137 to 138.</li>
+          <li>XVIII Airborne Corps moved the line north of the Euphrates on February 27: Lambeth, 135. McPeak: 17 hours, Baghdad to Kuwait resupply line, VII Corps sanctuary, escape to Basra: Lambeth, 135 to 136.</li>
+          <li>"Boundaries are set by people who do not have full authority": Lambeth, 136.</li>
+          <li>Senior airman's 1994 letter on Army distrust at all levels: Lambeth, 137 (footnote).</li>
+          <li>Scissors comparison: Lambeth, 129. Schwarzkopf admitted he knew little of the debate: Lambeth, 136.</li>
+          <li>The weak and strong seminar comments, the point about whose survey it is, and the closing line are our opinion.</li>
+        </ul>
+        <h3>Lambeth, chapter 5: SAC Had to Die So the Bombers Could Go to War</h3>
+        <ul>
+          <li>Fighter wings 39 to 20: Lambeth, 154.</li>
+          <li>Smaller force more capable; stealth, new munitions, bombers turned conventional: Lambeth, 155.</li>
+          <li>38-aircraft package for 8 bombers on three aim points vs. 20 F-117s on 37: Lambeth, 156.</li>
+          <li>Chain, 1988, three pillars; "strategic" meaning "nuclear": Lambeth, 164.</li>
+          <li>Strategic used for weapons and targets instead of actions and effects: Lambeth, 165.</li>
+          <li>B-52s in Vietnam for eight years as precedent: Lambeth, 164.</li>
+          <li>Butler: World War II proficiency; "would not be invited to participate": Lambeth, 165.</li>
+          <li>Butler: "a nuclear outfit"; proposal to McPeak; Chain's 31 bombers; Vietnam experience lost: Lambeth, 166.</li>
+          <li>SAC and TAC disestablished June 1992; Weapons School B-52 and B-1 divisions; open question; no common language: Lambeth, 166.</li>
+          <li>B-1B assigned solely to conventional missions: Lambeth, 167.</li>
+          <li>Kosovo: 21 heavy bombers, 11,000 of 23,000 weapons; B-2 under 1 percent of sorties, a third of precision munitions: Lambeth, 194.</li>
+          <li>The use-it paragraph and the closing line are our opinion.</li>
+        </ul>
+        <h3>Lambeth, chapter 6: My Jeweler Outranks Yours: Kosovo and the Myth of Air Alone</h3>
+        <ul>
+          <li>78-day campaign; third win in a row for air power; step backward in efficiency: Lambeth, 181.</li>
+          <li>Ground forces ruled out in the plan: Lambeth, 182; quick settlement expected: Lambeth, 183.</li>
+          <li>About 50 strike sorties a night vs. as many as 1,000 a day: Lambeth, 184.</li>
+          <li>Clark's request for 300 more aircraft; drain on AWACS and EA-6B from the Gulf and Korea: Lambeth, 184-185.</li>
+          <li>No tank destruction confirmed after three weeks: Lambeth, 196.</li>
+          <li>150 tanks claimed, cut to 110; milk-carton decoys: Lambeth, 197.</li>
+          <li>Short vs. Clark on targets; "My jeweler outranks yours": Lambeth, 221.</li>
+          <li>Task Force Hawk: 5,350 personnel for 24 Apaches: Lambeth, 208; $234 million, no combat missions: Lambeth, 209.</li>
+          <li>Lambeth wary of the air-alone claim; Russia on June 3: Lambeth, 191.</li>
+          <li>Indictment, cronies' economic stake, ground-intervention prospect: Lambeth, 192.</li>
+          <li>Durres to Kukes road for Abrams tanks; Plan B-minus (170,000): Lambeth, 193.</li>
+          <li>Attacks on fielded forces largely ineffective; atrocities increased: Lambeth, 225.</li>
+          <li>Incirlik redeployment suspended northern Iraq patrols: Lambeth, 216.</li>
+          <li>Fogleman, Short, and Ryan criticisms: Lambeth, 224; gradualism may be here to stay: Lambeth, 228-229.</li>
+          <li>McPeak calls ruling out ground troops a major blunder; a Desert Shield-like deployment could have enabled a quicker end: Lambeth, 231.</li>
+          <li>Reputation at risk of being frittered away; "can never be more effective than the strategy": Lambeth, 232.</li>
+          <li>The use-it paragraph, the seminar question, and the closing line are our opinion.</li>
+        </ul>
+        <h3>Lambeth, chapter 7: Space Joined the Fight When the Fighter Pilots Took the Keys</h3>
+        <ul>
+          <li>Space officers from reconnaissance and deterrence, trained in engineering, separate worlds: Lambeth, 233.</li>
+          <li>Space geeks and other insults: Lambeth, 234.</li>
+          <li>Separate space service counterproductive today: Lambeth, 253-254.</li>
+          <li>GPS five satellites short of full global coverage: Lambeth, 235.</li>
+          <li>Receivers from a few hundred to thousands; emergency buy of 13,000: Lambeth, 236.</li>
+          <li>DSCS satellite moved from Pacific to Indian Ocean, first such repositioning; 85 percent of communications: Lambeth, 236.</li>
+          <li>DSP detected Scud plumes within 30 seconds; three Iraqi practice launches: Lambeth, 237.</li>
+          <li>McPeak's "first space war"; purists might demur over support functions: Lambeth, 237-238.</li>
+          <li>Horner as commander of U.S. Space Command: Lambeth, 238.</li>
+          <li>ICBMs moved to Air Force Space Command, warfighter credentials for space technicians: Lambeth, 239.</li>
+          <li>Space Warfare Center opened November 1, 1993: Lambeth, 239.</li>
+          <li>1994 Strike II test, F-15E vs. simulated mobile Scud launcher; Weapons School space course, Red Flag space facility: Lambeth, 240.</li>
+          <li>Five fighter-pilot commanders in a row; space push to operator pull: Lambeth, 241.</li>
+          <li>Navy "functionally dead in the water without space": Lambeth, 242.</li>
+          <li>JDAM to depend wholly on GPS: Lambeth, 244.</li>
+          <li>GPS signals weak and easily blocked: Lambeth, 245.</li>
+          <li>Smith, 1998: SWC focused on dropping bombs; "not space warfare"; Lambeth calls it correct; too few space officers in senior ranks: Lambeth, 251.</li>
+          <li>NRO director on underdeveloped space literacy after Allied Force, 1999: Lambeth, 255.</li>
+          <li>The weak and strong seminar comments, the integration-for-the-Air-Force point, and the claim that the chain pre-empts the better-satellites objection are our opinion and inference.</li>
+        </ul>
+        <h3>Lambeth, chapter 8: The Air Power Debate Is Two Fights, and Only One Still Matters</h3>
+        <ul>
+          <li>Two parallel arguments, theory and service doctrine, lumped together: Lambeth, 262.</li>
+          <li>Second argument more important; first largely moot: Lambeth, 263.</li>
+          <li>Strategic refers to decisive effects, not platform or target type: Lambeth, 270.</li>
+          <li>Infrastructure attacks no more than 10 percent of strike sorties: Lambeth, 267.</li>
+          <li>GWAPS on petroleum, no significant military results, war too short for fuel shortages; 23,000 sorties short of 30 percent attrition: Lambeth, 268.</li>
+          <li>Republican Guard designated strategic targets from the outset: Lambeth, 266.</li>
+          <li>Pape's 33 campaigns, "strategic bombing cannot be decisive," false strategic and theater split: Lambeth, 265.</li>
+          <li>McPeak's rear, close, deep, and high battles: Lambeth, 277.</li>
+          <li>Garner's "Air Force uber alles": Lambeth, 278.</li>
+          <li>FSCL once about 20 miles, extended hundreds of miles; JCS meeting May 12, 1998; disagreement persisted: Lambeth, 292.</li>
+          <li>Air power alone is a nonissue; endgame relatively painless: Lambeth, 274.</li>
+          <li>Four days of ground war vs. six weeks of air strikes, equipment possibly abandoned: Lambeth, 295.</li>
+          <li>Other services assumed a defensive crouch: Lambeth, 261.</li>
+          <li>ATACMS, stealthy deep-attack helicopters, Army After Next: Lambeth, 281.</li>
+          <li>Comanche: Lambeth, 282.</li>
+          <li>National Defense Panel, $4.5 million, would not endorse the halt phase: Lambeth, 290.</li>
+          <li>Army 25 percent of 1998 obligational authority, about 30 percent each for Air Force and Navy: Lambeth, 294.</li>
+          <li>Honest disagreement through different perceptual filters; Army vision appropriated air power's speed, range, firepower: Lambeth, 285.</li>
+          <li>The weak and strong seminar comments, the counter-question critique, and the closing barb are our opinion.</li>
+        </ul>
+        <h3>Lambeth, chapter 9: Lambeth's Last Word to Airmen: Stop Saying "Dominant"</h3>
+        <ul>
+          <li>Air power truly strategic after two decades of transformation: Lambeth, 298.</li>
+          <li>Effects from the outset governing a joint campaign; "massing without having to mass"; Kosovo, when not whether; Vietnam strike packages: Lambeth, 299.</li>
+          <li>Halt-phase strategy cannot rely on CONUS bombers alone: Lambeth, 299.</li>
+          <li>Korea: more than 500,000 combatants at the DMZ, fewer than 200 U.S. combat fatalities in Desert Storm: Lambeth, 300.</li>
+          <li>Air power cannot win wars single-handedly: Lambeth, 297, 308, 320.</li>
+          <li>Land warfare community's counterclaim to the new paradigm; budget triage on deep-attack redundancies: Lambeth, 305-306.</li>
+          <li>Fewer coalition deaths to hostile fire in five weeks than to accidents in five months: Lambeth, 306.</li>
+          <li>Neustadt on persuading others in their own interests: Lambeth, 307.</li>
+          <li>Douhet's axiom false in 1921 and today: Lambeth, 308.</li>
+          <li>TACWAR and Fogleman's 1996 memorandum on legacy models: Lambeth, 311.</li>
+          <li>Stop talking of dominant air and space power: Lambeth, 312.</li>
+          <li>Kosovo as agonizingly slow, burdened by gradualism: Lambeth, 313.</li>
+          <li>Theater CINCs as audience and credible witnesses before the JROC; chief of staff seen as hardware accumulator: Lambeth, 316-317.</li>
+          <li>F-22, joint strike fighter, and C-17 preferred over the B-2: Lambeth, 318.</li>
+          <li>Land power to secure a win rather than achieve it: Lambeth, 321.</li>
+          <li>The use-it paragraph and the "loses twice" inference are our opinion.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Gaddis thesis: Gaddis, vii–ix, 302, 342–343. Lambeth on the balanced budget and triage of deep-attack programs: Lambeth, 305–306.</li>
+          <li>Crane thesis: Crane, 6–9, 170, 183–184. Korea forecast, more than 500,000 combatants, fewer than 200 U.S. combat fatalities in Desert Storm: Lambeth, 300.</li>
+          <li>Clodfelter thesis: Clodfelter, ebook pp. 9–11, 223–225. Lambeth cites Clodfelter on Rolling Thunder: Lambeth, 1 (note 1). Deficiencies in the weapon itself: Lambeth, 13–14, 35–36.</li>
+          <li>Haun thesis: Haun, 1–2, 6–7, 224, 228. 67 percent of releases against fielded forces: Lambeth, 137. Pape on destroying a dug-in ground force: Lambeth, 7.</li>
+          <li>Kitfield thesis: Kitfield, 24, 434–435. Flying hours: Lambeth, 71. Red Flag: Lambeth, 62.</li>
+          <li>Olsen thesis: Olsen, 1–2, 4, 293, 295. Baghdad strikes: Lambeth, 8.</li>
+          <li>The closing opinion is ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>What makes air power "strategic," in Lambeth's view?</summary><p>The objective pursued and the effect achieved, not the type of target; he borrows Colin Gray's line that there is no such beast as strategic air power. <span class="pg">L 7</span></p></details></li>
+          <li><details><summary>What does Lambeth concede about the Desert Storm strikes on Baghdad?</summary><p>Attacks on power plants, leadership and transportation nodes had little strategic effect on the outcome, while the air campaign did achieve strategic effects against Iraq's forces. <span class="pg">L 8</span></p></details></li>
+          <li><details><summary>How did the Title V report divide its pages among the services' wars?</summary><p>135 pages on the air war, 100 on the ground war and 85 on naval operations, after a delay of nearly three months over hundreds of disputes. <span class="pg">L 5</span></p></details></li>
+          <li><details><summary>How does Lambeth answer Hallion's claim that Vietnam showed limits on air power rather than limits of it?</summary><p>He calls it fair but partial: strategy failed first, but the air weapon also had real deficiencies in equipment, use and organization. <span class="pg">L 13</span></p></details></li>
+          <li><details><summary>What did the 1961 PACAF F-100 training manual say about conventional training?</summary><p>Nuclear training took precedence in every instance, and units outside the mobile strike force were limited to one conventional event per aircrew per year. <span class="pg">L 36</span></p></details></li>
+          <li><details><summary>What happened to the Navy's kill ratio after Topgun?</summary><p>It rose from 3.7 to 1 to as high as 13 to 1, while the Air Force, which had all but dropped dissimilar air combat training, saw its ratio decline. <span class="pg">L 48</span></p></details></li>
+          <li><details><summary>What finding justified Red Flag?</summary><p>A pilot's first 10 combat sorties largely determine whether he survives, so Red Flag gave crews the equivalent of their first 8 or 10 in peacetime. <span class="pg">L 62</span></p></details></li>
+          <li><details><summary>What went wrong with the Navy's December 1983 strike in Lebanon?</summary><p>EUCOM moved the launch up to 0630 at 0330, so 28 aircraft went with the wrong munitions and unbriefed crews; an A-6 pilot was killed and his bombardier-navigator captured. <span class="pg">L 97</span></p></details></li>
+          <li><details><summary>What did the Navy build after the Lebanon raid, and what did it pay off in?</summary><p>Strike U at Fallon and the SPEAR threat cell, which correctly appraised Iraq's air defense system before Desert Storm. <span class="pg">L 99</span></p></details></li>
+          <li><details><summary>What share of Desert Storm weapon releases went against fielded Iraqi ground forces?</summary><p>About 67 percent, or 23,430 releases against discrete aim points. <span class="pg">L 137</span></p></details></li>
+          <li><details><summary>Why did corps commanders blame Horner for their unserviced targets?</summary><p>They did not realize the apportionment was Schwarzkopf's, who as his own land component commander favored the Republican Guard over the targets in front of each corps. <span class="pg">L 134</span></p></details></li>
+          <li><details><summary>What did the XVIII Airborne Corps do with the fire support coordination line on February 27?</summary><p>Pushed it north of the Euphrates. Separately, McPeak said that on the third day of the ground operation the corps commander blocked air strikes on the main Baghdad-Kuwait resupply line for 17 hours. <span class="pg">L 135</span></p></details></li>
+          <li><details><summary>What were General Chain's three "pillars" blocking conventional use of SAC's bombers?</summary><p>That the bombers were built for nuclear use only, that "strategic" meant "nuclear," and that theater war belonged to tactical fighters. Lambeth adds that "strategic" should describe actions and effects. <span class="pg">L 164</span></p></details></li>
+          <li><details><summary>Why did General Butler propose abolishing Strategic Air Command?</summary><p>After Desert Storm he concluded SAC was a nuclear outfit at its core and could never be a competent conventional organization; SAC and TAC were disestablished in June 1992. <span class="pg">L 166</span></p></details></li>
+          <li><details><summary>What was the Desert Storm stealth comparison Lambeth cites?</summary><p>A nonstealth package needed 38 aircraft so that 8 could bomb three aim points; 20 F-117s attacked 37 aim points. <span class="pg">L 156</span></p></details></li>
+          <li><details><summary>What did NATO claim about Serbian tanks, and what did Clark later revise it to?</summary><p>NATO first claimed 150 of an estimated 400 tanks disabled; Clark scaled that to 110 after finding many were decoys. <span class="pg">L 197</span></p></details></li>
+          <li><details><summary>Besides bombing, what pressures does Lambeth list behind Milosevic's capitulation?</summary><p>Loss of Russian support, his war-crimes indictment, elite and crony pressure, and above all the prospect of a NATO ground intervention. <span class="pg">L 192</span></p></details></li>
+          <li><details><summary>What did Task Force Hawk cost, and what did it accomplish in combat?</summary><p>About $234 million by May 31; the Apaches flew no combat missions, though its counterbattery radars helped target Serb artillery late in the war. <span class="pg">L 209, 212</span></p></details></li>
+          <li><details><summary>What does Lambeth say turned "space push" into "operator pull" after Desert Storm?</summary><p>Five fighter-pilot commanders in a row at U.S. Space Command, starting with Horner, the Desert Storm air commander, plus the Space Warfare Center founded in 1993. <span class="pg">L 238-241</span></p></details></li>
+          <li><details><summary>What did Senator Bob Smith say was wrong with the Air Force's space effort in 1998?</summary><p>He said the Space Warfare Center mostly used space to help aircraft drop bombs, which is using space to support air warfare, and he threatened to push for a separate space service. <span class="pg">L 251-252</span></p></details></li>
+          <li><details><summary>How many handheld GPS receivers did the program office buy in its wartime emergency purchase?</summary><p>It bought 13,000, of which some 4,500 reached the theater. <span class="pg">L 236</span></p></details></li>
+          <li><details><summary>What are the two arguments Lambeth says make up the air power debate, and which one matters?</summary><p>A theory argument over whether strategic bombing works and whether air power can win alone, and a roles and resources argument over service doctrine and budget shares; the second is the one that matters. <span class="pg">L 262-263</span></p></details></li>
+          <li><details><summary>What share of allied strike sorties went to infrastructure targets in Desert Storm?</summary><p>No more than 10 percent; the decisive work was against Iraq's fielded forces. <span class="pg">L 267</span></p></details></li>
+          <li><details><summary>What was the 1998 Joint Publication 3-09 fight about?</summary><p>Whether the land component commander could control all fires in his area, with the fire support coordination line pushed hundreds of miles forward; the Joint Chiefs met on May 12, 1998, but disagreement persisted. <span class="pg">L 292</span></p></details></li>
+          <li><details><summary>What new role does Lambeth propose for U.S. land power against large-scale aggression?</summary><p>To secure a win rather than to achieve it, with air power carrying the bulk of the work of beating down enemy forces first. <span class="pg">L 321</span></p></details></li>
+          <li><details><summary>Who does Lambeth say is the best audience for the "air power story," and why?</summary><p>The theater CINCs, because they care about whether their war plans work and are the most credible witnesses before the Joint Requirements Oversight Council; the Air Force chief is seen as an advocate for his own service's hardware. <span class="pg">L 316</span></p></details></li>
+          <li><details><summary>What is wrong with the TACWAR campaign model, according to the critique Lambeth cites?</summary><p>It is attrition-based: it makes air power kill every SAM along the front instead of punching a hole, and it gives no credit for destroying ground-controlled intercept sites. <span class="pg">L 311</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

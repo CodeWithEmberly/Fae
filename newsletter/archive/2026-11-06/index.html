@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-11-06 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>8</b> read · <b>10</b> to go</span>
+    <span>Next seminar: <b>Haun, Monday</b></span>
+    <span>628 paper due in <b>25</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 6 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-06.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-06.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Friday, November 6, 2026 · Seminar today: Nguyen at 1200 · Haun on Monday</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <ol>
+          <li><a href="#a1">Today's Seminar Questions, Answered: Four Questions, One First Secretary</a></li>
+          <li><a href="#a2">Hanoi Had a Boss, and He Kept His Name Off the Door</a></li>
+          <li><a href="#a3">Weekend Reading: Haun Says Air Power Wins When the Enemy Is Too Scared to Move</a></li>
+          <li><a href="#a4">If Tehran Tests: Read the Regime's Org Chart Before the Target List</a></li>
+          <li><a href="#a5">Eight Books, Two Archives, One Argument About Who Was in Charge</a></li>
+          <li><a href="#a6">Hit-and-Run Quotations Leave Dents in Your Grade</a></li>
+          <li><a href="#a7">Schumer Takes a Victory Lap, and the Iran War Gets a Vote in the Leadership Races</a></li>
+          <li><a href="#a8">Personnel Is Policy, in Berlin Today and in Hanoi in 1967</a></li>
+          <li><a href="#a9">Ukraine Rents Its Sky, and the Landlord Hasn't Explained October</a></li>
+          <li class="toc-sub">Nguyen, chapter by chapter</li>
+          <li><a href="#n-00">The Man Who Ran Hanoi's War Wanted You to Look at Uncle Ho</a></li>
+          <li><a href="#n-01">Hanoi Hired a Caretaker and Got a War Party</a></li>
+          <li><a href="#n-02">Le Duan Won the Debate by Arresting the Other Side</a></li>
+          <li><a href="#n-03">Le Duan Tested His Tet Assumptions by Jailing the Doubters</a></li>
+          <li><a href="#n-04">Hanoi Got Serious in Paris When It Ran Out of Offensives</a></li>
+          <li><a href="#n-05">The Cambodian Incursion Moved Hanoi's Map and Washington's Clock</a></li>
+          <li><a href="#n-06">Hanoi Wrote Its Public Peace Plans for Congress</a></li>
+          <li><a href="#n-07">Brezhnev Shouted for the Record and Toasted for Real</a></li>
+          <li><a href="#n-08">The Christmas Bombing Hit Hanoi's Calendar Harder Than Its Will</a></li>
+          <li><a href="#n-09">Le Duan Waited Fifteen Years for an Uprising and Got Tanks Instead</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
+      </nav>
+
+      <article id="a1">
+        <span class="kicker">Seminar 8 · Nguyen, today at 1200</span>
+        <h3><a href="#a1">Today's Seminar Questions, Answered: Four Questions, One First Secretary</a></h3>
+        <ol class="qs">
+          <li><b>What effect, if any, did bombing have on the "moral" of the North's political leadership?</b> It changed Hanoi's timetable and its price, and Nguyen finds little sign it changed the goal. Rolling Thunder fed a spy fever that Le Duan's security men used to arrest critics before Tet (chapter 3). Linebacker forced the Politburo to switch from attacking the South to defending the North, and the Christmas bombing raised the cost of delay for leaders who already wanted a deal; Nguyen says it rallied world condemnation instead of breaking Hanoi's will (chapter 8).</li>
+          <li><b>How did airpower's use in South Vietnam shape the strategic environment the communists faced?</b> It kept defeating the big offensives and pushed Hanoi toward the negotiating table. After the 1968 and 1969 offensives drained it, Hanoi adopted an "economy of forces" and raised diplomacy to equal rank with fighting (chapter 5). In 1972, American bombing and Saigon's counteroffensives, backed by American air power, rolled back the early gains, and Hanoi's leaders privately admitted their big-unit offensive had failed (chapters 7 and 8).</li>
+          <li><b>What role did information operations play during the war?</b> In Nguyen's account, the leading one. Her conclusion calls Hanoi's world relations campaign, aimed at antiwar movements abroad, the key to its success. In July 1971 Le Duan told his negotiators that the diplomatic struggle's first objective was inciting the antiwar movement in Congress and on the streets (chapter 6). At home, information was a police matter: cadres studying Resolution 9 were told its most important part could not be written down (chapter 2).</li>
+          <li><b>How accurate were the assumptions of North Vietnam's leadership?</b> Sharp about its allies, poor about the South and about Nixon. Le Duan bet three times, in 1964, 1968, and 1972, on a general uprising that never came (conclusion). Le Duc Tho bet that Nixon, busy with summits, could not hit back in 1972, and got Linebacker (chapter 7). Yet Le Duan read his patrons well, telling Zhou Enlai that Beijing had rescued a "drowning" Nixon.</li>
+        </ol>
+        <p>Pages are in Sources. The table will bring the counterarguments; that's what the table is for. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">The Reading · Nguyen, <i>Hanoi's War</i></span>
+        <h3><a href="#a2">Hanoi Had a Boss, and He Kept His Name Off the Door</a></h3>
+        <p>Nguyen's argument fits in one name. Le Duan, first secretary from 1960 to 1986, ran Hanoi's war, sidelined Ho Chi Minh and Vo Nguyen Giap at nearly every key juncture, and owed his rise to the war he sold. Her conclusion widens it: leaders in Hanoi and Saigon set the nature and pace of American intervention, so a history written only from Washington has the wrong protagonist.</p>
+        <p>That rearranges the shelf. Clodfelter asked whether bombing could coerce Hanoi; Nguyen asks who in Hanoi was being coerced, and the answer is a man whose credential was the war, which made a cheap settlement politically expensive for him. Zhang showed Beijing as the junior partner scrambling for Soviet help in Korea. Nguyen shows Hanoi working two patrons at once and playing them against each other. Opinion: the most dangerous adversary is the one whose leader can't afford to lose the argument at home. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">Weekend Reading · Haun, for seminar Monday, November 9</span>
+        <h3><a href="#a3">Weekend Reading: Haun Says Air Power Wins When the Enemy Is Too Scared to Move</a></h3>
+        <p>Phil Haun, a SAASS graduate who flew A-10s over Kosovo, wrote <i>Tactical Air Power and the Vietnam War</i> to supply a theory he couldn't find while studying at SAASS: one for attacking armies directly. His scorecard covers twenty-three modern American air campaigns since 1965. Direct attack on fielded forces was tried in eleven and met its military aims in nine; strategic bombing succeeded twice in six, and interdiction failed five times out of six.</p>
+        <p>His thesis is that air power alone kept failing in Vietnam, while air forces in combined arms operations usually succeeded. Its greatest effect, he argues, comes from armed reconnaissance that deters enemy armies from concentrating and maneuvering. He argues against the strategic bombers and the interdiction enthusiasts, and, to his A-10 squadron mates' dismay, he doesn't advocate for close air support either. For this course, he answers the question the last three books circled, which is what American air power was actually good at in Vietnam.</p>
+        <p>Read for:</p>
+        <ol class="qs">
+          <li>Chapter 1, pages 1 to 12: the twenty-three campaigns and the scorecard on page 7.</li>
+          <li>Chapter 2, pages 13 to 34: the theory, and the dilemma it poses for an army under a lethal air threat, which is to mass and get hammered from the air or disperse and give up the initiative.</li>
+          <li>Chapter 7, pages 163 to 201: the Easter Offensive; set it beside Randolph and ask why Quang Tri fell while An Loc held.</li>
+          <li>Chapter 8, pages 202 to 228: the factor tables and why the Air Force keeps dropping armed reconnaissance from doctrine.</li>
+          <li>Chapter 9, pages 229 to 250: the theory applied to Kyiv and to Taiwan.</li>
+        </ol>
+        <p>Short on time? Chapters 1, 2, and 8. Haun scores campaigns on whether the enemy dared to move, so a reader who skims chapter 3 is technically practicing dispersal. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a4">
+        <span class="kicker">The 628 Paper · through today's author</span>
+        <h3><a href="#a4">If Tehran Tests: Read the Regime's Org Chart Before the Target List</a></h3>
+        <p>The prompt asks for the single most important potential crisis and how Airmen should prepare, in ten pages due December 1 at 1630. Today we run the syllabus's first example, an IRGC nuclear test, through Nguyen. This is our extrapolation from a book about Hanoi, not Shaun's answer.</p>
+        <p>Nguyen's Hanoi offers three warnings. Le Duan's rise and the war were one project, so settling cheaply would have cost him his position (chapter 1). His security services turned every American escalation into a reason to arrest the moderates (chapters 2 and 3). And he aimed his diplomacy at the American Congress and the American street, which he judged the softest targets in the war (chapter 6).</p>
+        <p>Opinion, extrapolated: Airmen preparing for a test should first ask who inside the regime gains from it, because that person decides what the air campaign is up against. They should expect strikes to strengthen the hardliners at home, as Rolling Thunder fed Hanoi's spy fever, and plan for an information fight aimed at Congress and allies as seriously as the one over the target area. Le Duan never needed to win an air battle. He needed Washington arguing with itself. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a5">
+        <span class="kicker">The Readings So Far · Gaddis through Nguyen</span>
+        <h3><a href="#a5">Eight Books, Two Archives, One Argument About Who Was in Charge</a></h3>
+        <p>Yesterday's author and today's disagree about Hanoi's org chart. Randolph concluded that no single leader in totalitarian North Vietnam held anything like Nixon's authority over strategy. Nguyen says Le Duan monopolized decision making and sidelined Ho and Giap at nearly every turn. Randolph leaned on the Nixon tapes and Vietnamese official histories; Nguyen got into Hanoi's Foreign Ministry archives. Opinion: when two good historians disagree, check their reading rooms before their reasoning.</p>
+        <p>The patrons look familiar too. In Zhang, Moscow told its pilots in 1950 to retrain the Chinese first and not to fly beyond the Yalu. In Nguyen, Moscow and Beijing answered Linebacker with defensive arms and no offensive weapons for the South, and both kept their summits with Nixon. Junior allies in both wars got air defense and lectures. And Clodfelter's Linebacker, which cut overland imports from 160,000 tons a month to 30,000, shows up in Nguyen as the campaign that forced the Politburo to defend the North.</p>
+        <p>The news web keeps growing. Thursday's House majority eyeing the Iran war budget met Randolph's 35-to-8 Senate caucus vote; today Senate Democrats demanding Iran war commitments meet Le Duan's 1971 telegram naming Congress as a target. Only one of them admits it in the archives. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a6">
+        <span class="kicker">Technical Writing · Week 2, Day 5 · citations and Chicago style</span>
+        <h3><a href="#a6">Hit-and-Run Quotations Leave Dents in Your Grade</a></h3>
+        <p>Friday is citation day, and the guide is Graff and Birkenstein's <i>They Say / I Say</i>, which treats a bad quotation the way insurance adjusters treat a fender bender. Quotations don't speak for themselves, they write; "quotations are orphans" that need a new home in your text. A quote dropped in with no frame is a "dangling" or "hit-and-run" quotation. The fix is the quotation sandwich: a top slice that says who is speaking and sets up the words, and a bottom slice that says what you take them to mean and why they matter. Choose a verb that matches the speaker's spirit ("complains," "concedes") over a neutral "states," and when in doubt, explain more.</p>
+        <p>Before: "Linebacker II worked. 'Nixon's bombs had done their damage.' The agreement followed." After: "Nguyen, the first scholar admitted to Hanoi's Foreign Ministry archives, concedes that by December 26 'Nixon's bombs had done their damage.' Her claim is narrower than airmen hope, since on the same page she argues the bombing rallied world condemnation instead of breaking Hanoi's will. The damage bought Nixon a date in January."</p>
+        <p>Pro tip, an old editor's trick: press Ctrl+F, search your draft for the quotation mark, and make sure a sentence of yours follows every hit. Then give the first Chicago note in full (author, title, Chapel Hill: University of North Carolina Press, 2012, page) and shorten later ones to "Nguyen, Hanoi's War." If your copy is an ebook without fixed pages, cite the chapter and say which edition you used. A quote without a sandwich is just someone else's sentence loitering in your paper. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a7">
+        <span class="kicker">Political Strategy × Nguyen · via Punchbowl News AM, November 6, and electoral-vote.com, November 5</span>
+        <h3><a href="#a7">Schumer Takes a Victory Lap, and the Iran War Gets a Vote in the Leadership Races</a></h3>
+        <p>Chuck Schumer is enjoying himself. Punchbowl News reports that Senate Democrats flipped a stunning number of seats and could hold as many as 56 in the next Congress, with Alaska and Mississippi still uncalled and Democrats ahead in both. Electoral-vote.com's count from Thursday had it at 54 to 44 with two outstanding, and Mississippi within about 1,100 votes at 98 percent reporting. Schumer credited relentless recruiting and called winning "only step one." Not everyone is celebrating him: Senator Chris Van Hollen wants commitments on how leadership will handle the Iran war before he backs anyone for leader. Across the Capitol, every House Republican leadership post is contested, with Steve Scalise and Jim Jordan locked in a tight race.</p>
+        <p>So the war has become a question in leadership elections, which is a sentence that would have interested Le Duan. In July 1971 he cabled his negotiators that the first objective of Hanoi's diplomacy was inciting the antiwar movement in Congress and on the streets. A year earlier, after Cambodia, Hanoi read Kissinger's offer of a twelve-month withdrawal schedule as weakness forced by antiwar sentiment, and stiffened in Paris. Nguyen's point is that adversaries read American legislatures the way we read their politburos, closely and with a theory.</p>
+        <p>Opinion, nonpartisan and old: a war that becomes a test in caucus votes acquires a second audience abroad, whatever anyone intends. Nobody in Washington controls how the other side reads the whip count. (Leadership elections after a drubbing are their own genre, too. Hanoi's old guard held one and picked the man it thought had no base.) The Senate now has its majority; the scorekeepers abroad have their newsletters. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a8">
+        <span class="kicker">Leadership × Nguyen · via Defense News (Reuters), November 5</span>
+        <h3><a href="#a8">Personnel Is Policy, in Berlin Today and in Hanoi in 1967</a></h3>
+        <p>Germany has picked its next top officer, and the résumé is the message. The Defense Ministry named Lieutenant General Christian Freuding, army chief since October 2025, as chief of defense starting in February 2027; Carsten Breuer leaves to chair NATO's Military Committee. Freuding spent years overseeing Berlin's arms supplies to Kyiv, pushed the army to adopt technology tested in Ukraine, and started a drone regiment.</p>
+        <p>Nguyen would read the appointment as a strategy document. In 1967, with General Nguyen Chi Thanh dead and Giap opposed, Le Duan needed what she calls "a more pliant general" for his risky plan, and he found Van Tien Dung; one historian she cites describes Tet's origins as a Faustian bargain between them. Giap was sidelined, Dung's plan went forward, and in 1975 Dung's troops rode Soviet tanks into Saigon while Giap later lost his Politburo seat. The choice of general told everyone which war the first secretary meant to fight.</p>
+        <p>Opinion: the leadership lesson cuts both ways. Picking the officer who learned the most from someone else's war is the healthy version of the signal; picking the one who agrees with you is the risky version, and both send a message to the ranks about what gets rewarded. Hanoi promoted the general who said yes. Berlin promoted the one who'd been paying attention to Ukraine, and we know which method we'd rather brief. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a9">
+        <span class="kicker">Space × Sci-Fi × Nguyen · via Breaking Defense, November 5</span>
+        <h3><a href="#a9">Ukraine Rents Its Sky, and the Landlord Hasn't Explained October</a></h3>
+        <p>Ukraine's Starshield contract with SpaceX expires in mid-2027, and talks on a replacement are only beginning, Kyiv's chargé d'affaires, Denys Sienik, told reporters this week. In October, Ukrainian officials said, a sudden change to the network caused failures in drones and defenses that they tied to military and civilian deaths. "We still don't have [an] answer from [the] Pentagon and SpaceX," Sienik said. Kyiv has no effective alternative in low Earth orbit and is weighing domestic options and European systems, because, in his words, it's "always good to have a backup."</p>
+        <p>Nguyen's chapter 7 is the history of renting from a patron. In 1972 Moscow and Beijing sent Hanoi defensive arms and no offensive weapons for the South, and kept their summits with Nixon. Beijing even concluded that Soviet cargo arrived under torn blankets so American satellites could watch it pass, which turns a supply shipment into a message to the enemy, delivered by way of orbit.</p>
+        <p>Frank Herbert's <i>Dune</i> built a whole empire on this problem. The Spacing Guild holds the monopoly on travel between the stars, so every Great House moves at its pleasure, and Paul Atreides gains leverage over the Guild only by threatening the spice it depends on. A single provider of the space layer is a guild, however friendly. Opinion: Kyiv's search for a backup is the correct reading of both books. Hanoi had two patrons and played them against each other. Kyiv has one, and it still hasn't explained October. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Today's seminar: Nguyen, <i>Hanoi's War</i>, chapter by chapter</p>
+
+      <article id="n-00">
+        <span class="kicker">Chapter by Chapter · Nguyen, introduction</span>
+        <h3><a href="#n-00">The Man Who Ran Hanoi's War Wanted You to Look at Uncle Ho</a></h3>
+        <p>Before you analyze an enemy's strategy, find out who writes it, and treat the famous face on the poster as a decoy. Nguyen names the author: Le Duan, who held the top Party post from 1960 until his death in 1986, with Le Duc Tho as his right hand. Historians, she argues, treat Washington's choices as human and Hanoi's victory as fate, when individuals in Hanoi shaped the outcome as much as structures did.</p>
+        <p>Her method is her evidence. The Party, military, and Foreign Ministry archives remain closed even to Vietnamese scholars, and in 2003 she became the first researcher admitted to the Foreign Ministry's, and is still the only one (the line for the reading room is short). Her prize is a classified chronology quoting the 1968 to 1973 telegrams between the Politburo and the delegation in Paris, Le Duan talking to Le Duc Tho. She calls it the "holy grail."</p>
+        <p>The weak seminar comment is "Ho and Giap outlasted the Americans." The strong one is "Ho was the face and Giap the famous general, but Le Duan ran the Politburo, so before we ask whether bombing broke Hanoi's will, we should ask whose will." Opinion: with the key archives still shut, some of her conclusions are inference in a confident suit, and saying so will win the room. Le Duan wanted off the historical stage, and American scholarship politely held the curtain. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-01">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 1</span>
+        <h3><a href="#n-01">Hanoi Hired a Caretaker and Got a War Party</a></h3>
+        <p>Whoever holds the drafting pen and the personnel office holds the strategy, and a leader who rises by selling a war will find the war has become his credential. Nguyen argues that Le Duan fanned the southern flames to push reluctant comrades in the North into war. The chapter's epigraph is his: "Revolution is offensive."</p>
+        <p>Watch the plumbing. Land reform went so badly that soldiers fired on their own people in 1956; Truong Chinh stepped down as first secretary, and Le Duc Tho ran the cleanup and became the Party's organizational chief. Le Duan arrived in Hanoi in 1957, and the old guard backed him because he seemed to lack a base (a hiring decision that aged badly). Ho had given Giap Resolution 15 to draft, and in early 1958, most likely under pressure from Le Duan, Ho told Giap to hand it over. Le Duan and Pham Hung ran it through twenty-two more drafts, a plenum approved it in January 1959.</p>
+        <p>The weak seminar comment is "The southern insurgency forced Hanoi's hand." The strong one is "Le Duan took the pen from Giap and used the threat of losing control of the South as his argument." Opinion: ask of any war plan who inside the government profits if the war happens. The Politburo wanted a caretaker without a base. It got a man whose base was the war. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-02">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 2</span>
+        <h3><a href="#n-02">Le Duan Won the Debate by Arresting the Other Side</a></h3>
+        <p>Internal security is an instrument of war policy, so when a regime escalates, check whom it arrests before you count what it builds. From 1960 to 1963, Nguyen argues, Le Duan and Le Duc Tho fused the Party Secretariat and the Ministry of Public Security into one machine and aimed it at the moderates who wanted to build socialism in the North before fighting for the South.</p>
+        <p>The Ninth Plenum of December 1963 is the proof. Truong Chinh asked the Soviet-trained theoretician Hoang Minh Chinh to draft the Party line, got a plea for neutrality between Moscow and Beijing, and buried it (he had read the room, and the room had a police force). The hardliners used threats and blackmail and offered Ho Chi Minh the option of "following the Politburo line or standing aside." In January 1964, four hundred cadres gathered to study Resolution 9 heard that its most important aspect could not be written down. Bui Cong Trung soon lost his seat and his post, and Duong Bach Mai died under "mysterious circumstances."</p>
+        <p>The weak seminar comment is "Hanoi was a disciplined monolith." The strong one is "Hanoi looked unified because Le Duan made dissent a security matter, and Resolution 9 passed over letters from about fifty mid-ranking cadres." Opinion: manufactured unity works until the plan fails, and then nobody is left to say so. It's hard to dissent from a paragraph that doesn't exist. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-03">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 3</span>
+        <h3><a href="#n-03">Le Duan Tested His Tet Assumptions by Jailing the Doubters</a></h3>
+        <p>Before approving a plan, write down what it assumes, then ask who is still allowed to call an assumption wrong. Official Vietnamese histories treat Tet as a shrewd answer to American failure. Nguyen adds the feud and the police: Le Duan revived the General Offensive and General Uprising that had flopped in 1964 and cleared its path with the largest purge in Party history.</p>
+        <p>The assumptions were bold. In mid-1967 Le Duan said, "It is impossible for the United States to maintain its current troop level." In July 1967 Ho questioned whether the plan was realistic. Giap then left for Eastern Europe, Ho for Beijing, and the security service arrested critics in three waves, catching the General Staff officers Nguyen Van Vinh and Le Trong Nghia in October just after they briefed the Politburo. The stated reason was protecting surprise. The result: southern commanders got little more than two weeks' notice, and calendar discrepancies sent some provinces in a day early while others got their orders too late.</p>
+        <p>Use it as a check. For each assumption, name the person who doubted it and say where that person is now; if the answer is Hoa Lo prison, the assumption is untested. Opinion: American bombs fed the spy fever that justified the arrests, a favor Le Duan never thanked Johnson for. He guarded the secret so well that some of his own units missed it. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-04">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 4</span>
+        <h3><a href="#n-04">Hanoi Got Serious in Paris When It Ran Out of Offensives</a></h3>
+        <p>When a negotiation runs alongside a war, lay the diplomatic calendar over the battlefield calendar, because a side that is still attacking is only probing at the table. Nguyen argues that Le Duan accepted talks after Johnson's March 31, 1968 speech because he had no choice, then kept betting on the uprising. Le Duc Tho stated the house view: "Diplomacy could never replace military strength."</p>
+        <p>Hanoi accepted preliminary talks on April 3. On May 4 it hit 119 bases, towns, and cities in a second wave, and the first Paris session met on May 13. Moscow, which had helped find the venue, was dismayed (allies love surprises). In September Tho lectured Averell Harriman for nearly an hour on American intervention, while his private cable of September 28, two days before the third wave ended, sketched a real negotiating plan. Only with its forces spent, Nguyen concludes, did the Politburo take diplomacy seriously.</p>
+        <p>The weak seminar comment is "Tet shocked both sides into peace talks." The strong one is "Hanoi said yes in April, attacked 119 targets in May, and drafted its first serious plan two days before the offensive ended." Opinion: run the check on your own side too. On October 10 the Politburo hardened its demands again, and Tho flew home to talk his bosses down. Harriman got the history lecture; the Politburo got the reality briefing. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-05">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 5</span>
+        <h3><a href="#n-05">The Cambodian Incursion Moved Hanoi's Map and Washington's Clock</a></h3>
+        <p>Score an operation on the periphery by the options it leaves the enemy afterward, since the ground it takes is the smaller half of the ledger. By 1970, Nguyen argues, a Hanoi drained by its 1968 and 1969 offensives adopted an "economy of forces," shelved the urban uprising, raised diplomacy to equal rank with fighting, and stepped up support for Cambodia and Laos. As the war shrank in South Vietnam, it spread next door.</p>
+        <p>After Sihanouk was voted out on March 18, the exiled prince formally approved communist use of Cambodian territory. On April 30 Nixon sent American and South Vietnamese troops after the communist headquarters, COSVN. After two days of heavy combat the communists withdrew deeper, toward a headquarters already relocated, and the military balance barely moved. The balance at home did, with Kent State, the Cooper-Church amendment, and the Senate's repeal of the Tonkin Gulf Resolution. On September 7 Kissinger offered a twelve-month withdrawal schedule with no matching demand, and Hanoi read it as weakness forced by antiwar sentiment.</p>
+        <p>Use it as a check on any raid on a sanctuary: ask where the enemy goes when struck, who invited him there, and what your own capital will do the week after. Opinion: the incursion answered all three in Hanoi's favor. The operation found something. It just wasn't COSVN. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-06">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 6</span>
+        <h3><a href="#n-06">Hanoi Wrote Its Public Peace Plans for Congress</a></h3>
+        <p>Ask who a peace offer was written for. Nguyen's sixth chapter shows Hanoi running two negotiations in 1971, a secret one with Henry Kissinger and a public one aimed at the American home front, and she concludes that peace never had a chance that year.</p>
+        <p>A five-day stretch makes the case. On June 26, Le Duc Tho and Xuan Thuy handed Kissinger a secret nine-point plan across a green tablecloth spread to look flexible (diplomacy by upholstery). On July 1, at the 119th public session, Madame Nguyen Thi Binh unveiled seven points that pressed harder on Thieu. Le Duan's telegram to his negotiators named the first target plainly: the antiwar movement in Congress and on the streets.</p>
+        <p>The weak seminar comment is "Hanoi was intransigent in Paris." The strong one is "Hanoi was flexible in public and rigid in private on purpose, because the public offer was aimed at American voters, and Le Duan said so in writing in July 1971." Opinion: Hanoi learned the trick from Nixon. That January, Thuy cabled home that Nixon's Five-Point Proposal was hollow, built for world opinion, and working anyway. When Kissinger told Hanoi to choose between propaganda and negotiation, he was grading a copy of his own homework. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-07">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 7</span>
+        <h3><a href="#n-07">Brezhnev Shouted for the Record and Toasted for Real</a></h3>
+        <p>Judge an ally by what it ships and what it withholds; speeches are free. Nguyen argues that Le Duan and Le Duc Tho launched the 1972 offensive partly to outrun their own patrons, since a smashing victory would inoculate Hanoi against Chinese and Soviet pressure to settle. Beijing and Moscow protested Nixon's escalation for the record and leaned on Hanoi to settle more or less on Washington's terms.</p>
+        <p>Hanoi timed the attack between Nixon's Beijing summit in February and his Moscow summit in late May. Tanks crossed the DMZ on March 30, and Nixon answered on May 8 with Linebacker and the mining. At his dacha on May 24, Brezhnev told Nixon, "I don't want to hurl more epithets on you," hurled a few more, and toasted him. Beijing kept Soviet ships out of Chinese harbors until Tho pleaded on June 18, and when Soviet cargo arrived under torn blankets, Beijing decided Moscow wanted American satellites to see it.</p>
+        <p>The weak seminar comment is "China and the Soviet Union stood by Hanoi." The strong one is "They sent defensive arms against Linebacker, no offensive weapons for the South, and both summits went ahead." Opinion: Hanoi read its allies better than its enemy, since Tho had bet that Nixon was too busy with summits to hit back. Moscow drank to détente while Hanoi's leaders sat in bomb shelters. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-08">
+        <span class="kicker">Chapter by Chapter · Nguyen, chapter 8</span>
+        <h3><a href="#n-08">The Christmas Bombing Hit Hanoi's Calendar Harder Than Its Will</a></h3>
+        <p>Before crediting bombs with breaking a leadership, learn what it already wanted, then ask whether the bombs changed its goal or only its price. By summer 1972 Le Duan had conceded the offensive's failure. Linebacker pushed the Politburo from attacking the South to defending the North, and Saigon retook Quang Tri.</p>
+        <p>With talks deadlocked and defenses going up, the Politburo told its negotiators, "Signing now or later, timing is no longer an issue." Nixon ordered Linebacker II for December 18, the day Le Duc Tho got home. Over twelve days, 3,420 sorties hit the Hanoi and Hai Phong area, killing more than 2,000 civilians and costing 27 American aircraft, 15 of them B-52s. On December 26, the heaviest day, Hanoi offered to resume talks. Nguyen writes that "Nixon's bombs had done their damage," and on the same page that they mobilized world condemnation instead of breaking Hanoi's will (pick one per argument).</p>
+        <p>The weak seminar comment is "Linebacker II bombed Hanoi back to the table." The strong one is "Linebacker II raised the price of delay for a Politburo that already wanted out, and Nguyen scores it as the failure of Hanoi's hope to settle without more damage." Opinion: the morale case is thinner than airmen hope. The Party feared unrest enough to put its security minister on the Politburo, and the worried men held the handcuffs. The final round opened January 8, a date booked before the bombing began, which is an expensive way to keep an appointment. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="n-09">
+        <span class="kicker">Chapter by Chapter · Nguyen, epilogue and conclusion</span>
+        <h3><a href="#n-09">Le Duan Waited Fifteen Years for an Uprising and Got Tanks Instead</a></h3>
+        <p>In a war fought through allies, the small powers often set the pace, so study their capitals as hard as your own. Nguyen's conclusion says leaders in Hanoi and Saigon dictated the nature and pace of American intervention. Le Duan monopolized decisions, sidelined Ho and Giap at nearly every key juncture, and bet three times, in 1964, 1968, and 1972, on a general uprising that never came. Thieu, the supposed puppet, dragged out the American exit and exposed the limits of the Nixon Doctrine.</p>
+        <p>The epilogue supplies the punch line. On April 30, 1975, troops under General Van Tien Dung rode Soviet tanks into Saigon; the Party never needed the masses to rise, and South Vietnam's leaders had more or less fled a week earlier. Le Duan died in 1986, and 100,000 Hanoians lined the route of his funeral. China sent nobody, and Ronald Reagan did not register the passing. Le Duan won the war and lost the obituary.</p>
+        <p>The weak seminar comment is "We lost Vietnam because of bad decisions in Washington." The strong one is "Washington made plenty, but Hanoi and Saigon set the terms: Le Duan pushed escalation over Ho's objections, Hanoi's antiwar diplomacy blunted superpower diplomacy, and Thieu slowed the withdrawal." Opinion: quote her caveats too. She concedes nothing is definitive until the archives open, and she warns that crediting small powers too much lets the superpowers off the hook. Her last line is bleak: leaders ensured that "peace could only be won through the barrel of a gun." The diplomats won the argument, and the tanks delivered the verdict. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Keyed to the phrase each one supports. Nguyen pages are ebook PDF pages: Lien-Hang T. Nguyen, Hanoi's War: An International History of the War for Peace in Vietnam (Chapel Hill: University of North Carolina Press, 2012). Haun pages are printed pages: Phil Haun, Tactical Air Power and the Vietnam War: Explaining Effectiveness in Modern Air Warfare (Cambridge: Cambridge University Press, 2024). Randolph, Zhang, and Graff pages are printed pages; Clodfelter pages are ebook PDF pages, cited by chapter. Gerald Graff and Cathy Birkenstein, They Say / I Say: The Moves That Matter in Academic Writing, 3rd ed. (New York: W. W. Norton, 2014). <i>Opinion</i> needs no source.</p>
+
+        <h3>Today's episode</h3>
+        <ul>
+          <li>Offer on December 26 to resume talks; "Nixon's bombs had done their damage"; bombs mobilized world condemnation rather than breaking Hanoi's will: Nguyen, ch. 8, ebook p. 412.</li>
+          <li>"Signing now or later, timing is no longer an issue": Nguyen, ch. 8, ebook p. 408. Le Duan concedes the offensive failed after Saigon retakes Quang Tri: Nguyen, ch. 8, ebook pp. 360–361. Shift from the offensive in the South to defense of the North: Nguyen, ch. 8, ebook p. 359.</li>
+          <li>Seventy percent of electrical capacity; imports to about 60 percent; a price the Politburo was willing to pay: Randolph, 338.</li>
+          <li>Spy fever and arrests of Tet critics: Nguyen, ch. 3, ebook pp. 135, 150, 153–154. Security minister raised to the Politburo amid fear of unrest; Kissinger, "striking a raw nerve of the DRV leadership"; counterrevolution unlikely: Nguyen, ch. 8, ebook pp. 363–365.</li>
+          <li>Linebacker II as failure of Hanoi's aim to settle without further damage: Nguyen, ch. 8, ebook pp. 415–416. Fifteen B-52s lost: Nguyen, ch. 8, ebook p. 411.</li>
+          <li>Quiz: Le Duan, first secretary 1960 to 1986, Nguyen, intro, ebook p. 19. Resolution 9 could not be written down, Nguyen, ch. 2, ebook pp. 105–106. Torn blankets, Nguyen, ch. 7, ebook p. 353. Vinh raid and the kilometer-off charts, Randolph, 121. Moscow's pilots not beyond the Yalu, Zhang, 62; defensive arms only, Nguyen, ch. 7, ebook pp. 355–356.</li>
+        </ul>
+
+        <h3>Today's Seminar Questions, Answered</h3>
+        <ul>
+          <li>Seminar 8 questions (including "moral" as printed): SAASS 628 syllabus, Seminar 8.</li>
+          <li>Spy fever as bombs fell; arrests of critics before Tet: Nguyen, ch. 3, ebook pp. 135, 150, 153–154. Shift from the offensive in the South to defense of the North: Nguyen, ch. 8, ebook p. 359. Linebacker II mobilized world condemnation rather than breaking Hanoi's will: Nguyen, ch. 8, ebook p. 412. Overriding concern to avoid further destruction: Nguyen, ch. 8, ebook p. 401.</li>
+          <li>"Economy of forces"; diplomacy raised to the level of the military and political struggles: Nguyen, ch. 5, ebook pp. 217, 222–223. U.S. bombing and South Vietnamese counteroffensives rolled back early victories; big-unit offensive had failed: Nguyen, ch. 7, ebook p. 353. Saigon forces supported by American air power counterattacked: Nguyen, ch. 8, ebook p. 359.</li>
+          <li>World relations campaign as the key to Hanoi's success: Nguyen, conclusion, ebook p. 432. Le Duan's telegram on inciting the antiwar movement in Congress and on the streets: Nguyen, ch. 6, ebook p. 297. Most important aspect of Resolution 9 could not be written down: Nguyen, ch. 2, ebook pp. 105–106.</li>
+          <li>General Offensive and General Uprising in 1964, 1968, 1972: Nguyen, conclusion, ebook pp. 430–431. Tho's prediction that Nixon could not respond militarily: Nguyen, ch. 7, ebook p. 338. Beijing rescued a "drowning" Nixon: Nguyen, ch. 7, ebook p. 335.</li>
+        </ul>
+
+        <h3>Hanoi Had a Boss, and He Kept His Name Off the Door</h3>
+        <ul>
+          <li>First secretary 1960 to 1986: Nguyen, introduction, ebook p. 19. Ho and Giap sidelined at nearly all key junctures; Le Duan's monopolization of decision making: Nguyen, conclusion, ebook p. 428. Hanoi and Saigon dictated the nature and pace of U.S. intervention: Nguyen, conclusion, ebook pp. 432–433.</li>
+          <li>War as rallying cry and key to Le Duan's seizure of power: Nguyen, ch. 1, ebook pp. 72–73.</li>
+          <li>Clodfelter's question on whether bombing North Vietnam was as fruitful as claimed: SAASS 628 syllabus, Seminar 6. Beijing as the junior partner: SAASS 628 syllabus, Seminar 3; Moscow's 1950 orders to its pilots: Zhang, 62. Two patrons played against each other: Nguyen, ch. 7, ebook pp. 324, 352–356.</li>
+          <li>The closing line is our opinion.</li>
+        </ul>
+
+        <h3>Weekend Reading: Haun</h3>
+        <ul>
+          <li>Studied air power theory at SAASS; frustrated over Kosovo in an A-10; little theory on attacking fielded forces: Haun, xi. Book does not advocate for the A-10 or CAS; greatest impact through armed recce by deterring armies from concentrating and maneuvering: Haun, xii.</li>
+          <li>Twenty-three campaigns since 1965; direct attack in eleven, military success in nine; strategic bombing two of six; interdiction failed in all but one of six: Haun, 7.</li>
+          <li>Air power alone repeatedly failed; combined arms succeeded more often than not: Haun, back cover summary (9-Haun.txt, PDF p. 2).</li>
+          <li>Chapter page ranges: Haun, contents. The dilemma of concentrating or dispersing: Haun, ch. 2. Khe Sanh massing not predicted by the theory: Haun, 77, 107. Factor tables: Haun, ch. 8. Kyiv and Taiwan: Haun, 237–244.</li>
+        </ul>
+
+        <h3>If Tehran Tests</h3>
+        <ul>
+          <li>Paper prompt and example crises: SAASS 628 syllabus, "Grading."</li>
+          <li>Le Duan's rise and the war: Nguyen, ch. 1, ebook pp. 38, 72–73. Security apparatus against moderates: Nguyen, ch. 2, ebook pp. 86–88, 104–108; ch. 3, ebook pp. 135, 150, 159. Antiwar movement in Congress as diplomatic objective: Nguyen, ch. 6, ebook p. 297. Bombing and Hanoi's goals: Nguyen, ch. 8, ebook pp. 401, 412, 415–416.</li>
+          <li>The application to an IRGC test is our extrapolation.</li>
+        </ul>
+
+        <h3>Eight Books, Two Archives</h3>
+        <ul>
+          <li>No single North Vietnamese leader held authority like Nixon's: Randolph, 341–342. Le Duan monopolized decision making: Nguyen, conclusion, ebook p. 428. First scholar in the Foreign Ministry archives: Nguyen, introduction, ebook p. 23. Randolph's use of the Nixon tapes and Vietnamese official histories: Randolph, 55, 222, 230 (as covered in the November 5 issue).</li>
+          <li>Moscow's pilots to retrain the Chinese first and not fly beyond the Yalu: Zhang, 62. Defensive armaments only; summits proceeded: Nguyen, ch. 7, ebook pp. 355–356.</li>
+          <li>Overland imports from 160,000 to 30,000 tons a month: Clodfelter, ch. V, ebook p. 184. Shift to defense of the North: Nguyen, ch. 8, ebook p. 359.</li>
+          <li>Senate Democratic Caucus 35 to 8: Randolph, 179. Earlier news link: issue of November 5.</li>
+        </ul>
+
+        <h3>Hit-and-Run Quotations</h3>
+        <ul>
+          <li>Quotations do not speak for themselves; "quotations are orphans"; frame every major quotation: Graff and Birkenstein, 43–44.</li>
+          <li>"Dangling" and "hit-and-run" quotations: Graff and Birkenstein, 44. The quotation sandwich: Graff and Birkenstein, 46. Verbs that reflect the spirit of the passage: Graff and Birkenstein, 47. When in doubt, explain: Graff and Birkenstein, 49.</li>
+          <li>The "after" example uses Nguyen, introduction, ebook p. 23, and ch. 8, ebook p. 412. The Ctrl+F check and the Chicago advice are our tips.</li>
+        </ul>
+
+        <h3>Schumer Takes a Victory Lap</h3>
+        <ul>
+          <li>As many as 56 seats; Alaska and Mississippi uncalled with Democrats ahead; recruiting; "is only step one"; Van Hollen wants commitments on the Iran war before backing anyone for leader: Andrew Desiderio and Laura Weiss, Punchbowl News AM, November 6, 2026.</li>
+          <li>Every House GOP leadership post contested; Scalise and Jordan in a tight race: Jake Sherman, Punchbowl News AM, November 6, 2026.</li>
+          <li>Senate 54 to 44 with two uncalled; Mississippi within about 1,100 votes with 98 percent reporting: electoral-vote.com, November 5, 2026.</li>
+          <li>Le Duan's July 1971 telegram: Nguyen, ch. 6, ebook p. 297. Twelve-month withdrawal schedule read as weakness: Nguyen, ch. 5, ebook p. 261. Old guard picked a leader who appeared to lack a base: Nguyen, ch. 1, ebook pp. 65, 73.</li>
+        </ul>
+
+        <h3>Personnel Is Policy</h3>
+        <ul>
+          <li>Freuding named chief of defense from February 2027; army chief since October 2025; Breuer to chair NATO's Military Committee; Ukraine arms supplies, Ukraine-tested technology, drone regiment; Pistorius quotes: Sabine Siebold (Reuters), "Germany names Army Chief Freuding as next chief of defense," Defense News, November 5, 2026.</li>
+          <li>Thanh dead, Giap in disagreement; "a more pliant general"; Pribbenow's Faustian bargain: Nguyen, ch. 3, ebook p. 146. Dung's troops enter Saigon on Soviet tanks: Nguyen, epilogue, ebook p. 417. Giap loses his Politburo seat in 1982: Nguyen, epilogue, ebook pp. 420–421.</li>
+        </ul>
+
+        <h3>Ukraine Rents Its Sky</h3>
+        <ul>
+          <li>Starshield contract expires mid-2027; negotiations beginning; October network change and failures tied to deaths; Sienik quotes; working now; no effective alternative; domestic and European options: Ashley Roque, "Ukraine eyeing new SpaceX Starshield deal by mid-2027, still no answers about October problems," Breaking Defense, November 5, 2026.</li>
+          <li>Defensive armaments only; summits proceeded: Nguyen, ch. 7, ebook pp. 355–356. Torn blankets and U.S. satellites: Nguyen, ch. 7, ebook p. 353.</li>
+          <li>The Spacing Guild's monopoly on interstellar travel and Paul's leverage through the spice: Frank Herbert, Dune (1965), general plot.</li>
+        </ul>
+
+        <h3>Nguyen, introduction: The Man Who Ran Hanoi's War Wanted You to Look at Uncle Ho</h3>
+<ul>
+  <li>Le Duan top Party post 1960 to death in 1986; overshadowed by Ho, Giap, Pham Van Dong; obscurity self-cultivated; "bland figure"; collective leadership over a cult of personality: Nguyen, intro, ebook p. 19.</li>
+  <li>Le Duc Tho as right-hand man; scholarship sees American contingency and Vietnamese inevitability, book argues individuals in Hanoi mattered as much as structures: Nguyen, intro, ebook p. 20.</li>
+  <li>Party, Military, and Foreign Ministry archives closed to foreign and Vietnamese scholars: Nguyen, intro, ebook p. 22.</li>
+  <li>First and only scholar admitted to the Foreign Ministry archives, 2003: Nguyen, intro, ebook p. 23.</li>
+  <li>Reading the Party document collection like Kremlinologists: Nguyen, intro, ebook p. 32.</li>
+  <li>Classified diplomatic chronology quoting 1968 to 1973 Politburo and Paris telegrams, Le Duan to Le Duc Tho; "holy grail": Nguyen, intro, ebook p. 33.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 1: Hanoi Hired a Caretaker and Got a War Party</h3>
+<ul>
+  <li>"Revolution is offensive" epigraph: Nguyen, ch. 1, ebook p. 37.</li>
+  <li>Le Duan fanned southern revolutionary flames to force reluctant comrades in the North to war: Nguyen, ch. 1, ebook p. 38.</li>
+  <li>Soldiers fired on their own people during the land reform backlash, 1956: Nguyen, ch. 1, ebook p. 60.</li>
+  <li>Tenth Plenum, late September 1956, Truong Chinh steps down; Le Duc Tho heads rectification of errors, joins Politburo, becomes Party organizational chief: Nguyen, ch. 1, ebook p. 61.</li>
+  <li>Le Duan returns to Hanoi in 1957: Nguyen, ch. 1, ebook p. 64.</li>
+  <li>Old guard wanted a leader who would respect collective decision making and who appeared to lack a base: Nguyen, ch. 1, ebook p. 65; Politburo believed he lacked a base and underestimated him: ebook p. 73.</li>
+  <li>Giap drafting Resolution 15; Ho, most likely under pressure from Le Duan, tells Giap to hand it over in early 1958; southern emissaries locked away in Hanoi: Nguyen, ch. 1, ebook p. 67.</li>
+  <li>War in the South as rallying cry to reinvigorate the masses and bolster the Party; key to their seizure of power: Nguyen, ch. 1, ebook pp. 72-73.</li>
+  <li>December 1958 and January 1959 plenum; threat of annihilation and of losing control of the southern resistance; twenty-two further drafts with Pham Hung: Nguyen, ch. 1, ebook pp. 74-75.</li>
+  <li>Group 559 created May 1959 for the supply route: Nguyen, ch. 1, ebook p. 76.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 2: Le Duan Won the Debate by Arresting the Other Side</h3>
+<ul>
+  <li>Secretariat expanded by the 1960 Party statute; Le Duc Tho heads the Party Organizational Committee: Nguyen, ch. 2, ebook pp. 86-87.</li>
+  <li>Le Duan co-opts the Ministry of Public Security and builds a police state: Nguyen, ch. 2, ebook pp. 86, 88.</li>
+  <li>North-first moderates favor building the northern economy and oppose war in the South: Nguyen, ch. 2, ebook pp. 80-81, 96.</li>
+  <li>Truong Chinh asks Hoang Minh Chinh for a report; Chinh urges neutrality and peaceful coexistence; Truong Chinh had no intention of recommending it: Nguyen, ch. 2, ebook p. 101.</li>
+  <li>Ninth Plenum, December 1963, adopts Le Duan's General Offensive and General Uprising: Nguyen, ch. 2, ebook pp. 101-102.</li>
+  <li>Nearly half the Politburo supported peaceful coexistence (Chinh's account); threats and blackmail; Ho offered "following the Politburo line or standing aside": Nguyen, ch. 2, ebook p. 104.</li>
+  <li>Letters from approximately fifty mid-ranking cadres; moderates lose the debate: Nguyen, ch. 2, ebook p. 105.</li>
+  <li>400 cadres in Ba Dinh Square, January 1964; most important aspect could not be written down: Nguyen, ch. 2, ebook pp. 105-106.</li>
+  <li>Bui Cong Trung loses seat and post; Duong Bach Mai dies under "mysterious circumstances": Nguyen, ch. 2, ebook p. 108.</li>
+  <li>Go-for-broke gamble fails with American intervention; marines land March 1965: Nguyen, ch. 2, ebook pp. 115-116.</li>
+  <li>Rolling Thunder disrupts socialist development in the North: Nguyen, ch. 2, ebook p. 118.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 3: Le Duan Tested His Tet Assumptions by Jailing the Doubters</h3>
+<ul>
+  <li>Vietnamese scholarship cites American failure as the only factor in Tet decision making: Nguyen, ch. 3, ebook pp. 131-132.</li>
+  <li>Tet deliberation took account of VWP politics and the Sino-Soviet split: Nguyen, ch. 3, ebook p. 132.</li>
+  <li>GO-GU first used in 1963-64 and failed; Le Duan bided his time to redeem it: Nguyen, ch. 3, ebook p. 134.</li>
+  <li>"It is impossible for the United States to maintain its current troop level": Nguyen, ch. 3, ebook p. 144.</li>
+  <li>Da Nang uprisings of 1966 as proof cities were tinderboxes: Nguyen, ch. 3, ebook p. 145.</li>
+  <li>Giap, 14-16 June 1966: "it was necessary to build up to attack on the cities": Nguyen, ch. 3, ebook p. 146.</li>
+  <li>18-19 July 1967 meeting; Ho questions the plan's "subjectivity" and urges preparation for protracted war: Nguyen, ch. 3, ebook pp. 148-149.</li>
+  <li>Giap leaves for Eastern Europe; Ho leaves for Beijing: Nguyen, ch. 3, ebook p. 149.</li>
+  <li>Three waves of arrests, July, mid-October, 25 December: Nguyen, ch. 3, ebook p. 135.</li>
+  <li>Vinh and Nghia arrested after briefing the Politburo in October: Nguyen, ch. 3, ebook pp. 153-154.</li>
+  <li>Arrests to protect the element of surprise: Nguyen, ch. 3, ebook pp. 153, 155-156.</li>
+  <li>Prisoners held at Hoa Lo: Nguyen, ch. 3, ebook p. 137.</li>
+  <li>Spy fever as bombs rained down; Hoan's speeches: Nguyen, ch. 3, ebook p. 150.</li>
+  <li>Fourteenth Plenum held in Hoa Binh province because of spies and American bombs: Nguyen, ch. 3, ebook p. 157.</li>
+  <li>Little more than two weeks to prepare; calendar discrepancies; some attacked a day early, others got instructions too late: Nguyen, ch. 3, ebook p. 158.</li>
+  <li>Le Duan convinced his 1964 strategy succeeded but the United States snatched victory: Nguyen, ch. 3, ebook pp. 158-159.</li>
+  <li>Largest purge in Party history: Nguyen, ch. 3, ebook p. 159.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 4: Hanoi Got Serious in Paris When It Ran Out of Offensives</h3>
+<ul>
+  <li>Le Duc Tho epigraph, "Diplomacy could never replace military strength": Nguyen, ch. 4, ebook p. 160.</li>
+  <li>Le Duan nearly destroyed the southern communist infrastructure; squandered political capital of the first wave: Nguyen, ch. 4, ebook p. 162.</li>
+  <li>Johnson's 31 March speech; Le Duan had no choice but to agree to direct talks; still ordered a second wave: Nguyen, ch. 4, ebook pp. 165-166.</li>
+  <li>Second wave began 4 May against 119 bases, towns, and cities; 13 May Hotel Majestic meeting; Luu Van Loi's "green carpet" line: Nguyen, ch. 4, ebook p. 166.</li>
+  <li>Luu Van Loi as Le Duc Tho's personal secretary: Nguyen, ch. 4, ebook p. 168.</li>
+  <li>Hanoi's 3 April announcement accepting preliminary talks: Nguyen, ch. 4, ebook p. 169.</li>
+  <li>Soviet help on the venue; Soviet dismay at the 4 May second wave; public meetings used for probing only: Nguyen, ch. 4, ebook p. 170.</li>
+  <li>Third wave ran 17 August to 30 September; Tho lectured Harriman for nearly an hour: Nguyen, ch. 4, ebook pp. 176-177.</li>
+  <li>Tho and Thuy's telegrams after 20 September on NLF participation; Tho's 28 September telegram: Nguyen, ch. 4, ebook p. 177.</li>
+  <li>Telegram written two days before the third wave ended; Politburo took diplomacy seriously only after exhausting its forces: Nguyen, ch. 4, ebook p. 178.</li>
+  <li>10 October Politburo cable with new demands; Tho's trip back to Hanoi to lend perspective: Nguyen, ch. 4, ebook pp. 179-180.</li>
+  <li>Tho's exhortations changed Le Duan's stance by 20 October: Nguyen, ch. 4, ebook p. 183.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 5: The Cambodian Incursion Moved Hanoi's Map and Washington's Clock</h3>
+<ul>
+  <li>"Economy of forces" after the 1968 and 1969 offensives; fighting escalated in Cambodia and Laos as the North went defensive: Nguyen, ch. 5, ebook p. 217.</li>
+  <li>Each side used diplomacy to buy time; peace grew more remote: Nguyen, ch. 5, ebook p. 218.</li>
+  <li>Resolution 18 elevated diplomatic and political spheres, stepped up support for Cambodia and Laos, shelved urban uprising: Nguyen, ch. 5, ebook p. 222.</li>
+  <li>Diplomatic struggle raised to the level of military and political struggles in 1970: Nguyen, ch. 5, ebook p. 223.</li>
+  <li>21 February first Tho-Kissinger meeting: Nguyen, ch. 5, ebook p. 227.</li>
+  <li>Kissinger's "Pathet Lao troops were speaking Vietnamese" remark: Nguyen, ch. 5, ebook p. 229.</li>
+  <li>40,000 North Vietnamese troops in Laos in 1969: Nguyen, ch. 5, ebook p. 230.</li>
+  <li>Kosygin told Sihanouk on 18 March the National Assembly had voted him out: Nguyen, ch. 5, ebook p. 234.</li>
+  <li>Sihanouk's formal approval for PAVN-PLAF use of Cambodian territory at the 24-25 April summit: Nguyen, ch. 5, ebook p. 240.</li>
+  <li>30 April incursion; two days of heavy combat; communists withdrew deeper, headquarters already relocated; failed to find Pham Hung's base: Nguyen, ch. 5, ebook pp. 243-244.</li>
+  <li>Incursion did not significantly change the military balance; Kent State; Cooper-Church amendment: Nguyen, ch. 5, ebook p. 244.</li>
+  <li>Senate repealed the Tonkin Gulf Resolution: Nguyen, ch. 5, ebook p. 245.</li>
+  <li>Five northeast provinces liberated by June 1970; bombing shifted balance toward the Khmer Rouge, favoring neither Washington nor Hanoi: Nguyen, ch. 5, ebook p. 254.</li>
+  <li>7 September twelve-month withdrawal schedule read by Hanoi as weakness; Politburo ordered a more rigid posture: Nguyen, ch. 5, ebook pp. 261-262.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 6: Hanoi Wrote Its Public Peace Plans for Congress</h3>
+<ul>
+  <li>Hanoi wavering between talking and fighting, tipped toward fighting by Laos and triangular diplomacy: Nguyen, ch. 6, ebook p. 273.</li>
+  <li>Peace never had a chance in 1971: Nguyen, ch. 6, ebook p. 317.</li>
+  <li>26 June secret meeting, nine-point plan, green tablecloth: Nguyen, ch. 6, ebook p. 293.</li>
+  <li>1 July, 119th public forum, Binh's seven points, differing mainly on Thieu: Nguyen, ch. 6, ebook pp. 295-296.</li>
+  <li>Tho's interview with Anthony Lewis; "duplicitous stunt"; private linkage to other provisions: Nguyen, ch. 6, ebook p. 296.</li>
+  <li>Le Duan's telegram naming the two objectives of the diplomatic struggle (antiwar movement in Congress and the streets; toppling Saigon): Nguyen, ch. 6, ebook p. 297.</li>
+  <li>Xuan Thuy's January 1971 cable on Nixon's Five-Point Proposal (hollow, aimed at world opinion, effective; fewer American deaths; POW issue): Nguyen, ch. 6, ebook pp. 278-279.</li>
+  <li>12 July meeting: Kissinger attacks Binh's publication, choose between propaganda and negotiations; Thuy's reply: Nguyen, ch. 6, ebook p. 300.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 7: Brezhnev Shouted for the Record and Toasted for Real</h3>
+<ul>
+  <li>Offensive aimed to neutralize the summits and inoculate Hanoi against superpower manipulation: Nguyen, ch. 7, ebook p. 324.</li>
+  <li>Allies protested for the record but pushed Hanoi to settle more or less on Washington's terms: Nguyen, ch. 7, ebook p. 352.</li>
+  <li>Offensive timed between Beijing summit (21-28 February) and Moscow summit (22-30 May): Nguyen, ch. 7, ebook p. 342.</li>
+  <li>30 March crossing of the DMZ with Soviet and Chinese tanks: Nguyen, ch. 7, ebook p. 339.</li>
+  <li>8 May Linebacker and mining of ports: Nguyen, ch. 7, ebook p. 348.</li>
+  <li>Mild Soviet protest, no announcement on the summit, Hanoi reading what was not said: Nguyen, ch. 7, ebook p. 350.</li>
+  <li>Brezhnev at the dacha on 24 May, epithets, then toasts: Nguyen, ch. 7, ebook pp. 351-352.</li>
+  <li>Beijing condemns mining 12 May, mine-clearing teams, no Soviet port access: Nguyen, ch. 7, ebook pp. 349-350.</li>
+  <li>18 June port agreement, torn blankets, satellites, Kissinger arrives next day: Nguyen, ch. 7, ebook p. 353.</li>
+  <li>Defensive armaments only, no offensive weaponry; summits proceeded: Nguyen, ch. 7, ebook pp. 355-356.</li>
+  <li>Le Duan's "drowning" Nixon remark to Zhou: Nguyen, ch. 7, ebook p. 335.</li>
+  <li>Tho's prediction that Nixon could not respond militarily: Nguyen, ch. 7, ebook p. 338.</li>
+  <li>1 June shift to defense of the North: Nguyen, ch. 7, ebook p. 353.</li>
+  <li>Delegations drinking to détente in Moscow while the Politburo ducked into bomb shelters: Nguyen, ch. 7, ebook p. 321.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, chapter 8: The Christmas Bombing Hit Hanoi's Calendar Harder Than Its Will</h3>
+<ul>
+  <li>Linebacker damage forced the Politburo to shift from the offensive in the South to defense of the North: Nguyen, ch. 8, ebook p. 359.</li>
+  <li>Le Duan concedes the offensive failed and turns to "talking" after the ARVN retakes Quang Tri City: Nguyen, ch. 8, ebook pp. 360-361.</li>
+  <li>Beijing and Moscow lecture Hanoi and reduce aid: Nguyen, ch. 8, ebook p. 362.</li>
+  <li>Hoan and Van Tien Dung raised to the Politburo during the Easter Offensive; Hoan's elevation tied to clamping down on unrest: Nguyen, ch. 8, ebook pp. 363-364.</li>
+  <li>Kissinger thought psyops were "striking a raw nerve"; Nguyen calls counterrevolution unlikely given Party control: Nguyen, ch. 8, ebook pp. 364-365.</li>
+  <li>Third round of talks scheduled for 8 to 13 January in the exchange of notes: Nguyen, ch. 8, ebook p. 400.</li>
+  <li>Overriding concern to escape further destruction and preserve forces for after U.S. withdrawal: Nguyen, ch. 8, ebook p. 401.</li>
+  <li>Politburo prepares defenses around Hanoi and Hai Phong and evacuation of the urban population: Nguyen, ch. 8, ebook p. 406.</li>
+  <li>"Signing now or later, timing is no longer an issue": Nguyen, ch. 8, ebook p. 408.</li>
+  <li>Talks deadlocked 13 December; Nixon orders Linebacker II on 14 December for 18 December, the day Tho was due back in Hanoi; twelve days, 3,420 sorties: Nguyen, ch. 8, ebook p. 409.</li>
+  <li>27 U.S. aircraft lost including 15 B-52s; more than 2,000 civilians killed: Nguyen, ch. 8, ebook p. 411.</li>
+  <li>Bombs mobilized world condemnation rather than breaking Hanoi's will; "Nixon's bombs had done their damage"; 26 December offer to resume talks on 4 January: Nguyen, ch. 8, ebook p. 412.</li>
+  <li>Final round began 8 January 1973: Nguyen, ch. 8, ebook p. 412.</li>
+  <li>Linebacker II as failure of Hanoi's aim to settle without further damage; outcry meant Nixon could no longer use American air power in Vietnam: Nguyen, ch. 8, ebook pp. 415-416.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+
+        <h3>Nguyen, epilogue and conclusion: Le Duan Waited Fifteen Years for an Uprising and Got Tanks Instead</h3>
+<ul>
+  <li>PAVN troops under Van Tien Dung enter Saigon on 30 April 1975 atop Soviet tanks; the Party did not need a popular uprising; Saigon's leaders had more or less fled a week before: Nguyen, epilogue, ebook p. 417.</li>
+  <li>Le Duan and Le Duc Tho celebrate the end of their fifteen-year struggle: Nguyen, epilogue, ebook p. 417.</li>
+  <li>Funeral on 15 July 1986: 100,000 Hanoians along six miles from Ba Dinh Square to Mai Dich Cemetery: Nguyen, epilogue, ebook p. 419.</li>
+  <li>The PRC conspicuously absent; Reagan did not register Le Duan's passing: Nguyen, epilogue, ebook p. 420.</li>
+  <li>Giap stripped of defense post in 1980 and Politburo seat in 1982; outlives the "comrades Le"; ranks among the greatest generals: Nguyen, epilogue, ebook pp. 420-421.</li>
+  <li>Danger of ascribing too much power to Third World players, absolving superpowers: Nguyen, conclusion, ebook p. 424.</li>
+  <li>Nothing definitive until the Party, military, and Foreign Ministry archives open: Nguyen, conclusion, ebook p. 427.</li>
+  <li>Le Duan's monopolization of decision making; Ho and Giap sidelined at nearly all key junctures; Ho blackmailed into silence in 1963 and 1964: Nguyen, conclusion, ebook p. 428.</li>
+  <li>General Offensive and General Uprising behind the 1964, 1968, and 1972 attacks; mass insurrection failed each time: Nguyen, conclusion, ebook pp. 430-431.</li>
+  <li>Key to Hanoi's success was its world relations campaign aimed at antiwar movements; it blunted Washington's superpower diplomacy: Nguyen, conclusion, ebook p. 432.</li>
+  <li>Thieu prolonged American withdrawal and laid bare problems with the Nixon Doctrine; Hanoi and Saigon dictated the nature and pace of U.S. intervention; Vietnamese elites created the context: Nguyen, conclusion, ebook pp. 432-433.</li>
+  <li>"Peace could only be won through the barrel of a gun": Nguyen, conclusion, ebook p. 433.</li>
+  <li>The use-it paragraph is our opinion.</li>
+</ul>
+      </section>
+
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Graff and Birkenstein, <i>They Say / I Say</i></h3>
+        <p class="fine">The rule: never leave a quotation dangling. Build a quotation sandwich, with a top slice that says who is speaking and a bottom slice that says what the words mean and why they matter (p. 46), using a verb that reflects the speaker's spirit (p. 47). Frame this Politburo instruction from December 1972 (Nguyen, ch. 8, ebook p. 408).</p>
+        <p class="protip">"Signing now or later, timing is no longer an issue."</p>
+        <div class="mine">
+          <label for="mine-practice">Your sandwich:</label>
+          <textarea id="mine-practice" placeholder="In December 1972, Hanoi's Politburo… told its negotiators, '…' In effect, …"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible sandwich</summary><p>"Days before Linebacker II, with the talks deadlocked and evacuation plans under way, Hanoi's Politburo shrugged at its own negotiators: 'Signing now or later, timing is no longer an issue' (Nguyen, ch. 8, e406, e408). The Politburo was betting that delay cost it nothing, and the Christmas bombing was Nixon's way of putting a price on the calendar." The top slice gives speaker and moment; the bottom slice says what it means (Graff and Birkenstein, 46–47).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Connect the dots</h3>
+        <ul class="recall">
+          <li><details><summary>Senate Democrats now want Iran war commitments before they back a leader. Link it to Nguyen and Randolph.</summary><p>Nguyen: in July 1971 Le Duan made inciting the antiwar movement in Congress and on the streets the first objective of Hanoi's diplomacy (ch. 6, e297), and in 1970 Hanoi read Kissinger's twelve-month withdrawal offer as weakness forced by antiwar sentiment (ch. 5, e261). Randolph: the day after the May 8, 1972 speech, the Senate Democratic Caucus voted 35 to 8 to cut off war funds (179). Adversaries read the caucus as closely as the cockpit (Punchbowl News AM, Nov 6).</p></details></li>
+          <li><details><summary>Ukraine's Starshield link failed in October and its contract runs out in mid-2027. Link it to Nguyen and Zhang.</summary><p>Nguyen: in 1972 Moscow and Beijing gave Hanoi defensive arms but no offensive weapons for the South and kept their summits with Nixon (ch. 7, e355–356); Soviet cargo under torn blankets let U.S. satellites watch (e353). Zhang: in 1950 Moscow ordered its pilots to retrain the Chinese first and not fly beyond the Yalu, so promised air cover never came (62). A patron's support has terms, and the client finds them out in combat (Breaking Defense, Nov 5).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Nguyen: chapter recall</h3>
+        <ul class="recall">
+          <li><details><summary>Who does Nguyen say actually ran Hanoi's war, and for how long did he hold the top Party post?</summary><p>Le Duan, first secretary from 1960 until his death in 1986, with Le Duc Tho as his right-hand man. <span class="pg">N intro, e19</span></p></details></li>
+          <li><details><summary>How did Le Duan take control of Resolution 15?</summary><p>Ho had assigned Giap to draft it, but in early 1958, most likely under pressure from Le Duan, Ho had Giap hand it over; Le Duan and Pham Hung then ran it through twenty-two more drafts. <span class="pg">N ch. 1, e67, e75</span></p></details></li>
+          <li><details><summary>What choice did the hardliners give Ho Chi Minh at the Ninth Plenum in December 1963?</summary><p>Follow the Politburo line or stand aside. They shamed him with his "two mistakes" of 1945 and 1954. <span class="pg">N ch. 2, e104</span></p></details></li>
+          <li><details><summary>What did Le Duan assume about American staying power in mid-1967?</summary><p>That the United States could not maintain its troop level, expand the war, or drag it out, so a sharp escalation would find its breaking point. <span class="pg">N ch. 3, e144</span></p></details></li>
+          <li><details><summary>What did Hanoi do the day after it proposed Paris as a venue in May 1968?</summary><p>On 4 May it launched the second wave of the offensive against 119 southern bases, towns, and cities, to Moscow's dismay; the public talks were for probing only. <span class="pg">N ch. 4, e166, e170</span></p></details></li>
+          <li><details><summary>What did Resolution 18 of the Eighteenth Plenum change in Hanoi's strategy for 1970?</summary><p>It adopted an "economy of forces" strategy, raised the diplomatic struggle to equal rank with the military and political struggles, stepped up support for Cambodia and Laos, and put Le Duan's urban uprising on hold. <span class="pg">N ch. 5, e222-223</span></p></details></li>
+          <li><details><summary>What happened in Paris between 26 June and 1 July 1971?</summary><p>Tho and Thuy gave Kissinger a secret nine-point plan across a new green tablecloth; five days later Madame Binh publicly unveiled the PRG's seven points, tougher on Thieu. <span class="pg">N ch. 6, e293, e295</span></p></details></li>
+          <li><details><summary>How did Hanoi time the 1972 offensive against Nixon's summits?</summary><p>It launched on 30 March, between the Beijing summit (21-28 February) and the Moscow summit (22-30 May), hoping to neutralize big-power pressure. <span class="pg">N ch. 7, e342</span></p></details></li>
+          <li><details><summary>What did Hanoi's Politburo say about timing just before Linebacker II?</summary><p>It told its Paris negotiators that signing now or later was no longer an issue, while it prepared defenses and evacuation of the cities. <span class="pg">N ch. 8, e406, e408</span></p></details></li>
+          <li><details><summary>Who, in Nguyen's conclusion, dictated the nature and pace of U.S. intervention?</summary><p>Leaders in Hanoi and Saigon; Vietnamese elites created the context in which American leaders operated. <span class="pg">N concl., e433</span></p></details></li>
+          <li><details><summary>What does Nguyen call the key to Hanoi's ultimate success?</summary><p>Its world relations campaign to win antiwar movements abroad, which with small-power diplomacy blunted Washington's superpower diplomacy, more than general offensives or hearts and minds. <span class="pg">N concl., e432</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Haun: preview recall (answer after the weekend's reading)</h3>
+        <ul class="recall">
+          <li><details><summary>Of the eleven US campaigns that directly attacked enemy fielded forces since 1965, how many met their military objectives?</summary><p>Nine of eleven; strategic bombing succeeded in two of six, and interdiction failed in five of six. <span class="pg">H 7</span></p></details></li>
+          <li><details><summary>According to Haun's preface, how has air power had its greatest impact?</summary><p>Through armed reconnaissance, by deterring enemy armies from concentrating and maneuvering. <span class="pg">H xii</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: where did "flexible response" get its public name?</summary><p>From Maxwell Taylor's book <i>The Uncertain Trumpet</i> (213).</p></details></li>
+          <li><details><summary>Crane: what did the April 1952 FEAF study find about rail interdiction?</summary><p>It had failed despite more than 15,000 rail cuts, at a cost of 243 aircraft (115–116).</p></details></li>
+          <li><details><summary>Zhang: what did Moscow order Belov's 151st Air Division in 1950?</summary><p>To retrain Chinese pilots first and not to fly beyond the Yalu, so Chinese troops did not get the air cover they counted on (62).</p></details></li>
+          <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
+          <li><details><summary>Schlight: what share of 1966 strike sorties hit enemy troops engaged with allied forces?</summary><p>About 3 percent (216).</p></details></li>
+          <li><details><summary>Clodfelter: how much did Linebacker I cut North Vietnam's overland imports?</summary><p>From 160,000 to 30,000 tons a month, with 155,548 tons of bombs dropped (ch. V, e184).</p></details></li>
+          <li><details><summary>Randolph: why did the first B-52 raid on North Vietnam, at Vinh on April 10, 1972, miss?</summary><p>The American charts of North Vietnam were off by about a kilometer (121).</p></details></li>
+          <li><details><summary>Nguyen: who does she say actually ran Hanoi's war?</summary><p>Le Duan, first secretary from 1960 until his death in 1986, with Le Duc Tho as his right hand (intro, e19–20).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Fix the hit-and-run: "Le Duan was confident. 'It is impossible for the United States to maintain its current troop level.'"</summary><p>"In mid-1967, as he pushed the Tet plan past Giap's doubts, Le Duan insisted that 'it is impossible for the United States to maintain its current troop level' (Nguyen, ch. 3, e144). He was betting that one sharp escalation would find America's breaking point, and he jailed the planners who doubted it" (Graff and Birkenstein, 46).</p></details></li>
+          <li><details><summary>Pick a better verb: "Nguyen states that peace could only be won through the barrel of a gun."</summary><p>"Nguyen concludes, bleakly, that leaders ensured 'peace could only be won through the barrel of a gun'" (conclusion, e433). "Concludes, bleakly" carries her tone; "states" flattens it (Graff and Birkenstein, 47).</p></details></li>
+          <li><details><summary>Review (Thursday, although and because): turn "Linebacker II forced Hanoi to sign" into a thesis.</summary><p>"Although Hanoi offered to resume talks on December 26, the heaviest day of the Christmas bombing, Linebacker II changed the price of delay more than Hanoi's goals, because the Politburo had already shifted to seeking American withdrawal that summer" (Nguyen, ch. 8, e360–361, e412; Booth et al., 125–126).</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: one quotation sandwich around Nguyen's closing line that leaders ensured "peace could only be won through the barrel of a gun." Say what it means for the bombing debate.</label>
+          <textarea id="mine-crane" placeholder="Nguyen concludes… '…' (conclusion, e433). Her point is…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-done">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>30 Oct</td><td class="st-done">McDougall, <i>…The Heavens and the Earth</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>2 Nov</td><td class="st-done">Schlight (intro, ch. 1–2) + document pack (decision exercise)</td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>3 Nov</td><td class="st-done">Clodfelter, <i>The Limits of Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>5 Nov</td><td class="st-done">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>6 Nov</td><td class="st-now">Nguyen, <i>Hanoi's War</i></td><td><span class="pill now">SEMINAR</span></td></tr>
+            <tr><td>9 Nov</td><td>Haun, <i>Tactical Air Power and the Vietnam War</i></td><td><span class="pill now">NEXT</span></td></tr>
+            <tr><td>10 Nov</td><td>Kitfield, <i>Prodigal Soldiers</i></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Eight more after Kitfield, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Haun seminar, 9 Nov</span><b>3</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>25</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: politics, plus defense, leadership, or conflict (Fridays add Space × Sci-Fi)</li>
+          <li>Sources, then Q&amp;A</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, Punchbowl News, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Defense News</i>, <i>Breaking Defense</i>, <i>Air &amp; Space Forces Magazine</i>, SpaceNews, CSIS, and RAND.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+</script>
+
+</body>
+</html>
