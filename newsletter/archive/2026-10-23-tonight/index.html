@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Review edition for an earlier book, written November 17 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Friday, October 23, 2026 · Review edition for Monday's seminar: Gaddis (written November 17)</p>
+      <p class="toc-after"><a href="../">Archive of every edition</a> · <a href="../../map/">Course map</a></p>
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Gaddis, <i>Strategies of Containment</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Monday's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from the course's opening question</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#g-01">Ch. 1 (with preface): Washington Promised the World, Then Sent the Army Home</a></li>
+          <li><a href="#g-02">Ch. 2: Kennan Counted Five Power Centers and Told Washington to Stop Counting Communists</a></li>
+          <li><a href="#g-03">Ch. 3: The Means Ate the Ends, and Washington Called It Strength</a></li>
+          <li><a href="#g-04">Ch. 4: Define Interests by the Threat, and the Kremlin Writes Your Budget</a></li>
+          <li><a href="#g-05">Ch. 5: Eisenhower Priced the Cold War Before He Planned It</a></li>
+          <li><a href="#g-06">Ch. 6: Ike's Big Stick Only Worked on Enemies Who Had a Boss</a></li>
+          <li><a href="#g-07">Ch. 7: Kennedy Found the Soviets Smaller, Then Bought More Weapons Anyway</a></li>
+          <li><a href="#g-08">Ch. 8: Promise to Do Only What Is Necessary, and Hanoi Decides What Is Necessary</a></li>
+          <li><a href="#g-09">Ch. 9: The Road to Bombing Hanoi Ran Through Beijing</a></li>
+          <li><a href="#g-10">Ch. 10: You Cannot Train a Bear When Four Hands Hold the Treats</a></li>
+          <li><a href="#g-11">Ch. 11: Reagan Priced Containment Against Moscow's Budget, Then Asked for a Meeting</a></li>
+          <li><a href="#g-12">Ch. 12 (epilogue): Containment Travels Well, Provided You Pack the Conditions</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Monday's seminar</span>
+        <h3><a href="#t1">Gaddis, <i>Strategies of Containment</i>: One Idea, Six Budgets</a></h3>
+        <p>Gaddis argues that American Cold War strategy was one idea, containment, run in a series of versions, and that what changed most between versions was each administration's sense of how much it could afford. He defines strategy as relating ends to means, intentions to capabilities, objectives to resources. He counts five "geopolitical codes": Kennan's strategy from 1947 to 1949, NSC-68 from 1950 to 1953, the Eisenhower-Dulles New Look to 1961, Kennedy and Johnson's flexible response to 1969, and the Nixon-Kissinger detente that lasted through Ford and Carter until the Soviets invaded Afghanistan. Each code, he says, forms before or just after an administration takes office and rarely changes afterward. The revised edition expands chapter 11 to cover Reagan, who in Gaddis's telling completed the job Kennan started. (Few authors get to write the ending to their own book twenty-three years late.)</p>
+        <p>The book's main tool is a pair of terms. Symmetrical containment meets every threat wherever the enemy chooses, which gives a president more options than escalation or humiliation and requires virtually unlimited resources. Gaddis says the United States never had the capabilities or the will to sustain it for long, and that Korea and Vietnam ended in frustration, disillusionment, and exhaustion. Asymmetrical containment accepts limited means and picks the time, place, and instrument, applying American strengths against Soviet weaknesses. It keeps the initiative and demands steady nerves, because it means giving up some places on purpose. Administrations swung between the two, and Gaddis's recurring finding is that perceived means drove the swing more than the threat did. Kennedy's team, he writes, shows that interests may be as much functions of means as of threats.</p>
+        <p>The book argues against two habits: narrative history that piles up detail without asking what it means (Gaddis calls himself a "lumper"), and the assumption that the threat sets the strategy, which he says NSC-68 made official by handing the Russians control over what American interests were. For this course, Gaddis is the frame for every Cold War book that follows. Airpower appears mostly as the cheap instrument: the New Look's home-based bomber deterrent, the Air Force's share of the defense budget rising from 34.2 to 46.2 percent, and Rolling Thunder's calibrated bombing. Read it asking, in each chapter, whether the people in charge thought their means were limited. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Four Hundred Pages, Sorted by Payoff</a></h3>
+        <p>Read the frame first, then the two chapters where the strategy broke, then the rest. Gaddis pairs most chapters: one describes an administration's strategy, the next judges how it was carried out. Chapter 4 does both for NSC-68, and chapter 8 is a Vietnam case study.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The preface, pp. viii to ix (strategy defined, the five codes, and in the footnote the four questions he asks of every strategy). Then the opening of chapter 11, pp. 342 to 343 (symmetry and asymmetry summed up in two paragraphs), and the epilogue's lessons, pp. 386 to 389.</li>
+          <li><b>60 minutes.</b> Add chapter 2, pp. 29 to 40 (Kennan's five power centers and his test for aid), and chapter 4, pp. 89 to 98 and 107 to 111 (NSC-68's logic, then the budget before and after Korea).</li>
+          <li><b>2 hours.</b> Add chapter 5, pp. 144 to 149 and 159 (the New Look and its five instruments); chapter 8, pp. 245 to 262 (Rolling Thunder, the services, and the abundance of means); and chapter 9, pp. 294 to 298 (the China opening and what it freed Nixon to bomb).</li>
+        </ol>
+        <p>Chapters 1, 3, 6, 7, and 10 can wait; the lessons below carry their evidence. Make one exception for chapter 6's two-part test for deterrence, p. 179. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Preface, p. ix, the footnote.</b> Gaddis asks four questions of each strategy: how it saw American interests, how it saw threats, what responses it chose, and how it justified them. Use them as a checklist.</li>
+          <li><b>Chapter 3, pp. 57 to 58.</b> Strongpoint against perimeter defense. A perimeter, Gaddis writes, required readiness along its entire length whether local conditions favored resistance or not.</li>
+          <li><b>Chapter 4, pp. 96 to 98 and 111.</b> NSC-68 carried no cost estimate by design, and the fiscal 1951 budget went from a 13.5 billion dollar ceiling to a 48.2 billion dollar authorization once Korea began.</li>
+          <li><b>Chapter 6, pp. 173 to 174.</b> Eisenhower's aim was to avoid all wars. He feared that conventional forces built for limited war would bring "great temptations to demonstrate the value of such forces," if only to justify what they cost.</li>
+          <li><b>Chapter 8, pp. 245 to 246 and 262.</b> Rolling Thunder as calibration, with results "precisely opposite from those intended," and Gaddis's verdict on a war the government "did not understand, could not win, but would not leave."</li>
+          <li><b>Chapter 12, p. 382.</b> Why the Cold War stayed cold: every leader on both sides feared a third world war, so total war stopped being a usable means, even though limited wars were still possible.</li>
+        </ol>
+        <p>Argue with item four. Eisenhower's logic says the force you build shapes the war you get, and this course spends seven weeks testing it. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Monday's Seminar Questions</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 1, "The Cold War: A Long Game." Monday morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>What options were available to American policymakers to contain the Soviet Union and communism?</b> The five codes in the preface, p. ix; Kennan's economic-aid strategy, chapter 2, pp. 29 to 40; the New Look's five instruments, chapter 5, pp. 145 and 159; linkage, chapter 9, pp. 290 to 291.</li>
+          <li><b>What constraints and opportunities were available over these four decades?</b> Eisenhower's fear of ruinous spending, chapter 5, pp. 130 to 133; Kennedy's belief in expandable means, chapter 7, pp. 202 and 212; the China opening, chapter 9, p. 297; Congress after Vietnam, chapter 10, pp. 312 to 315; Soviet economic weakness, chapter 11, pp. 354 to 356.</li>
+          <li><b>Were the Korean and Vietnam Wars necessary for the overarching strategy?</b> Korea's jump from peripheral to vital interest, chapter 4, pp. 107 to 117; Vietnam as the test of flexible response, chapter 8, pp. 245 to 262; Gaddis's summary of both, chapter 11, p. 342.</li>
+          <li><b>Was there a primary instrument of power that ultimately led to the dissolution of the Soviet Union?</b> Chapter 11, pp. 354 to 356 and 375; the epilogue on enemies defeating themselves, pp. 386 to 387.</li>
+          <li><b>If containment was American policy over four decades, how important were individual presidential administrations?</b> Codes formed early and rarely changed, preface, p. ix; the same objectives under both parties, with shifts as course corrections, epilogue, pp. 388 to 389.</li>
+        </ol>
+        <p>Opinion: prepare question four. Gaddis declines to name a single cause and says internal Soviet developments mattered more than outside pressure, which makes him a useful witness against anyone at the table who says one word, whether it is "Reagan," "bombers," or "money." <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>George F. Kennan.</b> First director of the State Department's Policy Planning Staff in May 1947, author of the "X" article, and the architect of containment (p. 24).</li>
+          <li><b>Strongpoint defense.</b> Defending particular regions and the routes to them instead of fixed lines, so the United States could pick its ground (pp. 57 to 58).</li>
+          <li><b>Paul Nitze and NSC-68.</b> Nitze, Kennan's successor, chaired the small committee that drafted NSC-68 in early 1950; it treated every interest as vital and every means as affordable (pp. 88, 93).</li>
+          <li><b>The New Look.</b> Eisenhower and Dulles's strategy of 1953 to 1961, answering aggression at places and with means of America's own choosing (p. 145).</li>
+          <li><b>Flexible response.</b> Kennedy and Johnson's strategy of options at every level, meant to give the president more choices than humiliation or all-out nuclear war (p. 202).</li>
+          <li><b>Linkage.</b> Kissinger's idea that the great issues were interrelated, so progress in one negotiation should depend on Soviet conduct elsewhere (p. 290).</li>
+          <li><b>Symmetrical and asymmetrical containment.</b> Meeting every threat where the enemy chooses, against picking your own ground and instruments (pp. 342 to 343).</li>
+          <li><b>Geopolitical code.</b> An administration's assumptions about interests, threats, and feasible responses, usually fixed by its first months in office (p. ix).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From the Course's Opening Question · Limited War to Gaddis</span>
+        <h3><a href="#t6">Why the Adjective Stayed Attached to the Noun</a></h3>
+        <p>The course opens by asking why the Cold War never became a direct great power war, and whether Korea and Vietnam deserve the word "limited." Gaddis answers the first half in his epilogue. When Kennan's first assignment after the long telegram was to design a course on strategy at the National War College, he found "no American tradition of limited war" and had to borrow from Clausewitz, Talleyrand, and Gibbon. The sense of shared risk then lasted the whole Cold War, Gaddis says, which is why the adjective "cold" stayed attached to the noun. Every leader in both capitals feared a third world war, so total war stopped being a way to defend anything, even though limited wars remained possible. Containment, he adds, came almost a decade before the nuclear stalemate, so the bomb did not keep the peace alone. (The course's first lesson on limited war features a man designing a war college course. Nobody here should be surprised.)</p>
+        <p>The second half of the question is where Gaddis gets uncomfortable for airmen. Eisenhower worried that forces built for limited wars would tempt their owners to use them, and Senator Taft warned in 1951 against fighting on the enemy's chosen battleground. Gaddis's verdict on Vietnam is that the real decisions about American force levels were made in Hanoi. Keep one question in mind while reading: in each war, who actually set the limits, the enemy, the budget, or Washington's own strategy? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Gaddis, <i>Strategies of Containment</i></p>
+
+
+      <article id="g-01">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 1</span>
+        <h3><a href="#g-01">Washington Promised the World, Then Sent the Army Home</a></h3>
+        <p>A commitment without the means to keep it fails Gaddis's own definition of strategy. He defines strategy in his preface as "the process by which ends are related to means." Chapter 1 shows Washington trying three ways to handle Stalin between 1941 and 1947: Roosevelt's plan to bring the Soviets into a postwar club, the quid pro quo bargaining of Harriman and Byrnes, and the "patience and firmness" line that followed Kennan's long telegram. Each one failed, and containment grew out of the failures. The preface promises a later sorting of containment into symmetrical and asymmetrical forms. This chapter is where the arithmetic starts.</p>
+        <p>Twelve million Americans were in uniform when Germany surrendered. By July 1946 there were 3 million, and a year later 1.6 million. Defense spending fell from 83 billion dollars in fiscal 1945 to 12.8 billion in fiscal 1947. On March 12, 1947, Truman pledged to support free peoples resisting subjugation. Gaddis's verdict is that the commitment was open-ended at a time when the means to honor it had almost entirely disappeared. Roosevelt had run the books the other way. He capped the army at 90 divisions instead of the 215 once thought necessary and hoped to keep the American share largely to naval and air power. For every American who died in the war, 13 Germans and 90 Russians died. Given his objectives, Gaddis says, it would have been hard to improve on that strategy.</p>
+        <p>A weak seminar comment: "Containment started when Truman got tough with Stalin in the Truman Doctrine." That claim asserts a turning point and ignores the author's own counterevidence. Gaddis shows containment on Washington's mind from 1941, and the decisions to aid Greece and Turkey were made months before the speech; what was new in early 1947 was Britain's abrupt notice that it was quitting. The strong version: the Truman Doctrine was the last word of a year-old strategy that had ends and no means, and the real turn came that spring, when Washington began ranking its interests. Opinion: Gaddis is right that "patience and firmness" boiled down to "a set of attitudes." The bargaining before it did no better. Byrnes thought dealing with Moscow was like running the Senate: "You build a post office in their state." When Byrnes threatened to publish an American report on Soviet conduct, Stalin offered to publish his own "impartial" one, and the atomic bomb drew from the Kremlin a few cocktail party jokes by a tipsy Molotov.</p>
+        <p>The first-order effect was a global pledge resting on a shrinking force. The second-order effect came in spring 1947: interests had to contract to fit means, which forced Washington to separate vital interests from peripheral ones, and that task opened the door for Kennan as containment's chief architect. The third-order effect arrived in 1950, when Washington tried the opposite fix and expanded means to fit interests; the preface ties that NSC-68 strategy, from 1950 to 1953, to the Korean War. Because the chain runs on troop counts and budgets, it pre-empts the claim that containment was simply Truman's temperament.</p>
+        <p>Gaddis says the United States depended on the Red Army as much as the Russians depended on Lend-Lease. If so, was Soviet power in Europe in 1945 a price Washington chose to pay for a 90-division army? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-02">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 2</span>
+        <h3><a href="#g-02">Kennan Counted Five Power Centers and Told Washington to Stop Counting Communists</a></h3>
+        <p>Decide what you must protect before you decide what threatens you. Kennan held that threats had no meaning except in terms of one's interests, and because capabilities were finite, interests had to be finite too. Gaddis rebuilds Kennan's strategy from planning papers, war college lectures, and private notes, since the famous "X" article reflected his thinking only imperfectly. What emerges is a balance-of-power strategy aimed at the psychological weakness of a few vital regions, with economic aid as its main tool.</p>
+        <p>Five centers of industrial and military power mattered, Kennan told National War College students in September 1948: the United States, Great Britain, Germany and central Europe, the Soviet Union, and Japan. Only in those places could anyone build the amphibious power that would seriously threaten American security. One center was in hostile hands. The job was to keep the other four from joining it. Everything else went through a three-part test for aid: are there local forces of resistance worth strengthening, how much does the area matter to American security, and do the costs fit the results? Kennan called the last one a "business accounting procedure in political terms." He even suggested that a communist China might trouble Moscow more than Washington, because it would lack for years the industrial base to build the instruments of amphibious and air warfare. In Kennan's ledger, the ability to project power by sea and air is what made a region dangerous.</p>
+        <p>A weak seminar comment: "Kennan wanted the United States to stop communism everywhere. Just read the X article." That comment treats one public essay as the whole strategy and ignores the author's own counterevidence: Kennan found himself agreeing more with Walter Lippmann's critique than with his own article. The strong version: Kennan aimed containment at the demoralization of Western Europe and Japan, rather than at Soviet military attack or at international communism, and his plans for European aid carried no formal military commitment. In his words, "We are not necessarily always against the expansion of communism." Resist it everywhere, he warned, and everyone in the world would show up with his palm out. Opinion: the confusion was partly self-inflicted. The "X" byline protected Kennan's anonymity until Arthur Krock went digging and revealed it, and Lippmann's rebuttal ran longer than the original.</p>
+        <p>The first-order effect of Kennan's approach was aid to Western Europe treated as a whole and planned by Europeans, meant to restore self-confidence, with the western zones of Germany quietly folded in. The second-order effect, as Kennan saw it, was that a prosperous Western Europe would drain the appeal of local communism and make Eastern Europe's regimes look bad by comparison across the fence; the Yugoslav split in the summer of 1948 seemed to confirm the analysis. The third-order effect was Kennan's forecast: nationalism would fracture the communist world, and steady pressure over years would change how Kremlin leaders thought. He said he would rather wait thirty years for that than go to war. This chain pre-empts the charge that containment was purely negative, a charge Kennan called "entirely untrue" in November 1948.</p>
+        <p>Truman's March 1947 speech sold a limited aid program in universal language, which offended Kennan, and he never solved how to explain priorities to Congress and the public. Can a democracy run a strategy of priorities when it has to sell every commitment as universal? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-03">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 3</span>
+        <h3><a href="#g-03">The Means Ate the Ends, and Washington Called It Strength</a></h3>
+        <p>Watch for the day your instrument becomes your objective, because that is the day the strategy stops working. Gaddis argues that the Truman administration carried out the first two stages of Kennan's containment with remarkable fidelity: strongpoint defense built on economic aid, then exploiting Tito's break with Moscow. It parted company with Kennan on the third stage, changing the Soviet outlook through negotiation, as NATO, a West German state, American bases in Japan, and the hydrogen bomb piled up between 1948 and 1950. Kennan's verdict on West Germany fits all four: "what was conceived as an instrument became, little by little, an end in itself."</p>
+        <p>The Soviet Union tested an atomic bomb in August 1949, and the argument over a far more powerful "super" bomb began. Kennan answered with a seventy-nine-page paper calling for minimum deterrence and no first use, which he later ranked among the most important things he wrote in government. The Atomic Energy Commission's General Advisory Committee warned the super might become a weapon of genocide, and commission chairman David Lilienthal and two other commissioners opposed it. Acheson floated an eighteen to twenty-four month moratorium. The Joint Chiefs prized it as an offensive weapon. On January 31, 1950, Truman authorized a test of technical feasibility, which in practice meant building it. A few days later he told his staff, "There actually was no decision to make on the H bomb." (Seventy-nine pages, answered in one sentence.)</p>
+        <p>A weak seminar comment: "Kennan was right, and Truman should have listened to him." That asserts a verdict without evidence and ignores the author's own counterevidence, since Gaddis shows Truman did listen through 1949 and then faults Kennan's strategy too. The strong version names the cause of the break: measurement. Kennan judged Soviet intentions; his critics wanted capabilities they could count. Paul Nitze said Washington could not prove whether the Soviets would use force, and while drafting NSC-68 Acheson brushed aside Kennan and Bohlen's ranking of Kremlin priorities. Gaddis calls this a tendency to "equate the importance of information with the ease of measuring it," an approach he says suits physics better than diplomacy. Opinion: Gaddis grades both sides fairly. Kennan's own flaw, he says, was missing that insistence on rational distinctions could itself breed irrational fears, and Kennan's tightrope image admits the allies kept looking down.</p>
+        <p>First order, the January 1950 decision committed the United States to the super. Second order, Truman paired it with a full review of national security policy that became NSC-68, which aimed to reduce near-total reliance on weapons of mass destruction but cost so much that it evolved into a different strategy of containment. Third order, Gaddis calls the failure to keep means subordinate to ends the strongest criticism of Truman's policy, and he says process triumphing over policy became a familiar pattern in later years. We infer that Acheson's goal of building situations of strength became a standing reason to postpone talks, since strength never felt finished. The chain is hard to rebut because it rests on the administration's own decisions and on Kennan's own concession that Germany and Japan turned out better than he feared, so it cannot be waved off as one diplomat's sour grapes.</p>
+        <p>If strength is a means to negotiation, how does a commander know when he has enough of it? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-04">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 4</span>
+        <h3><a href="#g-04">Define Interests by the Threat, and the Kremlin Writes Your Budget</a></h3>
+        <p>A strategy that defines its interests by the enemy's threats hands the enemy the pen. Gaddis argues that NSC-68, drafted in early 1950 by Paul Nitze's small State and Defense committee, made every interest vital and every means affordable: a defeat anywhere was a defeat everywhere, and a fully employed economy could pay for the defense. Because it derived American interests from the Soviet threat, Gaddis says, it managed to "transfer to the Russians control over what United States interests were."</p>
+        <p>Truman's defense ceiling for fiscal 1951 was $13.5 billion, and he held it even after reading NSC-68 in April 1950. In May he told reporters next year's defense budget would be smaller. The document carried no cost estimate, by design; Acheson later said its purpose was to "bludgeon the mass mind of 'top government.'" Informal estimates inside the drafting committee put the program near $50 billion a year, three and a half times the ceiling. Then North Korea attacked. Truman asked for $10 billion more on July 19, $4 billion for military assistance on August 1, $1.6 billion on August 4, and $16.8 billion on December 1. Congress authorized $48.2 billion, a 257 percent increase over the original request. Truman signed off on NSC-68 on September 30, 1950, by then a formality.</p>
+        <p>A weak seminar comment: "NSC-68 tripled the defense budget." That confuses the document with the outcome and ignores Gaddis's own timeline, since Truman kept his ceiling until the war began. The strong version splits the credit. NSC-68 supplied the logic and Korea supplied the shock: Gaddis writes that the attack across the 38th parallel produced both the presidential approval and the Congressional money. Korea, a peripheral interest in June, became vital almost at once because credibility was now the measure. Opinion: NSC-68's most effective lobbyist was Stalin. Gaddis says its advocates did not have to work as hard as they expected, thanks to unexpected help from the Soviet Union. NSC-68 also claimed 6 to 7 percent of gross national product went to defense, and Gaddis notes the real figure was closer to 5 percent.</p>
+        <p>First order, the money bought forces: in September 1950 Washington decided to send four to six divisions to Europe, and the Pentagon's price was West German rearmament. Second order, the logic of credibility pushed United Nations forces north of the 38th parallel, China intervened in late November, and the administration found itself bogged down in a peripheral war with a secondary adversary, precisely what it had resolved to avoid. Acheson admitted privately, "We are fighting the second team." Third order, the cost fed the Republican critique: Taft warned against fighting on the enemy's chosen ground, and in May 1952 Dulles proposed instant retaliation with atomic weapons and strategic air and naval power, at a lower price. Gaddis concludes the Truman program had grown beyond the nation's political will, as the 1952 election showed. We infer that NSC-68's bills are what gave Dulles's cheaper airpower answer its audience. The chain is hard to rebut because it uses the administration's own private doubts, including Acheson's complaint that Korea had bought them a colt, so the critique cannot be dismissed as hindsight.</p>
+        <p>If Korea had never happened, would NSC-68 have been funded at all? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-05">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 5</span>
+        <h3><a href="#g-05">Eisenhower Priced the Cold War Before He Planned It</a></h3>
+        <p>Decide what you can afford before you decide how to fight, because your means will redraw your interests. Gaddis argues that Eisenhower and Dulles kept Truman's view of American interests but threw out NSC-68's assumption that the country could pay any security bill. Eisenhower feared endless defense spending would bring inflation, controls, and a garrison state. He had read Clausewitz in Panama under Fox Conner, and he put the lesson plainly: "we must not destroy what we are attempting to defend." The answer was asymmetry, which means hitting the enemy's weak points with your own strengths, at a place you pick.</p>
+        <p>Truman's approach had pushed defense spending to roughly 50 billion dollars a year, and Eisenhower estimated that Truman's parting recommendations in NSC 141 would have produced 44 billion dollars in deficits over five years. On January 12, 1954, Dulles told the Council on Foreign Relations that the free world would respond "at places and with means of its own choosing." Behind the speech sat NSC-162/2, approved in October 1953, which made nuclear weapons as available for use as any other munitions. A month later Eisenhower and three cabinet officers agreed that the new weapons justified cutting ground troops and parts of the Navy. Intercontinental jet bombers were coming into service, foreign hosts were souring on American bases, and an airborne deterrent based at home won the argument. The Army's bottle washers and table waiters, as Eisenhower called them, did not.</p>
+        <p>A weak comment: "The New Look was massive retaliation. Threaten to nuke Moscow over everything and pocket the savings." This mistakes the slogan for the strategy and ignores the author's counterevidence. Gaddis counts five instruments, nuclear deterrence, alliances, psychological warfare, covert action, and negotiations, and says their common thread was that all cost less than NSC-68's symmetrical response. Eisenhower mocked bombastic talk within a month, and Dulles soon explained in Foreign Affairs that he never meant bombs dropped all over the map. The strong version: the New Look was a cost-driven theory of asymmetry, and the nuclear threat was its cheapest tool. Opinion: covert action was the second cheapest, and the administration noticed. The CIA toppled governments in Iran in 1953 and Guatemala in 1954, and Gaddis calls covert action relatively inexpensive, which is a phrase the Guatemalans might have priced differently.</p>
+        <p>The chain runs from a budget to a credibility problem. First order: the Army and parts of the Navy were cut while the deterrent leaned on bombers. Second order: a cheap threat works only if believed, so the administration blurred the line between nuclear and conventional weapons. Eisenhower told the United Nations in December 1953 that atomic weapons had virtually achieved conventional status, and in 1955 he authorized nuclear use even in local wars. Third order: the rhetoric outran the policy. Dulles's 1956 Life interview about going to the verge of war handed reporters the word brinkmanship, and Gaddis concludes that Dulles's overstatements confused the public, alarmed allies, and bewildered adversaries. We infer that this gap set up the later charge that the New Look was nuclear and nothing else. The chain pre-empts the charge of recklessness, because the risk was priced: the administration accepted greater risks than Truman did in order to lower costs.</p>
+        <p>Who should decide how much risk a saved dollar is worth? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-06">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 6</span>
+        <h3><a href="#g-06">Ike's Big Stick Only Worked on Enemies Who Had a Boss</a></h3>
+        <p>Before you threaten, ask two questions: does the enemy want this less than you do, and does someone over there actually control the fighters? Gaddis says deterrence assumes both, and the Eisenhower administration kept forgetting it. The New Look delivered deterrence at low cost, and defense fell from 13.1 percent of gross domestic product in 1954 to 9.4 percent in 1961. But it fitted one drastic solution to a varied set of problems. Eisenhower leaned on nuclear weapons on purpose. He wanted to avoid all wars, and he thought making general war the only option would deter both the enemy and his own advisers.</p>
+        <p>In Korea, the Chinese were not strongly committed to fighting on, but Beijing controlled its forces, so a threat had something to grip. Off the China coast, Mao backed down over Quemoy and Matsu, perhaps because of the nuclear threats. In Indochina the insurgents were totally committed and under little outside control, so no threat could give the French fighting spirit or scare off their enemies. The 1957 Eisenhower Doctrine tried to deter something as vague as communism in a region as loose as the Middle East, and it spent almost overnight the Arab goodwill Washington had earned over Suez. Gaddis calls the administration a victim of its own successes, sure that what worked in one place would work in another.</p>
+        <p>A weak comment: "Massive retaliation worked. No big war happened on Eisenhower's watch." This treats the absence of war as proof. Gaddis warns that without insight into the other side's intentions, nobody can say whether there was anything to deter in the first place. It also ignores his counterevidence on Korea: exhaustion and Stalin's death in March 1953 brought the armistice, and Beijing misunderstood or ignored the nuclear threats. The strong version: the threat worked where an enemy with a boss had limited stakes, and failed where a committed movement answered to no one. Opinion: a strategy that grades its own exam by counting wars that did not happen will always pass.</p>
+        <p>The cheap threat was paid for in control. First order: the Army shrank from 1.5 million to 1 million men between December 1953 and June 1955, and the Air Force share of defense spending rose from 34.2 percent to 46.2 percent. Eisenhower said small wars were "primarily a matter for Navy and Air," with allies supplying the ground troops. Second order: once allies held the conventional rung, they could steer Washington, the French by doing too little in Indochina and Chiang Kai-shek by doing too much on the offshore islands. Washington was left choosing between nuclear use and doing nothing. Third order: the 1958 Quemoy crisis showed how little it took to push the country toward nuclear war with China. Public and allied opposition pushed Dulles to call Chiang's island garrisons "rather foolish." Gaddis adds that the scheme rested on Eisenhower's confidence that he knew too much about the military to be fooled, a quality his successors were unlikely to share. We infer that this is why the next administration went shopping for flexibility. The chain answers the claim that nuclear threats came free: the bill arrived as lost initiative, the very thing the New Look was supposed to buy.</p>
+        <p>Which Cold War limited wars passed both tests? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-07">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 7</span>
+        <h3><a href="#g-07">Kennedy Found the Soviets Smaller, Then Bought More Weapons Anyway</a></h3>
+        <p>A shrinking threat will not shrink a commitment when the money looks unlimited, because the budget, more than the enemy, sets how much a government decides it must defend. Gaddis argues that Kennedy and Johnson lowered their estimates of Soviet power, kept every interest Eisenhower had claimed, and then added the means to defend all of it at every level. They called the result flexible response. Gaddis draws the moral himself: "interests may be as much functions of means as of threats." Once the Soviets looked smaller, the thing left to fear was looking weak.</p>
+        <p>Soviet divisions in Europe numbered about 175 against NATO's 25 by the traditional count, which made a conventional defense look hopeless. McNamara's systems analysts priced that army out. Equipping 175 divisions to American standards would cost eight times what Washington was spending, far more than the Soviet economy could carry. Intelligence put Soviet manpower at about 2 million to America's 960,000, and NATO ahead of the Warsaw Pact, 6 million to 4.5 million. The explanation was arithmetic: a Soviet division was about one-third the size of an American one. Meanwhile reconnaissance showed by the fall of 1961 that the United States led in operational missiles, and the missile gap the Democrats had campaigned on did not exist. (Campaign issues age quickly once someone develops the film.) For the first time since 1945, the West felt at parity or better.</p>
+        <p>A weak comment: "Kennedy built up the military because the Soviets were getting ahead." That is weak because it ignores the author's own counterevidence: the administration knew by October 1961 that it was ahead, and said so in public. The strong version says the threat estimate fell and spending rose anyway, because Kennedy's economists told him the economy could carry both defense and domestic reform. Johnson put it plainest in July 1964: the richest nation in history could afford whatever was needed. By mid-1964 the number of nuclear weapons was up 150 percent and deliverable megatonnage up 200 percent, with 29 Polaris submarines and 800 Minuteman missiles in the plan. Gaddis says the main motive was simply to keep the superiority the missile count had revealed. Opinion: when the cash register has no ceiling, the enemy stops setting the size of the order.</p>
+        <p>First order, combat-ready Army divisions went from 11 to 16, and defense spending rose from 49.6 billion dollars in fiscal 1961 to 54.8 billion in fiscal 1964, though its share of the economy dipped from 9.4 to 8.5 percent (which made the bill feel free). Second order, Carl Kaysen warned Kennedy that generous missile goals would step up the arms race, and Khrushchev, watching his position slip, threatened Berlin, resumed atmospheric testing, and put missiles in Cuba. Third order, the administration treated its Cuba handling as the textbook case of flexible response, and a February 1963 draft memorandum called for the "controlled and graduated application" of power. We infer that this template walked into Vietnam. The chain pre-empts the reply that Kennedy was only answering Soviet strength, since Gaddis shows the threat estimate fell first and the buildup came after.</p>
+        <p>If Kennedy knew by late 1961 that he was ahead, what was flexible response actually buying? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-08">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 8</span>
+        <h3><a href="#g-08">Promise to Do Only What Is Necessary, and Hanoi Decides What Is Necessary</a></h3>
+        <p>A strategy that announces it will do only what is needed to counter the enemy has handed the enemy the dial. Gaddis argues that Vietnam was the fair test of flexible response and that the strategy failed it on its own terms: calibration ceded the pace of the war to Hanoi, the bureaucracy measured whatever flattered it, and the belief in unlimited means removed any reason to choose. Johnson promised, "We will do only what must be done." Gaddis concludes that the real decisions on American force levels were being made in Hanoi.</p>
+        <p>The bombing of North Vietnam grew from 25,000 sorties and 63,000 tons of bombs in 1965 to 108,000 sorties and 226,000 tons in 1967. A sortie is one flight by one plane. Targets were chosen in Washington, and one 1966 order ruled out attacks on Sunday (the war, it seems, kept a weekend). None of it produced a discernible drop in infiltration or a step toward talks. In November 1961 McNamara's worst case, with both China and North Vietnam openly in the war, was six divisions, or 205,000 men. China stayed out, and by the end of 1967 the United States had 486,000 troops there. Pentagon analysts later found that enemy attacks produced enemy casualties while American operations produced few, so the enemy was setting its own loss rate.</p>
+        <p>A weak comment: "We lost because the politicians tied the airmen's hands." That is weak because it ignores the author's own counterevidence: by August 1967 the White House had approved about 95 percent of the targets the Joint Chiefs requested, and the enemy later held out under much heavier pressure. The strong version grants the one point Gaddis grants the military, that gradual escalation gave away the initiative and any uncertainty in the enemy's mind. The services also bent the war to their own habits. The Air Force insisted on strategic bombing and on B-52s against suspected guerrilla camps, and it favored fast jets although studies found propeller aircraft three times as accurate and five to thirteen times cheaper. Because fuel and ordnance followed sortie rates, the Air Force and Navy raced each other on sorties, some flown without bombs. As one colonel put it, "you've got to have more Air Force over the target than Navy." Opinion: an empty bomb bay is a metric that has eaten its mission. In plain terms, the services counted sorties because sorties earned resources, and the count replaced the damage as the goal.</p>
+        <p>First order, bombing raids quadrupled between 1965 and 1968 while enemy attacks in the South rose fivefold, in places eightfold, and the bombing did about 600 million dollars of damage at a cost of 6 billion dollars in lost aircraft. Second order, after Tet in February 1968 Westmoreland asked for 206,000 more troops, a number that required calling up the Reserves, and only then did Johnson weigh costs against benefits, by political gut rather than analysis. Third order, war costs made the administration reluctant to ask Congress for new strategic systems, and by 1969 Moscow was nearing parity in land-based missiles; Johnson's deferred war financing set off inflation that lasted more than a decade. The chain pre-empts the reply that the airmen only needed to be unleashed, because the restrictions had largely fallen away and the dial stayed in Hanoi.</p>
+        <p>If a strategy publishes its own ceiling, how does a commander keep the enemy guessing? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-09">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 9</span>
+        <h3><a href="#g-09">The Road to Bombing Hanoi Ran Through Beijing</a></h3>
+        <p>The cheapest way to widen your military options is to subtract an enemy. Gaddis argues that Nixon and Kissinger rebuilt containment by defining American interests first and threats second, which let them judge communist states by their conduct instead of their creed. Only four and a half years earlier, Dean Rusk had justified escalation in Vietnam by invoking a billion Chinese armed with nuclear weapons. Threat briefings, it turns out, have a shelf life. The new approach produced a triangle with Moscow and Beijing, and the triangle changed what American forces could do in Vietnam.</p>
+        <p>Johnson and his advisers often weighed invading Cambodia, hitting the Ho Chi Minh trail in Laos, mining Haiphong harbor, and bombing Hanoi. Each time they held back for fear of drawing China into the war. In March 1969 Soviet and Chinese troops fought along the Ussuri River, and Moscow discreetly asked how Washington would react to a strike on Chinese nuclear facilities. On August 14 Nixon told an incredulous cabinet that the United States could not let China be defeated. Once the opening was under way, Zhou Enlai let it be known that escalations covering an American withdrawal could proceed with impunity. Gaddis's verdict: Nixon did more in Vietnam with 50,000 troops than Johnson had felt able to do with 500,000.</p>
+        <p>A weak seminar comment: "Nixon bombed Hanoi because he was tougher than Johnson." This is weak because it adopts Nixon's own boast as the explanation. He did tell Kissinger he had "the will in spades," but the evidence Gaddis supplies shows a constraint that moved, and the comment never mentions it. The strong version: "The ceiling on Johnson's air war was fear of Chinese intervention. Nixon's diplomacy lowered that fear, so the same targets became available with a tenth of the troops." In May 1972, two weeks before his first meeting with Brezhnev, Nixon ordered Haiphong mined. Most of his advisers, Kissinger included, expected the move to kill the summit. It did not. Opinion: the most consequential targeting decision of the war was made by diplomats, a sentence no air staff enjoys reading.</p>
+        <p>First order: the opening to China, plus Zhou's quiet signal, freed Nixon to mine Haiphong and later send B-52s against Hanoi. Second order: Moscow now faced rivals more set on containing it than on containing each other. In October 1969 Kissinger judged a simultaneous Warsaw Pact and Chinese attack unlikely, and force planning dropped from a two-and-a-half war standard to one-and-a-half. Gaddis calls this progress toward Dulles's old goal of maximum deterrence at minimum cost, reached by reducing the number of adversaries. Third order: the method came with a bill. Tactics stayed secret, starting with the bombing of Cambodia in March 1969, and the price Gaddis names was a sullen bureaucracy, a Congress determined to reclaim its authority, and in the end a president's resignation. We infer that freedom of action bought in Beijing was later repossessed in Washington. The chain is hard to rebut because it disposes of the temperament theory: the same president kept withdrawing troops on a steady schedule while escalating from the air, so the variable that changed was China.</p>
+        <p>If Beijing's fears set the ceiling on Johnson's air war, who really imposed the limits in Vietnam: Washington, Moscow, or Beijing? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-10">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 10</span>
+        <h3><a href="#g-10">You Cannot Train a Bear When Four Hands Hold the Treats</a></h3>
+        <p>Pressure and reward shape an adversary's behavior only when one authority controls both. Gaddis judges that linkage, the Nixon-Kissinger plan to offer trade, credits, and arms agreements in return for Soviet restraint, did not produce the restraint it promised. His sharper claim is that linkage never got a fair trial, because it required more central control than Congress would accept after Vietnam and Watergate. One critic described the plan as treating the Soviet bear like one of B.F. Skinner's pigeons, which assumes a single person is running the experiment.</p>
+        <p>The White House planned to release grain sales, most-favored-nation trade status, and Export-Import Bank credits only after a successful Moscow summit in May 1972. The Commerce Department resisted any conditions on trade. That summer the Agriculture Department let the Russians quietly buy massive quantities of American wheat at bargain prices, which pleased farmers and spent the carrot. In October Senator Henry Jackson proposed denying trade status and credits to non-market economies that restricted emigration. Congress passed a modified version, and early in 1975 Moscow rejected the whole economic package. Exit visas for Israel fell from about 33,500 in 1973 to 13,000 in 1975. The amendment, Gaddis concludes, served neither detente nor trade nor human rights, a clean sweep of the wrong kind.</p>
+        <p>A weak seminar comment: "Detente failed because the Soviets broke their promises." This is weak because it ignores the author's own counterevidence. Brezhnev said openly in 1972 that the struggle between the two systems would continue, and Moscow treated detente as competition by compartment. The strong version: "Linkage failed because Washington could not hold its own levers. Agriculture sold the wheat, Congress priced the trade deal beyond what Moscow would pay, and the War Powers Act capped unapproved deployments at 60 days." Nixon had promised Saigon he would enforce the cease-fire with military action, and in the summer of 1973, while American aircraft were still bombing Cambodia, Congress ended all American combat in Indochina over his veto. Opinion: Moscow was not the only capital practicing compartmentalization. Washington simply did it by committee.</p>
+        <p>First order: Congress imposed its own linkage and its own limits on force, through the Jackson amendment, the Indochina cutoff, and the War Powers Act. Second order: Moscow walked away from the trade package, Jewish emigration fell by more than half, and Kissinger's theory that economic ties would breed political restraint was never tested. In the spring of 1975 the Ford administration watched North Vietnam overrun the South. When Kissinger warned Ambassador Dobrynin that Washington would remember who caused this, Dobrynin replied, "you should go after Senator Fulbright." Third order: by early 1976 Kissinger himself decided arms control was too important to hold hostage to Soviet restraint. We read that as linkage abandoned by its author. The chain is hard to rebut because Gaddis concedes the obvious objection: even with a free hand, Kissinger would not have sent troops back to Southeast Asia or Africa. The claim is only that the tool was never tested, which is sturdier than claiming it would have worked. The result was a United States provoking its main rival without deterring it.</p>
+        <p>If the War Powers Act made American threats of force less credible, did the bargaining value of airpower in the 1970s depend more on Congress than on the aircraft? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-11">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 11</span>
+        <h3><a href="#g-11">Reagan Priced Containment Against Moscow's Budget, Then Asked for a Meeting</a></h3>
+        <p>Size a strategy to what the enemy can stand as well as to what you can afford. Gaddis argues that every earlier swing between symmetrical and asymmetrical containment, from Truman to Carter, was set by what the American economy could tolerate. Reagan was the first president to ask what the Soviet system could tolerate. He pushed hardest when Moscow was weakest and turned toward persuasion before Gorbachev arrived.</p>
+        <p>Soviet military spending in the early 1980s consumed between 15 and 20 percent of gross domestic product. The American figure, through the late 1970s, had averaged slightly under 5 percent. Reagan's directive of May 1982 called for making the Soviet Union bear the brunt of its own economic shortcomings. The Strategic Defense Initiative, announced March 23, 1983, moved the contest into computer technology, the field where the Soviets would find it hardest to keep up. Reagan had discussed NSC-68 on the radio in 1975 and concluded "we could outspend them forever." (Not a sentence often heard at a budget hearing.) He also went through six national security advisers, which Gaddis reads as a sign that Reagan was his own chief strategist.</p>
+        <p>A weak seminar comment: "Reagan won the Cold War by spending the Soviets into the ground." This confuses first-order effects with the outcome and ignores the author's own counterevidence. Gaddis says that Reagan's strategy did not cause the Soviet decline, that structural tensions would have produced a crisis even under a re-elected Carter, and that Gorbachev's actions, not Reagan's, ended the U.S.S.R. The strong version: Reagan's contribution was timing and terrain. He strained the Soviet system at its moment of maximum weakness, moved the competition onto ground that favored the United States, and reached for talks first. In February 1983, before the "evil empire" and SDI speeches, he told Shultz privately that he wanted to start talking to the Russians. Opinion: the buildup gets the applause lines, but Gaddis grades the combination of pressure, reassurance, and persuasion. As he puts it, "So who had a strategy and who did not?"</p>
+        <p>First order, the pressure frightened the Kremlin more than anyone intended. Andropov, convinced Washington planned a first strike, had his spies hunting for proof, and they read NATO's Able Archer 83 exercise in November 1983 as possible cover for a real attack. Second order, Reagan learned from the British spy Oleg Gordievsky how close things had come and changed his tone, giving a reassuring speech on January 16, 1984. That path ran through Geneva and Reykjavik to the INF Treaty of December 1987, which destroyed an entire category of weapons. American Stinger missiles proved lethally effective against Soviet air operations in Afghanistan, and by September 1987 Shevardnadze was telling Shultz the Soviets would leave. Third order, Eastern Europe threw out its Soviet-installed governments in 1989, and the Soviet Union ceased to exist on Christmas Day 1991. Stockpiles fell from over 40,000 Soviet and about 24,000 American weapons in 1985 to roughly 11,000 each by 2002. The chain answers both camps: hawks who credit only the buildup must explain Able Archer and the reassurance speech, and skeptics who call Reagan a lightweight must explain why his conciliation came first.</p>
+        <p>If Soviet archives show the Brezhnev Doctrine was a bluff after 1968, was Reagan pressuring a Kremlin that had already decided not to fight for its empire? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="g-12">
+        <span class="kicker">Chapter by Chapter · Gaddis, chapter 12</span>
+        <h3><a href="#g-12">Containment Travels Well, Provided You Pack the Conditions</a></h3>
+        <p>Before you borrow a strategy, list the conditions that made it work and check whether they still hold. Gaddis closes the book by running containment through that test. Three conditions may not transfer: an adversary that shared America's sense of risk, a world of states able to manage that risk, and a Soviet alternative that made American power look good by comparison. Several lessons should transfer, including two worth memorizing: a strategy that offers only bad choices needs rethinking, and the best enemy is one left to defeat itself.</p>
+        <p>The attacks of September 11, 2001, supplied the test case. Nineteen members of a terrorist gang killed more Americans on their own soil than the Imperial Japanese Navy had at Pearl Harbor. In the fall of 2002 the George W. Bush administration announced a grand strategy of pre-emption, on the theory that nobody can contain an invisible enemy or deter one ready to die. Gaddis finds the novelty overstated. No Cold War president had ruled out pre-emption; they simply did not advertise it. The first clear act of pre-emption, in Iraq in March 2003, was aimed at a state, and its unstated purpose was to frighten other governments that might harbor terrorists. That, Gaddis notes, is deterrence. Pre-emption led back to containment.</p>
+        <p>A weak seminar comment: "September 11 made containment obsolete." This asserts without evidence, and it ignores the author's own counterevidence from Iraq. The strong version: containment fails where its conditions fail, so test the conditions. Gaddis concedes that if a few individuals can now endanger whole societies, containment is of little use, since it presumed threats from states seeking to survive, not movements seeking martyrdom. But terrorists and their host states want different things. States need an economy, and even rogue states want the state system preserved. That gap is exploitable, as the communist world's contradictions were. Opinion: "it depends on the conditions" is less satisfying than a slogan and far more likely to survive the follow-up question. Kennan himself, watching his idea stretched over Vietnam, said he would "emphatically deny the paternity" of such uses.</p>
+        <p>First order, the Soviet Union made American predominance tolerable; as the historian Geir Lundestad put it, the United States led more by invitation than imposition. Second order, when the Soviet Union vanished, so did the urgency of courting allies, and multilateral consultation shrank steadily under George H. W. Bush and Bill Clinton. Third order, the George W. Bush administration inherited that unilateralism and intensified it, over Kyoto, the International Criminal Court, the ABM Treaty, and Iraq, producing an unprecedented loss of support abroad. If invitation becomes imposition, little of containment will transfer. Because the chain runs through three administrations of both parties, nobody can wave it off as partisan.</p>
+        <p>If containment needed "something worse" than American power to make that power welcome, what plays that role now? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Gaddis, <i>Strategies of Containment</i>, revised and expanded edition (Oxford, 2005). Page numbers are the printed pages.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Strategy as relating ends to means, intentions to capabilities, objectives to resources: Gaddis, viii.</li>
+          <li>Five geopolitical codes and their dates; codes formed before or just after taking office: Gaddis, ix.</li>
+          <li>First edition 1982; revised edition of 2005 expands chapter 11 on Reagan completing Kennan's task: Gaddis, xiii&ndash;xv.</li>
+          <li>Symmetry: wider choices than escalation or humiliation, virtually unlimited resources, Korea and Vietnam ending in frustration, disillusionment, and exhaustion; asymmetry: limited resources, strengths against weaknesses, initiative, steady nerves: Gaddis, 342&ndash;343.</li>
+          <li>Interests may be as much functions of means as of threats: Gaddis, 212.</li>
+          <li>"Lumpers" and "splitters"; the book as an effort at lumping: Gaddis, vii&ndash;viii.</li>
+          <li>NSC-68 transferred to the Russians control over what U.S. interests were: Gaddis, 96.</li>
+          <li>Home-based airborne deterrent: Gaddis, 146. Air Force share from 34.2 to 46.2 percent: Gaddis, 169. Rolling Thunder as calibrated: Gaddis, 245&ndash;246.</li>
+          <li>The parentheticals and the closing advice are ours.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter page ranges: ch. 1, 3&ndash;23; ch. 2, 24&ndash;52; ch. 3, 53&ndash;86; ch. 4, 87&ndash;124; ch. 5, 125&ndash;161; ch. 6, 162&ndash;196; ch. 7, 197&ndash;234; ch. 8, 235&ndash;271; ch. 9, 272&ndash;306; ch. 10, 307&ndash;341; ch. 11, 342&ndash;379; ch. 12 (epilogue), 380&ndash;392: Gaddis, contents, xv&ndash;xvi.</li>
+          <li>One chapter describes a strategy, the next its implementation; chapter 4 does both; chapter 8 is a Vietnam case study: Gaddis, ix&ndash;x.</li>
+          <li>The four questions asked of each strategy: Gaddis, ix (note).</li>
+          <li>Strongpoint and perimeter defense: Gaddis, 57&ndash;58.</li>
+          <li>No cost estimate; 13.5 billion dollar ceiling; 48.2 billion dollar authorization: Gaddis, 97&ndash;98, 111.</li>
+          <li>Eisenhower's aim to avoid all wars; "great temptations to demonstrate the value of such forces": Gaddis, 173&ndash;174.</li>
+          <li>"Precisely opposite from those intended": Gaddis, 246. "Did not understand, could not win, but would not leave": Gaddis, 262.</li>
+          <li>All feared a third world war; total war no longer a means; limited wars still possible: Gaddis, 382.</li>
+          <li>Two-part test for deterrence: Gaddis, 179.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 1, "The Cold War: A Long Game."</li>
+          <li>No single explanation; internal developments more important than external pressures: Gaddis, 375.</li>
+          <li>Page pointers for each question come from the chapter files; "prepare question four" is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Kennan, first director of the Policy Planning Staff, May 1947: Gaddis, 24. The "X" article: Gaddis, 24&ndash;25.</li>
+          <li>Strongpoint defense: Gaddis, 57&ndash;58.</li>
+          <li>Nitze, Kennan's successor, chaired the ad hoc State and Defense committee: Gaddis, 88. All interests vital, all means affordable: Gaddis, 93.</li>
+          <li>"At places and with means of its own choosing": Gaddis, 145.</li>
+          <li>Kennedy's July 1961 promise of a wider choice than humiliation or all-out nuclear war: Gaddis, 202.</li>
+          <li>Linkage and the great issues as interrelated: Gaddis, 290.</li>
+          <li>Symmetrical and asymmetrical containment: Gaddis, 342&ndash;343.</li>
+          <li>Geopolitical codes: Gaddis, ix.</li>
+        </ul>
+        <h3>Bridge from the course's opening question</h3>
+        <ul>
+          <li>Seminar 1 framing on why the conflict never escalated and whether Korea and Vietnam were limited: SAASS 628 syllabus, Seminar 1.</li>
+          <li>Kennan's war college course; "no American tradition of limited war"; Clausewitz, Talleyrand, Gibbon: Gaddis, 380.</li>
+          <li>Shared risk; the adjective remained attached to the noun; all feared a third world war; limited wars still possible: Gaddis, 382.</li>
+          <li>Containment preceded the nuclear stalemate by almost a decade: Gaddis, 386.</li>
+          <li>Eisenhower on the temptations of limited-war forces: Gaddis, 173&ndash;174. Taft on the enemy's chosen battleground, 1951: Gaddis, 117.</li>
+          <li>Real decisions on force levels made in Hanoi: Gaddis, 249.</li>
+          <li>The parenthetical and the framing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 1: Washington Promised the World, Then Sent the Army Home</h3>
+        <ul>
+          <li>Strategy as "the process by which ends are related to means": Gaddis, viii.</li>
+          <li>Symmetrical and asymmetrical forms of containment previewed: Gaddis, xiii.</li>
+          <li>NSC-68 assumptions in effect 1950&ndash;1953 as a result of the Korean War: Gaddis, ix.</li>
+          <li>Containment on Washington's mind from 1941; Kennan coined the term in July 1947: Gaddis, 4.</li>
+          <li>Roosevelt's integration approach, the "club": Gaddis, 9&ndash;12.</li>
+          <li>Quid pro quo under Harriman, Deane, Truman, and Byrnes: Gaddis, 14&ndash;18.</li>
+          <li>Byrnes's post office quote: Gaddis, 16.</li>
+          <li>Ethridge report and Stalin's Ehrenburg counter-threat; Molotov's cocktail party jokes: Gaddis, 17.</li>
+          <li>Sticks unimpressive or unusable; Soviet imperviousness to outside influence: Gaddis, 18.</li>
+          <li>Long telegram and the "patience and firmness" strategy: Gaddis, 18&ndash;21.</li>
+          <li>Truman Doctrine, March 12, 1947; aid decisions made months before; British notice of withdrawal: Gaddis, 22.</li>
+          <li>Forces 12 million to 3 million (July 1946) to 1.6 million; spending 83.0, 42.7, and 12.8 billion dollars; commitment open-ended as means disappeared: Gaddis, 23.</li>
+          <li>"A set of attitudes"; contraction of interests to fit means in spring 1947; vital versus peripheral; Kennan as chief architect; means expanded in 1950: Gaddis, 23.</li>
+          <li>90 divisions instead of 215; arsenal of democracy; U.S. dependence on the Red Army as great as Soviet dependence on Lend-Lease: Gaddis, 6&ndash;7.</li>
+          <li>Harriman on limiting U.S. participation largely to naval and air power: Gaddis, 7.</li>
+          <li>13 Germans and 90 Russians died for every American; strategy hard to improve on given its objectives: Gaddis, 8.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 2: Kennan Counted Five Power Centers and Told Washington to Stop Counting Communists</h3>
+        <ul>
+          <li>Threats meaningful only in terms of interests; finite capabilities mean finite interests: Gaddis, 31.</li>
+          <li>Sources Gaddis uses to reconstruct the strategy: Gaddis, 25.</li>
+          <li>"X" article reflected his thinking imperfectly; Krock revealed authorship; Lippmann's longer critique; Kennan agreed more with Lippmann than his own article: Gaddis, 24&ndash;25.</li>
+          <li>Universalist versus particularized approaches; balance of power: Gaddis, 26&ndash;28.</li>
+          <li>Five centers of industrial and military power, September 1948; only one hostile; amphibious power: Gaddis, 29.</li>
+          <li>Containment aimed at psychological malaise, not Soviet attack or international communism: Gaddis, 34.</li>
+          <li>Three-step strategy; economic aid as the primary tool: Gaddis, 35&ndash;36.</li>
+          <li>Aid to Western Europe as a whole, European initiative, inclusion of the western German zones: Gaddis, 36&ndash;37.</li>
+          <li>No formal military commitment in European aid plans; three aid criteria; "business accounting procedure in political terms": Gaddis, 39.</li>
+          <li>"We are not necessarily always against the expansion of communism"; the palm-out warning; stay out of China: Gaddis, 40.</li>
+          <li>Communist China lacking the industrial base for amphibious and air warfare; Yugoslav schism, summer 1948: Gaddis, 42.</li>
+          <li>Western European recovery mitigating communism's appeal and eroding Eastern Europe by comparison: Gaddis, 43&ndash;44.</li>
+          <li>"Entirely untrue," November 1948; nationalism fracturing the communist world: Gaddis, 46.</li>
+          <li>Steady pressure over years; rather wait thirty years than go to war: Gaddis, 48.</li>
+          <li>Truman's March 1947 speech as universalist rhetoric for particularist purposes; Kennan never solved winning public and Congressional support: Gaddis, 49&ndash;52.</li>
+          <li>The use-it judgment, the "ledger" sentence on sea and air power, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 3: The Means Ate the Ends, and Washington Called It Strength</h3>
+        <ul>
+          <li>First stage implemented "with remarkable fidelity"; strongpoint defense and economic instrument: Gaddis, 57-63.</li>
+          <li>Titoism strategy; NSC 58/2 and NSC 48/2 approved December 1949: Gaddis, 66-69.</li>
+          <li>Break on the third stage: NATO, West German state, forces in Japan, hydrogen bomb, 1948-1950: Gaddis, 70.</li>
+          <li>Kennan quote, "what was conceived as an instrument became, little by little, an end in itself": Gaddis, 77.</li>
+          <li>Soviet test August 1949; Kennan's seventy-nine-page paper and his rating of it: Gaddis, 77.</li>
+          <li>Minimum deterrence and no first use: Gaddis, 78.</li>
+          <li>General Advisory Committee "weapon of genocide"; Lilienthal and two of four other commissioners opposed: Gaddis, 78-79.</li>
+          <li>Acheson's 18-24 month moratorium idea, November 1949: Gaddis, 79.</li>
+          <li>Joint Chiefs on the offensive weapon: Gaddis, 79.</li>
+          <li>January 31, 1950 authorization, tantamount to building; Truman's "no decision to make" remark: Gaddis, 80.</li>
+          <li>Nitze on inability to prove Soviet intentions; Acheson dismissing Kennan and Bohlen's ranking during NSC-68 drafting: Gaddis, 82.</li>
+          <li>"Equate the importance of information with the ease of measuring it"; physics comparison: Gaddis, 82.</li>
+          <li>Kennan's flaw on rational distinctions and irrational fears; tightrope analogy: Gaddis, 72, 86.</li>
+          <li>NSC-68 as the review ordered with the H-bomb decision; aim to move away from reliance on mass destruction weapons; costs led to a different strategy: Gaddis, 80.</li>
+          <li>Acheson's "situations of strength": Gaddis, 81.</li>
+          <li>Failure to subordinate means to ends; process triumphed over policy, a pattern familiar in later years: Gaddis, 86.</li>
+          <li>Kennan concedes Germany and Japan worked out better than expected: Gaddis, 77.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 4: Define Interests by the Threat, and the Kremlin Writes Your Budget</h3>
+        <ul>
+          <li>NSC-68 drafted by Nitze's ad hoc State and Defense committee, early 1950: Gaddis, 88, 105.</li>
+          <li>A defeat of free institutions anywhere is a defeat everywhere; perimeter defense: Gaddis, 89.</li>
+          <li>Expandable means; economy could pay without lowering living standards: Gaddis, 91-92.</li>
+          <li>All interests vital, all means affordable: Gaddis, 93.</li>
+          <li>Interests as a function of threats; "transfer to the Russians control over what United States interests were": Gaddis, 96.</li>
+          <li>$13.5 billion ceiling held after reading NSC-68 in April 1950; May press conference: Gaddis, 98, 110.</li>
+          <li>No cost estimate by design; Acheson's "bludgeon" remark; informal $50 billion estimate, three and a half times the ceiling: Gaddis, 97-98.</li>
+          <li>Supplemental requests July 19, August 1, August 4, December 1; $48.2 billion final authorization, 257 percent increase: Gaddis, 111.</li>
+          <li>Truman's formal approval September 30, 1950, by then a formality: Gaddis, 107.</li>
+          <li>Korean attack ensured NSC-68's implementation, causing both approval and funding; Stalin authorized the invasion: Gaddis, 106-107.</li>
+          <li>Korea shifted from peripheral to vital for credibility: Gaddis, 107.</li>
+          <li>Barrett's "scare campaign": Gaddis, 105.</li>
+          <li>6 to 7 percent of GNP claim; Gaddis's correction to closer to 5 percent: Gaddis, 91.</li>
+          <li>Four to six divisions to Europe, September 1950; West German rearmament as the Defense Department's price: Gaddis, 112.</li>
+          <li>Crossing the 38th parallel for credibility; Chinese intervention late November 1950: Gaddis, 109.</li>
+          <li>Bogged down in a peripheral war with a secondary adversary: Gaddis, 115.</li>
+          <li>Acheson, "We are fighting the second team"; "bought a colt": Gaddis, 120.</li>
+          <li>Taft on the enemy's chosen battleground: Gaddis, 117.</li>
+          <li>Dulles, "A Policy of Boldness," May 1952; retaliation by atomic weapons and strategic air and naval power: Gaddis, 118-119.</li>
+          <li>Interests beyond the nation's political will, as the 1952 election showed: Gaddis, 124.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 5: Eisenhower Priced the Cold War Before He Planned It</h3>
+        <ul>
+          <li>Interests close to NSC-68; perceptions of means shape perceptions of interests; NSC-68 held means could expand: Gaddis, 130.</li>
+          <li>Fear of isolationism, regimentation, inflation, and controls: Gaddis, 131-132.</li>
+          <li>Clausewitz in Panama under Fox Conner; means subordinated to ends: Gaddis, 133.</li>
+          <li>"we must not destroy what we are attempting to defend"; garrison state: Gaddis, 133.</li>
+          <li>Defense budget roughly $50 billion a year; NSC 141 deficit estimate of $44 billion over five years; Council on Foreign Relations speech, January 12, 1954: Gaddis, 144.</li>
+          <li>"at places and with means of its own choosing": Gaddis, 145.</li>
+          <li>Asymmetrical response as the central idea; nuclear weapons one component alongside alliances, psychological warfare, covert action, and negotiations: Gaddis, 145.</li>
+          <li>Intercontinental jet bombers; "bottle washers and table waiters"; overseas bases provoking resentment; November 1953 agreement with Dulles, Humphrey, and Wilson to cut ground troops and parts of the Navy; U.S.-based airborne deterrent: Gaddis, 146.</li>
+          <li>Atomic weapons "virtually achieved conventional status," UN speech, December 1953: Gaddis, 147.</li>
+          <li>NSC-162/2, October 1953, nuclear weapons as available as other munitions; 1955 authorization for local situations: Gaddis, 147.</li>
+          <li>"big and bombastic talk"; Dulles's Foreign Affairs clarification; bombs "dropped all over the map": Gaddis, 148.</li>
+          <li>Dulles's 1956 Life interview and "brinkmanship"; greater risks than its predecessor to lower costs: Gaddis, 149.</li>
+          <li>CIA overthrow of governments in Iran (1953) and Guatemala (1954); covert action relatively inexpensive: Gaddis, 155-156.</li>
+          <li>Common thread of all five instruments: cheaper than NSC-68's symmetrical response: Gaddis, 159.</li>
+          <li>Dulles's overstatements confused the public, alarmed allies, bewildered adversaries: Gaddis, 159.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 6: Ike's Big Stick Only Worked on Enemies Who Had a Boss</h3>
+        <ul>
+          <li>Goal of maximum deterrence at minimum cost; defense at 13.1 percent of GDP in 1954, 9.4 percent in 1961: Gaddis, 162.</li>
+          <li>Small wars "primarily a matter for Navy and Air"; allies to supply ground forces: Gaddis, 164-165.</li>
+          <li>Korean armistice brought by Chinese and North Korean exhaustion and Stalin's death; nuclear threats misunderstood or disregarded: Gaddis, 167 (note).</li>
+          <li>Mao backed down at Quemoy-Matsu; 1958 crisis discredited the strategy; Dulles called Chiang's deployment "rather foolish": Gaddis, 168-169.</li>
+          <li>Impossible to say whether there was anything to deter: Gaddis, 169.</li>
+          <li>Army cut from 1.5 million to 1 million men, December 1953 to June 1955; Air Force share from 34.2 percent (fiscal 1953) to 46.2 percent (fiscal 1955): Gaddis, 169.</li>
+          <li>Allies gained the ability to manipulate the U.S., the French by doing too little and Chiang too much; choice between nuclear use and no response: Gaddis, 169-170.</li>
+          <li>Indochina insurgents committed and outside control; single draconian solution to diverse problems: Gaddis, 170-171.</li>
+          <li>Eisenhower's aim to avoid all wars; general war as the only option: Gaddis, 173-174.</li>
+          <li>"knew too much about the military to be fooled"; successors unlikely to share that quality: Gaddis, 174.</li>
+          <li>Eisenhower Doctrine dissipated Arab goodwill won by opposing the Suez invasion: Gaddis, 178-179.</li>
+          <li>Deterrence assumes less than total commitment and reliable central direction; Korea versus Indochina; Eisenhower Doctrine; victim of its own successes: Gaddis, 179.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 7: Kennedy Found the Soviets Smaller, Then Bought More Weapons Anyway</h3>
+        <ul>
+          <li>"Interests may be as much functions of means as of threats"; threats contracted while means proliferated: Gaddis, 212.</li>
+          <li>Fear of humiliation and appearing weak as the real threat: Gaddis, 211-212.</li>
+          <li>175 Soviet divisions versus NATO's 25: Gaddis, 205.</li>
+          <li>Systems analysis: eight times U.S. spending; manpower 2,000,000 versus 960,000; NATO 6,000,000 versus 4,500,000; Soviet divisions one-third the size; sense of parity for the first time since 1945: Gaddis, 206.</li>
+          <li>U-2 and satellite reconnaissance show U.S. ahead in operational ICBMs by fall 1961; Gilpatric makes it public in late October: Gaddis, 205.</li>
+          <li>Democratic charges of a missile gap: Gaddis, 217, 232.</li>
+          <li>Kennedy's economists (Samuelson, Heller) on the economy carrying defense and reform: Gaddis, 202-203.</li>
+          <li>Johnson, July 1964, richest nation can afford whatever is needed: Gaddis, 204.</li>
+          <li>Strategic buildup by mid-1964 (150 percent, 200 percent, 29 Polaris, 800 Minuteman) and the main motive of holding superiority: Gaddis, 217.</li>
+          <li>Army combat-ready divisions from 11 to 16: Gaddis, 215.</li>
+          <li>Defense spending $49.6 billion to $54.8 billion; share 9.4 to 8.5 percent: Gaddis, 225.</li>
+          <li>Kaysen's warning that generosity steps up the arms race: Gaddis, 217-218.</li>
+          <li>Khrushchev threatens Berlin, resumes atmospheric testing, places missiles in Cuba: Gaddis, 206.</li>
+          <li>Cuba as a textbook demonstration; February 1963 draft NSAM, "controlled and graduated application": Gaddis, 230.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 8: Promise to Do Only What Is Necessary, and Hanoi Decides What Is Necessary</h3>
+        <ul>
+          <li>Vietnam as a fair test of flexible response: Gaddis, 235.</li>
+          <li>Johnson, "We will do only what must be done": Gaddis, 241.</li>
+          <li>Calibration yields control of one's actions to the aggressor; choices made in Hanoi; deterrence and uncertainty: Gaddis, 249.</li>
+          <li>Bombing sorties and tonnage 1965 and 1967; target selection in Washington; 1966 order including no Sunday attacks; no discernible progress; definition of a sortie: Gaddis, 245-246.</li>
+          <li>McNamara's November 1961 estimate of six divisions, 205,000 men; China did not intervene: Gaddis, 247.</li>
+          <li>U.S. troop strength 486,000 by end of 1967: Gaddis, 246.</li>
+          <li>Enemy attacks produce enemy casualties, U.S. operations few; enemy retains initiative: Gaddis, 260.</li>
+          <li>95 percent of JCS targets authorized by August 1967; Air Force strategic bombing, B-52s, jets versus propeller aircraft: Gaddis, 250-251.</li>
+          <li>Military argument that lifting restraints would end the war seems unconvincing given enemy endurance: Gaddis, 249.</li>
+          <li>Sortie-rate competition, sorties without bombs, the Air Force colonel's quote: Gaddis, 255.</li>
+          <li>Raids quadrupled 1965-1968; enemy attacks up fivefold, in places eightfold; $600 million damage versus $6 billion in lost aircraft: Gaddis, 260-261.</li>
+          <li>Westmoreland's request for 206,000 more troops after Tet; Reserves; Johnson's gut political instinct: Gaddis, 261.</li>
+          <li>Reluctance to request new strategic systems; Moscow near ICBM parity by 1969: Gaddis, 265.</li>
+          <li>Inflation lasting more than a decade from deferred war financing: Gaddis, 270.</li>
+          <li>The use-it judgment, the opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 9: The Road to Bombing Hanoi Ran Through Beijing</h3>
+        <ul>
+          <li>Interests defined independently of threats, then threats defined by interests; judging states by actions, not ideology: Gaddis, 282-283.</li>
+          <li>Rusk's "billion Chinese ... armed with nuclear weapons," four and a half years before Nixon's 1972 Beijing talks: Gaddis, 282.</li>
+          <li>Johnson's advisers considered Cambodia, the Ho Chi Minh trail, mining Haiphong, bombing Hanoi, but held back for fear of Chinese intervention; Zhou signaled escalations could proceed with impunity; 50,000 versus 500,000: Gaddis, 297.</li>
+          <li>Ussuri River fighting, March 1969; Soviet inquiries about a pre-emptive strike on Chinese nuclear facilities; Nixon to an incredulous cabinet, August 14: Gaddis, 294.</li>
+          <li>Haiphong mined in May 1972, two weeks before meeting Brezhnev, despite most advisers' incorrect expectation it would kill the summit: Gaddis, 291.</li>
+          <li>Nixon's "I have the will in spades": Gaddis, 298.</li>
+          <li>Mining of Haiphong and B-52 bombing of Hanoi: Gaddis, 299.</li>
+          <li>Russians facing rivals more determined to contain them; October 1969 memo; two-and-a-half to one-and-a-half war standard; Dulles's maximum deterrence at minimum cost by reducing adversaries: Gaddis, 295.</li>
+          <li>Steady troop withdrawals from mid-1969 to January 1973; strategic withdrawal covered by tactical escalation: Gaddis, 296-297.</li>
+          <li>Secret bombing of Cambodia from March 1969: Gaddis, 303.</li>
+          <li>Price of centralization: sullen bureaucracy, Congress reasserting authority, a president's resignation: Gaddis, 273.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 10: You Cannot Train a Bear When Four Hands Hold the Treats</h3>
+        <ul>
+          <li>Skinner's pigeons comparison by a critic; linkage as pressures and inducements: Gaddis, 308.</li>
+          <li>Linkage failed to secure Soviet crisis help and economic enmeshment: Gaddis, 309.</li>
+          <li>Brezhnev 1972 on continuing class struggle between the systems: Gaddis, 310.</li>
+          <li>Grain sales, MFN, Eximbank credits tied to the May 1972 summit: Gaddis, 312.</li>
+          <li>Commerce resistance; Agriculture's wheat sales in summer 1972; Jackson's October proposal: Gaddis, 312.</li>
+          <li>Modified Jackson amendment passed; Soviets reject the package early in 1975; exit visas 33,500 (1973) to 13,000 (1975); served neither detente, trade, nor human rights: Gaddis, 313.</li>
+          <li>Summer 1973 end of combat involvement in Indochina over Nixon's veto while still bombing Cambodia; War Powers Act 60-day limit: Gaddis, 313-314.</li>
+          <li>Nixon's promise to guarantee the cease-fire; North Vietnam exploiting it; Dobrynin and Fulbright; fall of South Vietnam, spring 1975; Kissinger unwilling to send troops back; early 1976 decision on arms control: Gaddis, 314.</li>
+          <li>Linkage required central direction; never got a fair trial; provoking but not deterring: Gaddis, 315.</li>
+          <li>Moscow's view of detente as compartmentalized competition: Gaddis, 316.</li>
+          <li>The use-it judgment, the inference sentences, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 11: Reagan Priced Containment Against Moscow's Budget, Then Asked for a Meeting</h3>
+        <ul>
+          <li>Earlier shifts set by what the American system could stand; none had much to do with what the Soviet system could stand: Gaddis, 354-355.</li>
+          <li>Reagan calculated on what the Soviet economy, not his own, could withstand; drew on strengths of symmetry and asymmetry while avoiding weaknesses: Gaddis, 375-376.</li>
+          <li>Soviet military spending 15 to 20 percent of GDP; U.S. slightly under 5 percent in the late 1970s: Gaddis, 356.</li>
+          <li>Reagan's May 1982 directive on making the U.S.S.R. bear the brunt of its economic shortcomings: Gaddis, 355.</li>
+          <li>SDI announced March 23, 1983; exploited American superiority in computer technology: Gaddis, 358.</li>
+          <li>Reagan read NSC-68 on the air in 1975; "we could outspend them forever": Gaddis, 351.</li>
+          <li>Six national security advisers; Reagan his own chief strategist: Gaddis, 354.</li>
+          <li>Strategy did not cause these things; structural tensions would have produced a crisis even if Carter were re-elected: Gaddis, 354.</li>
+          <li>Gorbachev's actions, not Reagan's, brought about the outcome; "So who had a strategy and who did not?"; hard line strained the system at maximum weakness; conciliation preceded Gorbachev: Gaddis, 375.</li>
+          <li>February 1983 meeting with Shultz, before the "evil empire" and SDI speeches: Gaddis, 359.</li>
+          <li>Andropov's first-strike fears, intelligence operation, Able Archer 83 in November 1983: Gaddis, 360.</li>
+          <li>Gordievsky; reassuring speech of January 16, 1984: Gaddis, 360.</li>
+          <li>Geneva summit: Gaddis, 364. Reykjavik: Gaddis, 365.</li>
+          <li>INF Treaty, December 1987, destroyed an entire category of weapons: Gaddis, 366-367.</li>
+          <li>Stockpiles: over 40,000 Soviet and about 24,000 American in 1985; roughly 11,000 each by 2002 (footnote): Gaddis, 367.</li>
+          <li>Stinger missiles lethally effective against Soviet air operations; Shevardnadze assures Shultz, September 1987: Gaddis, 371-372.</li>
+          <li>Brezhnev Doctrine a bluff after Czechoslovakia 1968: Gaddis, 372.</li>
+          <li>Eastern Europe in 1989 without Soviet resistance: Gaddis, 372-373. Soviet Union ceased to exist Christmas Day 1991: Gaddis, 379.</li>
+          <li>The use-it judgment, the "answers both camps" sentence, and the closing question are ours.</li>
+        </ul>
+        <h3>Gaddis, chapter 12: Containment Travels Well, Provided You Pack the Conditions</h3>
+        <ul>
+          <li>Principle of transferability; Kennan's National War College course: Gaddis, 380.</li>
+          <li>"Emphatically deny the paternity" during the Vietnam War: Gaddis, 381.</li>
+          <li>Adversary must share one's sense of risk: Gaddis, 381-382. State-based strategy: Gaddis, 382-383. "Something worse" than American hegemony: Gaddis, 384.</li>
+          <li>Strategies with only deadly or undesirable choices require rethinking; enemies defeating themselves: Gaddis, 386.</li>
+          <li>September 11, nineteen attackers, more Americans killed than at Pearl Harbor; pre-emption strategy announced fall 2002: Gaddis, 383.</li>
+          <li>Pre-emption never ruled out in the Cold War; Iraq, March 2003; unstated justification was deterrence; pre-emption led back to containment: Gaddis, 383-384.</li>
+          <li>Containment presumed states seeking to survive, not movements seeking martyrdom: Gaddis, 384.</li>
+          <li>Terrorists and states have different interests; states need an economic program and want the state system preserved: Gaddis, 387.</li>
+          <li>Lundestad, invitation rather than imposition; consultation diminished under George H. W. Bush and Clinton; George W. Bush inherited unilateralism: Gaddis, 384.</li>
+          <li>Intensified unilateralism (Kyoto, ICC, ABM Treaty, Iraq); unprecedented loss of support; shift from invitation to imposition: Gaddis, 385.</li>
+          <li>The use-it judgment, the "both parties" sentence, and the closing question are ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>What did U.S. force levels and defense spending do between the end of the war and 1947, and why does Gaddis care?</summary><p>Forces fell from 12 million to 1.6 million and spending from 83 billion to 12.8 billion dollars, so the Truman Doctrine's open-ended pledge had almost no means behind it, which forced Washington to rank its interests. <span class="pg">G 23</span></p></details></li>
+          <li><details><summary>What were Kennan's five centers of industrial and military power, and what was the goal regarding them?</summary><p>The United States, Great Britain, Germany and central Europe, the Soviet Union, and Japan; only one was hostile, so the aim was to keep the other four out of hostile hands. <span class="pg">G 29</span></p></details></li>
+          <li><details><summary>Which stage of Kennan's containment did the Truman administration abandon, and which four decisions marked the break?</summary><p>The third stage, changing the Soviet outlook through negotiation; NATO, a West German state, U.S. forces in post-occupation Japan, and the hydrogen bomb all went against Kennan's advice. <span class="pg">G 70</span></p></details></li>
+          <li><details><summary>What was the fiscal 1951 defense ceiling before Korea, and what did Congress finally authorize?</summary><p>Truman's ceiling was $13.5 billion, which he kept even after reading NSC-68; after Korea the final authorization reached $48.2 billion, a 257 percent increase. <span class="pg">G 111</span></p></details></li>
+          <li><details><summary>What did Gaddis say was the common thread tying together the five instruments of the New Look?</summary><p>Nuclear deterrence, alliances, psychological warfare, covert action, and negotiations were all cheaper than NSC-68's symmetrical response, and all aimed to keep the initiative by shifting the competition to ground of America's choosing. <span class="pg">G 159</span></p></details></li>
+          <li><details><summary>What two conditions does Gaddis say deterrence assumes about the behavior being deterred?</summary><p>That the adversary's commitment is something less than total, and that the behavior is under reliable central direction. The Chinese in Korea met both; the insurgents in Indochina met neither. <span class="pg">G 179</span></p></details></li>
+          <li><details><summary>What did McNamara's systems analysts discover about the 175 Soviet divisions facing NATO?</summary><p>Fielding 175 divisions at U.S. standards would have cost eight times what Washington spent, and Soviet divisions turned out to be about one-third the size of American ones, so the conventional gap was largely an artifact of counting divisions. <span class="pg">G 205-206</span></p></details></li>
+          <li><details><summary>By August 1967, what share of the North Vietnamese targets requested by the Joint Chiefs had the White House authorized?</summary><p>About 95 percent, which is why Gaddis treats the "tied hands" complaint with skepticism, even while granting that gradual escalation ceded the initiative to Hanoi. <span class="pg">G 249-250</span></p></details></li>
+          <li><details><summary>Why could Nixon mine Haiphong and bomb Hanoi when Johnson would not?</summary><p>Johnson held back for fear of Chinese intervention; with the opening to China under way, Zhou Enlai signaled that escalations covering an American withdrawal could proceed with impunity. <span class="pg">G 297</span></p></details></li>
+          <li><details><summary>What happened to Jewish emigration from the Soviet Union after the Jackson amendment fight began?</summary><p>It fell: exit visas for Israel dropped from about 33,500 in 1973 to 13,000 in 1975 after Moscow rejected the trade package. <span class="pg">G 313</span></p></details></li>
+          <li><details><summary>What did Reagan measure his strategy against that no earlier containment president had?</summary><p>What the Soviet system could stand, not just what the American economy could afford; earlier shifts between symmetry and asymmetry had all been set by American limits. <span class="pg">G 354-355, 376</span></p></details></li>
+          <li><details><summary>Why does Gaddis say the Bush pre-emption strategy "led back to containment"?</summary><p>Its first clear use was against a state, Iraq, and its unstated aim was to frighten other states that might harbor terrorists, which is deterrence. <span class="pg">G 383-384</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Review edition for an earlier book, written November 17 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Friday, November 6, 2026 · Review edition for Monday's seminar: Haun (written November 17)</p>
+      <p class="toc-after"><a href="../">Archive of every edition</a> · <a href="../../map/">Course map</a></p>
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Haun, <i>Tactical Air Power and the Vietnam War</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Monday's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from Nguyen</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#h-01">Ch. 1: Ask Which Air Power Before You Say It Failed</a></li>
+          <li><a href="#h-02">Ch. 2: Haun Scores Air Power by the Battles That Never Happen</a></li>
+          <li><a href="#h-03">Ch. 3: Rolling Thunder Ascended Slowly, and Hanoi Adapted Quickly</a></li>
+          <li><a href="#h-04">Ch. 4: Khe Sanh Shows What Air Power Does to an Army That Holds Still</a></li>
+          <li><a href="#h-05">Ch. 5: Igloo White Counted Trucks. Hanoi Sent the Infantry on Foot</a></li>
+          <li><a href="#h-06">Ch. 6: Lam Son 719 Brought the Sorties and Left the Controllers Home</a></li>
+          <li><a href="#h-07">Ch. 7: At Quang Tri, the Clouds Had Air Superiority</a></li>
+          <li><a href="#h-08">Ch. 8: Twenty-Three Air Campaigns, One Moral: Bring an Army</a></li>
+          <li><a href="#h-09">Ch. 9: The Kyiv Forecast the Kremlin Never Ran</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Monday's seminar</span>
+        <h3><a href="#t1">Haun, <i>Tactical Air Power and the Vietnam War</i>: The Unglamorous Mission Won</a></h3>
+        <p>Phil Haun argues that air power works best when it attacks the enemy's army directly, alongside a capable friendly army, and that strategic bombing and air interdiction rarely succeed. He scores twenty-three modern American air campaigns since 1965, thirteen of them in Vietnam. Direct attack reached its military objective in nine of eleven tries. Strategic bombing reached its political goal in two of six, and interdiction succeeded once in six. The mechanism is the core of his theory: with air superiority, aircraft can find armies that mass or move, so a threatened army has to choose between concentrating and getting bombed or dispersing and getting overrun. Most armies hide, which is why air power's biggest effect is often a battle that never happened.</p>
+        <p>The book argues against the air power tradition that runs from Douhet and Mitchell to Warden, which held that air power is wasted on the enemy's fielded forces. Haun says those theories were built on how advocates wished air power worked, often to justify an independent service, and not on how it performed in combat. He also argues against the popular Vietnam story that air power failed. In his account the bombing of the North mostly failed, while the direct attack of the North Vietnamese Army broke it at Khe Sanh and again in the Easter Offensive. (Haun flew A-10s as an airborne forward air controller over Kosovo, so he has watched the theory's failure case from the cockpit.)</p>
+        <p>For this course, Haun is the summing-up book. Clodfelter graded the bombing of the North, Randolph followed the 1972 spring, and Nguyen sat in Hanoi's Politburo. Haun calls Vietnam a historical laboratory, since it was the longest modern air war and holds thirteen of his twenty-three cases. He puts all of it on one yardstick, whether air power changed the enemy army's decisions, and then carries the yardstick to Iraq, Kosovo, Kyiv, and Taiwan. He also explains when it works, with nine conditions running from air superiority and the friendly army's skill to weather, darkness, terrain, civilians, and cover. Read it asking which campaigns he counts as which type, because the scorecard depends on the coding. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Nine Chapters, One Weekend, Sorted by Payoff</a></h3>
+        <p>Read the argument first, then the scorecard, then the battles that test it. Page numbers are the printed pages.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> Chapter 1, pp. 1–12 (the three campaign types, the box score, and a map of the book), then chapter 8, pp. 218–228 (the summative assessment, the nine observations, and why the Air Force keeps forgetting the lesson).</li>
+          <li><b>60 minutes.</b> Add chapter 2, pp. 28–34 (TAP theory and the dilemma), chapter 6, pp. 139–149 (Cooper-Church and Lam Son 719), and chapter 7, pp. 196–201 (the Easter Offensive verdict, the October agreement, and Linebacker II).</li>
+          <li><b>2 hours.</b> Add chapter 3, pp. 53–57 (what Rolling Thunder actually was and how Hanoi absorbed it); chapter 4, pp. 92–107 (Khe Sanh and Tet); chapter 5, pp. 116–117 and 127–138 (Igloo White, DIA against CIA, and Cambodia); and chapter 9, pp. 229–231 and 237–246 (the recommendations, Kyiv, and Taiwan).</li>
+        </ol>
+        <p>If you have ten minutes more, read the Kyiv section, pp. 237–241. It is the book's only forecast, and so the easiest part to argue with. The World War II history in chapter 2, pp. 14–27, can wait. It shows that air forces wrote coordination doctrine in wartime and forgot it in peacetime, and lesson 2 below carries that point. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 1, pp. 7–8.</b> Table 1.1, the twenty-three campaigns with their strategy and their military and political outcomes. Check one coding you disagree with.</li>
+          <li><b>Chapter 2, pp. 30–33.</b> The dilemma and the "dogs that do not bark." Watch how Haun handles the problem of proving an effect that leaves no evidence.</li>
+          <li><b>Chapter 3, pp. 53–57.</b> Rolling Thunder billed as strategic bombing and flown mostly as armed recce south of the 20th parallel, and Hanoi tripling its supply flow anyway.</li>
+          <li><b>Chapter 5, p. 128.</b> DIA says Commando Hunt I cut supplies by 82 percent, CIA says the South got what it needed, and Haun says both were right.</li>
+          <li><b>Chapter 6, pp. 140–148.</b> The ARVN goes into Laos without its advisors and air controllers. Compare the Khe Sanh contrast on p. 148.</li>
+          <li><b>Chapter 7, pp. 197–201.</b> Abrams, Truong, and a 1976 North Vietnamese history all credit air power for the Easter Offensive, and Linebacker II produces terms virtually identical to October's.</li>
+        </ol>
+        <p>Read the footnote on p. 2 too. Haun admits that proving air power deterred something is like proving a police force prevented crime, and few authors volunteer the weak spot in their own yardstick. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Monday's Seminar Questions</span>
+        <h3><a href="#t4">Four Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 9, "A Holistic Look at Airpower."</p>
+        <ol class="qs">
+          <li><b>What was airpower most effective at doing in the limited war of the Cold War?</b> Chapter 1, p. 7 (the box score); chapter 2, p. 32 (two NVA defeats when it massed); chapter 8, pp. 222–224 (direct attack with a capable ground force, and dispersal as the main effect).</li>
+          <li><b>Where did it fall short on its promises?</b> Chapter 3, pp. 54–55 (Rolling Thunder); chapter 5, p. 137 (Commando Hunt and the Sihanouk Trail); chapter 7, pp. 170–171 (Quang Tri); chapter 8, p. 218 (the strategic bombing and interdiction columns).</li>
+          <li><b>Were the gradual escalation and interdiction campaigns effective at all, and how?</b> Chapter 3, pp. 46, 50, 57 (NSAM 328, delays and costs, Hanoi's adaptation); chapter 5, p. 128 (limits placed on NVA operations); chapter 7, pp. 199–201 (Linebacker I and II).</li>
+          <li><b>What lessons from Vietnam can strategists apply to other and future air campaigns?</b> Chapter 8, pp. 220–227 (nine observations and the doctrine fix); chapter 9, pp. 229–234 (eleven recommendations), 237–241 (Kyiv), and 242–246 (Taiwan and extended deterrence).</li>
+        </ol>
+        <p>The syllabus framing also asks why the war stayed limited and why China did not intervene as it had in Korea. Haun answers briefly. Growing thermonuclear arsenals deterred a superpower war, fear of Chinese or Soviet intervention constrained the airstrikes and ruled out invading the North, and by 1972 détente with Beijing and Moscow let Nixon bomb the North without that risk. Chapter 1, pp. 7 and 11, and chapter 3, p. 54, hold the evidence.</p>
+        <p>Opinion: prepare question three. Everyone will say interdiction failed, and Haun's answer is more useful than that, since he credits it with delays, costs, and time bought for Vietnamization. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>TAP theory.</b> Tactical air power theory: air power's advantage is finding and attacking armies that mass or maneuver, so a threatened army disperses and hides (p. 9, 30).</li>
+          <li><b>Armed recce.</b> Haun's term for direct attack beyond the range of close air support, also called BAI, Killer-Scout, or SCAR (p. 5).</li>
+          <li><b>The nine factors.</b> Air superiority, air-to-ground capability, friendly and enemy ground force capability, weather, lighting, geography and terrain, civilians, and concealment and cover (p. 12).</li>
+          <li><b>Igloo White.</b> The Trail sensor network, read at the Infiltration Surveillance Center at Nakhon Phanom, Thailand (p. 116–117).</li>
+          <li><b>Cooper-Church amendment.</b> Voted into law at the end of 1970, it barred U.S. ground troops from operating beyond South Vietnam's borders (p. 140).</li>
+          <li><b>Lam Son 719.</b> The ARVN raid into Laos toward Tchepone in February 1971, made without U.S. advisors or air controllers (p. 140).</li>
+          <li><b>An Loc.</b> The 1972 siege where 6,200 South Vietnamese troops and 25 U.S. advisors held with air power alone for fire support (p. 173, 176).</li>
+          <li><b>Le Duan.</b> North Vietnam's party leader, who read Lam Son 719 as proof Vietnamization had failed and ordered the next general offensive (p. 141).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Nguyen · Nguyen to Haun</span>
+        <h3><a href="#t6">The Theory's Two Exceptions Had One Author</a></h3>
+        <p>Nguyen supplies the explanation Haun's theory says it cannot. TAP theory predicts that armies under a lethal air threat disperse and hide, and Haun admits the North Vietnamese twice did the opposite, at Khe Sanh and in the Easter Offensive. Nguyen shows why: Le Duan, not Ho or Giap, ran Hanoi's war, and he bet three times, in 1964, 1968, and 1972, on a general offensive and uprising that never came. Haun even borrows Nguyen's verdict. Only after the ARVN retook Quang Tri City, he quotes her, did Le Duan accept that diplomacy had to put American withdrawal first. Haun calls Le Duan's willingness to sacrifice his armies a short-term military defeat and a long-term political victory. (Nguyen would add that the victory was also won in the world's capitals, which no bomb damage report covers.) The citation runs both ways. When Haun explains why Hanoi kept fighting after losing its Cambodian sanctuary in 1970, he cites Nguyen for a party still under Le Duan's thumb and resolved to unite the country by force. Nguyen also gives Lam Son 719 its Hanoi side: 17,000 South Vietnamese met 22,000 and later 60,000 North Vietnamese, and language barriers hurt coordination with the Americans.</p>
+        <p>Keep one question in mind while reading: if the two cases where air power destroyed armies both trace to one man's politics, how much of the scorecard measures air power and how much measures the enemy's choices? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Haun, <i>Tactical Air Power and the Vietnam War</i></p>
+
+      <article id="h-01">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 1</span>
+        <h3><a href="#h-01">Ask Which Air Power Before You Say It Failed</a></h3>
+        <p>Before arguing about whether air power worked, name the theory of victory the campaign was betting on, then check that theory's record. Haun sorts air campaigns into three kinds. Strategic bombing flies over the battlefield to coerce a nation through its population, economy, or leadership. Air interdiction goes after an army's supply lines and reinforcements. Direct attack hits the fielded army itself, usually alongside friendly troops. His thesis is that the third kind, the one air force leaders long said squandered air power, is the one that works. Most of it is not close air support. Haun notes that close air support depends on having a controller with a target, so aircraft assigned to it are often sent beyond the front to hunt on their own, a mission he calls armed recce.</p>
+        <p>The box score covers twenty-three modern American air campaigns since 1965 against opponents with real air defenses. Thirteen happened in Vietnam, the longest modern air war at almost eight years, in which the United States lost over 9,000 fixed- and rotary-wing aircraft. Direct attack was tried eleven times and met its military objective in nine, and five of those nine also helped deliver the political goal. Strategic bombing went two for six. Interdiction failed in all but one of six. Haun's summary is blunt: "strategic bombing and air interdiction rarely succeed." He offers a yardstick to go with it. A police force is better measured by crimes that don't happen than by arrests, and an air force by how it changes enemy decisions. (He admits in a footnote that this is hard to prove, which is more candor than most yardsticks come with.)</p>
+        <p>The weak seminar comment is "Air power failed in Vietnam." It is weak because it lumps three different campaigns into one verdict, so it is true of some and false of others, and nobody can test it. The strong version names the type. Rolling Thunder failed to isolate communist forces in the South or to coerce Hanoi, but combined arms defeated the North Vietnamese Army at Khe Sanh and decisively defeated it in the Easter Offensive. Opinion: the funniest line in the chapter is that Air Force leaders supported combined arms reluctantly, and only when ordered to. The winning strategy had to be assigned, like homework.</p>
+        <p>The strong version wins because it explains what the service did next. First order, Air Force leaders preferred strategic bombing and interdiction and backed direct attack only on orders. Second order, the service removed battlefield interdiction from its doctrine during the war, brought it back as battlefield air interdiction for the Army's AirLand Battle, refused to call armed recce sorties by that name in Desert Storm, and struck it from doctrine again afterward. Third order, in Kosovo in 1999 there was no friendly army to threaten the Serbs, so they swapped their military vehicles for civilian cars and kept up the ethnic cleansing while "NATO tacair circled helplessly overhead." Haun flew A-10s there. The chain is hard to rebut because it uses the service's own record, and it heads off the reply that the scorecard is an Army partisan's arithmetic.</p>
+        <p>If direct attack has the best record, why did it take a direct order to get airmen to fly it? Even a nine-for-eleven record, it seems, needs a chain of command to enforce it. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-02">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 2</span>
+        <h3><a href="#h-02">Haun Scores Air Power by the Battles That Never Happen</a></h3>
+        <p>Judge air power against an army by what the army stops doing. That is the core of tactical air power theory. With air superiority secured, aircraft hold one asymmetric advantage: from above they can spot ground forces that mass or move, since big formations have fewer places to hide. That puts the enemy army on the horns of a dilemma. It can concentrate and maneuver and get hammered from the air, or it can disperse and hide, which gives up the initiative and leaves it open to a ground attack. Most commanders choose to hide, so the payoff rarely shows up in a body count.</p>
+        <p>History supplies both horns. At Khe Sanh and in the Easter Offensive the North Vietnamese chose to concentrate, and American combined arms destroyed two divisions in the first and defeated fourteen in the second. Haun says Hanoi sacrificed those armies for broader political goals. Iraq in 2003 took the other horn. Expecting an air-only campaign, it dispersed its army, and the coalition met little resistance in what became a race to Baghdad. Haun borrows Clausewitz for the method: engagements that never happen still count, because their consequences are real. Meanwhile nobody wrote down why any of this works. The Army's field manual of July 1943 declared in capital letters that land and air power were coequal, then ranked close air support last among targets. The Air Force added battlefield interdiction to its doctrine in 1964 and removed it two years later, in the middle of the war.</p>
+        <p>The weak seminar comment is "We destroyed hundreds of tanks, so the air campaign worked." It is weak because it confuses a first-order effect with the outcome: kills measure a munition's lethality, and they say nothing about whether the enemy could still carry out his plan. The strong version asks whether the enemy massed, and if he dispersed instead, whether a friendly ground force cashed in. Haun's line: "The dead make no decisions and take no actions on the battlefield." Opinion: the theory's best evidence is the dogs that do not bark, which is also its weak spot, since an absence is hard to photograph. Haun hedges sensibly. Weather, terrain, civilians, and the other factors decide whether the threat bites.</p>
+        <p>The strong version wins because it follows the effect to where it lands. First order, a lethal air threat makes an army scatter, dig in, and move only at night and in bad weather. Second order, that army can no longer mass for an offensive and is exposed to the friendly ground attack, which is why Iraq's dispersed army could not hold the choke points in 2003. Third order, since the payoff is a non-event, nobody has an incentive to record it: Haun says Army generals had little reason to credit air power for their victories, Air Force generals disliked what they saw as a supporting role, and analysts went on counting dead tanks. That chain also explains why battlefield air interdiction, revived for AirLand Battle, was struck from doctrine again after Desert Storm. It also answers anyone who says a real effect would have been written down.</p>
+        <p>Why did Hanoi twice pick the horn that gets bombed? Haun's answer, politics, is one way to make an air force look brilliant. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-03">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 3</span>
+        <h3><a href="#h-03">Rolling Thunder Ascended Slowly, and Hanoi Adapted Quickly</a></h3>
+        <p>Bombing coerces only when something else threatens what the enemy values most. If nothing on the ground forces him to concentrate, he will scatter, hide, and wait you out. Rolling Thunder, billed as strategic bombing by gradual escalation, was flown mostly as armed recce south of the 20th parallel, which made it an interdiction campaign, and it neither cut the Ho Chi Minh Trail nor bent Hanoi. In the South, by contrast, air and ground forces together kept the enemy dispersed and unable to mount a major offensive.</p>
+        <p>In April 1965 Johnson's National Security Action Memo 328 ordered planners to "continue roughly the present slowly ascending tempo of Rolling Thunder operations." They did. Attack sorties rose from 55,000 in 1965 to 148,000 in 1966, and bomb tonnage from 33,000 to 128,000. Hanoi answered by putting 20 percent of its non-agricultural workforce on dispersal and repair, and by the end of 1965 it had tripled its flow of supplies, enough to support 40 percent more NVA troops in the South. The June 1966 strikes on fuel storage wrecked 70 percent of capacity, which mattered little because Hanoi had already scattered its fuel. McNamara refused the Joint Chiefs' request to turn the campaign against North Vietnam's industry, since he believed Hanoi would persevere as long as it hoped to win in the South, and Johnson left Haiphong harbor, the main port for Soviet weapons, unmined. Target requests, meanwhile, went to Tuesday luncheons at the White House, a procedure we assume was more comfortable for the diners than for the aircrews.</p>
+        <p>The weak seminar comment is "Rolling Thunder failed because of political micromanagement." It is weak because it picks one cause and ignores the author's own counterevidence: Haun lists three contributing causes, an unstable Saigon, Johnson's restrictions, and an incremental pace that included a five-day pause, and then adds an operational cause that no change in the rules would fix. NVA light infantry and Viet Cong guerrillas needed so few supplies that air power alone could not starve them. The strong version leads with that operational cause. Opinion: before any interdiction plan, ask how much the enemy actually consumes and what will make him consume more.</p>
+        <p>The strong version wins because the chain runs through a choice Washington made on purpose. First order, Johnson ruled out invading the North, fearing a repeat of MacArthur's march to the Yalu and the Chinese intervention it triggered, so the NVA never had to concentrate to defend its border and dispersed freely north of the DMZ. Second order, Hanoi absorbed the bombing: strikes on fixed targets, about 1,000 a month in 1965, fell close to zero in 1966 because there were few fixed targets left, while losses over the North rose from 171 aircraft in 1965 to 318 in 1966. Third order, Washington recognized the limits of Rolling Thunder and expanded the ground war in the South to attack the enemy directly, and on July 28, 1965, Johnson announced troop levels rising from 75,000 to 125,000. Haun is careful to say he is not arguing for an invasion. That care is what makes the chain hard to rebut: the restraint was sensible, and it still capped what bombing alone could achieve.</p>
+        <p>A question for the room: if the NVA's infantry needed so little, which target in the North could have hurt Hanoi enough without an invasion threat behind it? Washington chose targets over lunch, and Hanoi spent the rest of the week fixing bridges. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-04">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 4</span>
+        <h3><a href="#h-04">Khe Sanh Shows What Air Power Does to an Army That Holds Still</a></h3>
+        <p>Air power is deadliest when the enemy concentrates and maneuvers, and a friendly ground force that holds its position is what keeps him concentrated long enough to pay for it. TAP theory expected the NVA to disperse under a lethal air threat. At Khe Sanh in early 1968 it massed two divisions instead, hoping for another Dien Bien Phu, and a combined arms operation built around air power decisively defeated it. The massing was new. The NVA had survived until then by dispersing into sanctuaries in Laos and Cambodia, which also kept postponing its general offensive. Haun admits the theory missed the massing but says it explains the slaughter, since air power proves lethal "when a cooperative adversary continues to concentrate and maneuver."</p>
+        <p>The siege opened January 21 and ran seventy-seven days, 20,000 NVA against 6,000 Marines and ARVN Rangers. On day one an NVA round hit the open ammunition dump and destroyed 98 percent of the Marines' munitions, which is one way to test an airlift. Westmoreland bet on air power and artillery instead of sending more battalions. Under Operation Niagara, an intelligence center at Tan Son Nhut built up to 300 targets a day. Tactical aircraft flew 22,000 sorties, and B-52s, arriving in three-ship cells about every ninety minutes, dropped 60 percent of the tonnage. Airlifters delivered 12,400 tons of supplies, two-thirds of it by parachute. The NVA lost 10,000 to 15,000 dead or wounded. Westmoreland finally got his decisive battle.</p>
+        <p>The weak seminar comment is "Khe Sanh proves air power can win battles." It is weak because it overgeneralizes from one case and ignores the counterexample in the same chapter. In the Tet Offensive the Viet Cong slipped into the cities dispersed, surveillance could not track them, and air power was largely irrelevant except for mobility; South Vietnamese police and militia won those fights. The strong version names the conditions. Khe Sanh worked because the Marines held, the airlift kept them supplied, the NVA chose to stay, and clearing weather in March proved most decisive. Without air power, Haun says, the NVA would have quickly overrun the base, and holding it still took ground forces. Opinion: before promising decisive air effects, ask whether the enemy has agreed to cooperate. At Khe Sanh he did. In the cities he declined.</p>
+        <p>The strong version wins because it explains both the military result and the political one. First order, the NVA massed at Khe Sanh and lost 10,000 to 15,000 men. Second order, the wider Tet Offensive failed militarily too, at Khe Sanh and in the cities. Third order, Hanoi succeeded politically anyway as American support for the war evaporated: Eugene McCarthy took 40 percent in the New Hampshire primary on March 12, and by month's end Johnson had stopped bombing north of the 20th parallel and announced he would not seek reelection. The next president, Nixon, came in seeking withdrawal. Anyone who thinks a battlefield win settles a war has to get past that sequence. Haun says it plainly: the offensive failed militarily, and the North Vietnamese succeeded politically.</p>
+        <p>A question for the room: if the NVA had dispersed around Khe Sanh the way the Viet Cong did in the cities, what would Niagara's 300 targets a day have found? Westmoreland got his decisive battle, and New Hampshire voters got theirs. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-05">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 5</span>
+        <h3><a href="#h-05">Igloo White Counted Trucks. Hanoi Sent the Infantry on Foot</a></h3>
+        <p>Before you grade an interdiction campaign, ask what the sensors counted and how much the enemy actually needed. Haun's subject is Commando Hunt I and III, the dry season air campaigns against the Ho Chi Minh Trail in southern Laos from late 1968 to spring 1970. His verdict is that air power squeezed the supply line, barely touched the soldiers walking down it, and left the back door at Sihanoukville open until allied ground troops went into Cambodia and shut it.</p>
+        <p>Igloo White eventually air-dropped 20,000 battery-powered sensors along the Trail. Their signals went to the Infiltration Surveillance Center at Nakhon Phanom, Thailand, where two IBM 360-65 mainframes, the fastest in the world at the time, let 400 analysts estimate truck movements in near real time. When the Nixon administration reviewed Commando Hunt I in 1969, the DIA and 7th Air Force intelligence said it had cut supplies reaching South Vietnam by 82 percent. The CIA replied that the forces in the South needed fewer than fifteen truckloads a day and were getting them. Haun, refereeing: "Both DIA and CIA assessments were correct." Meanwhile the replacement troops hid under the canopy by day and marched in small groups at night, a trip of up to 120 days, and they kept arriving.</p>
+        <p>The weak seminar comment is "Commando Hunt worked; it cut supplies by 82 percent." It is weak because it confuses a first-order effect, tonnage stopped, with the outcome, what the enemy could still do in the South. The strong version says Commando Hunt cut tonnage, the South needed fewer than fifteen truckloads a day, and so the payoff was a ceiling on NVA operations and a bigger bill for keeping the Trail open. Run the same check on the kill tally. Gunships got credit for 28 percent of all truck kills, and the Surprise Package AC-130 raised the claimed rate to 7.34 trucks per sortie. Yet the NVA chose to drive at night, when the gunships flew, which Haun reads as a sign the daytime forward air controllers and fighters were the bigger threat. Opinion: the tally rewarded the airplane that killed trucks, while the enemy's timetable revealed which airplane he feared.</p>
+        <p>The strong version wins because it explains why the ground war had to widen. First order, Commando Hunt slowed supplies and raised Hanoi's costs without stopping the infantry. Second order, while the Sihanouk Trail through Cambodia stayed open, interdiction had little effect near Saigon and the Mekong Delta, and it took an allied invasion of Cambodia in 1970 to shut that route. Third order, the incursion revived the antiwar movement at home, and at the end of 1970 Congress voted the Cooper-Church amendment into law, barring American ground troops from operating outside South Vietnam. Haun credits the period with buying time for pacification and Vietnamization, and he also notes that the clock was ticking. Hanoi, for its part, showed war-weariness and called off further offensives, but its party stayed resolved to unite the country by force. That chain beats both "interdiction failed" and "interdiction worked," since it shows what interdiction bought and what it cost.</p>
+        <p>A question for the room: if fifteen truckloads a day were enough, how many truck kills would it have taken to change anything in the South? The mainframes could tell you where every convoy was headed, and the infantry never needed a convoy. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-06">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 6</span>
+        <h3><a href="#h-06">Lam Son 719 Brought the Sorties and Left the Controllers Home</a></h3>
+        <p>Air power against an army is only as good as the link between the airplane and the soldier who needs it, so check that link before you count sorties. The center of this chapter is Lam Son 719, the ARVN raid toward Tchepone in February 1971, meant to do on the ground what Commando Hunt could not do from the air and close the Ho Chi Minh Trail. TAP theory says competent air and ground forces together leave the enemy two bad choices. In Laos the NVA massed anyway, because the ground half of the team could not call in the air half.</p>
+        <p>The handicap was written into law. Cooper-Church barred U.S. ground troops from operating outside South Vietnam, so the ARVN crossed on February 8 without its U.S. advisors and tactical air controllers. President Thieu had already told his commander to limit losses, an odd brief for an invasion. The NVA, on familiar terrain with short supply lines, soon outnumbered the ARVN more than two to one, grew past 34,000 men, and had every ARVN unit back across the border by March 24. U.S. air forces flew 8,500 tactical and 1,358 B-52 sorties, with aircraft checking in every ten minutes, and the Army lost 107 helicopters. Both sides claimed victory, and the North held the ground. Haun's summary: the ARVN "could not leverage air power to defeat the enemy."</p>
+        <p>The weak seminar comment is "Lam Son 719 proves air power cannot stop a determined army." It is weak because it generalizes from one case and skips the author's explanation of that case. The strong version makes Haun's comparison with Khe Sanh. There, the Marines defended fortified positions with well-coordinated air support, so the NVA had to concentrate into the bombs. In Laos, the ARVN attacked into NVA ground with nobody to direct strikes, and the NVA was exposed mainly when it chased the retreat. Opinion: Cooper-Church was a decision about American soldiers that turned out to be a decision about where American bombs would land. For a planner the check is simple. Ask who on the ground talks to the airplanes, and whether the law lets them be there.</p>
+        <p>The strong version wins because the chain ends in the biggest offensive of the war. First order, the law kept advisors and controllers out of Laos, on a raid Haun calls ill-advised and says the ticking congressional clock helped push Saigon into. Second order, the ARVN could not use the air power overhead, and Lam Son 719 became the one direct attack campaign of the eleven in which the United States did not have air superiority. Third order, over the summer of 1971 Le Duan judged from the ARVN's poor showing that Vietnamization had failed, and he ordered preparations for another general offensive the following dry season. That offensive came at Easter 1972. It also disposes of the reply that the ARVN was simply a poor army, since Haun shows the same ARVN holding the next year once advisors and a working control system were in place. If Lam Son 719 defied TAP theory, but the theory assumes a competent ground partner, did it defy anything?</p>
+        <p>The bombs arrived every ten minutes, and the people who aim them were stuck on the wrong side of the border by act of Congress. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-07">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 7</span>
+        <h3><a href="#h-07">At Quang Tri, the Clouds Had Air Superiority</a></h3>
+        <p>Before promising that air power will stop an army, check the conditions on the day: the cloud deck, the enemy's missiles, who runs the radios, and whether friendly troops will stand. Haun's 1972 chapter is close to a controlled test. In the Easter Offensive the NVA massed and maneuvered, and at An Loc and Kontum air power wrecked it. At Quang Tri, the same air forces in the same spring could not stop it.</p>
+        <p>The North Vietnamese crossed the DMZ on March 30 under low cloud, with 40,000 troops and 200 tanks behind more than 5,000 artillery rounds in the first day. Bad weather kept tactical air largely out of the fight for a week. The NVA fired 1,000 SA-2s in the opening weeks, which kept the AC-130 gunships away from Quang Tri, endangered the slow forward air controllers, and kept B-52s south of Quang Tri City after one was hit. The U.S. Air Force had also just handed the region's air control system to the South Vietnamese, whose Vietnamese-only support center now had to handle hundreds of English-only American pilots. By May 2 the ARVN 3rd Division was destroyed. At An Loc, meanwhile, 6,200 defenders and 25 U.S. advisors held while MACV sent 300 tactical and 30 B-52 sorties on May 11 alone, and the NVA lost three divisions there.</p>
+        <p>The weak seminar comment is "Air power defeated the Easter Offensive." It is weak because it is true but unarguable as stated, and it hides Quang Tri, where the same air power failed. The strong version names the conditions. Air power won where the sky cleared, the missile threat was moderate, Americans still ran strike control, and the ARVN held; Quang Tri in April had none of that, and by September, with all of it restored, the South retook the Citadel. Abrams supplies the precondition: without Vietnamese who would stand and fight, "ten times the air would not have stopped them." Opinion: Vietnamization handed over the switchboard before anyone could take the calls.</p>
+        <p>The strong version wins because it leads straight to the peace terms. First order, An Loc and Kontum held, and Quang Tri was retaken on September 16. Second order, that defeat pushed Hanoi to seek a settlement; Haun quotes Nguyen that only after the ARVN recaptured Quang Tri City did Le Duan accept that diplomacy had to put American withdrawal first, and Le Duc Tho agreed terms with Kissinger in October. Third order, Thieu's objections delayed the deal, Nixon ordered Linebacker II, eleven nights that cost fifteen B-52s, and on January 27, 1973, the parties signed terms virtually identical to the October agreement. Haun concludes that direct attack in the South compelled Hanoi, and that Linebacker I's interdiction did not: its precision strikes cut the rail lines in May, and the North soon adapted, so the flow of supplies stopped only for a while. He adds that many still mistake Linebacker I for a strategic success, and that neither service has an institutional interest in correcting them. Nobody can credit the B-52s over Hanoi with the peace after that, since the terms existed before they flew. It also shows the limit: with Nixon gone after Watergate, no air support came in 1975.</p>
+        <p>A question for the room: if the October terms already existed, what exactly did fifteen B-52s buy in December? Hanoi's best air defense in April 1972 was an overcast, and it cost nothing to build. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-08">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 8</span>
+        <h3><a href="#h-08">Twenty-Three Air Campaigns, One Moral: Bring an Army</a></h3>
+        <p>Before grading any air campaign, ask who was fighting on the ground alongside it. Haun codes twenty-three modern U.S. air campaigns against four operational and five environmental factors, then tallies the results. His verdict is that direct attack on fielded forces, paired with a capable friendly army, succeeds far more often than any independent air campaign, and that its main effect is to make the enemy scatter and hide.</p>
+        <p>Eleven of the twenty-three campaigns were direct attack, and nine of those eleven succeeded militarily. Strategic bombing reached its political goal in two of six tries. Interdiction succeeded militarily once in six and politically never. Split the direct attack cases by ground force and the gap widens: with a competent friendly army, all seven met their military aims and four met their political ones; without one, two of four and one of four. The United States won air superiority in ten of eleven direct attack cases, against four of six for strategic bombing and three of six for interdiction, since the battlefield is easier to control than enemy airspace. In seven of the nine wins, air power's main contribution was dispersing the enemy. The environment matters too: arid climates and dry seasons favor air power, and radar, GPS, infrared sensors, and night vision have extended it into bad weather and darkness. Haun explains why the Air Force keeps forgetting: armed recce does not justify an independent service, its targeting has to be shared with Army commanders, and it is hard. And when it works best, the Air Force "drops fewer bombs while the Army takes the credit."</p>
+        <p>The weak seminar comment is "Linebacker II proves bombing works once you stop holding back." It is weak because it builds a rule from one case and ignores the author's counterevidence: Hanoi signed terms identical to the ones it had already agreed after its army lost the Easter Offensive. The strong version adds Haun's second observation, that coercion tracked the demand. In 1965 Washington wanted Hanoi to give up unification; by 1972 it mostly wanted a way out. Opinion: the cells are small, six cases a column, so treat the table as a strong lean. Haun also notes that analysts who count dead tanks have criticized successful direct attack, which is like grading a goalkeeper on how many saves he had to make.</p>
+        <p>The strong version wins because it explains the war's ending, not only the bombing. First order, the United States lowered its demand from abandoning unification to allowing an American withdrawal. Second order, Hanoi found the new demand easy to accept, and it even helped, because the American departure shifted the military balance back toward the North. Third order, that shift set the stage for the communist victory in 1975. The institutional chain runs alongside: the Air Force expunged armed recce from doctrine in 1966 and again after Desert Storm, listed no battlefield air interdiction missions on its Desert Storm tasking orders, and in Kosovo had no army to work with. Haun's fix is to adopt Marine aviation doctrine as joint doctrine. Together the two chains answer the comeback that the airmen were simply restrained, because the scorecard holds whether the restraints were tight or loose.</p>
+        <p>A question for the room: which of the twenty-three codings would you challenge first, and does the scorecard survive the change? The Air Force's best mission is the one that makes it look least important, which explains a great deal about its doctrine. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="h-09">
+        <span class="kicker">Chapter by Chapter · Haun, chapter 9</span>
+        <h3><a href="#h-09">The Kyiv Forecast the Kremlin Never Ran</a></h3>
+        <p>Before a war starts, score the air plan on the nine factors and see how many come out against you. Haun's epilogue does this for someone else's air force. He argues that tactical air power theory, applied ahead of time to the Battle of Kyiv, would have flagged five of the nine factors as working against Russian air power. He then turns the same logic on China and on American planning, with eleven recommendations that mostly say less dogfighting, more suppression of enemy air defenses, more sensors, and a real ground partner.</p>
+        <p>The Kyiv numbers look like a mismatch. When Russia invaded on February 24, 2022, it had an estimated 1,200 tactical aircraft, 350 of them deployed against Ukraine, while Ukraine fielded 100 inherited from the Soviet Union. Russia kept its air-to-air advantage and lost the fight for air superiority anyway, because it could not suppress Ukraine's mobile SAMs. At the end of February the sky over Kyiv was mostly cloudy 70 percent of the time. Only the Su-34 had a real night capability. The route south from Belarus funneled Russian armor into river valleys, and the defenders were mostly dispersed infantry and armed civilians. The one factor that broke Russia's way was civilians, since the Russians showed little regard for them. Haun is careful to say the check would not have called the battle. It would have told Moscow what to expect from its air force, which is more than Moscow apparently knew.</p>
+        <p>The weak seminar comment is "Russia's air force failed because it is incompetent." It is weak because it asserts without evidence and gives a planner nothing to check in his own plan. The strong version names the factors: unsuppressed mobile SAMs, cloud, darkness, terrain, and a dispersed defender, five of nine against the attacker before the first sortie. Opinion: Haun's third recommendation will be the hardest sell, since "Enemy fighters are less of a threat than SAMs" is not what fighter pilots put on the squadron patch.</p>
+        <p>The strong version wins because it transfers to our own plans. First order, Russia could not suppress the mobile SAMs. Second order, after the first three days those missiles drove Russian strike aircraft down into small arms, antiaircraft artillery, and shoulder-fired missiles, where low cloud and few night-capable jets made finding Ukrainian forces harder still. Third order, Haun applies the lesson to Taiwan: modern SAMs and missiles that can reach regional airfields and carriers mean the old template, win the air and then hammer fielded forces, may not deter a Chinese assault. He prefers denial aimed at Chinese forces and sea lanes over punishing the homeland, and asks, "Would the United States risk Washington over Warsaw or Los Angeles over Taipei?" He would network sensors to long-range strikes, an updated Assault Breaker, the DARPA concept of the late 1970s that never became operational largely because the Air Force disliked a design with no role for its strike aircraft. It led to JSTARS anyway. He adds that AirSea Battle failed in part because it showed short-range tactical aircraft were vulnerable to Chinese SAMs, while AirLand Battle sold because it funded what the services already wanted. "It can't happen to us" fails the same test, since the factors are the same for every air force.</p>
+        <p>If the scorecard favors direct attack, why do the services keep buying for the air-to-air fight? The hardest target in modern air warfare may be the acquisition plan. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · six earlier books against Haun</span>
+        <h3><a href="#r1">Six Old Friends Who Graded the Same War</a></h3>
+        <ol class="qs">
+          <li><b>Gaddis, containment.</b> American Cold War strategy swung between symmetrical and asymmetrical containment, driven mostly by how leaders saw their means. The link: Gaddis says calibrated escalation in Vietnam produced effects opposite to those intended, and Haun supplies its execution order, NSAM 328's "slowly ascending tempo." Gaddis has Rolling Thunder reaching 226,000 tons in 1967 without cutting infiltration; Haun explains why, since the light infantry hardly needed trucks.</li>
+          <li><b>Crane, airpower in Korea.</b> The Air Force entered Korea with inflated expectations, tried interdiction and then "air pressure," and took the ambiguous armistice as success. The link: FEAF's own 1952 study found rail interdiction failed despite more than 15,000 rail cuts, and that campaign cost 243 aircraft destroyed. Haun's interdiction column reads one success in six, and Commando Hunt repeated the Korean result with better computers.</li>
+          <li><b>Zhang, the Chinese air force in Korea.</b> The PLAAF entered Korea hastily built and dependent on a Soviet patron who limited his own air war, and Korea left China with a defensive air doctrine and a myth that distorted its view of air power for decades. The link: patrons set the limits in both books. Stalin kept Soviet air operations defensive, and China concluded the Soviets were unreliable; in 1972 Nixon's détente let him bomb the North without fear of escalation, and Hanoi went into Linebacker II no longer backed by Moscow or Beijing.</li>
+          <li><b>Schlight, the war in South Vietnam.</b> The Air Force made close air support, a mission it disliked, its main job in the South and did it well, without its own objective or data to show what it achieved. The link: Haun names the missing data, the dogs that do not bark, since successful direct attack leaves an enemy who never massed. He adds that Army generals had little reason to credit air power for their victories, which made Schlight's missing data harder still to find.</li>
+          <li><b>Clodfelter, the limits of air power.</b> Bombing failed Johnson against a guerrilla war that needed few supplies and worked for Nixon's limited goals against a conventional offensive. The link: Haun agrees on Johnson and on the light supply needs, then moves the credit for 1972 from the bombing of the North to direct attack in the South.</li>
+          <li><b>Randolph, the 1972 air war.</b> Nixon's air and naval response blunted the Easter Offensive and got the United States out, while Hanoi still reached its minimum aims. The link: Randolph doubted the South could replace its reliance on American air power, and Haun quotes General Truong, who called American air support on all major fronts timely and most effective, then warned that ARVN forces became too dependent on the B-52s.</li>
+        </ol>
+        <p>Opinion: all six end up where Haun starts, judging air power by what the enemy did next. Only Haun adds that the mission everyone undersold was the one the Air Force wanted least. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Haun's page numbers are printed pages (printed page = PDF page minus 17 in the file on hand).</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Direct attack with a capable ground force works best; strategic bombing and interdiction rarely succeed: Haun, 1–2, 6–7, 224, 228.</li>
+          <li>Twenty-three campaigns, thirteen in Vietnam; nine of eleven, two of six, one of six: Haun, 7, 218.</li>
+          <li>Asymmetric advantage; armies disperse and hide; the dilemma: Haun, 1, 9, 14, 30.</li>
+          <li>Douhet, Trenchard, Mitchell, Warden; theories built on how advocates wished air power worked, to justify independence: Haun, 6–7.</li>
+          <li>Rolling Thunder failed; combined arms defeated the NVA at Khe Sanh and in the Easter Offensive: Haun, 10–11.</li>
+          <li>Haun flew as an A-10 airborne forward air controller in Kosovo: Haun, 4 (note 10).</li>
+          <li>Iraq, Kosovo, Kyiv, and Taiwan applications: Haun, 1, 4, 237–244. Vietnam as a historical laboratory: Haun, 7, 9.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter page ranges: ch. 1, 1–12; ch. 2, 13–34; ch. 3, 35–76; ch. 4, 77–107; ch. 5, 108–138; ch. 6, 139–162; ch. 7, 163–201; ch. 8, 202–228; ch. 9, 229–250.</li>
+          <li>Table 1.1: Haun, 8. Dilemma and dogs that do not bark: Haun, 30–33.</li>
+          <li>Rolling Thunder flown mostly as armed recce south of the 20th: Haun, 53. Hanoi tripled its supply flow: Haun, 57.</li>
+          <li>DIA and CIA: Haun, 128. ARVN without advisors; Khe Sanh contrast: Haun, 140, 148.</li>
+          <li>Abrams, the 1976 North Vietnamese history, and Truong on air power; terms virtually identical: Haun, 197–198, 201.</li>
+          <li>Police analogy and the footnote on proving deterrence: Haun, 2 (note 5).</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 9, "A Holistic Look at Airpower."</li>
+          <li>Pages cited in each item are where the topic appears in Haun; see the lessons' sources below for the specific facts.</li>
+          <li>Interdiction bought time for pacification and Vietnamization: Haun, 11, 139.</li>
+          <li>Thermonuclear deterrence; escalation concern constrained strikes and dissuaded an invasion: Haun, 7, 54. Détente let Nixon bomb without risk of escalation: Haun, 11.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>TAP theory: Haun, 9, 30. Armed recce and its other names: Haun, 5. Nine factors: Haun, 12.</li>
+          <li>Igloo White and the Infiltration Surveillance Center: Haun, 116–117. Cooper-Church: Haun, 140. Lam Son 719: Haun, 140.</li>
+          <li>An Loc garrison and advisors; no artillery support: Haun, 173, 176. Le Duan's judgment and order: Haun, 141.</li>
+        </ul>
+        <h3>Bridge from Nguyen</h3>
+        <ul>
+          <li>NVA massed twice; theory did not predict it: Haun, 32, 107.</li>
+          <li>Le Duan and Le Duc Tho ran the war; general offensives of 1964, 1968, 1972 failed; the world relations campaign: Nguyen, ebook pp. 20–21, 430–433.</li>
+          <li>Haun quotes Nguyen on Le Duan accepting diplomacy after Quang Tri City was recaptured: Haun, 199. Party under Le Duan's thumb, citing Nguyen: Haun, 137. Lam Son 719 force sizes and language barriers: Nguyen, ebook p. 283.</li>
+          <li>Short-term military defeat, long-term political victory: Haun, 201.</li>
+        </ul>
+        <h3>Haun, chapter 1: Ask Which Air Power Before You Say It Failed</h3>
+        <ul>
+          <li>Three campaign types by theory of victory: Haun, 3–4.</li>
+          <li>Air force leaders said air power is squandered in direct attack; "strategic bombing and air interdiction rarely succeed": Haun, 6.</li>
+          <li>Twenty-three campaigns; nine of eleven, five of nine; two of six; all but one of six interdiction campaigns failed; leaders supported combined arms reluctantly when ordered: Haun, 7.</li>
+          <li>Vietnam almost eight years, thirteen of twenty-three cases, over 9,000 aircraft lost: Haun, 7.</li>
+          <li>Police analogy: Haun, 2; footnote on proving the effect: Haun, 2 (note 5).</li>
+          <li>Close air support limited by controllers and targets; aircraft diverted to armed recce: Haun, 4–5.</li>
+          <li>Rolling Thunder failed to isolate or coerce; Khe Sanh; decisive defeat in the Easter Offensive: Haun, 10–11.</li>
+          <li>Battlefield interdiction removed during the war, revived as BAI for AirLand Battle, refused in Desert Storm, struck again: Haun, 5.</li>
+          <li>Kosovo, civilian cars, "NATO tacair circled helplessly overhead": Haun, 4. Haun as an A-10 AFAC: Haun, 4 (note 10).</li>
+          <li>The homework line and the closing question are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 2: Haun Scores Air Power by the Battles That Never Happen</h3>
+        <ul>
+          <li>Horns of a dilemma; dispersal forfeits the initiative: Haun, 14.</li>
+          <li>Air superiority; asymmetric advantage; massed units have fewer places to hide: Haun, 30.</li>
+          <li>Khe Sanh two divisions; Easter Offensive fourteen; armies sacrificed for political goals; most commanders disperse, move at night and in bad weather; Iraq 2003: Haun, 32.</li>
+          <li>Iraqi army dispersed; little resistance; race to Baghdad: Haun, 1.</li>
+          <li>FM 100-20, July 1943, coequal in capitals, close air support last: Haun, 22.</li>
+          <li>Battlefield interdiction named in 1964, removed two years later: Haun, 25. BAI revived and struck after Desert Storm: Haun, 26.</li>
+          <li>"The dead make no decisions"; dogs that do not bark; no incentive for Army or Air Force generals or analysts: Haun, 33.</li>
+          <li>Operational and environmental factors: Haun, 33–34. Clausewitz on engagements not waged: Haun, 2, 33.</li>
+          <li>The photograph joke and the closing line are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 3: Rolling Thunder Ascended Slowly, and Hanoi Adapted Quickly</h3>
+        <ul>
+          <li>Described as strategic bombing, flown mostly as armed recce south of the 20th: Haun, 53.</li>
+          <li>Could not disrupt the Trail or compel Hanoi; Johnson feared a repeat of the Yalu; NVA dispersed freely north of the DMZ: Haun, 54.</li>
+          <li>In the South, enemy kept dispersed: Haun, 10, 73–76.</li>
+          <li>NSAM 328: Haun, 46. Tuesday luncheons: Haun, 50.</li>
+          <li>Sorties 55,000 to 148,000; tonnage 33,000 to 128,000: Haun, 66.</li>
+          <li>20 percent of the workforce; supply flow tripled; 40 percent more NVA troops: Haun, 57.</li>
+          <li>Fixed-target strikes from about 1,000 a month to near zero: Haun, 58.</li>
+          <li>POL strikes, 70 percent of storage: Haun, 59.</li>
+          <li>Three contributing causes including the five-day pause; operational cause of minimal supply needs; ground war expanded in response: Haun, 55.</li>
+          <li>July 28, 1965, 75,000 to 125,000; McNamara rejected the JCS industrial campaign; Haiphong not attacked or mined: Haun, 56.</li>
+          <li>Losses 171 and 318: Haun, 65. Not arguing for an invasion: Haun, 54 (note 84).</li>
+          <li>The luncheon jokes and the closing question are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 4: Khe Sanh Shows What Air Power Does to an Army That Holds Still</h3>
+        <ul>
+          <li>TAP expected dispersal; two divisions massed; decisively defeated: Haun, 77. Dien Bien Phu hope; earlier dispersal into Laos and Cambodia delayed the general offensive: Haun, 10.</li>
+          <li>"When a cooperative adversary continues to concentrate and maneuver": Haun, 107.</li>
+          <li>January 21, seventy-seven days, 20,000 against 6,000: Haun, 92.</li>
+          <li>Ammunition dump, 98 percent destroyed; Westmoreland relied on air and artillery: Haun, 95.</li>
+          <li>Niagara and up to 300 targets a day: Haun, 101. 22,000 sorties; B-52 cells; 60 percent of tonnage: Haun, 102.</li>
+          <li>12,400 tons, two-thirds by parachute: Haun, 96. 10,000 to 15,000 dead or wounded: Haun, 98.</li>
+          <li>Overrun without air power; ground forces needed: Haun, 99. Westmoreland's decisive battle: Haun, 100. Weather most decisive: Haun, 103.</li>
+          <li>Tet: air power largely irrelevant except mobility; police and militia: Haun, 105–106.</li>
+          <li>Failed militarily, succeeded politically; Nixon sought withdrawal: Haun, 10.</li>
+          <li>McCarthy 40 percent on March 12; bombing ended north of the 20th; Johnson would not run: Haun, 106.</li>
+          <li>The cooperation line, the Niagara question, and the New Hampshire joke are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 5: Igloo White Counted Trucks. Hanoi Sent the Infantry on Foot</h3>
+        <ul>
+          <li>Commando Hunt I and III dates: Haun, 114, 130.</li>
+          <li>20,000 sensors: Haun, 117. ISC, two IBM 360-65s, 400 analysts: Haun, 116.</li>
+          <li>DIA and 7th Air Force 82 percent; CIA fewer than fifteen truckloads; "Both DIA and CIA assessments were correct": Haun, 128.</li>
+          <li>Troops by night in small groups, up to 120 days: Haun, 127.</li>
+          <li>Gunships 28 percent of truck kills: Haun, 123. Surprise Package 7.34 per sortie; NVA chose night: Haun, 132.</li>
+          <li>Sihanouk Trail; little impact near Saigon; Cambodia invasion needed; little effect on infiltration: Haun, 137.</li>
+          <li>Antiwar resurgence; Cooper-Church into law at year's end: Haun, 139–140.</li>
+          <li>Time bought for pacification and Vietnamization: Haun, 11, 139. The clock was ticking: Haun, 138. War-weariness; offensives called off; party resolved: Haun, 137.</li>
+          <li>The convoy line, the closing question, and the "feared" reading of the tally are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 6: Lam Son 719 Brought the Sorties and Left the Controllers Home</h3>
+        <ul>
+          <li>Objective to close the Trail; Cooper-Church; crossing without advisors and controllers; outnumbered more than two to one: Haun, 139–140.</li>
+          <li>"Could not leverage air power to defeat the enemy": Haun, 139.</li>
+          <li>Ill-advised raid; congressional clock: Haun, 138. Short lines and familiar terrain: Haun, 144. February 8; Thieu's order to limit losses: Haun, 145.</li>
+          <li>Over 34,000 NVA; all ARVN out by March 24; 107 helicopters: Haun, 146–147. Check-ins every ten minutes: Haun, 147.</li>
+          <li>8,500 tacair and 1,358 B-52 sorties; Khe Sanh comparison: Haun, 148.</li>
+          <li>Air superiority in ten of eleven direct attack cases, all but Lam Son 719: Haun, 222.</li>
+          <li>Both sides claimed victory; the North held the ground; Le Duan judged Vietnamization a failure and ordered a general offensive: Haun, 141.</li>
+          <li>ARVN held in 1972 with advisors and a U.S. control system: Haun, 197–198.</li>
+          <li>The Cooper-Church line and the closing question are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 7: At Quang Tri, the Clouds Had Air Superiority</h3>
+        <ul>
+          <li>NVA massed; air power decisive at An Loc and Kontum: Haun, 163, 197.</li>
+          <li>Low cloud at the crossing; 1,000 SA-2s; gunships, FACs, and B-52 limits: Haun, 167–168.</li>
+          <li>March 30; 5,000 rounds; 40,000 troops and 200 tanks: Haun, 168. A week without significant tacair; TACS just withdrawn: Haun, 169.</li>
+          <li>3rd Division destroyed by May 2: Haun, 170. Vietnamese-only DASC: Haun, 171.</li>
+          <li>An Loc 6,200 and 25 advisors: Haun, 173. May 11 sorties: Haun, 175–176. Three divisions lost: Haun, 176.</li>
+          <li>Abrams, "ten times the air would not have stopped them": Haun, 177.</li>
+          <li>Citadel retaken September 16: Haun, 195. Conditions at An Loc, Kontum, and the retaking: Haun, 197.</li>
+          <li>Hanoi seeks settlement; Le Duc Tho agrees in October; Thieu delays: Haun, 197, 200. Nguyen quoted on Le Duan: Haun, 199.</li>
+          <li>Direct attack compelled Hanoi, not Linebacker I; rail lines cut in May, North adapted; Linebacker I mistaken for strategic success; service interests: Haun, 198–199.</li>
+          <li>Linebacker II eleven nights, fifteen B-52s; January 27, 1973, terms virtually identical; no air support in 1975: Haun, 200–201.</li>
+          <li>The switchboard and overcast lines and the B-52 question are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 8: Twenty-Three Air Campaigns, One Moral: Bring an Army</h3>
+        <ul>
+          <li>Four operational and five environmental factors: Haun, 207, 214.</li>
+          <li>Nine of eleven; two of six; one of six and politically never: Haun, 218.</li>
+          <li>Coercion tracked the demand; 1965 versus 1972; withdrawal shifted the balance; 1975: Haun, 221.</li>
+          <li>Seven of seven and four of seven; two of four and one of four; air superiority ten of eleven, four of six, three of six: Haun, 222.</li>
+          <li>Dispersal the main contribution in seven of nine: Haun, 224. Climate, seasons, and technology observations: Haun, 221.</li>
+          <li>Armed recce expunged in 1966 and after Desert Storm; reasons the Air Force resists: Haun, 225–226.</li>
+          <li>"Drops fewer bombs while the Army takes the credit"; Marine doctrine as joint doctrine; tank-counting analysts: Haun, 227.</li>
+          <li>No BAI missions on Desert Storm tasking orders: Haun, 205.</li>
+          <li>Linebacker II terms identical to those agreed after the Easter Offensive: Haun, 202.</li>
+          <li>The small-cells caution, goalkeeper line, coding question, and closing line are our opinion.</li>
+        </ul>
+        <h3>Haun, chapter 9: The Kyiv Forecast the Kremlin Never Ran</h3>
+        <ul>
+          <li>Eleven recommendations: Haun, 230. "Enemy fighters are less of a threat than SAMs": Haun, 231.</li>
+          <li>February 24, 2022; dispersed infantry and armed civilians: Haun, 237–238.</li>
+          <li>Five of nine factors; 1,200, 350, and 100 aircraft: Haun, 238.</li>
+          <li>Air-to-air advantage kept; mobile SAMs not suppressed: Haun, 238–239. Strikers forced low after three days: Haun, 239–240.</li>
+          <li>Cloudy 70 percent of the time: Haun, 240. Su-34 night capability; river valleys; civilians the one factor not against Russia; no prediction of the outcome: Haun, 241.</li>
+          <li>Denial over punishment; "Would the United States risk Washington over Warsaw or Los Angeles over Taipei?": Haun, 242.</li>
+          <li>Old template may not deter a Chinese assault; SAMs and missiles against airfields and carriers: Haun, 243. Sea lanes: Haun, 243–244.</li>
+          <li>Assault Breaker, Air Force disapproval, JSTARS: Haun, 244. AirSea Battle and AirLand Battle: Haun, 249.</li>
+          <li>The squadron patch line and closing question are our opinion.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Gaddis thesis: Gaddis, vii–ix, 302, 342–343. Calibrated escalation's opposite effects: Gaddis, 246. 226,000 tons in 1967: Gaddis, 245–246. NSAM 328: Haun, 46. Light infantry supply needs: Haun, 55.</li>
+          <li>Crane thesis: Crane, 6–9, 170, 183–184. 1952 FEAF study, 15,000 rail cuts: Crane, 115–116. 243 aircraft destroyed: Crane, 116. Interdiction one of six: Haun, 218.</li>
+          <li>Zhang thesis: Zhang, 6–8, 201–214. Stalin kept Soviet air operations defensive; USSR unreliable: Zhang, 139, 208. Détente and bombing without escalation: Haun, 11. No longer backed by the Soviets or Chinese: Haun, 12.</li>
+          <li>Schlight thesis: Schlight, v, 289–290, 309. Dogs that do not bark; Army generals' lack of incentive: Haun, 33.</li>
+          <li>Clodfelter thesis: Clodfelter, ebook pp. 9–11, 223–225. Minimal supply needs: Haun, 55. Direct attack compelled Hanoi in 1972: Haun, 198–199.</li>
+          <li>Randolph thesis: Randolph, 333, 337–342. RVNAF reliance: Randolph, 337. Truong on air support and B-52 dependence: Haun, 198.</li>
+          <li>The closing opinion is ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>What is Haun's box score for the three types of air campaign?</summary><p>Direct attack met its military aims in nine of eleven campaigns, strategic bombing its political aims in two of six, and interdiction succeeded in only one of six. <span class="pg">H 7</span></p></details></li>
+          <li><details><summary>What dilemma does TAP theory say a threatened army faces?</summary><p>Concentrate and maneuver and be hit from the air, or disperse and hide and give up the initiative while staying open to ground attack. <span class="pg">H 14</span></p></details></li>
+          <li><details><summary>Why, in Haun's account, could the NVA disperse freely north of the DMZ?</summary><p>Johnson ruled out invading the North for fear of Chinese intervention as in Korea, so the NVA never had to concentrate to defend its border. <span class="pg">H 54</span></p></details></li>
+          <li><details><summary>Why was air power largely irrelevant in the Tet Offensive's city fighting?</summary><p>Surveillance could not track the dispersed Viet Cong in the cities, and South Vietnamese police and militia won the urban battles. <span class="pg">H 105</span></p></details></li>
+          <li><details><summary>How did DIA and CIA disagree about Commando Hunt I, and who was right?</summary><p>DIA said supplies to the South were cut 82 percent; the CIA said the South needed fewer than fifteen truckloads a day and got them. Haun says both were correct. <span class="pg">H 128</span></p></details></li>
+          <li><details><summary>Why could the ARVN not direct U.S. air power during Lam Son 719?</summary><p>The Cooper-Church amendment kept U.S. ground troops out of Laos, so the ARVN went in without its advisors and tactical air controllers. <span class="pg">H 140</span></p></details></li>
+          <li><details><summary>Why did air power fail to stop the fall of Quang Tri?</summary><p>NVA air defenses along the DMZ, bad flying weather, and a South Vietnamese air control system the USAF had just handed over. <span class="pg">H 170</span></p></details></li>
+          <li><details><summary>How did direct attack fare with and without a capable friendly ground force?</summary><p>With one, seven of seven succeeded militarily and four politically; without one, two of four and one of four. <span class="pg">H 222</span></p></details></li>
+          <li><details><summary>What was the main, predictable reason Russia failed to win air superiority over Kyiv?</summary><p>It could not suppress Ukraine's mobile SAMs, which after three days forced Russian strike aircraft down into the low-altitude gun and missile threat. <span class="pg">H 239</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

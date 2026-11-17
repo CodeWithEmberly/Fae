@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Review edition for an earlier book, written November 17 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Thursday, October 29, 2026 · Review edition for Friday's seminar: McDougall (written November 17)</p>
+      <p class="toc-after"><a href="../">Archive of every edition</a> · <a href="../../map/">Course map</a></p>
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: McDougall, <i>...the Heavens and the Earth</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tomorrow's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#m-01">Introduction and ch. 1: The Prison Bureau Delivered on Time</a></li>
+          <li><a href="#m-02">Chs. 2 and 3: A Monopoly With a Dozen Bombs and No Plan</a></li>
+          <li><a href="#m-03">Chs. 4 and 5: Eisenhower Lost the Race He Wasn't Running</a></li>
+          <li><a href="#m-04">Chs. 6 and 7: Count the Panic Before You Report It</a></li>
+          <li><a href="#m-05">Chs. 8 and 9: Fly First, Define Later</a></li>
+          <li><a href="#m-06">Chs. 10 to 12: The Truth Was Classified, the Bluff Was Not</a></li>
+          <li><a href="#m-07">Chs. 13 to 15: Khrushchev Believed His Own Brochure</a></li>
+          <li><a href="#m-08">Chs. 16 to 18: The Film Came Back, the Order Stood</a></li>
+          <li><a href="#m-09">Chs. 19 to 21: What Would You Give Up for the Moon?</a></li>
+          <li><a href="#m-10">Ch. 22 (conclusion): Contempt for Our Works, Value for Ourselves</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Friday's seminar</span>
+        <h3><a href="#t1">McDougall, <i>...the Heavens and the Earth</i>: The Race Nobody Is Allowed to Quit</a></h3>
+        <p>McDougall argues that the rivalry that peaked with Sputnik made the state the main sponsor and manager of new technology, and that this change, which he calls technocracy, outlasted the race that started it. In the ten years up to 1965, he says, the West dropped its postwar belief that state-directed science defeated itself, and Western governments quintupled their research spending for national goals. He calls it a saltation, an evolutionary leap. The space race is his case study. The moon is almost a side issue.</p>
+        <p>The book alternates between the two capitals, which makes it easy to read in pieces. Part I follows Soviet rocketry to Sputnik, Part II covers America before Sputnik, Part III is Eisenhower's space policy, Part IV is Khrushchev's, Part V is Kennedy and Johnson and what McDougall calls the technocratic temptation, and Part VI surveys the first twenty-five years. Each Part ends with a short conclusion, and those few pages are where McDougall states his argument most plainly. Read them even when you skip the chapter in front of them.</p>
+        <p>He argues against two comfortable stories. The first is that Sputnik proved the Soviets were ahead. McDougall shows a primitive booster, a missile force that barely existed, and a bluff that lasted about seven years. The second is that Apollo proved American management could do anything. He shows a program with no defined objective, $146 billion in government research spending from Sputnik to the landing with no national plan, and a country that stopped for a nap once it won. (He is equally rude to both superpowers, which is how you know it is history and not a brochure.)</p>
+        <p>For this course, the book moves the limited war from the battlefield to the budget and the newspaper. Nobody in it drops a bomb, yet the stakes are deterrence, reconnaissance, and who gets to fly over whom. Read it asking which side knew the truth, which side could prove it, and why those were different questions. His warning is the one seminar will chew on: the race threatens to "erode the very values that make one's society worth defending." <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Twenty-Two Chapters, One Evening, Sorted by Payoff</a></h3>
+        <p>Read the frame first, then the bluff, then the money. The pages below come from the running heads in the ebook on file, so match them to your copy by chapter.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The introduction, pages 5 to 13 (technocracy defined, and the trap on its last page), then chapter 22, pages 449 to 461 (the conclusion: thesis restated, Gerschenkron, and the "fire in the sun").</li>
+          <li><b>60 minutes.</b> Add chapter 12, pages 249 to 261 (the missile bluff and its real numbers), and chapter 16, pages 323 to 331 (reconnaissance satellites kill the missile gap, and the buildup goes ahead anyway).</li>
+          <li><b>2 hours.</b> Add chapter 5, pages 111 to 133 (why Eisenhower chose Vanguard, with the Part II conclusion at the end); chapter 6, pages 139 to 155 (the "media riot" and Vanguard's four-foot flight); chapter 15, pages 303 to 322 (Kennedy picks the moon); and chapter 21, pages 435 to 449 (the $146 billion question and Churchman's test).</li>
+        </ol>
+        <p>If you have ten spare minutes, spend them on the Part conclusions, which sit at pages 61 to 65, 131 to 133, 225 to 229, 293 to 297, and 401 to 407. They are short, and McDougall argues hardest in them. Chapters 1 to 3 can wait. They are rich Soviet and American prehistory, and the first two lessons below cover their main points. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 4, pages 107 to 110.</b> RAND's October 1950 report, which McDougall calls the "birth certificate of American space policy." Watch how early "freedom of space" becomes the goal, and note the delivery date: seven years to the day before Sputnik.</li>
+          <li><b>Chapter 5, pages 121 to 124 and 133.</b> Vanguard chosen over von Braun's Redstone, inspectors making sure the Jupiter-C's upper stages were dummies, and Quarles telling Eisenhower the Soviets had "done us a good turn." This is the case that Eisenhower came second on purpose.</li>
+          <li><b>Chapter 6, pages 144 to 145.</b> The Gallup poll against the headlines. McDougall measures the panic before he describes it.</li>
+          <li><b>Chapter 10, pages 219 to 221.</b> Eisenhower's "What you want is enough," and the U-2 photographs he could not show anyone.</li>
+          <li><b>Chapter 12, pages 249 to 253.</b> "For it was all a bluff." No deployed Soviet ICBM at first, 150 confirmed in 1965, and an American lead of about 194 to 72 in late 1962.</li>
+          <li><b>Chapter 16, pages 327 to 331.</b> The CIA's count falls from 120 to 60 to at most fourteen, and the country buys exactly 1,000 Minutemen anyway.</li>
+        </ol>
+        <p>Keep chapter 4's dates straight. The 1946 RAND study carries the price tag; the 1950 report carries the birthday. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for the McDougall seminar, whose framing paragraph says the Soviets used a win in the information domain to hide that they were never ahead technically. Tomorrow morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>How did the Soviet Union seemingly get ahead in space technology?</b> Chapter 2, pages 59 to 62 (the R-7), chapter 12, pages 249 to 253 (the bluff), and chapter 5, pages 121 to 124 (the American decision to let a science rocket go first).</li>
+          <li><b>The Eisenhower administration was generally excellent at propaganda, so why did it not counter effectively?</b> Chapter 6, pages 144 to 155, chapter 10, pages 219 to 221, and chapter 17, pages 345 to 348 (the spy-satellite blackout).</li>
+          <li><b>What are the capabilities and limitations of propaganda?</b> Chapter 11, pages 239 to 240 (allied opinion), chapter 12, pages 259 to 261, and chapter 16, pages 329 to 330.</li>
+          <li><b>Did the Kennedy administration fight the Space Race more effectively than its predecessor?</b> Chapter 15, pages 303 to 322, chapter 16, pages 323 to 331, and chapter 19, pages 395 to 400.</li>
+          <li><b>What impact did the Space Race have on military technological and operational development?</b> Chapter 16, pages 335 to 341 (passive satellites blessed, Dyna-Soar killed) and chapter 20, pages 413 to 420 (the Outer Space Treaty).</li>
+        </ol>
+        <p>Opinion: prepare question four. It is the only one where the book hands you numbers for both sides: 77 percent of Americans backing Apollo by October 1964 on one, and 1,000 Minutemen bought after the gap was disproved on the other. Whoever brings both gets to referee. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>Sergei Korolev.</b> The Soviet rocket designer who survived the prison bureaus and built the R-7 that launched Sputnik (37 to 38, 59 to 60).</li>
+          <li><b>Donald Quarles.</b> Eisenhower's defense official on the satellite decision, who told the President after Sputnik that the Soviets had "done us a good turn" (119 to 121, 133).</li>
+          <li><b>T. Keith Glennan.</b> NASA's first administrator, who admitted in May 1959 that his agency had no objective (196, 201 to 202).</li>
+          <li><b>James Webb.</b> Kennedy's NASA administrator, who spread Apollo's money across firms, districts, and universities (311 to 312, 381 to 382).</li>
+          <li><b>Technocracy.</b> McDougall's word for technological change turned into an institution that serves the state (5 to 6).</li>
+          <li><b>Freedom of space.</b> The right to fly satellites over other countries, which RAND wanted settled before spy satellites flew (109 to 110).</li>
+          <li><b>Missile gap.</b> The belief that the Soviets led in ICBMs, which McDougall calls a myth (235 to 238, 329).</li>
+          <li><b>Discoverer and Samos.</b> The first American reconnaissance satellites, which cut the count of Soviet missiles to at most fourteen (329 to 330).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Zhang to McDougall</span>
+        <h3><a href="#t6">Same Stalin, Different Disguise</a></h3>
+        <p>Zhang and McDougall describe one Soviet habit from two angles: show the world a strength you do not have, and hide the one you do. In Zhang's Korea, Soviet pilots flew MiGs over the Yalu in Chinese uniforms, Stalin's promise of air cover was never defined, and both sides inflated their kill claims, the Americans at eight or ten to one before some revised it to about two. McDougall finds the same Stalin after Hiroshima telling his scientists "The equilibrium has been destroyed" and demanding a bomb, which arrived a year earlier than Kurchatov predicted. Khrushchev inherits the habit and runs it the other way, advertising an ICBM force he had not built. The Americans were good customers both times. In November 1951 General Vandenberg called Communist China "one of the major air powers of the world," and by 1960 CIA worst cases had the Soviets at up to 400 ICBMs in 1961. The two books also meet in 1953. Zhang argues Stalin's death that March broke the armistice deadlock, and McDougall reports that Soviet scholars dated the American scientific-technical revolution from that year, because the Korean War had locked large-scale government research into the American system.</p>
+        <p>Keep one question in mind while reading: if the image of air and missile power can be faked in both directions, what does each side need to see before it can call the bluff, and who pays while it waits? Chapter 16 has McDougall's answer, and it orbits. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: McDougall, <i>...the Heavens and the Earth</i></p>
+
+      <article id="m-01">
+        <span class="kicker">Chapter by Chapter · McDougall, introduction and chapter 1</span>
+        <h3><a href="#m-01">The Prison Bureau Delivered on Time</a></h3>
+        <p>Never assume a repressive rival cannot innovate in the one sector it truly cares about. McDougall's introduction sets the frame: for most of history states reacted to new tools and left the inventing to others, the world wars made state research a duty, and Sputnik pushed the West into what he calls technocracy, where the state sponsors technological change on purpose. Lyndon Johnson put the new creed in one sentence: "first in space means first, period." Chapter 1 shows that Russia got there first, by the cruelest route available.</p>
+        <p>Russia's road to Stalin's research system was long. Part I opens in 1881 with Tsar Alexander II killed by a People's Will bomb, whose maker, Nikolai Kibalchich, spent his last days in prison designing a rocket-propelled aircraft. Tsiolkovsky received a single grant from the old regime, 470 rubles. Lenin drew the lesson of the Great War in 1919, master the highest technology or be crushed, and a 1924 rocket bureau made the Soviet Union the first government to back spaceflight. Stalin then supplied money and terror together. The Academy of Sciences grew from 1,000 people in 1927 to over 16,000 by 1940, and a failed experiment could get a scientist branded a "wrecker." Civilian research suffered. McDougall names the exception: "That sector was defense." By 1939 Soviet factories turned out 700 to 800 planes a month. Korolev followed Tupolev into prison in 1938, and the writer Ozerov, finding the elite of Soviet aircraft design at work as prisoners, called it a catastrophe for Soviet aviation. McDougall answers in five words: "In fact, it did not." The prisoners designed fighters and dive bombers, and Langemak, reprieved from a death sentence, designed the Katyusha. (It was the most exclusive engineering faculty in the world, with admission by arrest warrant.)</p>
+        <p>The weak seminar comment is "The Soviet system was too repressive to innovate, so Sputnik was a fluke." It is weak because it ignores the author's own counterevidence: McDougall spends a chapter showing that terror hurt civilian science and spared defense. The strong version says terror and innovation coexisted in the sector the state prized, and it cites the prison bureaus, the Katyusha, and 700 to 800 planes a month. Opinion: "they can't innovate" is the most comfortable sentence in threat assessment, and 1930s Russia is McDougall's proof that it is wrong.</p>
+        <p>The strong version wins because the chain runs all the way to Sputnik. First order, the prison bureaus kept military designs coming while their designers were under guard. Second order, Korolev survived to build the R-7, twenty engines and 1.1 million pounds of thrust, which flew in August 1957, and McDougall's Part I conclusion says war, not terror, was what slowed Soviet rocketry. Third order, that rocket launched Sputnik, and the introduction says Sputnik set off the leap in which Western governments quintupled their research spending. A critic who calls Sputnik a fluke has to explain away a forty-year pipeline. The introduction's last page explains why nobody gets to stop: a state can switch off its own research, but not its rivals'.</p>
+        <p>If terror did not stop Soviet military innovation, what advantage exactly is a free society claiming in a race nobody may quit? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-02">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 2 and 3</span>
+        <h3><a href="#m-02">A Monopoly With a Dozen Bombs and No Plan</a></h3>
+        <p>Before you lean on a deterrent, count what stands behind it, because the other side is counting too, and its fear sets the pace of the race. Chapter 2 shows a frightened Moscow sprinting after the American bomb. Chapter 3 shows a comfortable Washington holding the bomb with very little behind it. Side by side, they explain why the race started when it did.</p>
+        <p>After Hiroshima, Stalin told his munitions commissar and the physicist Kurchatov, "The equilibrium has been destroyed," and demanded a bomb. Kurchatov guessed five years. The Soviet bomb came in August 1949, a year early. Soviet research spending rose from 6,300 million rubles in 1946 to 9,000 million by 1950, and McDougall judges Soviet military research perhaps six times the American effort as a share of national product. In Washington, the Finletter Commission of 1947 asked to see the war plan, and after a Pentagon runaround Eisenhower told his colleagues they owed the civilians the truth: "there is no war plan." Spaatz figured there were a dozen or so warheads. Only six of twenty-six B-29 groups had aircraft, and they were based in the Southwest, where they "threatened no one but Canada and Mexico." American science, McDougall says, "grew up an orphan." Robert Goddard earned eighty-three patents and was dismissed as a sort of crackpot, and peace put the orphan back on short rations. A $14.4 billion ceiling on the 1950 defense budget left the Joint Chiefs unable to hold a foothold in Europe, and in July 1949 Truman concluded "we must be strongest in atomic weapons."</p>
+        <p>The weak seminar comment is "The United States was far ahead after 1945 because it had the bomb." It is weak because it describes instead of arguing: it counts the invention and skips the inventory, the plan, and the delivery force. The strong version says the monopoly was thin, a dozen warheads and no war plan, and the budget ceiling made the bomb the cheap option. Opinion: Washington chose its strategy by subtraction, and Moscow set its schedule by fear. Neither belongs in a recruiting video.</p>
+        <p>The chain runs into the next decade. First order, the ceiling pushed Truman toward atomic weapons as the affordable defense. Second order, the Soviet bomb of August 1949 brought Truman's hydrogen bomb decision in January 1950, then NSC-68 and Korea, and defense spending tripled. Third order, McDougall's Part II opening says nuclear deterrence chained American defense to fast technological change, and that the restraint of these years helped make the country second into space. That chain pre-empts the reply that the monopoly bought safety. It bought a few years and a race. Chapter 2 closes the loop at a Soviet Embassy party in October 1957, where an émigré said "Poor Tsiolkovsky" was turning in his grave, a Soviet guest promised he would eat his words, and Radio Moscow soon announced a satellite in orbit. Khrushchev, told the news, went to bed. He could afford to.</p>
+        <p>If Truman's budget picked the strategy and Stalin's fear set the pace, who actually started the race that ended with Sputnik? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-03">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 4 and 5</span>
+        <h3><a href="#m-03">Eisenhower Lost the Race He Wasn't Running</a></h3>
+        <p>Before you call a loss a blunder, find out which race the loser thought he was running. Chapter 4 shows the United States shelving its rockets under Truman's austerity and reviving them only when Soviet bombs forced the issue. Chapter 5 argues that Eisenhower lost the race to orbit because he was running a different one, for the legal right to fly spy satellites over the Soviet Union.</p>
+        <p>RAND's October 1950 report, which McDougall calls the "birth certificate of American space policy," saw satellites mainly as reconnaissance tools, expected a closed Soviet Union to treat spying from orbit as an attack on its secrecy, and noted that nobody knew whether national airspace had a ceiling. Its fix was an "experimental" satellite on an equatorial orbit that never crossed Soviet territory, to establish "freedom of space" first. The report reached the Air Force on October 4, 1950, seven years to the day before Sputnik. Eisenhower's New Look needed hard intelligence to cut defense safely, so the U-2 was built in eighty days, and the National Security Council put protecting the reconnaissance satellite ahead of speed. On August 3, 1955, the Stewart committee chose the navy's Vanguard over von Braun's Redstone, a choice McDougall calls ideal politically, if not technically. In September 1956 a Jupiter-C flew 682 miles high and came down 3,355 miles downrange, and inspectors had made sure its upper stages were dummies so von Braun could not orbit anything "accidentally." On the night of Sputnik, von Braun told Defense Secretary McElroy at Huntsville that he could orbit a satellite in sixty days, and his commander, Medaris, corrected him to ninety. Four days after Sputnik, Quarles told Eisenhower the Redstone could have done the job a year or more earlier, then looked on the bright side: the Russians had "done us a good turn" by establishing freedom of space. Eisenhower asked about a reconnaissance vehicle.</p>
+        <p>The weak seminar comment is "Eisenhower blundered and let the Soviets win the space race." It is weak because it ignores the author's evidence of a deliberate choice: the RAND logic, the NSC priority, and the dummy stages. The strong version says Eisenhower traded first place for a legal precedent that protected his spy satellites, and Quarles's "good turn" shows the administration saw it that way within the week. Opinion: few presidents have been so pleased with a defeat, and fewer still had to keep the reason classified.</p>
+        <p>The strong version also survives McDougall's own objection, which is what makes it hard to rebut. First order, Sputnik flew over everyone and nobody protested, so the overflight precedent existed. Second order, McDougall's Part II conclusion calls Sputnik "the greatest defeat Eisenhower could have suffered," because it handed critics a weapon against his whole philosophy of government. Third order, the precedent paid off in 1961, when reconnaissance satellites cut the count of Soviet missiles to at most fourteen. A comment that concedes the political cost and still defends the trade is harder to attack than either "genius" or "blunder."</p>
+        <p>Was the freedom of space worth what a public defeat cost the policies Eisenhower was protecting? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-04">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 6 and 7</span>
+        <h3><a href="#m-04">Count the Panic Before You Report It</a></h3>
+        <p>Measure a public panic before you describe one, because the noise and the numbers often disagree. McDougall does this in chapter 6, setting the Sputnik headlines beside a Gallup poll and calling the result a "media riot." Chapter 7 follows Eisenhower's answer, four measures each built to be temporary or limited, and shows each one opening a door he could not shut.</p>
+        <p>The poll, taken October 11 to 14, 1957, found half the sample calling Sputnik a serious blow to American prestige, 46 percent saying it was not, and 61 percent expecting satellites to be used for good. That is a divided, mostly hopeful public. The press was another matter. Life told readers, "Let us not pretend that Sputnik is anything but a defeat for the United States." Defense Secretary Wilson called Sputnik a "neat scientific trick," and Sherman Adams said the goal was not a high score "in a celestial basketball game," which helped about as much as you would expect. A memo to Lyndon Johnson noted the issue could make him President, and his hearings opened November 25 with Sputnik called a "technological Pearl Harbor." The administration supplied the rest. The White House insisted that a Vanguard test be billed as a real satellite attempt, and on December 6 the rocket rose four feet, burst into flame, and settled back, leaving its little satellite chirping on the ground. The press named it Flopnik and Kaputnik, and Americans drank the Sputnik Cocktail, "two parts vodka, one part sour grapes." When the army's Explorer 1 reached orbit on January 31, 1958, Eisenhower said, "Let's not make too great a hullabaloo over this." He may have been the only American who wanted less hullabaloo.</p>
+        <p>The weak seminar comment is "Sputnik panicked the American people." It is weak because it asserts without evidence and overgeneralizes; the only poll in the chapter shows a public split down the middle. The strong version says editors, senators, and an administration that publicized a test made the panic, and it puts the 46 percent and Life's headline side by side. Opinion: this is McDougall's best method in the book, and it is worth stealing. Historians who count the panic first write better history.</p>
+        <p>The chain shows why the riot mattered anyway. First order, the riot set the agenda, and Eisenhower had to answer it, though his first post-Sputnik budget rose only 1.5 percent. Second order, he answered with four measures designed to limit themselves: the National Defense Education Act, written to run seven years, Pentagon reorganization, NASA, and the Space Act, which split space into an open civilian program and a closed military one to keep the country "a leader, not the leader." Third order, the limits failed. A $60 million rider widened the education act, and McDougall says the Space Act started the civil-military fight instead of ending it. That chain pre-empts the reply that a media riot is harmless noise, because this one wrote law. If the public was not panicking, who owned the riot, and can a government whose best facts are secret ever win one? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-05">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 8 and 9</span>
+        <h3><a href="#m-05">Fly First, Define Later</a></h3>
+        <p>When you need a right your adversary will not grant, establish it by doing, and keep its definition vague until the practice is settled. Chapter 8 argues that Eisenhower's space strategy had a public face, "space for peace," and a private one, freedom to fly the missions deterrence needed, above all spy satellites. Chapter 9 adds a warning about the agency he built to carry the public face: NASA had every reason to want the race to go on.</p>
+        <p>The real policy was NSC 5814/1, approved in mid-August 1958. It handled missiles separately from space, so a UN space deal could not freeze missiles, called reconnaissance satellites critical to national security, and declined to say where outer space began, preferring a functional test: if it is in orbit, it is in space. Eisenhower's Operations Coordinating Board asked about "a cover for such reconnaissance satellites," and its answer was rhetoric: call the military program vital to deterrence and therefore peaceful. At the UN, the General Assembly backed the Western resolution fifty-four to nine, with eighteen abstentions, and Washington won the wording. Space would serve "peaceful" purposes instead of "nonmilitary" ones, and that gap sheltered the Pentagon. Chapter 9 turns to NASA. Its first choice for administrator, Hugh Dryden, sank himself by telling Congress that putting a man in a Redstone nose cone had the technical value of "the circus stunt of shooting a young lady from a cannon." Glennan got the job, and the agency got muscle by raiding the Army, which lost the von Braun team to NASA effective July 1, 1960. Glennan admitted in May 1959 that the agency "had no objective," and McDougall's verdict is blunt: "NASA clearly needed the Soviets." At a White House dinner in December 1959, Vice President Nixon said prestige was the real motive and the question would be "how many more Soviet successes can we stand." NASA's 1961 budget came to $964 million after Congress added $50 million. For an agency told to be sensible, it ate well.</p>
+        <p>The weak seminar comment is "Eisenhower wanted space to be used for peace." It is weak because it takes the public face at its word and ignores the author's evidence of the private one. The strong version says "space for peace" was a cover the administration asked for by name, and the deliberately vague boundary let spy satellites fly before anyone could rule them illegal. Opinion: the most useful word in the policy was the one it refused to define.</p>
+        <p>The chain runs a decade. First order, the "peaceful" wording and the functional definition kept military satellites lawful while American hardware caught up, which took a while; Discoverer 2's capsule came down somewhere in northern Norway and was lost. Second order, the Soviets protested for three years, then dropped the campaign in December 1963, and a UN resolution declared outer space free for all and outside national sovereignty. Third order, the 1967 Outer Space Treaty banned nuclear weapons in orbit and left orbit open to military use. Every link is in the book, which pre-empts the reply that the strategy was mere hypocrisy. It was hypocrisy that worked. If NASA's budget rose with the Soviet challenge, did Eisenhower build an agency with every reason to keep the race going? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-06">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 10 to 12</span>
+        <h3><a href="#m-06">The Truth Was Classified, the Bluff Was Not</a></h3>
+        <p>A secret fact cannot win a public argument, so a leader who relies on classified evidence should expect to lose the debate while winning the policy. Chapter 10 shows Eisenhower right about Soviet missiles and unable to prove it. Chapters 11 and 12 show Khrushchev wrong about his own missiles and able to sell them for years.</p>
+        <p>CIA worst cases ran as high as 100 Soviet ICBMs by 1960 and 400 in 1961, while U-2 photographs seemed to show none deployed. The photographs were classified. So, pressed on urgency, Eisenhower told reporters "What you want is enough," and added that a deterrent gains no power once it is fully adequate. That is good strategy and terrible television. Kennedy raised the "space gap" over twenty times in the 1960 campaign. After the election a panel priced a manned lunar landing at an extra $26 to $58 billion, and Eisenhower said he was "not about to hock his jewels" and vetoed Apollo, while approving the Saint satellite interceptor on his way out. Khrushchev, meanwhile, told his party congress that ICBMs were coming off the line "like sausages." Chapter 12 opens with McDougall's verdict: "For it was all a bluff." The Soviet Union had yet to deploy a single ICBM, the first confirmed total was 150 in 1965, and in late 1962 the Americans led by about 194 to 72. About thirty-five of the big SS-6 rockets went into space shots, which bought more headlines than a small missile force could buy security. The spectaculars also had a body count. In October 1960, with two Mars-bound rockets already fizzled, a third failed to ignite, Marshal Nedelin of the new Strategic Rocket Forces ordered technicians out of their blockhouses to examine it, and it exploded. Estimates of the dead range from scores to hundreds, and Moscow reported that Nedelin had died in a plane crash. When Khrushchev showed the film from Powers's U-2 to prove it had found no missile bases, McDougall notes, "there were none to photograph."</p>
+        <p>The weak seminar comment is "The missile gap was a hoax, so it did not matter." It is weak because it confuses the facts with their effect; the bluff was false and still moved people. The strong version says the bluff worked on audiences who could not look: in June 1955 only 6 percent of West Europeans thought the West weaker, and by 1960 Britons judged the Soviets stronger by 59 to 15 percent. Opinion: sausages sell, as long as nobody tours the factory. The Soviets also understood the arithmetic better than their customers did, which is why the big rockets went to space shots instead of silos.</p>
+        <p>The chain shows where the bluff ran out. First order, it won allied opinion and handed the Democrats an election issue. Second order, it had costs: the Americans did not blink over Berlin, the Chinese demanded to know why Moscow was so timid if it was so mighty, and Khrushchev could not cooperate in space without "both giving away our strength and revealing our weakness." Third order, the spy satellite was the real threat to the bluff, which McDougall gives seven years, from Sputnik to the aftermath of the Cuban crisis. That chain pre-empts both "the gap was real" and "the gap was harmless." Get the numbers straight, too: cite the 400 as a count and a classmate will correct you with the 150 all the way to lunch. If the bluff lasted only while the Soviet Union stayed closed, did American reconnaissance do more to end the missile gap than any American missile? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-07">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 13 to 15</span>
+        <h3><a href="#m-07">Khrushchev Believed His Own Brochure</a></h3>
+        <p>A bluff turns dangerous when its author starts making policy as if it were true. Chapters 13 and 14 show Khrushchev cutting his army on the strength of rockets he did not have, then losing his job over the rockets he did. Chapter 15 shows Kennedy making the opposite error: he picked an end and left the means for later.</p>
+        <p>In January 1960 Khrushchev justified a one-third cut in the standing army by telling the Supreme Soviet that "almost the entire air force is being replaced with rockets." It was false, and it turned nearly every branch of the military against him. Within a year he retreated, the defense budget shot up 29 percent in a single year, and the army cuts were restored. When Marshal Sokolovsky's <i>Military Strategy</i> appeared in the summer of 1962, the Soviets were finally ready to deploy ICBMs, and they found "it was the space program that represented a bluff," at least five years behind in military satellites. The worse things went, the more he leaned on spectaculars: in August 1961 the cosmonaut Titov called him the cosmonauts' "space father," and a week later Soviet troops sealed off East Berlin. By October 1964 no power group of any size would back Khrushchev. He wanted a three-man capsule to beat Gemini, so Korolev's team stripped a one-man Vostok, crammed in three seats, and left out the space suits. Voskhod I flew on October 12, 1964, and Pravda headlined "Sorry Apollo!" On October 13 Khrushchev was relieved of all his party posts. McDougall's summary: "So Space Age communism fizzled like a capitalist rocket."</p>
+        <p>The weak seminar comment is "Khrushchev's space program was a propaganda triumph." It is weak because it is true but unarguable, and it stops at the first-order effect. The strong version says the propaganda worked abroad and wrecked him at home, because he cut real forces for imaginary ones and alienated the army, heavy industry, and even the scientists. Chapter 15 supplies the mirror image. Kennedy's team thought of space "in terms of ends," set aside Wiesner's warning against a prestige race, and after Gagarin's flight Kennedy asked, "Is there any place we can catch them?" The final moon message asked for upward of $20 billion, and James Webb later reminded Johnson that "you had to almost drive me" to recommend it. Opinion: one leader bought means for an end he invented, and the other bought an end and assumed the means would turn up.</p>
+        <p>Every link of the Soviet chain is in the book. First order, the rockets-for-army claim justified the troop cut. Second order, the military turned hostile, the defense budget jumped 29 percent, and the cuts reversed. Third order, a leader with no coalition left launched a stripped capsule for a headline and was removed the next day. Gaddis defines strategy as relating ends to means, and Khrushchev's chain shows what happens when the means are imaginary. That pre-empts the claim that the spectaculars were cheap wins. They were bought on credit, and the bill arrived on October 13. If Kennedy settled the end and never seriously asked about the means, was the moon decision a strategy at all? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-08">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 16 to 18</span>
+        <h3><a href="#m-08">The Film Came Back, the Order Stood</a></h3>
+        <p>Evidence rarely cancels a program once the program has a constituency, so ask what would change the buy before the first contract is signed. Chapter 16 shows reconnaissance satellites killing the missile gap and the missile buildup going ahead anyway. Chapters 17 and 18 show why: American space policy had learned to keep the public uninformed and spread the money widely.</p>
+        <p>In June 1961 the CIA's estimate of Soviet missiles dropped, without explanation, from 120 to 60. Discoverer 25 flew on June 16, missed its recovery area, and plunged into the sea, and navy frogmen labored to retrieve it. The count fell to at most fourteen. McDougall's sentence is the one to quote: "The first satellite sparked the missile gap; the first reconnaissance satellites snuffed it out." The buildup went ahead. SAC had asked for 10,000 ICBMs, which at least showed ambition, and McNamara told Kennedy that 950 Minutemen was the lowest he could request and "not get murdered" in Congress. The country got 41 Polaris submarines and exactly 1,000 Minutemen. Chapter 17 explains the silence: a January 1961 blackout forbade the Air Force even to mention satellite observation, though Moscow knew, and "Only the American public was being fooled." McDougall calls the whole posture "benign hypocrisy": cooperation in science, competition in engineering. The INTELSAT deal of July 1964 gave the American Comsat Corporation 61 percent, the Europeans 30.5 percent, and Washington a veto, which is sharing in the American sense. The emblem of the era was Telstar, built by AT&amp;T and launched by NASA in 1962, which carried the first live television between continents and symbolized space uniting the world. Six months later radiation from American high-altitude nuclear tests knocked it out. Chapter 18 explains the momentum. Webb sent 90 percent of NASA's funds to private firms and spread grants to more universities in more regions, and by fiscal 1964 the NASA budget passed $5 billion, five times what it was three years earlier. When North American, five times Martin's size, won a contract, a lobbyist explained that five times as many people were happy: "That's democracy in its finest form."</p>
+        <p>The weak seminar comment is "Better intelligence would have prevented the overbuild." It is weak because it ignores the author's own counterevidence; the intelligence arrived in 1961 and the order stood. The strong version says the satellites answered the question and politics overruled the answer, because a constituency and a classified source do not debate on equal terms. Opinion: the frogmen did their part. The film changed nothing.</p>
+        <p>The chain runs through the decade. First order, the satellites cut the count to fourteen. Second order, the buy went ahead at 1,000 Minutemen, and the "no-cities" counterforce strategy unveiled in June 1962 was going obsolete by late 1963, replaced by assured destruction, which needed no new missiles. Third order, in 1967 McNamara admitted the force was "more than we require," a force built on "worst plausible case" analysis. That chain pre-empts the excuse that nobody knew. They knew in 1961, and the people who did not know were the voters, which chapter 17 shows was a policy choice. The question to ask of any program, then or now, is what evidence would shrink it, and who has been cleared to see that evidence. If the satellites showed no gap, was the 1,000-Minuteman force a hedge against surprise or a purchase that invited the Soviet buildup? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-09">
+        <span class="kicker">Chapter by Chapter · McDougall, chapters 19 to 21</span>
+        <h3><a href="#m-09">What Would You Give Up for the Moon?</a></h3>
+        <p>A program's real objective is whatever its managers will knowingly sacrifice other goals to achieve, so ask what was given up before you accept what was promised. The test belongs to the systems theorist C. West Churchman, and McDougall applies it in chapter 21. Chapters 19 and 20 set it up: the Apollo debate of 1962 to 1964 was loud and settled little, because nearly every side wanted the money spent and argued only about what it should buy.</p>
+        <p>Apollo had critics everywhere. One straw poll found non-NASA scientists opposed to it 110 to 3, and Eisenhower in June 1963 called spending $40 billion to reach the moon "just nuts." When Kennedy proposed at the UN in September 1963 that the two countries go together, Moscow ignored him, and the Senate defeated a further 10 percent cut 36 to 49 and barred a joint landing without the consent of Congress. Offering to share the moon persuaded the Senate to keep it. The Outer Space Treaty hearings in 1967 had the same flavor. Senator Gore found the treaty's language so indefinite that he could "almost use the word fuzzy," and when General Wheeler said the Joint Chiefs backed the treaty but it required better ways to detect orbiting nuclear weapons, Senator Cooper asked whether that meant more money for military space research. "That is correct, Senator." The treaty passed 88 to 0. McDougall's diagnosis of the era is "a technocracy of politicians," setting a national agenda and ordering up the hardware to deliver it. The government spent $146 billion on research from Sputnik to the landing with no national plan, and Panofsky dismissed the spin-off defense: "If you want the by-product, you should develop the by-product." Churchman's test does the rest. American technocracy promised guns and butter, so McDougall concludes that "The objective of American technocracy was to avoid defining its objective."</p>
+        <p>The weak seminar comment is "Apollo succeeded, because Americans landed on the moon." It is weak because it confuses a first-order effect with the outcome; the landing was the method's success, and McDougall is asking what the method was for. The strong version applies Churchman: name what the program knowingly sacrificed, find nothing, and conclude that the objective was never defined. Opinion: a goal that costs nothing else is a wish with a launch window.</p>
+        <p>The chain shows what an undefined objective costs. First order, Apollo reached the moon. Second order, civilian space spending had already peaked in fiscal 1965 ("Some people's feet got tired," Johnson recalled), and McDougall writes that even before the first landing "the American hare had stopped again to take a nap." Third order, the tortoise kept walking: in 1973 the Soviets put 124 spacecraft in orbit or beyond to 23 American, and the method that solved an engineering problem then failed on the new national agenda, since ending poverty was not an engineering problem. That chain pre-empts the reply that the landing proves the policy. The landing proves the engineering. By Churchman's test, has American air or space policy had a real objective since Sputnik, and what did it knowingly give up to get it? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="m-10">
+        <span class="kicker">Chapter by Chapter · McDougall, chapter 22 (conclusion)</span>
+        <h3><a href="#m-10">Contempt for Our Works, Value for Ourselves</a></h3>
+        <p>Value the people who use the machines above the machines, and say out loud what the machines cannot do. McDougall's conclusion restates his thesis one last time: the rivalry that began in 1917 and peaked with Sputnik made the state the main promoter and manager of technical progress. He borrows Alexander Gerschenkron's rule that the more backward a country, the more the state must force change, and adds that in an age of perpetual innovation every country is permanently backward. Wartime methods became normal, and the line between state and society blurred.</p>
+        <p>He then sorts the answers people gave. Some surrendered to the machines; Churchman decided the real question was "how to design a god." Liberal clergy turned to counseling, and McDougall likens them to the Wizard of Oz: behind the curtain stands the same old social engineer. The orthodox, from Pius XII to von Braun, called technology a neutral tool, and McDougall calls that naive, because technology has a logic of its own. He predicts science will reach hard limits; the modest Uhuru satellite of 1970 sensed 161 X-ray sources, and physicists will keep splicing the atom until there is nothing left to splice. When that day comes, he suggests, science may become a branch of moral philosophy again. He also cuts human power down to size: Mount St. Helens erupted with the force of hundreds of megatons, migrating plovers navigate more precisely than a Minuteman, and Oppenheimer was no destroyer of worlds. Spaceflight, he says, "will teach us to have contempt for our works and value for ourselves," which he calls true humility. "Technology is our subcreation," to be loved while its limits are confessed. His prescription is to avoid both mellonolatry, worship of the future, and misoneism, hatred of change (two words that will make your text-to-speech app earn its keep), and to "pursue knowledge without mistaking knowledge for truth." He even rescues Frankenstein: the creature ran amok, he notes, only after people turned on it in hatred and fear.</p>
+        <p>The weak seminar comment is "McDougall is anti-technology." It is weak because it ignores the author's own counterevidence; he rejects hatred of change as firmly as worship of the future, and he says we must compete for power without making power an end in itself. The strong version says his target is the habit of treating new technology as its own justification. Opinion: that charge is harder to dodge, because it lands on everyone at the table who has ever written a requirement.</p>
+        <p>The chain is his thesis, and the earlier chapters supply the links. First order, the race made the state the sponsor of technical change, and Western governments quintupled their research spending. Second order, the methods outlived the purpose: $146 billion spent with no national plan and an objective nobody defined. Third order, the race threatens to "erode the very values that make one's society worth defending." Crane's Korea offers a service-sized version. FEAF's General Smart said "we certainly don't advertise our limitations," and the war's ambiguous ending let the Air Force go back to planning for general war, a bill it paid in Vietnam. McDougall's advice runs the other way: admit the limits early, while it is cheap. Is that a real risk for the airpower enterprise, or a luxury no Cold War service could afford? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · the three books before McDougall</span>
+        <h3><a href="#r1">Three Old Friends Who Would Recognize Khrushchev</a></h3>
+        <p>Only three 628 books come before McDougall, so the list is short and the links are strong.</p>
+        <ol class="qs">
+          <li><b>Gaddis, containment.</b> Strategy is relating ends to means, and American policy swung between meeting every threat everywhere and picking the ground, mostly according to how leaders saw their resources. The link: Eisenhower's "What you want is enough" is the resource-limited swing in one sentence, and Kennedy's moon decision, made "in terms of ends," is the swing back. Gaddis would also recognize the 1950 budget fight in chapter 3, where a $14.4 billion ceiling picked the strategy before anyone debated it.</li>
+          <li><b>Crane, airpower in Korea.</b> The Air Force fought Korea with inflated expectations, could not reach the sources of enemy power, and let the ambiguous ending convince it that it had succeeded. The link: Crane's subject is "the image and reality of American airpower," and McDougall's is the image and reality of Soviet rocket power. Both show a service that would rather not advertise its limits. Crane's April 1952 FEAF study found that rail interdiction had failed despite more than 15,000 rail cuts, and McDougall's 1961 satellites found no missile gap behind years of headlines. In both books the data arrived, and the image outlived it.</li>
+          <li><b>Zhang, the Chinese air force in Korea.</b> The PLAAF entered the war hastily built, leaning on a Soviet patron who limited his own air war, and the Soviets flew most of the MiG war in disguise. The link: Stalin's vague promise of air cover in Zhang and Khrushchev's ICBMs "like sausages" in McDougall are the same Soviet move, a commitment that sounds bigger than what stands behind it. Zhang also explains the date that keeps turning up in McDougall: after Stalin died in March 1953, Moscow made ending the war a priority.</li>
+        </ol>
+        <p>Opinion: all three would tell McDougall the bluff is older than the rocket. Gaddis would add that the budget always calls it eventually. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>McDougall's page numbers are ebook pages. The edition on file is a reflowed ebook with no usable folios, so pages come from the running heads marked in the chapter files, and a range such as 329–330 means the fact sits between two marked pages.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Ten years up to 1965; quintupled R&amp;D funding; saltation; technocracy defined: McDougall, ebook 5–6.</li>
+          <li>The six Parts and their titles: McDougall, ebook 13, 65, 133, 229, 297, 407. Part conclusions: ebook 61–65, 131–133, 225–229, 293–297, 401–407.</li>
+          <li>Bluff lasted seven years: McDougall, ebook 261. Primitive booster: ebook 249–250.</li>
+          <li>$146 billion with no national plan: McDougall, ebook 437–438. The hare's nap: ebook 421–422. No defined objective: ebook 447–448.</li>
+          <li>"Erode the very values that make one's society worth defending": McDougall, ebook 13.</li>
+          <li>The parenthetical and the framing question are ours.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter ranges from the chapter files: introduction 5–13; ch. 1, 19–39 (Part I opens at 13); ch. 2, 39–65; ch. 3, 73–95 (Part II opens at 65); ch. 4, 95–111; ch. 5, 111–133; ch. 6, 139–155 (Part III opens at 133); ch. 7, 155–175; ch. 8, 175–194; ch. 9, 194–209; ch. 10, 209–229; ch. 11, 235–249 (Part IV opens at 229); ch. 12, 249–261; ch. 13, 261–275; ch. 14, 275–297; ch. 15, 303–323 (Part V opens at 297); ch. 16, 323–343; ch. 17, 343–359; ch. 18, 359–387; ch. 19, 387–407; ch. 20, 413–435 (Part VI opens at 407); ch. 21, 435–449; ch. 22, 449–461.</li>
+          <li>RAND October 1950 report, "birth certificate," freedom of space, October 4, 1950: McDougall, ebook 107–110. RAND May 1946 study, $150 million: ebook 102.</li>
+          <li>Vanguard chosen; dummy upper stages; "done us a good turn": McDougall, ebook 121–124, 133.</li>
+          <li>Gallup poll and "media riot": McDougall, ebook 144–145.</li>
+          <li>"What you want is enough"; U-2 photographs: McDougall, ebook 219–221.</li>
+          <li>"For it was all a bluff"; 150 in 1965; 194 to 72: McDougall, ebook 249–253.</li>
+          <li>120 to 60 to at most fourteen; 1,000 Minutemen: McDougall, ebook 327–331.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions and framing (a win in the information domain; never actually ahead technically): SAASS 628 syllabus, McDougall seminar, as listed in The Long Game, October 30, 2026.</li>
+          <li>R-7: McDougall, ebook 59–62. Bluff: ebook 249–253. Vanguard decision: ebook 121–124.</li>
+          <li>Media riot and Vanguard TV-3: McDougall, ebook 144–155. Eisenhower's press conferences: ebook 219–221. Blackout: ebook 345–348.</li>
+          <li>Allied opinion: McDougall, ebook 239–240. U-2 film: ebook 259–261. Satellite count: ebook 329–330.</li>
+          <li>77 percent backing Apollo by mid-October 1964: McDougall, ebook 399–400. 1,000 Minutemen: ebook 327–328.</li>
+          <li>Kennedy picks the moon: McDougall, ebook 303–322. Minuteman buildup: ebook 323–331. UN offer and polls: ebook 395–400.</li>
+          <li>Passive satellites, Dyna-Soar: McDougall, ebook 335–341. Outer Space Treaty: ebook 413–420.</li>
+          <li>"Prepare question four" is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Korolev in prison: McDougall, ebook 37–38. R-7: ebook 59–60.</li>
+          <li>Quarles on the satellite programs: McDougall, ebook 119–121; "done us a good turn": ebook 133.</li>
+          <li>Glennan sworn in: McDougall, ebook 196. No objective: ebook 201–202.</li>
+          <li>Webb: McDougall, ebook 311–312; 90 percent of funds to private firms: ebook 381–382.</li>
+          <li>Technocracy: McDougall, ebook 5–6. Freedom of space: ebook 109–110.</li>
+          <li>Missile gap a myth: McDougall, ebook 235–238. Discoverer and Samos, at most fourteen: ebook 329–330.</li>
+        </ul>
+        <h3>Bridge from today's seminar</h3>
+        <ul>
+          <li>Soviet pilots in Chinese uniforms: Zhang, 133. Stalin's vague promise of air cover: Zhang, 60, 73–74. Kill claims of 8 or 10 to 1 revised to about 2 to 1: Zhang, 202–203. Stalin's death and the armistice: Zhang, 196–197.</li>
+          <li>"The equilibrium has been destroyed"; Kurchatov's five years; bomb a year "early": McDougall, ebook 49–50.</li>
+          <li>Soviet scholars dated the U.S. S-T revolution from 1953; Korean War locked in large-scale government R&amp;D: McDougall, ebook 277–280.</li>
+          <li>Vandenberg, November 1951, "one of the major air powers of the world": Zhang, 12. CIA worst case of 400 ICBMs in 1961: McDougall, ebook 219–220.</li>
+          <li>Reconnaissance satellites end the gap: McDougall, ebook 329–330. The framing question and the last line are ours.</li>
+        </ul>
+        <h3>McDougall, introduction and chapter 1: The Prison Bureau Delivered on Time</h3>
+        <ul>
+          <li>States historically passive toward invention; world wars make state R&amp;D a duty; technocracy; quintupled funding: McDougall, ebook 5–6.</li>
+          <li>Johnson, "first in space means first, period": McDougall, ebook 7–8.</li>
+          <li>Alexander II killed in 1881; Kibalchich designs a rocket-propelled aircraft in prison: McDougall, ebook 13–19.</li>
+          <li>A state can switch off its own R&amp;D but not foreign challenges: McDougall, ebook 13.</li>
+          <li>Tsiolkovsky's single grant of 470 rubles: McDougall, ebook 21–22. Lenin's 1919 lesson: ebook 23–24. 1924 rocket bureau, first government to back spaceflight: ebook 25–26.</li>
+          <li>Academy from 1,000 (1927) to over 16,000 (1940); "wrecker": McDougall, ebook 31–32.</li>
+          <li>"That sector was defense"; 700 to 800 planes a month by 1939: McDougall, ebook 33–34.</li>
+          <li>Korolev follows Tupolev to prison in 1938; Ozerov's "catastrophe"; "In fact, it did not": McDougall, ebook 37–38.</li>
+          <li>Fighters and dive bombers; Langemak and the Katyusha: McDougall, ebook 39–40.</li>
+          <li>R-7, twenty engines, 1.1 million pounds of thrust: McDougall, ebook 59–60; August 3, 1957 flight: ebook 61–62.</li>
+          <li>War, not terror, slowed Soviet rocketry: McDougall, ebook 65.</li>
+          <li>The weak and strong comments, the Opinion line, the parenthetical, and the closing question are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 2 and 3: A Monopoly With a Dozen Bombs and No Plan</h3>
+        <ul>
+          <li>"The equilibrium has been destroyed"; Kurchatov's five years; bomb in August 1949, a year "early": McDougall, ebook 49–50.</li>
+          <li>6,300 million rubles (1946) to 9,000 million (1950); perhaps six times as a share of GNP: McDougall, ebook 51–52.</li>
+          <li>Émigré's "Poor Tsiolkovsky"; Radio Moscow's announcement; Khrushchev went to bed: McDougall, ebook 61–62.</li>
+          <li>Nuclear deterrence chained defense to technological change; restraint helped make the U.S. second in space; "grew up an orphan": McDougall, ebook 73–74.</li>
+          <li>Finletter Commission; "there is no war plan"; a dozen or so warheads; six of twenty-six B-29 groups; "threatened no one but Canada and Mexico": McDougall, ebook 93–94.</li>
+          <li>$14.4 billion FY 1950 ceiling; Truman, "we must be strongest in atomic weapons": McDougall, ebook 95.</li>
+          <li>Goddard's eighty-three patents; dismissed as a crackpot: McDougall, ebook 77–78.</li>
+          <li>H-bomb decision January 31, 1950; NSC-68; defense spending tripled: McDougall, ebook 104.</li>
+          <li>The Opinion lines and the closing quip are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 4 and 5: Eisenhower Lost the Race He Wasn't Running</h3>
+        <ul>
+          <li>Truman's austerity shelved missiles: McDougall, ebook 95–98.</li>
+          <li>October 1950 RAND report, "birth certificate"; reconnaissance purpose: McDougall, ebook 107–108.</li>
+          <li>Soviet secrecy, airspace ceiling unknown, experimental equatorial satellite, "freedom of space," October 4, 1950: McDougall, ebook 109–110.</li>
+          <li>New Look: McDougall, ebook 113–114. U-2 in eighty days: ebook 117.</li>
+          <li>NSC priority on protecting the reconnaissance satellite; Stewart committee, August 3, 1955; ideal politically if not technically: McDougall, ebook 121–122.</li>
+          <li>Dummy upper stages: McDougall, ebook 123–124. Jupiter-C, September 20, 1956, 682 miles high, 3,355 miles downrange: ebook 129–130.</li>
+          <li>Sputnik "the greatest defeat Eisenhower could have suffered"; McElroy at Huntsville, von Braun's sixty days, Medaris's ninety: McDougall, ebook 131–132.</li>
+          <li>Quarles, Redstone a year or more earlier, "done us a good turn"; Eisenhower asks about a reconnaissance vehicle: McDougall, ebook 133.</li>
+          <li>At most fourteen missiles after 1961: McDougall, ebook 329–330.</li>
+          <li>The weak and strong comments and the Opinion line are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 6 and 7: Count the Panic Before You Report It</h3>
+        <ul>
+          <li>Gallup poll October 11–14: half, 46 percent, 61 percent: McDougall, ebook 144.</li>
+          <li>"Media riot"; Life's "Let us not pretend...": McDougall, ebook 144–145.</li>
+          <li>Wilson's "neat scientific trick"; Adams's "celestial basketball game"; memo on Sputnik as the issue to make Johnson President: McDougall, ebook 146–149.</li>
+          <li>Hearings opened November 25, "technological Pearl Harbor"; Vanguard TV-3 on December 6; Flopnik, Kaputnik; Sputnik Cocktail: McDougall, ebook 151–154.</li>
+          <li>Budget up only 1.5 percent; four self-limiting initiatives: McDougall, ebook 159–160.</li>
+          <li>NDEA to run seven years; $60 million rider: McDougall, ebook 162.</li>
+          <li>Explorer 1, January 31, 1958; "Let's not make too great a hullabaloo over this": McDougall, ebook 167–168.</li>
+          <li>Space Act; "a leader, not the leader"; struggle begun, not ended: McDougall, ebook 171–172.</li>
+          <li>The weak and strong comments, the Opinion line, and the hullabaloo quip are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 8 and 9: Fly First, Define Later</h3>
+        <ul>
+          <li>Dual strategy, "space for peace" and freedom for military missions: McDougall, ebook 175–178.</li>
+          <li>NSC 5814/1, mid-August 1958; missiles separate; functional definition; reconnaissance satellites critical: McDougall, ebook 179–180.</li>
+          <li>OCB's "a cover for such reconnaissance satellites"; peaceful because vital to deterrence: McDougall, ebook 183–184.</li>
+          <li>Fifty-four to nine with eighteen abstentions; "peaceful" instead of "nonmilitary": McDougall, ebook 185–186.</li>
+          <li>Dryden's "circus stunt"; Glennan chosen: McDougall, ebook 196. Von Braun team to NASA effective July 1, 1960: ebook 197–198.</li>
+          <li>Discoverer 2 capsule lost in northern Norway: McDougall, ebook 190.</li>
+          <li>Glennan, "It had no objective"; "NASA clearly needed the Soviets": McDougall, ebook 201–202.</li>
+          <li>Nixon at the White House dinner; "how many more Soviet successes can we stand": McDougall, ebook 203–204.</li>
+          <li>FY 1961 budget, $964 million after $50 million added: McDougall, ebook 205–206.</li>
+          <li>December 1963 end of the Soviet campaign; UN resolution on free outer space: McDougall, ebook 273–274.</li>
+          <li>Outer Space Treaty left orbit open to military use: McDougall, ebook 419–420.</li>
+          <li>The weak and strong comments and the Opinion lines are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 10 to 12: The Truth Was Classified, the Bluff Was Not</h3>
+        <ul>
+          <li>CIA estimates of 100 by 1960 and 400 in 1961; U-2 showed none deployed; "What you want is enough"; no added power once adequate: McDougall, ebook 219–220.</li>
+          <li>Kennedy raised the "space gap" over twenty times; $26 to $58 billion estimate; "not about to hock his jewels"; Apollo vetoed; Saint approved: McDougall, ebook 225–228.</li>
+          <li>Mars rockets failed October 10 and 14; Nedelin explosion; scores to hundreds dead; plane-crash story: McDougall, ebook 241–244.</li>
+          <li>Kremlin chose space shots over SS-6 deployment: McDougall, ebook 251–252.</li>
+          <li>"Like sausages"; 6 percent in June 1955; 59 to 15 in Britain by 1960: McDougall, ebook 239–240.</li>
+          <li>"For it was all a bluff"; no ICBM deployed: McDougall, ebook 249–250.</li>
+          <li>150 in 1965; 194 to 72 in late 1962; about thirty-five SS-6s for spaceflight: McDougall, ebook 251–252.</li>
+          <li>Americans did not blink over Berlin: McDougall, ebook 253–254.</li>
+          <li>"Both giving away our strength and revealing our weakness": McDougall, ebook 255–258.</li>
+          <li>U-2 film, "there were none to photograph": McDougall, ebook 259–260.</li>
+          <li>Chinese asked why Moscow was so timid; spy satellites the real threat; seven years of bluff: McDougall, ebook 261.</li>
+          <li>The weak and strong comments, the Opinion line, and the lunch line are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 13 to 15: Khrushchev Believed His Own Brochure</h3>
+        <ul>
+          <li>One-third army cut; "almost the entire air force is being replaced with rockets"; false; hostility of nearly every branch: McDougall, ebook 265–266.</li>
+          <li>Defense budget up 29 percent; army cuts restored: McDougall, ebook 267–268.</li>
+          <li>Sokolovsky, summer 1962; "it was the space program that represented a bluff"; five years behind: McDougall, ebook 269–270.</li>
+          <li>Titov's "space father," August 1961; East Berlin sealed a week later: McDougall, ebook 285–286.</li>
+          <li>Alienated army, heavy industry, scientists: McDougall, ebook 281–284. No group would back him by October 1964; "fizzled like a capitalist rocket": ebook 283–284.</li>
+          <li>Voskhod I, no space suits, October 12, 1964, "Sorry Apollo!": McDougall, ebook 291–292. Khrushchev relieved October 13: ebook 293–294.</li>
+          <li>"In terms of ends": McDougall, ebook 303–308. Wiesner report set aside: ebook 309–310.</li>
+          <li>"Is there any place we can catch them?": McDougall, ebook 317–318. Upward of $20 billion: ebook 321–322. Webb, "you had to almost drive me": ebook 319–320.</li>
+          <li>Strategy as relating ends to means: Gaddis, viii.</li>
+          <li>The weak and strong comments, the Opinion line, and the credit line are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 16 to 18: The Film Came Back, the Order Stood</h3>
+        <ul>
+          <li>SAC's 10,000; 950 Minutemen and "not get murdered"; 41 Polaris, exactly 1,000 Minutemen: McDougall, ebook 327–328.</li>
+          <li>120 to 60; Discoverer 25, June 16, 1961, frogmen; at most fourteen; "sparked... snuffed it out"; "more than we require"; "worst plausible case": McDougall, ebook 329–330.</li>
+          <li>"No-cities" strategy, June 1962, obsolete by late 1963; assured destruction needed no new missiles: McDougall, ebook 331–332.</li>
+          <li>January 1961 blackout; Air Force forbidden to mention satellite observation: McDougall, ebook 345–346. "Only the American public was being fooled": ebook 347–348.</li>
+          <li>"Benign hypocrisy"; cooperation in science, competition in engineering: McDougall, ebook 345–346.</li>
+          <li>Telstar: AT&amp;T, NASA, first live television between continents, knocked out after six months by radiation from American high-altitude nuclear tests: McDougall, ebook 357–358.</li>
+          <li>INTELSAT, July 1964: Comsat 61 percent, Europeans 30.5 percent, U.S. veto: McDougall, ebook 359.</li>
+          <li>North American five times Martin's size; "That's democracy in its finest form": McDougall, ebook 373–376.</li>
+          <li>90 percent of funds to private firms; grants spread to more universities: McDougall, ebook 381–382.</li>
+          <li>FY 1964 NASA budget past $5 billion, five times three years earlier: McDougall, ebook 383–384.</li>
+          <li>The weak and strong comments and the Opinion line are ours.</li>
+        </ul>
+        <h3>McDougall, chapters 19 to 21: What Would You Give Up for the Moon?</h3>
+        <ul>
+          <li>Straw poll 110 to 3: McDougall, ebook 387–390. Eisenhower, $40 billion "just nuts": ebook 393–394.</li>
+          <li>Kennedy at the UN, September 20, 1963; Fulbright cut lost 36 to 49; rider against a joint landing: McDougall, ebook 395–396.</li>
+          <li>"A technocracy of politicians": McDougall, ebook 405–407. Civilian space spending peaked FY 1965: ebook 407.</li>
+          <li>Gore's "fuzzy"; Wheeler and Cooper, "That is correct, Senator": McDougall, ebook 417–418. Ratified 88 to 0: ebook 419–420.</li>
+          <li>Johnson, "Some people's feet got tired": McDougall, ebook 407.</li>
+          <li>Engineering problem versus poverty: McDougall, ebook 413–416.</li>
+          <li>"The American hare had stopped again to take a nap": McDougall, ebook 421–422. 1973, 124 to 23: ebook 429–430.</li>
+          <li>$146 billion, no national plan; Panofsky's by-product line: McDougall, ebook 437–438.</li>
+          <li>Churchman's test; guns and butter; "The objective of American technocracy was to avoid defining its objective": McDougall, ebook 447–448.</li>
+          <li>The weak and strong comments and the Opinion line are ours.</li>
+        </ul>
+        <h3>McDougall, chapter 22: Contempt for Our Works, Value for Ourselves</h3>
+        <ul>
+          <li>Thesis restated; Gerschenkron; every country permanently backward; wartime methods, blurred line: McDougall, ebook 451–452.</li>
+          <li>Mellonolatry and misoneism: McDougall, ebook 451–452.</li>
+          <li>Churchman, "how to design a god"; Pius XII and von Braun: McDougall, ebook 453–454.</li>
+          <li>Wizard of Oz; Mount St. Helens; plovers; Oppenheimer: McDougall, ebook 455–456.</li>
+          <li>"Contempt for our works and value for ourselves"; true humility; orthodox view naive: McDougall, ebook 455–458.</li>
+          <li>Uhuru, 1970, 161 X-ray sources; splicing the atom until nothing is left; science again a branch of moral philosophy: McDougall, ebook 459–460.</li>
+          <li>"Technology is our subcreation": McDougall, ebook 459–461.</li>
+          <li>Frankenstein's creature ran amok only after people turned on it: McDougall, ebook 461.</li>
+          <li>Compete for power without making it an end; "pursue knowledge without mistaking knowledge for truth": McDougall, ebook 461.</li>
+          <li>"Erode the very values...": McDougall, ebook 13.</li>
+          <li>Gen. Smart, "we certainly don't advertise our limitations": Crane, 6. Ambiguous ending and Vietnam: Crane, 9, vii.</li>
+          <li>The weak and strong comments and the Opinion line are ours.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Gaddis thesis, symmetrical and asymmetrical containment, perceived resources: Gaddis, vii–ix, xiii. Ends and means: viii.</li>
+          <li>Crane thesis: Crane, 6–9. "The image and reality of American airpower": Crane, 6. April 1952 FEAF study, 15,000-plus rail cuts: Crane, 115–116. $14.4 billion ceiling: McDougall, ebook 95.</li>
+          <li>Zhang thesis: Zhang, 6–8, 201–214. Stalin's vague air cover: Zhang, 60, 73–74. Moscow made ending the war a priority after Stalin's death: Zhang, 196–197.</li>
+          <li>"What you want is enough": McDougall, ebook 219–220. "In terms of ends": ebook 303–308. "Like sausages": ebook 239–240.</li>
+          <li>The links and the closing line are our inference.</li>
+        </ul>
+      </section>
+
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>Introduction and ch. 1: What did McDougall find about Stalin's prison design bureaus?</summary><p>They did not wreck Soviet military design; prisoners produced fighters, dive bombers, and the Katyusha, because defense was the sector terror spared. <span class="pg">M 33–40</span></p></details></li>
+          <li><details><summary>Chs. 2 and 3: What did Eisenhower admit to the Finletter Commission in 1947?</summary><p>That there was no war plan, at a time when the arsenal held only a dozen or so warheads. <span class="pg">M 93–94</span></p></details></li>
+          <li><details><summary>Chs. 4 and 5: What did Quarles tell Eisenhower four days after Sputnik?</summary><p>That the Redstone could have orbited a satellite a year or more earlier, and that the Soviets had "done us a good turn" by establishing freedom of space. <span class="pg">M 133</span></p></details></li>
+          <li><details><summary>Chs. 6 and 7: What did the October 1957 Gallup poll show?</summary><p>Half called Sputnik a serious blow to prestige, 46 percent said it was not, and 61 percent expected satellites to be used for good, which is why McDougall calls the uproar a "media riot." <span class="pg">M 144–145</span></p></details></li>
+          <li><details><summary>Chs. 8 and 9: How did NSC 5814/1 handle the boundary of outer space?</summary><p>It refused to fix one and used a functional test (if it is in orbit, it is in space), and it treated missiles separately so a space deal could not freeze them. <span class="pg">M 179–180</span></p></details></li>
+          <li><details><summary>Chs. 10 to 12: How many ICBMs had the Soviets deployed during the bluff?</summary><p>None at first; the first confirmed total was 150 in 1965, and the Americans led about 194 to 72 in late 1962. <span class="pg">M 249–252</span></p></details></li>
+          <li><details><summary>Chs. 13 to 15: What happened the day after Voskhod I launched?</summary><p>Khrushchev was relieved of all his party posts on October 13, 1964. <span class="pg">M 291–294</span></p></details></li>
+          <li><details><summary>Chs. 16 to 18: What did reconnaissance satellites do to the Soviet missile count in 1961?</summary><p>Cut it from 120 to 60 to at most fourteen, yet the United States still built 41 Polaris boats and exactly 1,000 Minutemen. <span class="pg">M 327–330</span></p></details></li>
+          <li><details><summary>Chs. 19 to 21: What is Churchman's test, and what does McDougall conclude from it?</summary><p>A system's real objective is what its managers will knowingly sacrifice other goals to get; American technocracy promised guns and butter, so its objective was to avoid defining one. <span class="pg">M 447–448</span></p></details></li>
+          <li><details><summary>Ch. 22: How does McDougall reverse the "enlightened" lesson of spaceflight?</summary><p>He says it should teach contempt for our works and value for ourselves, which he calls true humility. <span class="pg">M 455–458</span></p></details></li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

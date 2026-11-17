@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Review edition for an earlier book, written November 17 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Monday, October 26, 2026 · Review edition for Tuesday's seminar: Crane (written November 17)</p>
+      <p class="toc-after"><a href="../">Archive of every edition</a> · <a href="../../map/">Course map</a></p>
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Crane, <i>American Airpower Strategy in Korea</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tomorrow's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#c-00">Introduction: Limitations Sold Separately</a></li>
+          <li><a href="#c-01">Ch. 1: Precision Bombing, One Size Fits All Cities</a></li>
+          <li><a href="#c-02">Ch. 2: Who Picks the Targets Picks the War</a></li>
+          <li><a href="#c-03">Ch. 3: Trusting the Tool That Beat the Last Enemy</a></li>
+          <li><a href="#c-04">Ch. 4: Grade Your Own Homework, Then Brief Congress</a></li>
+          <li><a href="#c-05">Ch. 5: Saving the Good Tricks for the Big War</a></li>
+          <li><a href="#c-06">Ch. 6: Fear of Flying, or Fear of the Fine Print?</a></li>
+          <li><a href="#c-07">Ch. 7: Just a Shift in Emphasis, Said the Man Changing the Strategy</a></li>
+          <li><a href="#c-08">Ch. 8: Three Thousand Feet of Insurance, Paid in Accuracy</a></li>
+          <li><a href="#c-09">Ch. 9: Choke the Parrot: The Signal Nobody Authorized</a></li>
+          <li><a href="#c-10">Ch. 10 (conclusion): Remember Korea? Which One?</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Tuesday's seminar</span>
+        <h3><a href="#t1">Crane, <i>American Airpower Strategy in Korea</i>: High Hopes, Short Supply, and a Happy Ending Nobody Checked</a></h3>
+        <p>Crane argues that the Air Force went to Korea promising more than it could deliver and left believing it had delivered. Leaders, the public, and some generals expected too much from airpower, partly because the service kept quiet about its limits. Jacob Smart, FEAF's operations deputy, admitted airmen "certainly don't advertise our limitations" to politicians or the press. Crane's stated purpose is to examine "the image and reality of American airpower" as it tried to meet high expectations with limited resources in a limited war. The plan was to win the air quickly and then bomb the enemy's capacity and will to fight. The MiG-15 contested the air, and the enemy's real sources of supply sat across a border nobody was allowed to bomb.</p>
+        <p>The book argues against two stories. Against the airman's story, that politicians tied the service's hands and nothing else went wrong, Crane shows FEAF sometimes lacking the resources or the competence for its missions, especially interdiction. Against the critic's story, that the airmen simply misread the war, he shows them improvising hard: interdiction first, then "air pressure," a campaign of deliberate destruction meant to push Communist negotiators toward an armistice. Both were attempts to influence enemy decision makers whose war-making base was off-limits. (Smart's own summary of the problem: nobody was sure who those decision makers were or how they thought.)</p>
+        <p>The sting is in the ending. The armistice was ambiguous enough for the Air Force to believe air pressure had produced it, so the service drew few lessons, returned to planning for general nuclear war, and relearned limited war at high cost over Vietnam. For this course, Crane opens all three themes at once: whether airpower worked, who set the limits, and how much the new jets changed anything. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Ten Chapters, One Evening, Sorted by Payoff</a></h3>
+        <p>Read the argument first, then the limits, then the campaign that was supposed to end the war. Page numbers are the book's printed pages.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The introduction, pages 1 to 9 (the thesis, Smart's confession, and the ambiguous ending), then chapter 10, pages 171 to 184 (what the Air Force remembered, what it forgot, and Ridgway at Dienbienphu). Finish with page 170, the last page of chapter 9.</li>
+          <li><b>60 minutes.</b> Add chapter 7, pages 110 to 131 (the switch from interdiction to air pressure, the hydroelectric strikes, and Banfill's beggar), and chapter 3, pages 40 to 55 (the strategic campaign that worked, Rashin, and the Yalu bridges).</li>
+          <li><b>2 hours.</b> Add chapter 9, pages 155 to 170 (nuclear planning, the dam raids, and Sabres over Manchuria); chapter 4, pages 56 to 75 (Truman's atomic press conference, the close air support fight, and HUDSON HARBOR); and chapter 2, pages 23 to 39 (Truman's first orders and who picked the targets).</li>
+        </ol>
+        <p>Chapters 1, 5, 6, and 8 can wait. They cover the prewar doctrine, the B-29 losses, manpower, and bombing accuracy, and the lessons below hit their main points. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 2, pages 23 to 24.</b> Truman's first order to Vandenberg was to make plans to destroy all Soviet air bases in the Far East. Four days later he approved strikes north of the 38th parallel, with one restriction: stay clear of the Soviet and Manchurian borders. Watch how fast the first instinct became the first limit.</li>
+          <li><b>Chapter 3, pages 44 to 45 and 49 to 50.</b> Rashin, less than twenty miles from the Soviet border, and the Yalu bridges, which the JCS let FEAF attack only on the Korean side of the spans. Note who set each limit and why.</li>
+          <li><b>Chapter 4, pages 58 to 59 and 70 to 71.</b> Truman's November 30, 1950, press conference, which sent Attlee rushing to Washington, and HUDSON HARBOR, which failed to show there were any suitable atomic targets in Korea. Those are two separate reasons the bomb stayed home.</li>
+          <li><b>Chapter 7, pages 114 to 117.</b> Interdiction's bill (243 aircraft destroyed against 131 replacements) and the April 1952 study that proposed "maximum selected destruction" instead.</li>
+          <li><b>Chapter 9, pages 164 to 165.</b> Crane's list of reasons the Communists signed: Stalin's death, riots in East Germany and Czechoslovakia, face-saving ground gains, and worry about Syngman Rhee, alongside military pressure. Count how many have nothing to do with airpower.</li>
+          <li><b>Chapter 10, page 175.</b> The doctrine line "The best preparation for limited war is proper preparation for general war," and the 1964 manual that gave counterinsurgency two pages.</li>
+        </ol>
+        <p>Read the epigraphs too. Crane picks them like a prosecutor picks exhibits, which is to say each one is chosen to convict, and O'Donnell's line about learning "bad habits" in Korea opens the case. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Six Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 2, "The Korean War: The USAF Experience." Tomorrow morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>Who exactly placed limitations on the use of airpower, and what were they?</b> Chapter 2, pages 23 to 24 (Truman and the border rule); chapter 3, pages 44 to 45 and 49 to 50 (the JCS on Rashin, the Yalu bridges, and hot pursuit); chapter 7, page 126 (retaliation on China reserved to the JCS, preemptive attacks to the president).</li>
+          <li><b>What were the various motivations for placing limits on its use in the first place?</b> Chapter 3, pages 44 and 49 (fear of drawing in the Soviets, nervous allies); chapter 4, pages 58 to 59 (allied fear of World War III); introduction, page 6 (the State Department's worry about propaganda on American "barbarism").</li>
+          <li><b>What was Truman fearful of, if the Russians were not directly involved, at least publicly?</b> Chapter 2, page 23 (the belief that the Russians were behind the invasion); chapter 4, page 70 (fear that China and the Soviets might push the United States out of Korea, even invade Japan, which meant global war). Gaddis, pages 112 to 120, supplies the European half of the answer.</li>
+          <li><b>Did airpower achieve all, some, or none of the objectives established for it?</b> Chapter 3, pages 43 to 53 (the strategic campaign succeeded, then met China); chapter 7, pages 114 to 116 (interdiction failed); chapter 9, pages 159 to 166 (air pressure's share of the armistice); chapter 10, pages 183 to 184.</li>
+          <li><b>What controversies did airpower engender within the military?</b> Introduction, page 7 (Smart's 40 percent and Weyland's Navy complaint); chapter 4, pages 60 to 62 (the close air support studies); chapter 5, page 90 (LeMay withholding countermeasures); chapter 10, pages 172 to 177.</li>
+          <li><b>Why did Truman, who approved the bomb against Japan, decide not to use atomic weapons again?</b> Chapter 4, pages 58 to 59 (the press conference and Attlee) and pages 70 to 71 (the Guam deployment and HUDSON HARBOR); chapter 9, pages 157 to 159 for the Eisenhower sequel.</li>
+        </ol>
+        <p>Opinion: prepare question four. It has the most evidence on both sides, and Crane himself declines to settle it, so whoever has the page 164 list will be ahead of anyone carrying an adjective. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>George Stratemeyer.</b> FEAF's commander when the war began, succeeded in May 1951 (page 5).</li>
+          <li><b>Otto Weyland.</b> FEAF commander from May 1951 and a believer in tactical airpower; Crane says no one influenced air operations in the war more (page 5).</li>
+          <li><b>Jacob Smart.</b> FEAF deputy for operations from January 1952, who initiated air pressure and supplies the book's most candid quotes (pages 6, 115).</li>
+          <li><b>Curtis LeMay.</b> SAC's commander in 1950, focused on general nuclear war and protective of his bombers' secrets (pages 5, 90).</li>
+          <li><b>MiG Alley.</b> Northwestern Korea, where MiGs based across the Yalu contested FEAF's bombers (page 50).</li>
+          <li><b>Hot pursuit.</b> Chasing MiGs back to their Manchurian airfields, refused in Washington as an unacceptable widening of the war (page 49).</li>
+          <li><b>Air pressure.</b> FEAF's 1952 strategy of "maximum selected destruction" to make the war as costly as possible for the enemy (page 116).</li>
+          <li><b>HUDSON HARBOR.</b> The 1951 exercise of simulated atomic strikes in Korea, which failed to show there were any suitable targets (page 71).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Gaddis to Crane</span>
+        <h3><a href="#t6">Gaddis Wrote the Budget, Crane Flew the Mission</a></h3>
+        <p>Gaddis explains why Washington fought in Korea, and Crane explains what that did to the Air Force. Gaddis says the North Korean attack ensured that NSC-68 was carried out, and that the Truman administration treated Korea as a chance to bolster the obviously inadequate defenses of Western Europe. The administration had resolved not to get bogged down in a peripheral war with a secondary adversary, and Gaddis notes that this is precisely what happened. Truman recalled Acheson warning that a land war in Asia "would bleed us dry." Crane's airmen lived inside that warning. They were told to win a war whose enemy airfields sat in Manchuria and whose feared adversary sat in Moscow, without touching either. (Gaddis defines symmetrical containment as letting the adversary choose where to compete. Opinion: Korea is the case study, and MiG Alley is the address.)</p>
+        <p>Keep one question in mind while reading: if Washington's real interest in Korea was Europe, did anyone tell FEAF what victory in Korea was supposed to look like? A 1953 FEAF study answers from the airmen's side. It says policy makers never managed to state limited-war objectives "compatible with air force capabilities." <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Crane, <i>American Airpower Strategy in Korea, 1950–1953</i></p>
+
+      <article id="c-00">
+        <span class="kicker">Chapter by Chapter · Crane, introduction</span>
+        <h3><a href="#c-00">Limitations Sold Separately</a></h3>
+        <p>A service that hides its limits from its political masters will be judged against expectations it cannot meet, and the bill arrives in the middle of the war. Crane builds his whole book on that tension. American airpower went to Korea carrying high hopes and limited resources, and it had to use its destructive power in ways that were both acceptable and effective in a limited war. Major General Emmett O'Donnell told a Senate committee in May 1951 that the Air Force could learn "an awful lot of bad habits" in Korea. This was plainly the war the new service had not ordered.</p>
+        <p>Brigadier General Jacob Smart, FEAF deputy for operations from January 1952, supplies the confession. He said, "Few people other than experienced Air Force people appreciate the limitations of airpower." He also admitted that airmen did not advertise those limitations to politicians or to a press eager to knock the service down. Crane notes that FEAF sometimes lacked the resources or the competence for its assigned missions, especially aerial interdiction. Smart kept systematic records of his own time and found he spent 40 percent of it countering Army and, to a lesser extent, Navy proposals for using his air forces. His boss, Lieutenant General Otto Weyland, once said he spent as much effort fighting the Navy as he did the Communists. Only one of those opponents was shooting back.</p>
+        <p>A weak seminar comment sounds like this: "Airpower was oversold in Korea." That is true but unarguable, and it never says who did the selling or why. The strong version names the seller and the motive. The Air Force kept quiet about its own limits, by its own officers' admission, and Crane ties that silence directly to the inflated expectations that leaders, the public, and some generals brought into the war. Those expectations shaped decisions in Washington and in the field early on, and they produced disillusionment as the war dragged. Opinion: A service that guards its weaknesses like classified material should not act surprised when policymakers plan as if it has none.</p>
+        <p>First order, inflated hopes shaped early decisions about how to use airpower. Second order, the Air Force could not strike the true sources of enemy war-making power, which lay off-limits to bombing, so FEAF had to improvise interdiction and "air pressure" campaigns to move a stubborn enemy toward a settlement. Third order, the war ended ambiguously enough for the Air Force to believe it had succeeded, so it drew few useful lessons. It more than doubled in size and became the cornerstone of Eisenhower's New Look, which Gaddis shows leaned on nuclear deterrence. Crane says another limited war in Asia would again expose the same problems with doctrine, technology, and joint operations. We infer that the candor gap survived the war because the ending never forced the service to close it. The chain is hard to rebut because the evidence comes from airmen themselves, which disposes of the usual reply that critics simply never understood airpower. One question for seminar: if candor about limits costs a service budget share, what would ever make it pay to be candid? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-01">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 1</span>
+        <h3><a href="#c-01">Precision Bombing, One Size Fits All Cities</a></h3>
+        <p>When a doctrine keeps its name while its methods change, the label is usually protecting an institution, so read the methods and the budget. Crane's first chapter shows the Air Force entering Korea with a precision-bombing doctrine that had absorbed city burning and the atomic bomb. Its money followed that doctrine to the Strategic Air Command, and its tactical arm was left nearly bare. It was ready for a nuclear war with the Soviet Union and not much else.</p>
+        <p>On the night of March 10, 1945, Brigadier General Thomas Power circled Tokyo in a B-29 to record Curtis LeMay's new tactics. Within an hour the largest fire was over forty blocks long, and the glow was visible 150 miles away. LeMay's campaign eventually destroyed 178 square miles of some sixty-six urban centers. Mission reports still said the objective was industrial and strategic targets concentrated in urban areas, and they denied any intent to bomb civilians indiscriminately. After the war, Air Force leaders planned to answer charges of indiscriminate bombing with a Hiroshima photomap marking military and economic targets around the aiming point. In October 1945 a board of Spaatz, Vandenberg, and Norstad concluded that the atomic bomb "does not at this time warrant a material change" in the postwar Air Force. By 1951 one statement quoted at the top of the chapter could describe SAC's plans as "precision attacks with an area weapon."</p>
+        <p>A weak seminar comment: "The Air Force was obsessed with strategic bombing." That describes instead of arguing, and it offers no mechanism. The strong version shows the label steering resources. In 1949 budget cuts shrank the Air Force from sixty groups to forty-eight, while SAC grew from eighteen to nineteen. By December 1948 Tactical Air Command had been stripped of its units and reduced to a planning headquarters. Colonel William Momyer, a TAC staff officer, called fighter escort "an obsolete concept of the last war." The Navy, meanwhile, called strategic bombing immoral and ineffective in 1949, then forgot that argument once it got nuclear strike forces of its own. Haywood Hansell said the Strategic Bombing Survey resembled the Bible, since you could find support in it for almost any preconceived notion. Opinion: Everyone in this chapter read the evidence the way their budget needed them to.</p>
+        <p>First order, SAC got the people and the airplanes, with 60,000 personnel in June 1950, 15 percent of the Air Force, and the B-50 coming into service. Second order, TAC was restored as a major command only in July 1950, after the Korean War had begun, and Crane says it would take a while to rebuild the capability to execute its doctrine; the new service found itself using World War II bombers in an unexpected war in an unexpected place. Third order, the absorbed method returned in Korea. After the Chinese intervened, MacArthur and Stratemeyer unleashed a campaign reminiscent of LeMay's fire raids on Japan. We infer that a doctrine which had already relabeled city burning as precision made that turn easier to authorize. The argument is hard to rebut because it rests on the airmen's own reports, boards, and budget lines, which pre-empts the claim that the Air Force simply misread the threat. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-02">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 2</span>
+        <h3><a href="#c-02">Who Picks the Targets Picks the War</a></h3>
+        <p>Before you argue about what airpower should hit, win the fight over who picks the targets. Crane's second chapter covers the first six weeks of the air war. Two airmen pitched MacArthur a grand bombing strategy and lost. A third airman changed the targeting process and got most of what the first two wanted.</p>
+        <p>In July 1950, the General Headquarters Target Group in Tokyo was choosing B-29 targets from an obsolete map of Korea, with no Air Force officer in the room. Bomber Command's directive had been rewritten to put close support first and industry last. Maj. Gen. Otto Weyland had commanded Tactical Air Command for one week before he was sent to Tokyo as Stratemeyer's vice commander. He later said his boss "adored and respected MacArthur" too much to get tough. So Weyland got Stratemeyer to send a harsh memo proposing a new GHQ Target Committee: Weyland, a Navy representative, and two of MacArthur's own generals, Hickey and Willoughby. It first met on July 24. On July 26, MacArthur approved its interdiction plan after Weyland told him that putting everything into close support was like trying to "dam up a river at the bottom of a waterfall." On August 4, O'Donnell learned his bombers were out of the battle area, starting the next day.</p>
+        <p>A weak seminar comment: "The Army and the Air Force just didn't get along in Korea." That is true but unarguable. It describes the friction and says nothing about what resolved it. The strong version: on the same subject, a vision lost and a process won. O'Donnell walked in and offered to burn the five industrial centers of North Korea. MacArthur answered, "No, Rosy, I'm not prepared to go that far yet." Stratemeyer floated his own bombing ultimatum on July 12 and got the same result. Weyland asked for a seat at the table and had his answer in two days. The fix was not total. On August 16, ninety-eight B-29s still carpet-bombed the Naktong front at the Army's request. Meanwhile, FEAF crews joked that new SAC crews had their navigators draw a line toward Omaha so they could bow before each mission. Omaha did not get a seat on the committee. Opinion: Weyland's memo did more for the bomber campaign than either ultimatum, because it changed who was in the room instead of who was right.</p>
+        <p>First order: the B-29s were freed for interdiction and strategic targets, under an orderly planning process. Second order: with two more bomb groups and a JCS directive of July 31, Bomber Command wrecked North Korean industry with high explosives in under two months, listing the Wonsan refinery as 95 percent destroyed. Third order: Weyland took over FEAF after Stratemeyer's heart attack in May 1951, held it until March 1954, and then took Tactical Air Command, where he built Composite Air Strike Forces for limited wars. Yet in Vietnam a RAND observer told Partridge the Air Force was reinventing its control system all over again. We infer that Korea's fix lived in one officer's memory more than in doctrine, and officers retire. That chain pre-empts the reply that strategy matters more than plumbing, since the strategy only ran once the plumbing changed. Which Korean lesson about air command did the Air Force write down, and which did it leave to Weyland's memory? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-03">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 3</span>
+        <h3><a href="#c-03">Trusting the Tool That Beat the Last Enemy</a></h3>
+        <p>A commander's faith in a weapon is set by the last enemy it beat, so before leaning on it, ask whether the new enemy offers the same kind of targets. Crane's third chapter shows airpower doing nearly everything asked of it from August to October 1950, then MacArthur betting on it against an enemy it could not pin down. Crane rejects the easy story that MacArthur was simply blind or arrogant. His optimism, Crane writes, was "largely a product of his faith in airpower."</p>
+        <p>The record that built that faith was strong. Using high explosives, B-29s destroyed 70 percent of the Pyongyang arsenal and railyards, 85 percent of the Konan chemical plants, and 95 percent of the Wonsan oil refinery. By the end of October, targets were so scarce that a B-29 chased a single motorcycle rider down a road, dropping one bomb at a time until it hit him. When the Chinese entered the war in November, MacArthur ordered the destruction of every installation, factory, city, and village in North Korea, except Rashin and the hydroelectric plants. Bombers burned 65 percent of Kanggye, 60 percent of Sinuiju, and 90 percent of Hoeryong, with more than 3,300 tons of incendiaries that month. On November 9 he told the JCS his airpower could keep Chinese reinforcements from crossing the Yalu in strength. Army chief of staff J. Lawton Collins saw the flaw. MacArthur's airpower had worked on fixed Japanese installations in the Pacific, a very different target from the "highly mobile, flexible armies of the Chinese."</p>
+        <p>A weak seminar comment: "MacArthur was arrogant and ignored the intelligence on China." It asserts a character flaw without evidence and ignores Crane's own counterargument. The strong version: MacArthur trusted airpower because it had not let him down, in the Pacific or in Korea. Crane credits it with slowing the first Communist advance, stiffening the Pusan perimeter, helping smash the North Korean army, and wiping out most of North Korea's industry. Even Mao hesitated, and apparently did not commit to the war until the Soviets promised planes and air defense for China. The record was real. The enemy changed. The World War II commander probably most concerned about bombing civilians was now ordering villages burned. Opinion: the motorcycle chase was the warning light. When a B-29 is hunting one rider, the target list is empty, and an empty list means the enemy that the bomber force was built for has left the field.</p>
+        <p>First order: the November campaign burned towns but did not drop the key Yalu bridges, which JCS limits and Soviet MiGs protected. Second order: the MiGs denied FEAF reconnaissance near the Yalu at a critical moment, so decision makers lacked information about the Chinese armies pouring into North Korea, and Chinese landpower threw MacArthur back. By May 1951 MacArthur himself conceded that "perhaps too much was expected of the air." Third order: Crane notes that the Air Force could not reliably destroy moving ground targets at night through Vietnam, where interdiction of a primitive, manpower-heavy supply system proved hard all over again. This chain is hard to rebut because it grants every airpower success first and then uses those successes to explain the failure. What target set is your own service's confidence built on today? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-04">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 4</span>
+        <h3><a href="#c-04">Grade Your Own Homework, Then Brief Congress</a></h3>
+        <p>When a service grades its own performance with a hearing on the calendar, read who ordered the study and why before you read the verdict, then go find the outside numbers it had to argue with. Crane shows the Air Force launching its Korea evaluations in fall 1950 to arm itself for a fight in Washington. The reports praised Air Force close air support. The theater's own operations analysts produced figures that explained why ground commanders kept asking for Marines.</p>
+        <p>Carl Vinson, chairman of the House Armed Services Committee and a Navy and Marine sympathizer, announced that he would hold hearings on close air support. Air Force leaders decided they needed supporting data, with special focus on tactical accomplishments. In October 1950 Vandenberg sent Maj. Gen. Glenn Barcus to evaluate the Far East Air Forces. In November the secretary of the Air Force appointed Dr. Robert Stearns, president of the University of Colorado, as an "impartial civilian not connected with the Air Force." His deadline came from Vinson, who might start in early January. Both reports gave Air Force close air support high marks, and Barton Leach, who collated everything, told his bosses there was "no significant dispute among military professionals." Then the Far East Command Operations Research Office reported. An Air Force strike took about forty-five minutes to answer a division's request; Marine controllers got bombs on target in about ten. Air Force planes loitered about thirty minutes over the target, Marines about seventy-three. Marine divisions averaged thirty-seven close support sorties a day, Army divisions thirteen.</p>
+        <p>A weak seminar comment: "The Air Force studies were biased." That asserts a motive without evidence, and it ignores Crane's own counterevidence: General Collins agreed with Vandenberg, and the Barcus Report conceded that troops valued aircraft that stayed on station. The strong version: Air Force leaders commissioned the evaluations to gather supporting data before Vinson's hearings, the theater's analysts then clocked Marine response at ten minutes against the Air Force's forty-five, and the Barcus team answered by calling press comparisons "invidious." In fairness, multipurpose planes made economic sense to the Air Force. Opinion: a study whose due date is set by a congressman's schedule is a legal brief, and it should be read like one. The impartial civilian was appointed by the secretary of the Air Force, which is a lot to ask of the word "impartial."</p>
+        <p>First order, the Air Force entered the hearings with favorable reports. Second order, the ground commanders kept fighting. Almond carried his complaints to Collins, and a year later Maj. Gen. Gerald Thomas of the First Marine Division said he wanted Marine aircraft or none, while Van Fleet asked for ground control of everything within fifty miles of the front. Third order, the dispute outlived the war. Almond wrote a student text at the Army War College cataloging the differences between the services, the 1955 SAGEBRUSH exercise found the Korean air-ground procedures too cumbersome, and the 1957 joint manual described two separate systems in two separate chapters. The Army's interest in helicopters came partly from hoping for close support without the Air Force. That chain pre-empts the reply that the quarrel was wartime press noise, because it ended up written into doctrine. If the reports were right, why did the Army spend the next decade building its own answer? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-05">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 5</span>
+        <h3><a href="#c-05">Saving the Good Tricks for the Big War</a></h3>
+        <p>A force that hoards its best tactics for the war it is planning will pay for them in the war it is fighting, so always ask what the hedge costs in crews today. Once armistice talks began, Ridgway turned to airpower to keep pressure on the enemy. Interdiction disappointed, MiGs multiplied, and in October 1951 the enemy ended daylight B-29 operations over North Korea. SAC's commander, Curtis LeMay, worried more about what those losses did to the nuclear deterrent than about what his own restrictions did to the bomber crews.</p>
+        <p>On October 23, 1951, nine B-29s of the 307th Bombardment Wing went after Namsi Airfield. Thirty-one Sabres swept ahead and were boxed in by some of the 140 MiGs defending the target. Forty-five Thunderjets and twelve Australian Meteors flew close escort. Fifty MiGs circled the formation, attacked during the bomb run, shot down three bombers, and seriously damaged five more. The mission report said 150 Sabres would have been needed to escort properly; FEAF had held only about ninety in the whole theater that September. For the month, Bomber Command lost five aircraft to MiGs, four more to salvage, and three to accidents, with fifty-five crewmen killed or missing, in an organization with fewer than ninety B-29s. Weyland and Kelly stopped daylight formations. LeMay told Kelly that a formation "practically shot out of the air" had serious implications for allies and enemies alike, and then he refused to let Bomber Command use chaff, radar jamming, or cell tactics, anything that "possibly will be used against us in the event of all out war."</p>
+        <p>A weak seminar comment: "The MiG-15 was a better airplane, so the B-29s had to stop flying by day." That is true but unarguable, and it ignores the American choices Crane documents. The strong version: the Communists had more than 500 MiGs against about ninety Sabres, Sabre combat time near the Yalu was fifteen to twenty minutes, and SAC withheld the countermeasures it was saving for general war. When SAC and FEAF finally allowed chaff in August 1952, after losses mounted, it proved very effective. Opinion: LeMay was weighing a real risk, since the deterrent depended on Moscow believing SAC could get through. He was weighing it with other men's airplanes, and the trade deserved a louder debate than it got.</p>
+        <p>First order, Bomber Command went to night bombing with SHORAN, a radar navigation system using two ground beacons, aiming for an average miss under 500 feet and getting nearly double that in late 1951. Second order, Washington scrambled for Sabres while North American built only eleven a month; the JCS bought sixty from Canada, and FEAF eventually held over 150, more than defended the United States itself. Third order, the hedge failed on its own terms. A May 1953 inspection found the SAC crews in Korea had perfected night SHORAN while their ability to fly the Emergency War Plan's visual or radar bombing was nonexistent or uncertain. Crane concludes that a nuclear bomber failing in an unfamiliar role can damage deterrent credibility. That chain pre-empts the defense that LeMay rightly protected the big war, because the big-war skills eroded anyway. If the deterrent's reputation was at stake over Namsi, was keeping chaff in the safe the way to protect it? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-06">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 6</span>
+        <h3><a href="#c-06">Fear of Flying, or Fear of the Fine Print?</a></h3>
+        <p>When airmen start refusing to fly, audit the promises before you audit their courage. Crane's chapter 6 shows an Air Force authorized only 416,314 people in 1950 racing toward a goal of 1,210,000, filling cockpits with recalled reservists, and then running into a "fear of flying" crisis. LeMay called it a character problem. Crane's evidence points at the deal the service offered, and the cure that worked was telling the truth about that deal.</p>
+        <p>Air Force Regulation 35-16, published in February 1950, let a rated officer ask to come off flying status. It was written for a small professional force. The war changed the math. In the first quarter of 1951 almost 20,000 reservists were recalled involuntarily, picked from records that listed little more than names, addresses, and specialties. By the end of 1951 about 800 officers in Air Training Command had used the regulation to give up their wings, and 134 more asked in January 1952 alone. Out in Korea, the 452d Bomb Wing, the first unit in Air Force history recalled whole from the reserves, had been led to believe its crews would go home after fifty missions. At fifty, a few men said they were done. Their commander admitted he didn't pass headquarters personnel policies down to his crews "because they didn't believe them and he didn't believe them either." He was relieved.</p>
+        <p>A weak seminar comment: "The fear of flying crisis proves the recalled reservists lacked moral fiber." That borrows LeMay's verdict and ignores Crane's own counterevidence. The strong version follows the expectations. Vandenberg refused mission limits in December 1950 because he feared the promise could not be kept, so the airmen wrote their own. What ended the Air Training Command crisis by late summer 1952, in Crane's judgment, was halting involuntary recalls and telling every volunteer plainly that he was headed for combat crew training and possibly Korea. A SAC staff officer who flew with mostly reservist B-29 crews late in the war found their discipline outstanding. Alcohol was also tried. In the Eightieth Fighter-Bomber Squadron, flight surgeons poured bourbon after each sortie, until a day of five or six missions left no one sober enough to fly by midafternoon. Opinion: the Air Force spent a year on evaluation boards and courts-martial for a problem a clearly worded recall notice would have shrunk.</p>
+        <p>First order, the recalls filled crews fast. Second order, many recallees either expected to stay out of combat or never wanted to serve, and the trouble went public: "sit-down strikes" in the press, Senate hearings on April 16 and 17, 1952, and a summary of fourteen courts-martial sent to President Truman's military aide, every defendant a recalled reservist. Third order, the service decided its problem reached the nation's youth. A Surgeon General study found only 700 applications for 1,600 pilot training slots. LeMay visited Paramount in July 1953, and the 1955 film Strategic Air Command gave audiences a recalled reservist who chooses to extend his tour. We infer the movie delivered, four years late and with Jimmy Stewart, the honest recruiting pitch the Air Force skipped in 1951. That chain pre-empts the bad-apples rebuttal, because the cases fell when the recall policy changed, which character flaws do not do on command. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-07">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 7</span>
+        <h3><a href="#c-07">Just a Shift in Emphasis, Said the Man Changing the Strategy</a></h3>
+        <p>When officials call a big change a mere shift in emphasis, read the target list instead of the press release. Crane's chapter 7 shows FEAF, stuck in a ground stalemate and losing faith in interdiction, moving in 1952 to "air pressure," deliberate destruction meant to push Communist negotiators toward an armistice. The airmen designed it as a political lever, and their superiors kept telling the public it had nothing to do with the talks.</p>
+        <p>Interdiction had cost FEAF 243 aircraft destroyed and 290 heavily damaged, against only 131 replacements, for more than 15,000 rail cuts, while the enemy's daily mortar ammunition fit on one truck. Brig. Gen. Jacob Smart put two staff officers, Randolph and Mayo, on the problem, and their study of April 12, 1952, called for maximum selected destruction to make the war as costly as possible for the enemy. On June 23, 1952, Navy and Air Force jets struck the hydroelectric plants, including Suiho, the fourth largest dam in the world. Within four days, 546 Navy and 730 Fifth Air Force sorties had destroyed 90 percent of North Korea's electric power potential. American prisoners never saw the end of a propaganda film that summer because the power always failed first. In early July Smart told the target committee to describe the new program as "a shift in emphasis from delay and disruption operations to destruction," wording chosen to avoid feeding Army demands for close air support and newspaper headlines.</p>
+        <p>A weak seminar comment: "FEAF switched to air pressure because interdiction had failed." That is true but unarguable, and it never says what the new strategy was for. The strong version names the purpose and the cover story. Secretary of Defense Lovett told the press the raids had purely military grounds, an explanation Crane calls misleading, and American newspapers saw a new get-tough policy anyway. Theater commanders agreed to tell reporters the attacks had no relationship to the armistice talks. General Bradley complained that people read political implications into everything, while Smart was aiming for exactly those. Inside FEAF, the intelligence deputy, Brig. Gen. Charles Banfill, dissented, saying FEAF was "trying to starve a beggar by raiding his pantry" when the beggar ate at his rich relatives up the street. Opinion: a strategy you cannot name in public is harder to judge in private, and Banfill's beggar deserved a hearing at every target meeting.</p>
+        <p>First order, North Korea went dark and Pyongyang took 1,254 sorties on July 11, 1952. Second order, the diplomatic bill came due: British Labour members denounced the raids in Parliament, Churchill eased them only by appointing a British deputy to the UN Command, and Acheson apologized in London for failing to consult. Third order, the target list shrank toward towns. Weyland estimated towns and cities were already 40 to 90 percent destroyed as a side effect of hitting military objectives, and by early 1953 Bomber Command called small cities and towns the last vulnerable link in the enemy's supply system. In Crane's conclusion, raids just before an armistice, the 1953 dam raids and later Linebacker II, appeared to advocates to justify unrestricted bombing in limited war. We infer that calling coercion something else made that lesson harder to examine. The chain pre-empts the defense that air pressure was just better targeting, because the planners' own papers state a political aim and the political costs appear in the record. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-08">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 8</span>
+        <h3><a href="#c-08">Three Thousand Feet of Insurance, Paid in Accuracy</a></h3>
+        <p>Every survival rule is also an accuracy rule, so never quote a bombing statistic without the rule that produced it. Crane's chapter 8 follows the American search for precision in Korea: guided bombs, ground radar, SHORAN, leaflets, and a chemical and biological program whose munitions never reached the theater. His recurring finding is that each gain was paid for somewhere else.</p>
+        <p>In mid-1952, during the strikes on Pyongyang, Fifth Air Force fighter-bombers took significant damage on 27 of every 1,000 sorties. Operations analysts found that most hits came below 2,500 feet. Barcus set a 3,000-foot floor, and Vice Adm. J. J. "Jocko" Clark ordered Task Force 77 to pull out at the same height. Pilots now had to release at 5,000 feet or higher. Intensive training got the practice CEP (circular error probable) to 225 feet, and combat was worse. By the end of the war only 4 percent of fighter-bomber bombs hit pinpoint targets, down from 11 percent in 1952. The B-29s faced the same trade in another form. SHORAN gave Bomber Command its best blind accuracy, but its geometry favored one approach, and the enemy noticed. On June 10, 1952, searchlights and twelve ground-controlled jets met four Superfortresses on the only good SHORAN run to the Kwaksan bridges and shot down two.</p>
+        <p>A weak seminar comment: "Korea showed American bombing getting more precise. The CEPs beat the Joint Chiefs' planning estimates." It ignores the author's own counterevidence: the same pages show fighter-bomber hits falling by more than half under the floor. The strong version: "Bomber Command's visual CEP, under 600 feet, beat the JCS estimate of 1,500, but fighter-bomber pinpoint hits fell from 11 percent to 4 percent under the 3,000-foot floor. Precision in Korea depended on who was flying and what they were allowed to risk." Carl Spaatz had said in 1944 that precision was meant "in a relative not a literal sense." Korea kept the definition. The Navy, which had drifted into glide bombing, heard its Task Force 77 commander declare, "The Korean war is ultimately a dive bombing campaign," plus remedial training. The Marines ignored the floor, took more risk, and kept the infantry's affection. Opinion: the floor was probably the right call. The mistake is citing the accuracy as if nobody had paid for it.</p>
+        <p>First order, the floor kept jets out of the band where most hits occurred. Second order, accuracy fell, so each target needed more sorties (we infer), and the Navy had to revive a neglected skill. The single SHORAN avenue forced countermeasures (black lacquer, jammers, staggered times), and after January 30, 1953, no more B-29s fell to night defenses, though Crane notes the fixes would have failed against a radar night fighter that never came. Third order, the Air Force kept survival as its main yardstick: in 1953 it judged the F-86 the best fighter-bomber for its speed, though its bombing was no more accurate than the F-84's. SHORAN's 200-mile reach was useless against Soviet targets, so the Korean work detracted from SAC's readiness for general war, and the limited-war lessons had to be relearned over Vietnam. The chain grants the floor its purpose and still shows the price, so no one can wave it off as hostility to airpower. Who should own that trade, the wing that loses the airplanes or the theater that needs the bridge down? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-09">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 9</span>
+        <h3><a href="#c-09">Choke the Parrot: The Signal Nobody Authorized</a></h3>
+        <p>The enemy reads what your forces do, and your directives are invisible to him, so the loudest signal in a coercive campaign may be one nobody authorized. Crane's chapter 9 covers the war's last months: nuclear planning around Clark's Oplan 8-52, attacks on irrigation dams, and Sabres hunting MiGs inside China. He allows that air pressure may have contributed to the armistice and declines to make it the sole cause.</p>
+        <p>On July 20, 1953, one week before the armistice, Marine Maj. Thomas Sellers led a four-ship flight assigned to count MiGs on airfields north of the Yalu. He was an exchange pilot on his forty-third mission with Fifth Air Force. Plane-count missions were popular, since counting required flying directly over the field. Sellers saw fourteen MiGs taking off, attacked with his wingman, shot down two, and crashed near the field in China. The official notice said he went down in North Korea. His Silver Star citation says he died there protecting fighter-bombers. Pilots had a routine for these trips: the leader would "choke his parrot," turning off his IFF transponder, while a wingman staying south switched his on, so radar showed a flight that never left. In March, Clark had assured the Joint Chiefs that his directives required full compliance, and Weyland reported that pilots broke off at the Yalu.</p>
+        <p>A weak seminar comment: "Eisenhower's nuclear threat forced the Communists to sign." It asserts without evidence. Crane finds no evidence that the warnings reached Soviet or Chinese leaders, and Eisenhower's own remarks at the July 23 NSC meeting imply he did not credit them either. The strong version: "Crane points to what the Communists could see: breached dams flooding rice fields and Pyongyang's streets, rumors that Eisenhower would raise the ante, and Sabres over Manchurian airfields. He adds Stalin's death, riots in East Germany and Czechoslovakia, face-saving ground gains, and the risk from Syngman Rhee." The dams split word from deed too. Weyland called them interdiction; his planners privately called that rationale a "mode of deception." Three days before Sellers died, he wrote his wife that Fifth Air Force had threatened to court-martial the next man to shoot down a MiG landing at its own field. Opinion: the most credible American threat of escalation in 1953 was delivered by pilots whose paperwork said it never happened.</p>
+        <p>First order, the looser practice paid off in the air: from January to April, Sabres claimed sixteen MiGs for every F-86 lost, double the earlier rate, then fifty-six for one in late May and seventy-seven in June with no air-to-air losses. Second order, the Chinese watched the incursions and probably assumed UN authorities had sanctioned them, which Crane suggests may have been their negotiators' clearest sign of fraying American patience. Tokyo and Washington saw only altered paperwork. Third order, the service built its memory on inflated kill claims and doctored records and concluded that air pressure had mainly produced the armistice. In Crane's words, "Perceived success provides little incentive for improvement," and the limited-war lessons were relearned over Vietnam. We infer that a service blind to its own signals cannot learn which ones worked. The chain grants that pressure mattered and still shows the record cannot say which pressure, so it pre-empts both "airpower won it" and "airpower did nothing." If the clearest coercive message came from disobedience, was Clark's promise of full compliance a strength or a liability? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-10">
+        <span class="kicker">Chapter by Chapter · Crane, chapter 10 (conclusion)</span>
+        <h3><a href="#c-10">Remember Korea? Which One?</a></h3>
+        <p>A service remembers the version of a war that pays its bills, so the useful lesson often survives only in a rival's memory. Crane's conclusion shows Korea producing two memories. The Air Force remembered itself as "the decisive force in Korea," and that memory steered money, aircraft, and doctrine toward general nuclear war. Matthew Ridgway remembered the opposite, and in 1954 his version helped keep American bombers away from Dienbienphu. In Vietnam the Air Force relearned Korea the hard way.</p>
+        <p>In 1955 the Air Force Public Information Office picked Col. James T. Stewart to edit a book titled Airpower, the Decisive Force in Korea. It was built mostly from Air University Quarterly Review articles and opened with Weyland's own summary, which credited close air support with killing more than 150,000 enemy troops and 750 tanks in the first year alone. Privately he was blunter. In early 1954 he told Partridge that calling Korean airpower indecisive was like saying Sitting Bull got no decisive result at the Little Big Horn because he failed to kill the entire Seventh Cavalry. Robert Futrell's official history, finished in 1958, carried the same theme and kept it in the 1983 revision. Meanwhile the Quarterly Review published two significant articles on airpower and insurgency in Southeast Asia during the whole decade. Doctrine said "The best preparation for limited war is proper preparation for general war." The August 1964 basic manual gave counterinsurgency two pages and general war thirteen. By 1964, three-fourths of the top officers on the Air Staff came from SAC.</p>
+        <p>A weak comment: "Korea taught the Air Force nothing." That overgeneralizes and ignores Crane's own counterevidence, because Weyland called for new ways to use airpower for limited objectives and built Composite Air Strike Forces for brush-fire wars. The strong version: Korea offered two lessons, and the Air Force kept the one the New Look would fund. Ridgway kept the other. On March 20, 1954, at Admiral Radford's home, Radford asked the visiting French chief, Gen. Paul Ely, whether he just needed more airpower. Ridgway answered before Ely could. Korea, he said, had complete control of the air and a far stronger air force, and still offered no reason to expect more airpower to decide things on the ground. To Ridgway, the bitter lesson of Korea was that "air and naval power alone cannot win a war." He rallied the other chiefs, including the Air Force's Gen. Nathan Twining, against Radford. The FEAF bomber chief, Brig. Gen. Joseph Caldera, flew out and found no real B-29 targets there. Crane concedes historians still argue over whether Eisenhower meant to intervene at all. Opinion: the best air plan of 1954 was the one that never flew, and an Army general's memory of an air war deserves the credit.</p>
+        <p>The two memories ran in opposite directions. First order, the decisive-force story became the official record in 1955 and 1958, and the armistice let the service claim victory without hard introspection. Second order, New Look budgets favored SAC, and Weyland and his successors struck what Crane calls a Faustian bargain that made TAC a junior SAC. Its F-105 was designed to deliver a nuclear bomb at low altitude and was unsuited to air combat or true close air support. Third order, in Vietnam the Air Force had to relearn how to fight a joint limited war, with tactical command and control so poor that analysts said it would have meant disaster against a capable air opponent. Airmen now call ROLLING THUNDER "Rolling Blunder," which is at least a lesson remembered. Crane's verdict is that introspection after Korea might have saved lives in Vietnam. This chain is hard to dismiss as hindsight, because Ridgway made the argument in 1954 from the same war, with the same evidence the Air Force had. Which Korean lesson is your service funding right now? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Crane's page numbers are the printed pages of the University Press of Kansas edition (2000), taken from the running heads (printed page = PDF page minus 14 in the file on hand). Gaddis pages are from the revised edition (Oxford, 2005).</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Smart, "certainly don't advertise our limitations"; FEAF lacking resources or competence, especially interdiction; inflated expectations: Crane, 6.</li>
+          <li>"The image and reality of American airpower"; high expectations, limited resources, limited war: Crane, 6.</li>
+          <li>Plan to win air superiority and then bomb capacity and will; MiG-15 problem; true sources of war-making resources out of reach: Crane, 7.</li>
+          <li>Interdiction and "air pressure" as attempts to influence enemy decision makers whose support lay off-limits: Crane, 8.</li>
+          <li>Smart on influencing the "perpetrators" when no one was sure who they were or how they thought: Crane, 9.</li>
+          <li>Ambiguous ending, few lessons drawn: Crane, 9. Service believed air pressure produced the armistice; lessons relearned at high cost over Vietnam: Crane, 170.</li>
+          <li>The three course themes: SAASS 628 syllabus, Seminar 2. The "two stories" framing is ours.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter page ranges: introduction 1–9; ch. 1, 11–22; ch. 2, 23–39; ch. 3, 40–55; ch. 4, 56–75; ch. 5, 76–92; ch. 6, 93–109; ch. 7, 110–131; ch. 8, 132–154; ch. 9, 155–170; ch. 10, 171–184.</li>
+          <li>Truman's first order to plan destruction of Soviet air bases, 25 June: Crane, 23. Approval north of the parallel on 29 June, stay clear of Soviet and Manchurian borders: Crane, 24.</li>
+          <li>Rashin less than twenty miles from the Soviet border; JCS ordered no further attacks: Crane, 44–45. Yalu bridges, Korean side of the spans only: Crane, 49–50.</li>
+          <li>Truman's 30 November press conference and Attlee's trip: Crane, 58. HUDSON HARBOR found no suitable atomic targets: Crane, 71.</li>
+          <li>243 aircraft destroyed, 131 replacements: Crane, 116. "Maximum selected destruction": Crane, 116–117.</li>
+          <li>Other factors in the Communist decision to sign, including Stalin's death, riots, and Rhee: Crane, 164–165.</li>
+          <li>"The best preparation for limited war is proper preparation for general war"; the August 1964 manual: Crane, 175.</li>
+          <li>O'Donnell's "bad habits" epigraph: Crane, 1. The prosecutor line is our opinion.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, Seminar 2, "The Korean War: The USAF Experience."</li>
+          <li>JCS reserved retaliatory strikes; president approved preemptive attacks: Crane, 126.</li>
+          <li>Allied reaction to hot pursuit: Crane, 49. Allied fear of World War III after Truman's remarks: Crane, 58. State Department sensitivity to "barbarism" propaganda: Crane, 6.</li>
+          <li>Russians seen behind the invasion: Crane, 23. Fear of a Chinese and Soviet push, possibly against Japan, meaning global war; nuclear weapons to Guam: Crane, 70.</li>
+          <li>Smart's 40 percent; Weyland on fighting the Navy: Crane, 7. Close air support evaluations: Crane, 60–62. LeMay and countermeasures: Crane, 90.</li>
+          <li>Eisenhower-era nuclear planning: Crane, 157–159. Crane's verdict on the armistice: Crane, 183–184.</li>
+          <li>"Prepare question four" is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Stratemeyer and Weyland; no one influenced air operations more than Weyland; LeMay: Crane, 5.</li>
+          <li>Smart, deputy for operations from January 1952: Crane, 6; initiated air pressure: Crane, 115 (caption).</li>
+          <li>LeMay protecting countermeasures for general war: Crane, 90.</li>
+          <li>MiG Alley and the Manchurian sanctuary: Crane, 50. Hot pursuit refused: Crane, 49.</li>
+          <li>Air pressure, "maximum selected destruction": Crane, 116. HUDSON HARBOR: Crane, 71.</li>
+        </ul>
+        <h3>Bridge from today's seminar</h3>
+        <ul>
+          <li>Korea ensured the implementation of NSC-68: Gaddis, 107. Opportunity to bolster Western Europe's inadequate defenses: Gaddis, 112.</li>
+          <li>Resolved not to get bogged down in a peripheral war with a secondary adversary, "precisely what happened": Gaddis, 115.</li>
+          <li>Acheson, "there would be no end to it and it would bleed us dry," as Truman recalls: Gaddis, 120.</li>
+          <li>Symmetrical containment lets adversaries select the nature and location of competition: Gaddis, 342.</li>
+          <li>1953 FEAF study on objectives "compatible with air force capabilities": Crane, 155.</li>
+          <li>The MiG Alley line and the framing question are ours.</li>
+        </ul>
+        <h3>Crane, introduction: Limitations Sold Separately</h3>
+        <ul>
+          <li>O'Donnell's "bad habits" remark to a Senate committee, May 1951; not the war the USAF expected or wanted: Crane, 1.</li>
+          <li>Book's purpose: image and reality of airpower, high expectations, limited resources, acceptable and effective use in limited war: Crane, 6.</li>
+          <li>Smart became FEAF deputy for operations in January 1952: Crane, 5-6.</li>
+          <li>Smart on limitations of airpower, not advertising limitations to politicians or press; FEAF lacking resources or competence, especially interdiction; inflated expectations shaping early decisions and later disillusionment: Crane, 6.</li>
+          <li>Weyland fighting the Navy as much as the Communists; Smart's 40 percent of time countering Army and Navy proposals: Crane, 7.</li>
+          <li>Weyland succeeded Stratemeyer at FEAF in May 1951: Crane, 5.</li>
+          <li>Enemy war-making sources off-limits; interdiction and "air pressure" as FEAF's alternatives: Crane, 7-8.</li>
+          <li>Ambiguous ending, few lessons drawn, USAF more than doubled, cornerstone of the New Look, another limited war in Asia: Crane, 9.</li>
+          <li>New Look leaned on nuclear deterrence: Gaddis, 173.</li>
+          <li>The use-it paragraph, the Opinion line, and the "we infer" links are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 1: Precision Bombing, One Size Fits All Cities</h3>
+        <ul>
+          <li>"Precision attacks with an area weapon," 1951 epigraph: Crane, 11.</li>
+          <li>Power over Tokyo, March 10, 1945; forty blocks; glow visible 150 miles away: Crane, 11-12.</li>
+          <li>178 square miles of some sixty-six urban centers; mission reports on industrial targets, not civilians: Crane, 12.</li>
+          <li>Hiroshima photomap to refute "wanton, indiscriminate bombing": Crane, 14.</li>
+          <li>Hansell's Bible remark on the USSBS: Crane, 15.</li>
+          <li>Navy's 1949 moral and effectiveness case against strategic bombing, later forgotten: Crane, 15-16.</li>
+          <li>Spaatz, Vandenberg, Norstad board, October 1945, "does not at this time warrant a material change": Crane, 16-17.</li>
+          <li>Air Force cut from sixty to forty-eight groups in 1949, SAC up from eighteen to nineteen; 60,000 SAC personnel, 15 percent of USAF, June 1950; B-50; TAC stripped by December 1948: Crane, 21.</li>
+          <li>TAC restored July 1950; Momyer on escort as obsolete; World War II bombers in an unexpected war: Crane, 22.</li>
+          <li>MacArthur and Stratemeyer's campaign reminiscent of LeMay's incendiary raids after Chinese intervention: Crane, 8.</li>
+          <li>The use-it paragraph, the Opinion line, and the "we infer" links are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 2: Who Picks the Targets Picks the War</h3>
+        <ul>
+          <li>GHQ Target Group used an obsolete map and had no Air Force representation; Weyland diverted from TAC; "adored and respected MacArthur" (1960 interview); harsh memo; committee of Weyland, a Navy representative, Hickey, and Willoughby; first met 24 July; MacArthur approved 26 July after the waterfall remark: Crane, 33.</li>
+          <li>Bomber Command's 11 July directive changed to make close support first and industry last; O'Donnell's protests; tactical missions until early August: Crane, 33.</li>
+          <li>O'Donnell notified by 4 August that B-29s would leave the battle area starting the next day; committee lasted six weeks and set up an ordered process for B-29 operations; Weyland had commanded TAC for only a week: Crane, 33-34.</li>
+          <li>O'Donnell's proposal to firebomb the five industrial centers; "No, Rosy, I'm not prepared to go that far yet": Crane, 32.</li>
+          <li>Stratemeyer's 12 July ultimatum proposal and MacArthur's rejection: Crane, 32-33.</li>
+          <li>Carpet bombing by ninety-eight B-29s on 16 August; O'Donnell saw only a morale lift for ground troops: Crane, 36.</li>
+          <li>FEAF joke about navigators drawing a line toward Omaha: Crane, 27.</li>
+          <li>JCS strategic bombing directive of 31 July and two added groups: Crane, 34.</li>
+          <li>Industry destroyed with high explosives in less than two months; Wonsan refinery 95 percent eliminated: Crane, 41.</li>
+          <li>Weyland took FEAF after Stratemeyer's heart attack in May 1951 and held it until March 1954: Crane, 34.</li>
+          <li>Weyland took TAC in April 1954 and formed Composite Air Strike Forces for limited wars: Crane, 174.</li>
+          <li>RAND observer told Partridge they were reinventing the control system in Vietnam: Crane, 178.</li>
+          <li>The use-it paragraph, the Opinion line, the Omaha quip, and the "we infer" link about memory and doctrine are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 3: Trusting the Tool That Beat the Last Enemy</h3>
+        <ul>
+          <li>MacArthur's optimism "largely a product of his faith in airpower"; airpower had always come through for him in World War II: Crane, 53.</li>
+          <li>Pyongyang arsenal and railyards 70 percent, Konan chemical plants 85 percent, Wonsan refinery 95 percent, with high-explosive bombs: Crane, 41.</li>
+          <li>By the end of October targets were so scarce a B-29 chased a motorcycle rider with single bombs: Crane, 44.</li>
+          <li>MacArthur's order to destroy every installation, factory, city, and village except Rashin and the hydroelectric plants: Crane, 47.</li>
+          <li>Kanggye 65 percent destroyed: Crane, 46. Sinuiju 60 percent, Hoeryong 90 percent, more than 3,300 tons of incendiaries in November: Crane, 48.</li>
+          <li>MacArthur's 9 November claim that his airpower could deny reinforcements across the Yalu: Crane, 40, 48.</li>
+          <li>Collins on overreliance based on immobile Japanese fixed installations versus "highly mobile, flexible armies of the Chinese": Crane, 53-55.</li>
+          <li>Airpower slowed the advance, stiffened Pusan, helped smash the enemy, wiped out industry; Mao did not commit until Soviets promised planes and air defense: Crane, 55.</li>
+          <li>MacArthur in World War II probably the commander most concerned with bombing's effects on civilians: Crane, 46.</li>
+          <li>JCS restrictions and Soviet air defense defeated attempts to destroy the Yalu bridges: Crane, 49-50.</li>
+          <li>MiGs denied FEAF reconnaissance near the Yalu at a critical time: Crane, 53. Chinese landpower threw MacArthur back: Crane, 55.</li>
+          <li>"Perhaps too much was expected of the air," 5 May 1951: Crane, 40.</li>
+          <li>Inability to knock out moving ground targets at night remained a deficiency through Vietnam: Crane, 42. Vietnam interdiction of primitive, manpower-intensive supply systems and lack of night capability: Crane, 178.</li>
+          <li>The use-it paragraph, the Opinion line about the motorcycle, and the framing of the two camps are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 4: Grade Your Own Homework, Then Brief Congress</h3>
+        <ul>
+          <li>Vinson's planned hearings on close air support; Air Force leaders decide to gather supporting data on tactical accomplishments; Barcus directed in October 1950; Stearns appointed in November as "impartial civilian not connected with the Air Force": Crane, 60.</li>
+          <li>Stearns's deadline tied to Vinson's possible early January start; Stearns and Barcus praise Air Force close air support; Leach's "no significant dispute" quote; Almond takes complaints to Collins; Collins agrees with Vandenberg: Crane, 61.</li>
+          <li>Multipurpose aircraft made economic sense to the Air Force; ground commanders preferred dedicated close air support and cited Marine air wings: Crane, 61-62.</li>
+          <li>Operations Research Office figures (forty-five versus ten minutes, thirty versus seventy-three minutes, thirteen versus thirty-seven sorties); Barcus concedes value of time on station and calls press comparisons "invidious": Crane, 62.</li>
+          <li>Thomas wants Marine aircraft or none; Van Fleet wants control within fifty miles: Crane, 84.</li>
+          <li>Almond's Army War College text; SAGEBRUSH 1955; 1957 manual with two systems in separate chapters; helicopters and organic close air support: Crane, 177.</li>
+          <li>The use-it paragraph, the Opinion line, and the "impartial" remark are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 5: Saving the Good Tricks for the Big War</h3>
+        <ul>
+          <li>Ridgway turns to airpower to keep military pressure on during armistice talks: Crane, 76.</li>
+          <li>More than 500 MiGs against about ninety F-86s by September 1951; Sabres limited to fifteen to twenty minutes of combat time near the Yalu: Crane, 83.</li>
+          <li>October 23, 1951, Namsi raid: thirty-one Sabres boxed in by some of 140 MiGs; nine 307th Wing B-29s, forty-five Thunderjets, twelve RAAF Meteors; fifty MiGs attack, three bombers shot down, five seriously damaged; report says 150 F-86s needed: Crane, 86.</li>
+          <li>October totals (five shot down by MiGs, four salvaged, three accidents, fifty-five killed or missing, fewer than ninety B-29s); Weyland and Kelly end daylight B-29 formations: Crane, 88.</li>
+          <li>North American building eleven Sabres a month; sixty F-86s bought from Canada; over 150 in FEAF, more than committed to U.S. air defense: Crane, 89.</li>
+          <li>LeMay's "grave concern," the "practically shot out of the air" letter, wrong ammunition, and refusal to allow chaff, jamming, or cell tactics: Crane, 90.</li>
+          <li>SHORAN method, target CEP under 500 feet, accuracy nearly double that in late 1951; chaff allowed from August 1952 and very effective: Crane, 90-91.</li>
+          <li>May 1953 IG report on night SHORAN proficiency versus Emergency War Plan bombing; failure of a nuclear bomber threatening deterrent credibility; withholding procedures to protect war-plan intelligence: Crane, 182-183.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 6: Fear of Flying, or Fear of the Fine Print?</h3>
+        <ul>
+          <li>Air Force authorized 416,314 at war's start; November 1951 goal of 1,210,000 and 143 wings: Crane, 93.</li>
+          <li>Almost 20,000 reservists involuntarily recalled in the first quarter of 1951, half officers: Crane, 97.</li>
+          <li>Recallees selected from records listing little more than names, addresses, specialties: Crane, 99.</li>
+          <li>AFR 35-16, February 1950, voluntary suspension provision and its intent for a small professional force: Crane, 98-99.</li>
+          <li>About 800 Air Training Command officers gave up wings by end of 1951; 134 more in January 1952: Crane, 99.</li>
+          <li>LeMay's view of "deadbeats" lacking moral courage: Crane, 101-102.</li>
+          <li>452d Bomb Wing first unit recalled whole; fifty-mission expectation; commander's quote; relief: Crane, 95-96.</li>
+          <li>Vandenberg refused mission limits in December 1950, fearing promises could not be kept: Crane, 94.</li>
+          <li>Halt in involuntary recalls and clear notice to volunteers more important in controlling the crisis; ATC crisis over by late summer 1952: Crane, 103.</li>
+          <li>SAC staff officer with the Ninety-eighth Bomb Wing found reservist B-29 crews' discipline outstanding: Crane, 107.</li>
+          <li>Bourbon after each sortie in the Eightieth Fighter-Bomber Squadron; no one sober by midafternoon: Crane, 104.</li>
+          <li>"Sit-down strikes," Senate Armed Services hearings April 16 and 17, 1952, fourteen courts-martial summary to Truman's aide, all recalled reservists: Crane, 102.</li>
+          <li>Recallees included veterans who expected no combat and involuntary recalls who had no desire to serve: Crane, 99.</li>
+          <li>Surgeon General staff study: 700 applications for 1,600 pilot training openings: Crane, 100.</li>
+          <li>Public relations push, LeMay at Paramount July 1953, Strategic Air Command (1955) and its recalled-reservist hero: Crane, 108.</li>
+          <li>The use-it paragraph, the Opinion line, and the "we infer" links are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 7: Just a Shift in Emphasis, Said the Man Changing the Strategy</h3>
+        <ul>
+          <li>Interdiction costs: 243 aircraft destroyed, 290 heavily damaged, 131 replacements: Crane, 116.</li>
+          <li>Over 15,000 rail cuts; mortar requirement carried by one truck or 100 coolies: Crane, 114-116.</li>
+          <li>Smart tasks Randolph and Mayo; study finished April 12, 1952, recommending maximum selected destruction: Crane, 114, 116.</li>
+          <li>Smart's search for a way to use destructive power as a political tool: Crane, 115 (caption), 122.</li>
+          <li>June 23, 1952 hydroelectric strikes; Suiho fourth largest dam; 546 Navy and 730 Fifth Air Force sorties; 90 percent of power potential destroyed; POWs' propaganda films: Crane, 119.</li>
+          <li>Smart's "shift in emphasis" wording to avoid Army close air support demands and headlines: Crane, 117.</li>
+          <li>Lovett's misleading "purely military" explanation; newspapers saw a get-tough policy: Crane, 120.</li>
+          <li>Theater commanders agree to tell press no relationship to the armistice talks; Bradley's complaint; Acheson's apology in London: Crane, 122.</li>
+          <li>Banfill's dissent and beggar analogy: Crane, 127.</li>
+          <li>Operation PRESSURE PUMP, 1,254 sorties, July 11, 1952: Crane, 122.</li>
+          <li>British Labour denunciation and Churchill's British deputy appointment: Crane, 119.</li>
+          <li>Weyland's 40 to 90 percent town destruction estimate: Crane, 126.</li>
+          <li>Bomber Command on small cities and towns as last vulnerable link, early 1953: Crane, 125.</li>
+          <li>1953 dam raids and Linebacker II seen by advocates as justifying unrestricted air attacks: Crane, 181.</li>
+          <li>The use-it paragraph, the Opinion line, and the "we infer" links are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 8: Three Thousand Feet of Insurance, Paid in Accuracy</h3>
+        <ul>
+          <li>Chapter scope (guided bombs, radar aids, psychological warfare, BW-CW program; no CW stocks shipped to the Far East): Crane, 132-154, esp. 153.</li>
+          <li>27 of every 1,000 sorties damaged over Pyongyang; most hits below 2,500 feet; Barcus's 3,000-foot floor; Jocko Clark's matching order for Task Force 77: Crane, 136.</li>
+          <li>Release at 5,000 feet or higher; practice CEP of 225 feet; combat worse; 4 percent pinpoint hits versus 11 percent in 1952: Crane, 136.</li>
+          <li>Navy shift from glide to dive bombing, "The Korean war is ultimately a dive bombing campaign," more training; Marines did not enforce the floor and kept the ground troops' esteem: Crane, 136.</li>
+          <li>Spaatz, precision "in a relative not a literal sense"; Korean CEPs somewhat better than World War II: Crane, 138.</li>
+          <li>Bomber Command visual CEP under 600 feet; JCS estimates of 3,000, 1,500, and 900 feet; SHORAN range a little over 200 miles; impractical against Soviet targets, detracting from SAC readiness for general war: Crane, 139-140.</li>
+          <li>Single SHORAN approach; June 10, 1952 Kwaksan raid, four B-29s, twelve jets, two shot down; countermeasures; no radar night fighter; no B-29s lost to night defenses after January 30, 1953: Crane, 140.</li>
+          <li>F-86 judged most suitable fighter-bomber for survivability, bombing no more accurate than the F-84's: Crane, 162.</li>
+          <li>Limited-war lessons lost and relearned over Vietnam: Crane, 170.</li>
+          <li>The use-it paragraph, the Opinion line, and the "we infer" links are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 9: Choke the Parrot: The Signal Nobody Authorized</h3>
+        <ul>
+          <li>Oplan 8-52 and nuclear planning: Crane, 155-159. Last phase of air pressure "may have contributed" to ending the war: Crane, 159.</li>
+          <li>Sellers mission of July 20, 1953: exchange pilot on his forty-third Fifth Air Force mission, plane-count flight requiring overflight of the field, fourteen MiGs, two kills, crash in China, official notice and Silver Star citation placing his death in North Korea: Crane, 166.</li>
+          <li>Chinese probably assumed incursions were sanctioned; possibly the clearest sign of fraying American patience: Crane, 166.</li>
+          <li>IFF swap, "choke his parrot": Crane, 167.</li>
+          <li>Sellers letter on Fifth Air Force court-martial threat, three days before his last mission: Crane, 167.</li>
+          <li>Clark's assurance of full compliance and Weyland's report, March 1953; pilots inferred hot pursuit was winked at; paperwork altered; MiGs destroyed at a base thirty miles inside China: Crane, 165.</li>
+          <li>Kill ratios: sixteen to one January-April, double the earlier rate; fifty-six for one, May 8-31; seventy-seven claimed in June without air-to-air losses: Crane, 166.</li>
+          <li>Kill claims probably highly inflated: Crane, 167.</li>
+          <li>Dams as interdiction versus planners' "mode of deception": Crane, 160. Weyland insisted they were interdiction; flooding of villages, rice fields, and Pyongyang streets: Crane, 163.</li>
+          <li>No evidence nuclear warnings reached Soviet or Chinese leaders; Eisenhower's July 23 NSC remarks; rumors of raising the ante; Stalin's death, East German and Czech riots, face-saving ground gains, Rhee: Crane, 164-165.</li>
+          <li>Air Force believed air pressure primarily responsible; "Perceived success provides little incentive for improvement"; lessons relearned over Vietnam: Crane, 170.</li>
+          <li>The use-it paragraph, the Opinion line, and the "we infer" links are our opinion and inference.</li>
+        </ul>
+        <h3>Crane, chapter 10: Remember Korea? Which One?</h3>
+        <ul>
+          <li>Air Force believed it had been "the decisive force in Korea": Crane, 171.</li>
+          <li>Weyland's postwar article: close air support killed over 150,000 troops and 750 tanks in the first year; plea for new ways to use airpower for limited objectives: Crane, 171-172.</li>
+          <li>TAC's Faustian bargain, "junior SAC," F-105 designed for nuclear delivery and unsuited to air combat and true close air support: Crane, 172.</li>
+          <li>Weyland's early-1954 letter to Partridge, Sitting Bull and the Little Big Horn: Crane, 172-173.</li>
+          <li>1955 PIO selects Col. James T. Stewart to edit Airpower, the Decisive Force in Korea, material mostly Air University Quarterly Review articles, opens with Weyland's article: Crane, 173.</li>
+          <li>Futrell completed his history in 1958, same themes, kept in 1983 revision: Crane, 173.</li>
+          <li>New Look budgets emphasized SAC; Composite Air Strike Forces for brush-fire wars; return to focus on general nuclear war: Crane, 173-175.</li>
+          <li>Only two significant Quarterly Review articles on airpower and Southeast Asian insurgency in the 1950s; doctrine quote on limited and general war; 1964 manual two pages vs. thirteen: Crane, 175.</li>
+          <li>By 1964 three-fourths of the highest-ranking Air Staff officers came from SAC: Crane, 175.</li>
+          <li>Vietnam: relearning joint limited war, "Rolling Blunder," command and control would have led to disaster against a capable air opponent: Crane, 178.</li>
+          <li>Ridgway's "bitter lesson" quote; Radford's home, March 20, Ely, Ridgway's reply about Korea; rallying the chiefs including Twining; Caldera finds no true B-29 targets: Crane, 178-179.</li>
+          <li>Disagreement over whether Eisenhower intended to intervene: Crane, 180.</li>
+          <li>Armistice let the Air Force claim victory and avoid introspection that might have saved lives in Vietnam: Crane, 184.</li>
+          <li>The use-it paragraph, the Opinion line, the closing question, and the claim that the hindsight objection fails are our opinion and inference.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>What did Jacob Smart admit airmen did not advertise, and to whom?</summary><p>Their limitations, which they kept from politicians and the press, helping inflate expectations of airpower in Korea. <span class="pg">C 6</span></p></details></li>
+          <li><details><summary>How much of his time did Smart spend countering other services' proposals?</summary><p>About 40 percent, mostly against the Army and to a lesser extent the Navy. <span class="pg">C 7</span></p></details></li>
+          <li><details><summary>Why, per Crane, did the Air Force draw few lessons from Korea?</summary><p>The ambiguous ending let it believe it had helped bring about an acceptable armistice. <span class="pg">C 9</span></p></details></li>
+          <li><details><summary>What did the October 1945 Spaatz, Vandenberg, and Norstad board conclude about the atomic bomb?</summary><p>That it did not yet warrant a material change in how the postwar Air Force would be employed, sized, or organized. <span class="pg">C 17</span></p></details></li>
+          <li><details><summary>When 1949 cuts shrank the Air Force from sixty to forty-eight groups, what happened to SAC?</summary><p>It grew, from eighteen groups to nineteen. <span class="pg">C 21</span></p></details></li>
+          <li><details><summary>When was Tactical Air Command restored as a major command?</summary><p>July 1950, after the Korean War had already begun. <span class="pg">C 22</span></p></details></li>
+          <li><details><summary>What was wrong with how B-29 targets were chosen in July 1950?</summary><p>MacArthur's GHQ Target Group picked them from an obsolete map of Korea, with no Air Force representative. <span class="pg">C 33</span></p></details></li>
+          <li><details><summary>What image did Weyland use to win MacArthur over to interdiction?</summary><p>Putting everything into close support was like trying to dam up a river at the bottom of a waterfall. <span class="pg">C 33</span></p></details></li>
+          <li><details><summary>How did MacArthur answer O'Donnell's offer to burn North Korea's five industrial centers?</summary><p>"No, Rosy, I'm not prepared to go that far yet," though he allowed high-explosive attacks on military targets in those cities. <span class="pg">C 32</span></p></details></li>
+          <li><details><summary>What does Crane say drove MacArthur's optimism as he advanced to the Yalu?</summary><p>His faith in airpower, which had always come through for him, rather than simple blindness to Chinese intervention. <span class="pg">C 53</span></p></details></li>
+          <li><details><summary>What scene shows how few targets were left in North Korea by late October 1950?</summary><p>A B-29 chased a lone motorcycle rider down a road with single bombs until one hit him. <span class="pg">C 44</span></p></details></li>
+          <li><details><summary>Why did Collins think MacArthur overrated airpower against China?</summary><p>MacArthur's experience came from bombing immobile Japanese fixed installations, a different target from mobile, flexible Chinese armies. <span class="pg">C 55</span></p></details></li>
+          <li><details><summary>Why did Air Force leaders commission the Barcus and Stearns evaluations in fall 1950?</summary><p>To gather supporting data on tactical performance before Carl Vinson's planned hearings on close air support. <span class="pg">C 60</span></p></details></li>
+          <li><details><summary>How fast did Marine controllers get bombs on target compared with the Air Force system?</summary><p>About ten minutes for the Marines against about forty-five for an Air Force response through the Joint Operations Center. <span class="pg">C 62</span></p></details></li>
+          <li><details><summary>What did the 1957 Joint Air-Ground Operations Manual show about the close air support dispute?</summary><p>It satisfied neither service and described two different systems in separate chapters. <span class="pg">C 177</span></p></details></li>
+          <li><details><summary>What happened to the B-29s over Namsi Airfield on October 23, 1951?</summary><p>Fifty MiGs attacked the nine-bomber formation during its bomb run, shooting down three and seriously damaging five, and daylight B-29 formations ended soon after. <span class="pg">C 86-88</span></p></details></li>
+          <li><details><summary>Which countermeasures did LeMay refuse to let Bomber Command use, and why?</summary><p>Chaff, radar jamming, and cell tactics, because they might give the enemy information usable against SAC in all-out war; chaff was finally allowed in August 1952. <span class="pg">C 90-91</span></p></details></li>
+          <li><details><summary>What did the May 1953 inspection find about SAC crews in Korea?</summary><p>They had perfected night SHORAN bombing, but their ability to do the war plan's visual or radar bombing was nonexistent or uncertain. <span class="pg">C 183</span></p></details></li>
+          <li><details><summary>What regulation opened the door to the Korean War "fear of flying" crisis?</summary><p>Air Force Regulation 35-16 of February 1950, which let rated officers request suspension from flying status. <span class="pg">C 98</span></p></details></li>
+          <li><details><summary>According to Crane, what did more than courts-martial to end the crisis?</summary><p>Halting involuntary recalls of reserve officers and telling volunteers clearly they were headed for combat crew training and possibly Korea. <span class="pg">C 103</span></p></details></li>
+          <li><details><summary>How many pilot training applications did the Air Force get for 1,600 openings?</summary><p>Only 700, even after the service lowered qualification requirements. <span class="pg">C 100</span></p></details></li>
+          <li><details><summary>Who commissioned the staff study that produced FEAF's air pressure strategy, and when was it finished?</summary><p>Brig. Gen. Jacob Smart, FEAF deputy for operations; Randolph and Mayo finished it on April 12, 1952. <span class="pg">C 114, 116</span></p></details></li>
+          <li><details><summary>What did the June 1952 hydroelectric strikes achieve?</summary><p>Within four days, 1,276 Navy and Fifth Air Force sorties destroyed 90 percent of North Korea's electric power potential. <span class="pg">C 119</span></p></details></li>
+          <li><details><summary>What was Banfill's beggar analogy?</summary><p>Hitting North Korean targets was like starving a beggar by raiding his pantry when he ate at his rich relatives' house up the street. <span class="pg">C 127</span></p></details></li>
+          <li><details><summary>What altitude floor did Barcus impose on fighter-bombers in 1952, and what did it do to pinpoint accuracy?</summary><p>A 3,000-foot pullout floor, which forced releases at 5,000 feet or higher and dropped pinpoint hits from 11 percent in 1952 to 4 percent by war's end. <span class="pg">C 136</span></p></details></li>
+          <li><details><summary>Why did SHORAN make the Kwaksan raid of June 10, 1952 so dangerous?</summary><p>SHORAN geometry favored one approach along a signal arc, so the enemy massed searchlights and twelve jets on it and shot down two of four B-29s. <span class="pg">C 140</span></p></details></li>
+          <li><details><summary>Why did SHORAN skill in Korea not help SAC prepare for war with the Soviet Union?</summary><p>Its range was only a little over 200 miles, making it impractical against Soviet targets. <span class="pg">C 139-140</span></p></details></li>
+          <li><details><summary>What did Sabre pilots mean by "choke his parrot"?</summary><p>The flight leader crossing the Yalu turned off his IFF while a wingman staying south turned his on, hiding the incursion from ground radar. <span class="pg">C 167</span></p></details></li>
+          <li><details><summary>What happened to Maj. Thomas Sellers on July 20, 1953, and what did the official record say?</summary><p>He shot down two MiGs and crashed near an airfield in China, but the official notice and his Silver Star citation placed his loss in North Korea. <span class="pg">C 166</span></p></details></li>
+          <li><details><summary>Besides air pressure, what factors does Crane list behind the Communist decision to sign the armistice?</summary><p>Stalin's death and Kremlin instability, riots in Czechoslovakia and East Germany, late ground gains that let them save face, and fear that Rhee would disrupt the peace. <span class="pg">C 164-165</span></p></details></li>
+          <li><details><summary>What book did the Air Force Public Information Office have Col. James T. Stewart edit in 1955?</summary><p>Airpower, the Decisive Force in Korea, built mostly from Air University Quarterly Review articles and opening with Weyland's summary. <span class="pg">C 173</span></p></details></li>
+          <li><details><summary>How did Ridgway answer Radford's suggestion that the French just needed more airpower at Dienbienphu?</summary><p>He said Korea, with complete air control and a far stronger air force, gave no basis for thinking more airpower would decide things on the ground. <span class="pg">C 179</span></p></details></li>
+          <li><details><summary>How did the August 1964 USAF basic doctrine manual divide its pages?</summary><p>Two pages on counterinsurgency and thirteen on nuclear and conventional operations for general war. <span class="pg">C 175</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

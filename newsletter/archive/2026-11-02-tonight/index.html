@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Review edition for an earlier book, written November 17 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Monday, November 2, 2026 · Review edition for Tuesday's seminar: Clodfelter (written November 17)</p>
+      <p class="toc-after"><a href="../">Archive of every edition</a> · <a href="../../map/">Course map</a></p>
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Clodfelter, <i>The Limits of Air Power</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tomorrow's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's exercise</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#c-01">Preface and ch. I, part 1: Korea's Only Bombing That Bit Was Aimed at Rice</a></li>
+          <li><a href="#c-02">Ch. I, part 2: The Best Preparation for a Small War, According to the People Planning a Big One</a></li>
+          <li><a href="#c-03">Ch. II: Everyone Agreed to Bomb North Vietnam. Nobody Agreed Why</a></li>
+          <li><a href="#c-04">Ch. III, part 1: The Oil Raids Hit Everything Except the Problem</a></li>
+          <li><a href="#c-05">Ch. III, part 2: The Lights Were Never Supposed to Go Off, Said the Memo Written Afterward</a></li>
+          <li><a href="#c-06">Ch. IV, part 1: Not Every Handcuff Came From the White House</a></li>
+          <li><a href="#c-07">Ch. IV, part 2: Seven Trucks Beat 643,000 Tons</a></li>
+          <li><a href="#c-08">Ch. V: Linebacker I, or Hanoi Brought Tanks to a Bomb Fight</a></li>
+          <li><a href="#c-09">Ch. VI: Eleven Days, Fifteen Bombers, and a Largely Cosmetic Peace</a></li>
+          <li><a href="#c-10">Ch. VII: Any Two Weeks You Like, and Other Postwar Grades</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Tuesday's seminar</span>
+        <h3><a href="#t1">Clodfelter, <i>The Limits of Air Power</i>: Same Bombs, Different War</a></h3>
+        <p>Clodfelter argues that bombing North Vietnam failed Lyndon Johnson and worked for Richard Nixon because the two men wanted different things in different wars. Taking the gloves off had less to do with it than the airmen claim. His test comes from Clausewitz: a bombing campaign is worth only what it contributes to the nation's war aims. Johnson wanted an independent, non-Communist South while keeping China and the Soviets out, against an enemy fighting a guerrilla war that needed almost nothing from outside. Nixon wanted far less, a withdrawal that did not hand the South to an imminent takeover, and in 1972 Hanoi obliged him by launching a conventional invasion that ran on fuel and ammunition. Bombing can choke an army that eats a lot. It cannot starve one that barely eats.</p>
+        <p>The book argues against the airman's favorite counterfactual. Nixon told Meet the Press in April 1988 that his greatest mistake as President was not bombing and mining the North in 1969. Most of the war's senior air commanders agreed, and a staff sergeant's letter to Stars and Stripes said nothing done in 1972 could not have been done in 1965. Clodfelter's reply is that Linebacker II worked for a specific combination of goals and conditions that did not exist until 1972. He also warns that his evidence is incomplete, since much of it was still classified and the Politburo's archives were closed to him. (Few authors put their missing evidence in the preface. It is a good habit, and seminar will reward you for noticing it.)</p>
+        <p>For this course, Clodfelter supplies the vocabulary. Positive objectives need force; negative objectives need restraint; and political controls flow straight from the negative ones. Add his military controls (doctrine, morals, command arrangements) and operational controls (defenses, weather, technology), and you have a checklist for every limited war still on the syllabus. Technology stays in the background on purpose. He counts the laser-guided bombs of 1972 and the good flying weather, but he credits the change in the war first, since the same doctrine and many of the same targets had failed in 1965. The syllabus asks whether that is a feature or an oversight; expect the Paul Doumer Bridge to come up. The syllabus notes that his view was a minority one in 1989 and is now widely held among airmen. Minority views have a way of becoming the reading list. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Seven Chapters, One Evening, Sorted by Payoff</a></h3>
+        <p>Read the argument first, then the numbers, then the stories. The text on file is a reflowed ebook with no printed page numbers, so these are ebook pages; match them to your copy by chapter.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The preface, ebook 8 to 11 (the thesis, positive and negative objectives, the three kinds of controls), then chapter VII, the epilogue, ebook 222 to 229 (why 1965 was not 1972, LeMay's two weeks, the aerial Verdun).</li>
+          <li><b>60 minutes.</b> Add chapter IV's results section, ebook 151 to 158 (643,000 tons, 34 tons a day, people and food), and chapter V's verdict, ebook 184 to 194 (what Linebacker I cut, and the four reasons it worked).</li>
+          <li><b>2 hours.</b> Add chapter II, ebook 74 to 80 (four advisers, four purposes, and Johnson's pencil); chapter III, ebook 109 to 119 (the oil campaign and the June 1966 meeting); chapter VI, ebook 204 to 220 (the eleven days); and chapter I, ebook 42 to 53 (doctrine after Korea).</li>
+        </ol>
+        <p>Chapter I's World War II pages, ebook 16 to 28, can wait. The lessons below hit their main points, and you met most of them in Crane. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Preface, ebook 10 to 11.</b> Positive and negative objectives, then political, military, and operational controls. Chapter IV is built on this sorting, so learn the categories here.</li>
+          <li><b>Chapter II, ebook 74 to 79.</b> Each adviser wants something different from the bombing, and Johnson edits a cable so he can avoid announcing a policy. Count the purposes.</li>
+          <li><b>Chapter III, ebook 114 to 117.</b> The June 22, 1966 meeting ("Are you more sure than MacArthur was?"), then the intelligence finding that the North still had more oil than it needed.</li>
+          <li><b>Chapter IV, ebook 152.</b> The single most useful page in the book: one day of combat in thirty, 34 tons a day from outside the South, and seven trucks.</li>
+          <li><b>Chapter V, ebook 184 to 191.</b> What Linebacker I cut from Hanoi's imports, and Clodfelter's four reasons it worked. Watch how small a share he gives the bombs.</li>
+          <li><b>Chapter VI, ebook 205 to 211 and 217.</b> SAC flies the same routes three nights running, and the January agreement turns out "largely cosmetic." Both pages are seminar ammunition.</li>
+        </ol>
+        <p>Read the epilogue's last page twice. Clodfelter calls political controls a standing feature of modern war, and the rest of this course keeps testing that sentence. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Six Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 6, "Vietnam War: Bombing the North." The syllabus also asks you to watch the positive and negative objectives, and whether treating technology as a backdrop is a feature or an oversight of the thesis.</p>
+        <ol class="qs">
+          <li><b>How did airmen tie the use of airpower to political objectives?</b> Preface, ebook 9 to 11; chapter I, ebook 44 and 52 to 53 (Manual 1-8's vital centers); chapter III, ebook 89 to 90 and 118 to 119 (will and capability, unchallenged).</li>
+          <li><b>Had airmen been given their druthers, would they have erased every limit placed upon bombing North Vietnam?</b> Chapter IV, ebook 143 to 144 (the dikes); chapter III, ebook 129 (McConnell on rice); chapter VII, ebook 224 to 225 (doctrine and conscience).</li>
+          <li><b>What was the strategy employed by the Johnson Administration, and could it have been effective?</b> Chapter II, ebook 56 to 63 and 74 to 79; chapter IV, ebook 152, 158, and 163; chapter VII, ebook 223 to 224.</li>
+          <li><b>Was Nixon and Kissinger's strategy to bomb the North Vietnamese as fruitful as they claimed?</b> Chapter V, ebook 184 to 194; chapter VI, ebook 214 to 220; chapter VII, ebook 225 to 227.</li>
+          <li><b>Would a more robust precision munition technology have changed anything had it been available earlier?</b> Chapter IV, ebook 150 to 152 (aircraft and weather against a 34-ton requirement); chapter V, ebook 176 and 182 (guided bombs); chapter VII, ebook 225.</li>
+          <li><b>What impact did having an air force built for massive retaliation have when asked to gradually escalate bombing operations?</b> Chapter I, ebook 43 to 48; chapter IV, ebook 145 to 151; chapter VI, ebook 205 and 211.</li>
+        </ol>
+        <p>Opinion: prepare question five. The book's answer hides in arithmetic, not in the weapons chapter, and the person who brings the 34 tons will end that debate early. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>Positive and negative objectives.</b> Goals reachable only by using force, and goals reachable only by limiting it, such as keeping China and the Soviets out (ebook 10).</li>
+          <li><b>Political, military, and operational controls.</b> Limits from war aims; limits from doctrine, morals, and command arrangements; limits from defenses, weather, terrain, and technology (ebook 10 to 11).</li>
+          <li><b>Manual 1-8.</b> The Air Force's strategic bombing manual, dated 1 May 1954 and not revised until December 1965 (ebook 44).</li>
+          <li><b>Rolling Thunder, Linebacker I, Linebacker II.</b> The three campaigns: 2 March 1965 to 31 October 1968; 10 May to 23 October 1972; 18 to 29 December 1972 (ebook 10).</li>
+          <li><b>Earle Wheeler.</b> Chairman of the Joint Chiefs, who promised the oil raids would bite in sixty to ninety days and later rewrote the power plant objective (ebook 114 to 115, 125).</li>
+          <li><b>Admiral U. S. Grant Sharp.</b> Commander in Chief, Pacific, and Rolling Thunder's operational director; his target list drove Johnson's picks for much of 1967 (ebook 90, 124).</li>
+          <li><b>The Tuesday lunch.</b> The White House meal where Johnson approved targets, with no military officer present until Wheeler joined in October 1967 (ebook 102, 129).</li>
+          <li><b>General John C. Meyer.</b> SAC's commander in Linebacker II, who repeated the first nights' plan, then cut the rate and varied the routes after six B-52s fell on 20 December (ebook 205 to 206).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Schlight to Clodfelter</span>
+        <h3><a href="#t6">One Air Force, Two Wars, the Same Missing Measure</a></h3>
+        <p>Schlight and Clodfelter describe the same Air Force failing in opposite directions. In the South, Schlight shows a service with no war objective of its own, measuring sorties, tons, and response times because it lacked reliable data on results. In his words, "An enormous quantity of data described the Air Force's effort, but little its progress." In the North, Clodfelter shows the reverse: the air chiefs had an objective, breaking Hanoi's will and capability, and nobody in Washington challenged it, even though it did not fit a guerrilla war. The measurement problem crossed the border intact. Schlight found reconnaissance the most disappointing Air Force activity in the South, and Clodfelter finds 7th Air Force's photo interpreters so swamped that pictures sat stacked in squadron corners. (Today's exercise put you on the Air Staff in July 1965, writing a strategy for General McConnell. Clodfelter's chapter II covers that exact month.)</p>
+        <p>Keep one question in mind while reading: was Rolling Thunder's problem the objective the airmen chose, or the war they were handed? Clodfelter answers it in chapter IV, and he lets neither side off. The exercise asked you for two divergent options. Opinion: his book suggests the Air Staff of 1965 really offered one, in two sizes. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Clodfelter, <i>The Limits of Air Power</i></p>
+
+      <article id="c-01">
+        <span class="kicker">Chapter by Chapter · Clodfelter, preface and chapter I, part 1</span>
+        <h3><a href="#c-01">Korea's Only Bombing That Bit Was Aimed at Rice</a></h3>
+        <p>Judge a bombing campaign by the war aim it served, and list the aims that demand restraint next to the ones that demand force. That is Clodfelter's whole method, and the preface states it plainly: positive objectives need military power, negative objectives need its limitation, and political controls flow directly from the negative ones. Chapter I then runs the method over World War II and Korea. In the first war there were no negative objectives at all. In the second there was one big one, and it shaped everything.</p>
+        <p>World War II shows what bombing looks like with nothing holding it back. Before the 3 February 1945 raid, Spaatz told Doolittle to hit oil if the weather was clear and otherwise the center of Berlin. Clouds settled it, and the raid killed 25,000 people. LeMay's fire raids burned sixty-six Japanese cities and killed 330,000 civilians. Korea was different because Truman's overriding negative objective was avoiding a world war. China stayed a sanctuary, the north side of the Yalu bridges stayed off limits, and interdiction and armed reconnaissance made up 47.7 percent of combat sorties. Communist defenses destroyed 1,041 FEAF aircraft. Then, in May 1953, F-84s hit the Toksan irrigation dam twenty miles north of Pyongyang. The flood washed out five bridges and six miles of railroad and covered twenty-seven miles of river valley. General Weyland, who had approved one raid reluctantly, admitted his surprise that it flooded "a hell of a lot of North Korea."</p>
+        <p>The weak seminar comment is "Political restrictions kept air power from winning in Korea." It is weak because it repeats the commanders' complaint without asking what the restrictions were for, and it treats the negative objective as an error instead of a war aim. The strong version: "Truman's negative objective, no world war, set the limits, and bombing only threatened the Communists when it hit something they could not afford to lose, the rice crop. Even then, Clodfelter credits the dams together with Eisenhower's atomic threat and the confusion after Stalin's death." Opinion: the heart of North Korea was agriculture, and the doctrine was aimed at its factories. That is a targeting error with a theory attached.</p>
+        <p>The strong version wins because it follows the chain past the flood:</p>
+        <ol class="qs">
+          <li>First order, the Toksan raid destroyed bridges, rail, and a valley's worth of rice land.</li>
+          <li>Second order, the Communists answered with their most intense propaganda campaign of the war; Dulles began delivering Eisenhower's atomic warning on 22 May, the Communist negotiators asked for a recess three days later, and on 8 June they accepted the UN position on prisoners.</li>
+          <li>Third order, the airmen drew the wrong conclusion. Military chiefs, Clodfelter writes, tended to view Korea as an aberration, and the doctrine that followed kept aiming at industry. The lesson that the more air power threatened an enemy's essential concerns, the better it worked, went unlearned.</li>
+        </ol>
+        <p>That chain is hard to rebut because it uses the airmen's own best Korean success to prove the author's point. If the dams worked because they hit what mattered, the factories failed for the same reason. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-02">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter I, part 2</span>
+        <h3><a href="#c-02">The Best Preparation for a Small War, According to the People Planning a Big One</a></h3>
+        <p>When a service routes its money, promotions, and doctrine through one mission, every other kind of war becomes a footnote to it. The second half of chapter I shows the Air Force doing exactly that between Korea and Vietnam. The service did notice limited war. It then decided that preparing for general war with the Soviet Union covered it, and the budget made sure nobody revisited the decision.</p>
+        <p>The numbers carry the chapter. America's nuclear arsenal grew from 1,750 weapons in 1954 to 26,500 in 1962. One historian's summary, quoted by Clodfelter, is that air planners were "making war fit a weapon" instead of the reverse. Manual 1-8, the strategic bombing manual, was dated 1 May 1954 and not revised until December 1965. It held that the fabric of modern nations was so interwoven that removing one element could collapse the whole. Clodfelter's dry gloss: "Most air commanders equated "modern" with "all."" LeMay stopped sending his war plans to the Joint Chiefs for review from 1951 on, and after his three years as Chief of Staff, three-fourths of the top Air Force officers in the Pentagon came straight from SAC. The Air Force cut tactical fighter wings to meet budget limits, and Bernard Brodie observed that "strategy wears a dollar sign." Even the fighters went nuclear: the F-105 was built to drop nuclear bombs and could not dogfight, which planners called irrelevant. (One way to fix a design flaw is to declare it out of scope.)</p>
+        <p>The weak seminar comment is "After Korea, the Air Force ignored limited war." It is weak because the author's own evidence contradicts it: Manual 1-2 distinguished general from limited war, and in 1957 a RAND analyst and an Air University colonel both urged more preparation for it. The strong version: "The Air Force saw limited war and answered it on paper. Manual 1-2 said the best preparation for limited war is proper preparation for general war, and SAC's budget and people kept that answer in place." Opinion: Vandenberg told the Air War College in May 1953 to spread the gospel, while admitting that claiming air power was all you need was "bunk." His audience kept the gospel and dropped the footnote.</p>
+        <p>The strong version wins because each link has a cost later in the book. First order, SAC got priority funding and the tactical force shrank, and the doctrine did not change for the next eight years. Second order, the F-105, the nuclear-attack fighter, flew more than 75 percent of Rolling Thunder's strike sorties and could not bomb in poor weather, so the war in the North was fought with an airplane designed for a different one. Third order, Manual 1-8 was revised in December 1965, nine months after Rolling Thunder began, so the Air Force went to Vietnam with a bombing manual written for the Soviet Union. That chain pre-empts the reply that doctrine is just paper: Clodfelter shows the paper deciding which airplanes existed. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-03">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter II</span>
+        <h3><a href="#c-03">Everyone Agreed to Bomb North Vietnam. Nobody Agreed Why</a></h3>
+        <p>A weapon that serves every adviser's purpose cannot be judged against any one of them, so nobody can say when it has failed. Chapter II, on late 1963 to July 1965, argues that Rolling Thunder was exactly that kind of compromise. The positive objective was fixed early: NSAM 288, signed 17 March 1964, called for an independent, non-Communist South Vietnam and stayed the goal until March 1968. The negative objectives were just as firm. Johnson feared Chinese or Soviet intervention, wanted to protect the Great Society, and ruled out actions that threatened North Vietnam's survival. The result was gradual response.</p>
+        <p>The advisers' memos show the split. McGeorge Bundy wrote that the real targets were in the South, in the minds of South Vietnamese and Viet Cong cadres. McNaughton saw bombing as a substitute for a competent Saigon government. Rusk wanted bargaining leverage. McNamara wanted to break Hanoi's will before its country was destroyed. The Joint Chiefs wanted a sharp blow, ninety-four targets in sixteen days, and Johnson said he "did not wish to enter the patient in a 10-round bout" when the patient could not last one. On 16 February 1965, Bundy drafted a cable to Ambassador Taylor saying the President "has concurred" in continued bombing. Johnson changed it to say the advisers thought he "will concur in" it. Bundy reported that McNamara kept saying he had to know what the policy was so he could give orders. The State Department's White Paper of 27 February was muddled enough that William Bundy later called it a "lousy job," which happened to be what the President wanted.</p>
+        <p>The weak seminar comment is "Johnson's gradualism was indecisive." It is weak because it describes instead of arguing, and Clodfelter explicitly rejects the officers' view that the campaign was a series of fits and starts. The strong version: "Gradual response was carefully orchestrated, but the orchestra was playing four scores at once. Each adviser backed the bombing because he expected it to deliver his own missing ingredient for a stable South." Opinion: a campaign with four purposes can never fail by anyone's measure, which is a lovely feature in a memo and a terrible one in a war.</p>
+        <p>The strong version wins because the split had consequences on a timetable. First order, Johnson ordered Rolling Thunder on 13 February, but a coup attempt and the monsoon pushed the first strike to 2 March, and delays had eaten so many mission numbers that the opener was called Rolling Thunder 5. Second order, the independent air campaign lasted about five weeks: on 6 April NSAM 328 moved the Marines toward offensive operations, and by July McNamara wanted sorties raised only from 2,500 a month to 4,000 while the weight of the war shifted to ground troops. Third order, the epilogue says Johnson's team never agreed on what bombing was for and kept adding reasons after the bombs fell, so no one could ever say the campaign had missed its mark. That chain closes off the defense that gradualism was a coherent signal, since a signal needs one sender.</p>
+        <p>If a campaign has five purposes, which one would you have measured in 1966? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-04">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter III, part 1</span>
+        <h3><a href="#c-04">The Oil Raids Hit Everything Except the Problem</a></h3>
+        <p>When doctrine names the enemy's vital center before anyone studies the enemy, each failed strike produces a new vital center instead of a new question. The first half of chapter III shows the air chiefs fighting Rolling Thunder with World War II's playbook against a guerrilla enemy with a small economy. In August 1964, LeMay's planners listed ninety-four targets and estimated that a "severe" campaign could destroy them all in sixteen days. Johnson picked targets instead at his Tuesday White House lunches, with no military officer at the table until Wheeler joined in late 1967. The phases rolled on: interdiction in late 1965, then oil in 1966.</p>
+        <p>The oil campaign is the clearest test. The Joint Chiefs noted that the North had imported 170,000 metric tons of petroleum in 1965 and figured that wrecking its storage would take 416 sorties and cause forty-four civilian casualties. At the National Security Council on June 22, 1966, Wheeler told Johnson the strike would not stop infiltration but would put another ceiling on it. Johnson asked what the results would be if the general's dreams came true, and Wheeler said it would start to bite in sixty to ninety days. Then the President asked about Chinese and Soviet intervention: "Are you more sure than MacArthur was?" He ordered the raids anyway, with hand-picked crews and a ban on starting on Sunday, June 26. The Wall Street Journal printed the details on June 24, Johnson canceled the attack, and then he un-canceled it. The bombs fell on June 29, the Haiphong storage area looked 80 percent destroyed, and General Gilbert Meyers called it the most important strike of the war. (Grand strategy, scheduled around the Sabbath and the morning paper.)</p>
+        <p>The weak seminar comment is "The oil raids failed because Johnson waited too long to approve them." It is weak because it asserts a counterfactual and ignores the author's evidence that oil was never the North's bottleneck. The strong version: "The raids were accurate and irrelevant. By the end of July the Defense Intelligence Agency found 75,000 metric tons of storage left, more than enough, and the Jason study estimated that only 5 percent of the North's oil went to truck infiltration." Opinion: precision against the wrong target is still a miss, just a photogenic one.</p>
+        <p>The strong version wins because the chain runs from the strike to the next mistake:</p>
+        <ol class="qs">
+          <li>First order, the raids destroyed most of the fixed storage they aimed at.</li>
+          <li>Second order, the North had already dispersed its fuel, and McNamara, after the Jason study, never again recommended intensifying the air war; he turned to a barrier of wire, mines, and sensors instead.</li>
+          <li>Third order, the air chiefs went back to their doctrine for new targets and found power plants and industry. The belief that bombing capped infiltration survived until Tet, when about 70,000 troops struck thirty-six of the South's forty-four provincial capitals.</li>
+        </ol>
+        <p>That chain is hard to rebut because every link comes from the government's own analysts. Clodfelter's verdict is that "air commanders had molded the war to suit their doctrine." The oil raids are his first exhibit, and the power plants are his second. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-05">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter III, part 2</span>
+        <h3><a href="#c-05">The Lights Were Never Supposed to Go Off, Said the Memo Written Afterward</a></h3>
+        <p>To find a campaign's real objective, read the memo written before the strikes and the one written after, and see what changed. The second half of chapter III, from October 1966 to Tet, shows Clodfelter catching officials as they rewrite their goals. After the oil campaign failed, the Joint Chiefs laid out Rolling Thunder 52 on 8 November 1966. It targeted eight major power plants, and attacks on four canal locks were meant to "exert desirable psychological pressures on both leaders and population." In plain terms, the chiefs had decided to go after North Vietnamese will directly. Johnson approved it on 12 November at his Texas ranch.</p>
+        <p>The record after that is a run of bad timing and worse weather. Hanoi hinted at talks in Warsaw on 6 December, then skipped the meeting after American aircraft hit targets near Hanoi on 2 and 4 December. Johnson curtailed the campaign and later expanded it again, with a Harris poll showing 67 percent public support. By 21 March 1967 the monsoon had canceled all but four of fifty-one strikes scheduled against the Thai Nguyen steel works. On 5 May, Wheeler told the President that the goal had never been "to turn the lights off" in the cities, only to deny power to war-supporting industry. Aircraft finally hit Hanoi's power station on 19 May. Clodfelter pairs Wheeler with Weyland, who described Korea's dam raids as interdiction aimed at rail embankments. Both men could order an attack on morale. Neither could say so afterward.</p>
+        <p>The weak seminar comment is "Wheeler changed his story." It is weak because it is a gotcha that stops at the contradiction and never says why it matters. The strong version: "The chiefs aimed Rolling Thunder 52 at Hanoi's will, but doctrine and conscience would not let them defend an attack on will, so they redescribed it as military. An objective nobody will admit is an objective nobody will measure." Opinion: the second memo is usually more modest than the first, and it is usually the one that ends up in the official history.</p>
+        <p>The strong version wins because the unadmitted objective set the course for the next year. First order, the power plants were hit, and the spring offensive against industry ended on 19 May. Second order, the civilians stopped seeing Rolling Thunder as a way to break morale. William Bundy redefined its aim as making infiltration "more costly and difficult," and Johnson's July directive was, in a phrase Clodfelter quotes, "a decision to postpone the issue." By August the chiefs' combined list held 427 fixed targets, 259 struck and 138 off limits, and two fighters attacking the Northeast Railroad strayed into China and were shot down. Third order, a December 1967 Jason study found the bombing had made the North's transport net more redundant, and Tet shattered the airmen's claim that Rolling Thunder limited Communist operations. Wheeler then asked to strike everything outside a 3.5-mile radius of Hanoi's center, and Clark Clifford's review concluded that more bombing could serve only to break the leaders' will, with little chance of success. The argument is hard to rebut because it ends where the chiefs started: with will as the target, admitted at last, after it was too late to matter. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-06">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter IV, part 1</span>
+        <h3><a href="#c-06">Not Every Handcuff Came From the White House</a></h3>
+        <p>Before blaming anyone for a campaign's limits, sort them by who imposed them. Chapter IV, on Rolling Thunder's restraints from 1965 to 1968, uses the preface's three categories: political, military, and operational controls. Its argument is that the political ones get the blame and the other two did at least as much damage, along with a shared failure by civilians and generals to grasp what kind of war the enemy was fighting.</p>
+        <p>The political controls were real. Commanders needed presidential approval to strike within 30 miles of Hanoi's center, 10 miles of Haiphong's, or 30 miles of China, and Johnson halted the bombing eight times. B-52s flew only 141 Rolling Thunder missions, most near the demilitarized zone. The military controls were homemade. Nobody commanded the whole air war; the Air Force ended up with a hybrid "7/13th Air Force" in Thailand, and one staff officer said "Command arrangements were a mess." The Navy and Air Force divided the North into route packages and competed over sortie counts. Air leaders never proposed breaching the Red River dikes, and Wheeler explained, "We tried to be sensible men." The operational controls were the enemy and the sky. By August 1967 the North had about two hundred SAM sites, seven thousand guns, and eighty MiGs, and American losses over the North rose from 171 aircraft in 1965 to 280 in 1966 and 326 in 1967. In 1966, only 1 percent of 81,000 sorties hit the Joint Chiefs' fixed targets, with weather a key reason. And when Washington pointed 7th Air Force to a "missile propellant storage area" on a single reconnaissance frame, General John Ryan of Pacific Air Forces said only "Bomb it." The first strike hit the wrong village. The second destroyed the right one. There was no propellant.</p>
+        <p>The weak seminar comment is "Johnson tied the pilots' hands." It is weak because it names one category of control and ignores the author's evidence on the other two. The strong version: "Johnson's political controls were one of three kinds. The services' own command split, their reluctance to hit the dikes, and the North's defenses and monsoon limited Rolling Thunder as much as the White House did." Opinion: if your target list depends on the weather in a place that has a monsoon, the weather is part of the strategy.</p>
+        <p>The strong version wins because it explains what the complaint cannot. First order, the controls together kept most strikes off the fixed targets the chiefs wanted. Second order, the strain landed on the aircrews; an A-4 pilot's diary described a limited aircraft dropping limited ordnance on rare targets, and Clodfelter says the psychological cost "cannot be quantified" but belongs in the final assessment. Third order, after the war the commanders remembered only the political controls, and Admiral Sharp said air power had not failed, the decision makers had. Clodfelter's sorting shows why that verdict is incomplete. The argument pre-empts the "hands tied" reply by granting it and then showing the other two hands. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-07">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter IV, part 2</span>
+        <h3><a href="#c-07">Seven Trucks Beat 643,000 Tons</a></h3>
+        <p>Measure an interdiction campaign against what the enemy needs, not against what you destroy. The results section of chapter IV makes that point with the book's best arithmetic. Rolling Thunder's 643,000 tons destroyed 65 percent of the North's oil storage, 59 percent of its power plants, 55 percent of its major bridges, 9,821 vehicles, and 1,966 railroad cars. It cost the United States $6.60 to inflict a dollar of damage in 1965 and $9.60 in 1966. Clodfelter says the numbers gave little indication of the campaign's true impact.</p>
+        <p>The reason is on a single page. Almost 90 percent of Rolling Thunder's tonnage hit transportation targets, yet it did not significantly affect infiltration, because the war in the South was a guerrilla war. In August 1967, Hanoi had only 55,000 North Vietnamese Army troops in the South; the other 245,000 Communist soldiers were Viet Cong. Enemy battalions fought an average of one day in thirty and needed about 380 tons of supplies a day, of which only 34 tons had to come from outside the South. Seven trucks could carry that, less than 1 percent of what the North imported daily. Defense analysts estimated that unrestrained bombing plus mining would cut the North's import capacity only to 7,200 tons a day. In August 1965 the Joint Chiefs themselves said the flow south "is primarily a function of their own choosing." The North also adapted: about 500,000 laborers repaired rails, roads, and bridges, and supplies moved at night or in bad weather.</p>
+        <p>The weak seminar comment is "Rolling Thunder destroyed most of the North's oil storage and power plants, so it worked." It is weak because it confuses first-order effects with the outcome; destruction is not the same as an effect on the war. The strong version: "Even a perfect campaign would have left Hanoi 7,200 tons a day of import capacity to move a 34-ton requirement. The Communists chose how often to fight, so they chose how much they needed." Opinion: the bomb tonnage was impressive. The enemy's shopping list was not, and the shopping list won.</p>
+        <p>The strong version wins because it traces the campaign's effects past the craters. First order, the bombing wrecked fixed facilities and cost far more than it destroyed. Second order, Hanoi used the bombing to extract more aid from China and the Soviet Union, and Chinese laborers helped convert rail lines so Chinese cars could run on them; the campaign fostered the imports it meant to cut. Third order, the air leaders' lesson was General Momyer's axiom, don't get in a fight unless you are prepared to do whatever is necessary to win, and Sharp, Wheeler, and Moore echoed it. Clodfelter's reply is that the nature of the war, plus the commanders' own controls, meant Rolling Thunder could never give more than token support to Johnson's aims. Only two targets could have touched the North's war-making capacity, he adds, people and food, and even those would have done little in the South. The chain is hard to rebut because it rests on the Joint Chiefs' own 1965 admission.</p>
+        <p>If you remove every political control from 1965, which number on this page changes? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-08">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter V</span>
+        <h3><a href="#c-08">Linebacker I, or Hanoi Brought Tanks to a Bomb Fight</a></h3>
+        <p>Interdiction works when the enemy consumes a lot, and the enemy decides how much it consumes. Chapter V, on 1969 to October 1972, argues that Linebacker I succeeded with much the same doctrine and many of the same targets that failed in Rolling Thunder, because the war and the aims had changed. Nixon wanted an American exit that did not hand the South to an imminent takeover. American troops fell from 139,000 in January 1972 to 69,000 in April. Nixon went to Peking in February and booked a Moscow summit for May, and both Communist powers turned out to value détente more than a Hanoi victory. Their protests stayed verbal.</p>
+        <p>On 30 March 1972, Hanoi sent three divisions and two hundred tanks across the demilitarized zone. Nixon answered with airplanes: F-4s in theater rose from 185 to 374, and B-52s reached 210, more than half of SAC's fleet. (A planner on Guam recalled waiting for the island's northern end to sink.) The first raid on 10 May still flew as "Rolling Thunder Alpha," because the new name had not reached the field. Guided bombs changed the accuracy: at Son Tay, F-4s dropped three laser-guided bombs on three warehouses and hit all three, and at Lang Chi a flight wrecked the generator and left the dam fifty feet away untouched. The whole campaign dropped 155,548 tons, a quarter of Rolling Thunder's total. Overland imports fell from 160,000 to 30,000 tons a month, and mining cut seaborne imports from more than 250,000 tons a month to nearly zero. Sir Robert Thompson put it best: "You cannot refuel T-54 tanks with gasoline out of water bottles carried on bicycles."</p>
+        <p>The weak seminar comment is "Linebacker worked because Nixon finally took the gloves off." It is weak because it credits one variable and ignores the author's own list. The strong version: "Clodfelter gives four reasons: détente removed the fear of Chinese or Soviet escalation, the war had gone conventional, Kissinger traded concessions while the bombs fell, and Nixon's goals were small. The Easter Offensive was, in his words, tailor-made to suit the Air Force's bombing doctrine." Opinion: the Politburo finally attacked in the format the Air Force preferred, and the Air Force took the credit for the Politburo's choice.</p>
+        <p>The strong version wins because it explains both the success and the trouble after it:</p>
+        <ol class="qs">
+          <li>First order, the bombing and mining choked the fuel and ammunition a conventional army needs, and American intelligence estimated 120,000 Communist casualties from air power by August.</li>
+          <li>Second order, South Vietnamese divisions retook Quang Tri on 15 September, and on 8 October Le Duc Tho dropped Hanoi's demand for a coalition government in Saigon.</li>
+          <li>Third order, success made the ally harder to manage. Linebacker convinced President Thieu that more bombing could win outright, so he balked at the October draft, and many commanders credited the result to reduced political controls alone.</li>
+        </ol>
+        <p>That chain is hard to rebut because it sets the stage for December. "The gloves came off" cannot explain why Thieu said no. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-09">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter VI</span>
+        <h3><a href="#c-09">Eleven Days, Fifteen Bombers, and a Largely Cosmetic Peace</a></h3>
+        <p>Judge a coercive campaign by what changed in the agreement, not by how fast the other side came back to the table. Chapter VI argues that Linebacker II had two targets, Hanoi's will to keep stalling and Saigon's fear that America would walk away. Nixon's clock was Congress, which he expected to end the war when it returned in January. On 13 December Hanoi's negotiators slipped seventeen changes into a text that was supposedly finished. Nixon sided with General Haig's call for B-52s over Kissinger's preferred fighter raids, told the public nothing, and sent Thieu a written ultimatum. Hanoi got the bombs. Saigon got the letter.</p>
+        <p>The campaign is also a lesson in who should plan the routes. On 18 December, 129 B-52s went north, and SAMs shot down three. SAC planning needed a forty-two-hour lead time, so the second night copied the first; it lost no bombers, planners took that as vindication, and General Meyer kept the same plan for the 20th, when six B-52s fell. Nixon was furious. Meyer then cut the daily rate, varied the routes, and lost none from the 22d to the 24th. On 26 December, 120 B-52s hit ten targets in fifteen minutes and lost two, and the next morning Hanoi agreed to resume talks. Altogether B-52s flew 729 sorties and dropped 15,237 tons; the North fired about a thousand SA-2s, downed fifteen B-52s, and had run out of missiles by 29 December. At Andersen, Major Robert Clark said that by the second day "you could smell the fear," and sick call rose from thirty or forty a day to fifty-five or sixty.</p>
+        <p>The weak seminar comment is "Linebacker II brought Hanoi back to the table in eleven days, which proves bombing works." It is weak because it treats a first-order effect as the outcome and ignores the author's verdict on the terms. The strong version: "Clodfelter calls Linebacker II a primary reason for the settlement, but he also writes that the January agreement's differences from October's were largely cosmetic. The bombing bought Thieu's signature and a deal before Congress returned, not better terms from Hanoi." Opinion: eleven days and fifteen bombers to get the October deal back is a strong result, as long as nobody reads the October deal.</p>
+        <p>The strong version wins because it follows the bombs to Saigon and Washington. First order, the raids wrecked supplies, exhausted the SAMs, and made the threat of more bombing believable. Second order, the campaign enraged Congress, where the House Democratic Caucus voted 154 to 75 to cut off war funds, and Nixon used that fury on Thieu, warning that Congress would cut off Saigon if he refused; Thieu sent his foreign minister to Paris on 20 January. Third order, Senator Goldwater hailed the strategic bombing lesson and many air commanders concluded a campaign like this in spring 1965 would have won; in March 1975 the North's army crossed the zone and there was no American response. The chain is hard to rebut because it accepts that the bombing worked and then asks what, exactly, it bought. Clark's verdict on "peace with honor" was shorter: "The fact that we retreated nullifies the words." <span class="by">(S)</span></p>
+      </article>
+
+      <article id="c-10">
+        <span class="kicker">Chapter by Chapter · Clodfelter, chapter VII, the epilogue</span>
+        <h3><a href="#c-10">Any Two Weeks You Like, and Other Postwar Grades</a></h3>
+        <p>Before deciding what your air force proved, decide what kind of war it proved it in. The epilogue opens with Clausewitz on exactly that point and closes the book's case: air power's political payoff depends on the war it is thrown into, and technology gave America a vision of air power focused on lethality instead of political effect. Johnson's team never agreed on what bombing was for; on the eve of Rolling Thunder, Bundy, Taylor, Rusk, and McNamara each gave a different reason. Nixon wanted less, relied on Kissinger alone, and had détente to remove the danger of a wider war. His bombing worked better because it threatened what Hanoi actually needed.</p>
+        <p>Clodfelter then takes apart the claim that an unleashed 1965 campaign would have won. Before Tet, the Viet Cong made up five-sixths of the Communist army, fought about one day in thirty, and needed only 34 tons a day from outside, which no bombing could stop. Eisenhower's nuclear threat worked in 1953 because it promised Communist defeat in Korea; ruining North Vietnam promised Saigon nothing, since the Viet Cong could ignore Hanoi. The air chiefs would not have flattened Hanoi anyway, he argues, because their doctrine aimed at industry and their consciences balked at killing civilians. In 1972, Tet had gutted the Viet Cong and the Easter Offensive threw the North's army into the open. For the first time, bombing met Clausewitz's principle of polarity: it struck something essential to a Communist victory. Laser-guided bombs and good flying weather helped.</p>
+        <p>The weak seminar comment is "Linebacker II proves an unrestricted campaign in 1965 would have won." It is weak because it compares two different wars as if they were one and ignores the author's evidence on the Viet Cong war of 1965. The strong version: "In 1965 the enemy was mostly guerrillas needing 34 tons a day; in 1972 it was an army running tanks across a border. The same bombs met two different targets." Opinion: Curtis LeMay, asked in July 1986 whether America could have won, answered "In any two-week period you want to mention." That is confidence without a footnote.</p>
+        <p>The strong version wins because the epilogue traces what the wrong lesson did to the institution. First order, Linebacker II became the proof text, and Admiral Sharp said air power did not fail, the decision makers did. Second order, Harry Summers's On Strategy, taught at Air Command and Staff College and the Air War College, told the same story and skipped the fact that most Communist troops in the South before 1968 were Viet Cong. Third order, Air Force Manual 1-1 still listed ten vital targets, six of them industrial, and unlike the generals after World War I, the post-Vietnam air leaders proposed no sweeping change. Clodfelter's last warning is that political controls are a standing feature of modern war, and that until airmen accept that air power is unlikely to bring cheapness or victory in a guerrilla war, "the prospect of an aerial Verdun will endure." The chain is hard to rebut because the institution wrote it down in its own manual.</p>
+        <p>Which of the ten vital targets in Manual 1-1 would have mattered against the Viet Cong of 1966? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · five earlier books against Clodfelter</span>
+        <h3><a href="#r1">Five Old Friends Who Saw Rolling Thunder Coming</a></h3>
+        <ol class="qs">
+          <li><b>Gaddis, containment.</b> American Cold War strategy swung between meeting every threat everywhere and choosing the terrain and tools, driven mostly by how leaders saw their means. The link: Gaddis says calibrated escalation in Vietnam produced effects "precisely opposite from those intended," and Clodfelter supplies the mechanism, four advisers and four purposes for one campaign.</li>
+          <li><b>Crane, airpower in Korea.</b> The Air Force could not strike the real sources of enemy power in Korea, tried interdiction and then air pressure, and took the ambiguous ending as success. The link: both authors find the Air Force filing Korea as an aberration, and Clodfelter's chapter I shows the doctrine that resulted.</li>
+          <li><b>Zhang, the Chinese air force in Korea.</b> The Chinese air force fought hastily built, held back by a cautious Soviet patron, and drew a defensive doctrine from the war. The link: Zhang credits Stalin's death, not air pressure, with the armistice breakthrough. Clodfelter credits the dams only alongside the atomic threat and the confusion after Stalin's death, which makes the two books a useful pair for a debate on coercion.</li>
+          <li><b>McDougall, the space race.</b> Sputnik made the state the manager of technological change, and the race for security through technology risks eroding what it protects. The link: Clodfelter lists Sputnik among the shocks that pushed the Air Force toward nuclear war planning in the decade before Vietnam.</li>
+          <li><b>Schlight, the war in the South.</b> The Air Force did close air support well but had no war objective of its own and no reliable way to show results. The link: the same measurement failure ran north of the border, where 7th Air Force could not count what the bombing achieved.</li>
+        </ol>
+        <p>Opinion: four of the five would tell Clodfelter the Air Force was answering the last war's question. The fifth, Zhang, would add that the other side was doing the same. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Clodfelter's page numbers are ebook pages from the PDF on file (the [[PAGE n]] markers in books\clodfelter); the edition is reflowed and has no printed page numbers, so they will not match the print edition.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Nixon on Meet the Press, April 10, 1988; air commanders share the view; staff sergeant's Stars and Stripes letter: Clodfelter, preface, ebook p. 8.</li>
+          <li>Nixon's two limited aims; free hand from China and the Soviets; conventional war vulnerable to air attack; combination absent until 1972: Clodfelter, preface, ebook pp. 8–9.</li>
+          <li>Supreme test is contribution to war aims; Clausewitz; positive and negative objectives; political controls flow from negative objectives: Clodfelter, preface, ebook p. 10.</li>
+          <li>Military and operational controls; evidence incomplete, sources classified, no Politburo archives: Clodfelter, preface, ebook pp. 10–11.</li>
+          <li>34 tons a day, one day in thirty: Clodfelter, ch. IV, ebook p. 152.</li>
+          <li>View once a minority, now widely held among airmen; technology as backdrop, feature or oversight: SAASS 628 syllabus, Seminar 6.</li>
+          <li>Laser-guided munitions and flying weather helped in 1972: Clodfelter, ch. VII, ebook p. 225. Same doctrine and many targets as Rolling Thunder: ch. V, ebook p. 165. Paul Doumer Bridge raid with guided bombs: ch. V, ebook p. 176.</li>
+        </ul>
+        <h3>Time plan, read for, seminar questions, people and terms</h3>
+        <ul>
+          <li>Chapter ebook ranges: preface 8–15; ch. I 16–54; ch. II 55–88; ch. III 89–133; ch. IV 134–163; ch. V 164–194; ch. VI 195–221; ch. VII 222–229 (books\clodfelter\00–07.txt).</li>
+          <li>Seminar 6 questions and framing: SAASS 628 AY27 syllabus, Seminar 6, "Vietnam War: Bombing the North."</li>
+          <li>Manual 1-8 dates: Clodfelter, ch. I, ebook p. 44. Campaign dates: Clodfelter, preface, ebook p. 10.</li>
+          <li>Wheeler at the June 22, 1966 NSC meeting: Clodfelter, ch. III, ebook pp. 114–115; Wheeler's 5 May 1967 memo: ebook p. 125.</li>
+          <li>Sharp as CINCPAC and operational director: Clodfelter, ch. III, ebook p. 90; his target list drove 1967 selection: ebook p. 124.</li>
+          <li>Tuesday lunch, no military representative until Wheeler: Clodfelter, ch. III, ebook p. 102; Wheeler a regular member from October 1967: ebook p. 129.</li>
+          <li>Meyer, SAC's commander; same plan for the 20th; revamped after the losses: Clodfelter, ch. VI, ebook pp. 204–206.</li>
+          <li>"Largely cosmetic": Clodfelter, ch. VI, ebook p. 217. Political controls a standing feature: Clodfelter, ch. VII, ebook p. 228.</li>
+          <li>The opinion on question five is ours.</li>
+        </ul>
+        <h3>Bridge from today's exercise</h3>
+        <ul>
+          <li>No war objective of its own, measured effort; "An enormous quantity of data described the Air Force's effort, but little its progress": Schlight, 290.</li>
+          <li>Reconnaissance the most disappointing activity: Schlight, 298.</li>
+          <li>Will and capability as the chiefs' objective, unchallenged by civilians: Clodfelter, ch. III, ebook pp. 89–90, 119.</li>
+          <li>Photo interpreters swamped; photos stacked in squadron corners: Clodfelter, ch. IV, ebook p. 148.</li>
+          <li>Exercise setting (Air Staff, July 1965, for McConnell, two divergent options): SAASS 628 syllabus, Seminar 5. The "one option in two sizes" line is our opinion, based on the JCS sharp blow and Options A to C: Clodfelter, ch. II, ebook pp. 63, 69–71. McNamara's July 1965 recommendations: Clodfelter, ch. II, ebook p. 86.</li>
+        </ul>
+        <h3>Preface and ch. I, part 1: Korea's Only Bombing That Bit Was Aimed at Rice</h3>
+        <ul>
+          <li>Positive and negative objectives; political controls flow from negative ones: Clodfelter, preface, ebook p. 10.</li>
+          <li>Unconditional surrender, no negative objectives: Clodfelter, ch. I, ebook p. 19.</li>
+          <li>Spaatz and Doolittle, oil or Berlin: ebook p. 21; clouds, 25,000 killed: ebook p. 22; sixty-six cities, 330,000 civilians: ebook p. 24.</li>
+          <li>Truman's negative objective: Clodfelter, ch. I, ebook p. 29; sanctuary, Yalu bridges, 47.7 percent: ebook p. 35; 1,041 aircraft: ebook p. 38.</li>
+          <li>Toksan raid, 13 May 1953, twenty miles north of Pyongyang; five bridges, six miles of railroad, twenty-seven miles of valley; Weyland's reluctance and quote: Clodfelter, ch. I, ebook p. 34.</li>
+          <li>8 June prisoner agreement: ebook p. 39; propaganda campaign, Dulles from 22 May, recess three days later: ebook p. 40; Stalin's death: ebook p. 41.</li>
+          <li>"Aberration": Clodfelter, ch. I, ebook p. 18. Heart of North Korea was agriculture; more menacing to essential concerns, more effective: ebook p. 53.</li>
+        </ul>
+        <h3>Ch. I, part 2: The Best Preparation for a Small War</h3>
+        <ul>
+          <li>Arsenal from 1,750 to 26,500: Clodfelter, ch. I, ebook p. 43.</li>
+          <li>"Making war fit a weapon"; Manual 1-8 dated 1 May 1954, revised December 1965; fabric of modern nations: Clodfelter, ch. I, ebook p. 44.</li>
+          <li>Tactical wings cut; Brodie, "strategy wears a dollar sign"; LeMay's plans not submitted from 1951: Clodfelter, ch. I, ebook p. 45.</li>
+          <li>Three-fourths from SAC; Manual 1-2 distinguished general and limited war: Clodfelter, ch. I, ebook p. 46.</li>
+          <li>"The best preparation for limited war is proper preparation for general war": Clodfelter, ch. I, ebook p. 47.</li>
+          <li>F-105 nuclear, unsuited for air combat, inability to dogfight considered irrelevant: Clodfelter, ch. I, ebook p. 48.</li>
+          <li>1957 RAND (Robert Johnson) and Air University (Hampton) studies: Clodfelter, ch. I, ebook pp. 49–50.</li>
+          <li>Doctrine unchanged for the next eight years: Clodfelter, ch. I, ebook p. 51. Vandenberg's May 1953 address, gospel and "bunk": ebook pp. 51–52; "modern" with "all": ebook p. 52.</li>
+          <li>F-105 flew more than 75 percent of strike sorties; could not bomb in poor weather: Clodfelter, ch. IV, ebook pp. 150–151.</li>
+          <li>Rolling Thunder began 2 March 1965: Clodfelter, preface, ebook p. 10. "Nine months" is our arithmetic.</li>
+        </ul>
+        <h3>Ch. II: Everyone Agreed to Bomb North Vietnam. Nobody Agreed Why</h3>
+        <ul>
+          <li>Compromise; NSAM 288, 17 March 1964, goal until March 1968: Clodfelter, ch. II, ebook p. 56.</li>
+          <li>Fear of intervention: ebook p. 58; Great Society, no threat to the North's survival: ebook p. 59.</li>
+          <li>Gradual response; fits and starts rejected; orchestrated but lacking harmony: Clodfelter, ch. II, ebook p. 60. Each adviser's own ingredient: ebook p. 63.</li>
+          <li>Ninety-four targets, sixteen days: Clodfelter, ch. II, ebook p. 67; "10-round bout": ebook pp. 67–68.</li>
+          <li>McNaughton: ebook p. 71; McGeorge Bundy on targets in the South: ebook p. 74; Rusk and McNamara: ebook p. 76.</li>
+          <li>16 February edit, "has concurred" to "will concur in"; McNamara needs to know the policy: Clodfelter, ch. II, ebook pp. 77–78.</li>
+          <li>White Paper, "lousy job," policy declaring itself through actions: Clodfelter, ch. II, ebook p. 79.</li>
+          <li>Ordered 13 February: ebook p. 75; first strike 2 March, Rolling Thunder 5: ebook pp. 79–80.</li>
+          <li>NSAM 328, 6 April: ebook p. 82; 2,500 to 4,000 sorties: ebook p. 86.</li>
+          <li>Advisers never agreed; more reasons after the bombs: Clodfelter, ch. VII, ebook p. 223.</li>
+        </ul>
+        <h3>Ch. III, part 1: The Oil Raids Hit Everything Except the Problem</h3>
+        <ul>
+          <li>World War II doctrine ill-suited to a guerrilla war: Clodfelter, ch. III, ebook p. 89.</li>
+          <li>Ninety-four targets, "severe" campaign, sixteen days: Clodfelter, ch. III, ebook p. 93.</li>
+          <li>Tuesday lunch, no military representative until Wheeler: ebook p. 102. Ceiling belief until Tet: ebook p. 101.</li>
+          <li>Interdiction phase: ebook p. 105; oil phase: ebook p. 109.</li>
+          <li>170,000 metric tons, 416 sorties, forty-four casualties: Clodfelter, ch. III, ebook p. 110.</li>
+          <li>June 22, 1966 NSC exchange and MacArthur line: ebook pp. 114–115; crews, Sunday ban, Wall Street Journal, cancellation: ebook pp. 115–116.</li>
+          <li>June 29 raids, 80 percent, Meyers; DIA 75,000 metric tons: Clodfelter, ch. III, ebook p. 116.</li>
+          <li>Jason 5 percent; McNamara never again recommended intensification; barrier proposal: Clodfelter, ch. III, ebook p. 117.</li>
+          <li>"Air commanders had molded the war to suit their doctrine": Clodfelter, ch. III, ebook p. 118. Shift to power and industry: ebook pp. 119–120.</li>
+          <li>Tet: 70,000 troops, thirty-six of forty-four capitals: Clodfelter, ch. III, ebook p. 131.</li>
+          <li>Dispersed oil in drums: Clodfelter, ch. IV, ebook p. 150.</li>
+        </ul>
+        <h3>Ch. III, part 2: The Lights Were Never Supposed to Go Off</h3>
+        <ul>
+          <li>Rolling Thunder 52, 8 November 1966, eight power plants, locks, "desirable psychological pressures": Clodfelter, ch. III, ebook p. 120.</li>
+          <li>Approved 12 November at the ranch: ebook p. 121.</li>
+          <li>Warsaw no-show after the 2 and 4 December raids; curtailment: ebook p. 122.</li>
+          <li>Harris poll 67 percent; Thai Nguyen, four of fifty-one strikes: ebook p. 123.</li>
+          <li>Wheeler's 5 May memo; Weyland comparison; 19 May Hanoi strike last of spring offensive: Clodfelter, ch. III, ebook p. 125.</li>
+          <li>William Bundy, "more costly and difficult": ebook p. 126; "a decision to postpone the issue": ebook p. 127.</li>
+          <li>427 targets, 259 struck, 138 prohibited: ebook p. 127; two fighters shot down over China, 21 August: ebook p. 128.</li>
+          <li>December 1967 Jason study: ebook p. 130; Tet shattered the conviction; Wheeler's 6 February request for everything outside 3.5 miles: ebook p. 131.</li>
+          <li>Clifford's review, only purpose to break the will: Clodfelter, ch. III, ebook p. 132.</li>
+        </ul>
+        <h3>Ch. IV, part 1: Not Every Handcuff Came From the White House</h3>
+        <ul>
+          <li>Three categories; failure to appreciate the enemy's kind of war: Clodfelter, ch. IV, ebook p. 134.</li>
+          <li>141 B-52 missions: ebook pp. 135–136; restricted zones and eight halts: ebook p. 136.</li>
+          <li>Missile propellant village, Ryan's "Bomb it": Clodfelter, ch. IV, ebook pp. 139–140.</li>
+          <li>Dikes, "We tried to be sensible men": ebook pp. 143–144.</li>
+          <li>7/13th Air Force, "Command arrangements were a mess": ebook pp. 145–146; route packages: ebook pp. 146–147.</li>
+          <li>SAMs, guns, MiGs, losses 171, 280, 326: ebook pp. 148–149. 1 percent of 81,000 sorties: ebook p. 150.</li>
+          <li>Tozer's diary; strain "cannot be quantified": Clodfelter, ch. IV, ebook p. 151.</li>
+          <li>Sharp, "Our air power did not fail us": Clodfelter, ch. VII, ebook p. 226.</li>
+        </ul>
+        <h3>Ch. IV, part 2: Seven Trucks Beat 643,000 Tons</h3>
+        <ul>
+          <li>643,000 tons; 65, 59, 55 percent; 9,821 vehicles, 1,966 railroad cars: Clodfelter, ch. IV, ebook p. 151.</li>
+          <li>$6.60 and $9.60; 90 percent on transportation; 55,000 NVA, 245,000 Viet Cong; one day in thirty; 380 and 34 tons; seven trucks, under 1 percent; 7,200 tons; "primarily a function of their own choosing"; aid from China and the Soviets, rail conversion: Clodfelter, ch. IV, ebook p. 152.</li>
+          <li>500,000 laborers: ebook p. 149; night and bad-weather movement: ebook p. 150.</li>
+          <li>People and food: Clodfelter, ch. IV, ebook p. 158.</li>
+          <li>Momyer's axiom; Sharp, Wheeler, Moore; token support: Clodfelter, ch. IV, ebook p. 163.</li>
+        </ul>
+        <h3>Ch. V: Linebacker I</h3>
+        <ul>
+          <li>Same doctrine and targets; Nixon's limited aim: Clodfelter, ch. V, ebook p. 165. 139,000 to 69,000: ebook p. 166.</li>
+          <li>Peking, Moscow, détente, verbal protests: ebook p. 167.</li>
+          <li>30 March, three divisions, two hundred tanks; F-4s 185 to 374: ebook p. 170; 210 B-52s, island to sink: ebook p. 171.</li>
+          <li>"Rolling Thunder Alpha," Son Tay three for three: ebook p. 176; Lang Chi generator, dam fifty feet away: ebook p. 182.</li>
+          <li>155,548 tons; import reductions: Clodfelter, ch. V, ebook p. 184. Thompson's T-54 line: ebook p. 185.</li>
+          <li>120,000 casualties: ebook p. 187; Quang Tri 15 September: ebook p. 188; 8 October coalition demand dropped: ebook p. 180.</li>
+          <li>Four reasons; "tailor-made": ebook pp. 190–192; Thieu stiffened: ebook p. 192; commanders credited reduced controls: ebook p. 194.</li>
+        </ul>
+        <h3>Ch. VI: Eleven Days, Fifteen Bombers</h3>
+        <ul>
+          <li>Two aims, will and reassurance: Clodfelter, ch. VI, ebook pp. 195, 200–201; Congress as the clock: ebook p. 196.</li>
+          <li>Seventeen changes 13 December; Haig's B-52s over Kissinger's fighters: ebook p. 200; no public announcement: ebook p. 201; ultimatum to Thieu: ebook p. 202.</li>
+          <li>129 B-52s, three lost; forty-two-hour lead time; second night taken as vindication; Meyer kept the plan; six lost on the 20th; Nixon furious: ebook pp. 204–205; Meyer's changes, no losses 22–24 December: ebook p. 206; 26 December raid: ebook pp. 206–207; Hanoi agrees 27 December: ebook p. 207.</li>
+          <li>House Democratic Caucus 154 to 75: ebook p. 210; "smell the fear," sick call: ebook p. 211.</li>
+          <li>About a thousand SA-2s, fifteen B-52s: ebook p. 212; 729 sorties, 15,237 tons: ebook p. 213.</li>
+          <li>Primary reason for settlement; Congressional furor: ebook p. 214; threat of renewed bombing: ebook p. 215; "largely cosmetic"; SAMs exhausted: ebook p. 217.</li>
+          <li>Warning to Thieu: ebook p. 218; foreign minister to Paris, 20 January: ebook p. 219; Goldwater and the commanders' 1965 claim: ebook pp. 219–220.</li>
+          <li>Clark, "nullifies the words": ebook p. 220; March 1975: ebook p. 221.</li>
+        </ul>
+        <h3>Ch. VII: Any Two Weeks You Like</h3>
+        <ul>
+          <li>Clausewitz epigraph; lethality over political effect: Clodfelter, ch. VII, ebook p. 222.</li>
+          <li>Four advisers, four rationales; Nixon's narrower goals, Kissinger, détente: ebook pp. 223–224.</li>
+          <li>Five-sixths Viet Cong, one day in thirty, 34 tons, Eisenhower's threat: ebook p. 224; doctrine and conscience: ebook pp. 224–225.</li>
+          <li>Polarity, laser-guided munitions, flying weather; LeMay, July 1986: ebook p. 225.</li>
+          <li>Summers taught at ACSC and Air War College; Sharp's quote: ebook p. 226.</li>
+          <li>AFM 1-1, ten vital targets, six industrial: ebook p. 227; no sweeping change; political controls no anomaly: ebook p. 228; aerial Verdun: ebook p. 229.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Gaddis thesis: Gaddis, vii–ix, 302, 342–343; "precisely opposite from those intended": Gaddis, 246.</li>
+          <li>Crane thesis and lessons lost: Crane, 6–9, 170; "aberration": Clodfelter, ch. I, ebook p. 18.</li>
+          <li>Zhang thesis: Zhang, 6–8, 201–214; Stalin's death and the armistice: Zhang, 197; Clodfelter's pairing: ch. I, ebook pp. 40–41.</li>
+          <li>McDougall thesis: McDougall, 5, 13, 451; Sputnik among the pressures toward nuclear war planning: Clodfelter, ch. I, ebook p. 43.</li>
+          <li>Schlight thesis: Schlight, v, 289–290; 7th Air Force could not calculate tons shipped or destroyed: Clodfelter, ch. IV, ebook p. 148.</li>
+          <li>The closing opinion is ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>What is the difference between positive and negative objectives?</summary><p>Positive objectives can be reached only by applying force; negative ones only by limiting it, and political controls flow from the negative ones. <span class="pg">C pref., e10</span></p></details></li>
+          <li><details><summary>What did Manual 1-2 say was the best preparation for limited war?</summary><p>Proper preparation for general war. <span class="pg">C ch. I, e47</span></p></details></li>
+          <li><details><summary>How did Johnson edit Bundy's 16 February 1965 cable?</summary><p>He changed "the President has concurred" to the advisers thought "the President will concur in," avoiding a clear statement of policy. <span class="pg">C ch. II, e77-78</span></p></details></li>
+          <li><details><summary>What did the DIA find after the June 1966 oil raids?</summary><p>The North still had 75,000 metric tons of storage, more than enough for its needs. <span class="pg">C ch. III, e116</span></p></details></li>
+          <li><details><summary>How did Wheeler restate the purpose of the power plant raids on 5 May 1967?</summary><p>He said the aim was never to turn the lights off in cities, only to deny power to war-supporting industry, contradicting Rolling Thunder 52's psychological aim. <span class="pg">C ch. III, e120, e125</span></p></details></li>
+          <li><details><summary>What happened when Washington pointed 7th Air Force to a "missile propellant storage area" in 1966?</summary><p>Ryan said "Bomb it"; the first strike hit the wrong village, the second destroyed the right one, and there was no propellant. <span class="pg">C ch. IV, e139-140</span></p></details></li>
+          <li><details><summary>How many tons a day did Communist forces in the South need from outside before Tet?</summary><p>About 34, which seven trucks could carry, less than 1 percent of the North's daily imports. <span class="pg">C ch. IV, e152</span></p></details></li>
+          <li><details><summary>What four reasons does Clodfelter give for Linebacker I's success?</summary><p>Détente, a conventional war, Kissinger's negotiating skill, and Nixon's limited goals. <span class="pg">C ch. V, e190-192</span></p></details></li>
+          <li><details><summary>What happened to the B-52s on 20 December 1972, and why?</summary><p>Six were lost after SAC, bound by a forty-two-hour planning lead time and encouraged by a lossless second night, repeated the same plan; losses fell once Meyer varied the routes. <span class="pg">C ch. VI, e205-206</span></p></details></li>
+          <li><details><summary>What is Clausewitz's principle of polarity, as Clodfelter uses it for 1972?</summary><p>Bombing struck an objective essential to a Communist victory, the North's conventional army, for the first time in the war. <span class="pg">C ch. VII, e225</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>

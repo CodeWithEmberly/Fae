@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Review edition for an earlier book, written November 17 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Friday, October 30, 2026 · Review edition for Monday's decision exercise: Schlight (written November 17)</p>
+      <p class="toc-after"><a href="../">Archive of every edition</a> · <a href="../../map/">Course map</a></p>
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Schlight, <i>The War in South Vietnam</i></a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Questions to bring to the decision exercise</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar: McDougall to Schlight</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#s-01">Introduction: Built for Korea, Staffed by the Army, Watched From a Palm Tree</a></li>
+          <li><a href="#s-02">Ch. I: Plan 39 Lost Because Nobody Was Asking About China</a></li>
+          <li><a href="#s-03">Ch. II: Thirty Bombers, Half a Target Box, and No Enemy at Home</a></li>
+          <li><a href="#s-04">Ch. III: A Masterpiece of Staff Work, Strategy to Follow</a></li>
+          <li><a href="#s-05">Ch. IV: The Most Independent Division Called the Air Force for Gas</a></li>
+          <li><a href="#s-06">Ch. V: The Runway Moved, the Sortie Count Did Not</a></li>
+          <li><a href="#s-07">Chs. VI and VII: Momyer Got a Better Seat for Watching the Bombers</a></li>
+          <li><a href="#s-08">Chs. VIII and IX: Redefine Close Air Support, Move Two-Thirds of the War</a></li>
+          <li><a href="#s-09">Ch. X: Two Air Forces, One Valley, Settled by Headcount</a></li>
+          <li><a href="#s-10">Ch. XI (conclusion): Whoever Owns the Objective Owns the Scorecard</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Monday's decision exercise</span>
+        <h3><a href="#t1">Schlight, <i>The War in South Vietnam</i>: The Mission Nobody Wanted, Graded on a Scorecard Nobody Could Read</a></h3>
+        <p>John Schlight argues that South Vietnam made close air support, the Air Force's least favorite mission, its main job from 1965 to 1968, and that the Air Force did that job well without ever being able to show what it achieved. Before the war, he writes in the preface, close air support was unpopular because it "ceded much control of aircraft to ground commanders," and many airmen thought it the least efficient use of the air weapon. From April 1965 the first priority for every American aircraft in South Vietnam was the ground war there. By March 1968 the Air Force had flown what he calls "the largest, most sustained ground support campaign in the history of aerial warfare." It did so, his conclusion says, while it "possessed neither its own war objective nor enough reliable data to quantify the results." That is an unusual sentence to find in an official history with the Air Force's seal on it.</p>
+        <p>The book argues against two comfortable stories. One is that the Air Force simply did what MACV told it. Schlight shows a running fight over who controlled the airplanes: the Air Force wanted control centralized at MACV, the Army wanted it at the corps level, the Marines kept their own, and the Navy's planes were run from Hawaii. The other is the airman's complaint that ground commanders wasted air power. He prints the Air Force's own unflattering numbers, including 1966 reports in which only 3 percent of sorties struck enemy soldiers actually fighting allied troops. He also refuses to referee the old Army and Air Force feud with a stopwatch, because "statistics alone are inadequate to resolve the differences of opinion."</p>
+        <p>For Monday, the syllabus puts you on the Air Staff in July 1965. Gen. John P. McConnell wants an airpower strategy to meet the President's objectives, and the seminar splits into two groups whose options must differ in some concrete way: geographic focus, target sets, or centers of gravity. The syllabus frames the strategic question as how to preserve an independent, non-communist South Vietnam. The assigned reading, the introduction and chapters I and II, ends in June 1965, one month before your chair. Read it as the record of the options the Air Staff really had, including the one it had already lost. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Fifty-Six Assigned Pages, Then the Month You Are Sitting In</a></h3>
+        <p>The exercise assigns pages 1 to 56. Read those first, then chapter III, which covers July 1965 itself, then the conclusion for the verdict. Page numbers are the book's printed pages.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The introduction, pages 1 to 13 (who ran the advisory effort and why MACV was a unified command in name only), then chapter I, pages 20 to 33 (the jailed observer, Plan 39 against Plan 32, and the Honolulu conference that put the ground war first).</li>
+          <li><b>60 minutes.</b> Add chapter II, pages 35 to 56, especially 37 to 40 (McConnell's fixes and Westmoreland's air priorities), 43 to 47 (the demand surge and the monsoon offensive), and 49 to 54 (the first B-52 strike).</li>
+          <li><b>2 hours.</b> Add chapter III, pages 57 to 83 (the June request, the Air Staff's unanswered questions, Westmoreland's 133-item shopping list, and the July 22 White House meeting), and the conclusion, pages 289 to 293 and 309 (the verdict, the response-time arithmetic, and the turn to flexible response).</li>
+        </ol>
+        <p>Chapters IV to X can wait until after Monday. They happen after July 1965, and quoting them in the exercise is hindsight, which the instructors will notice. The lessons below cover them for review. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark Before You Brief the Chief</a></h3>
+        <ol class="qs">
+          <li><b>Introduction, pages 10 to 11.</b> Eighty percent of MACV staff work on Army matters, and Westmoreland's offer of more Air Force generals if the Air Force put all its aircraft under him. Watch what PACAF chose instead.</li>
+          <li><b>Chapter I, pages 21 to 23.</b> Plan 39, fifteen strike squadrons around China, against Plan 32, a ground war in the south. Note McConnell's estimate of more than five divisions to seal the north and his sixty-day test for air interdiction.</li>
+          <li><b>Chapter I, pages 31 to 33.</b> Honolulu on April 20 and Admiral Sharp's rule that the war in the south gets first call on every aircraft. Schlight says the priority lasted the whole war.</li>
+          <li><b>Chapter II, pages 37 to 40.</b> McConnell's proposals to speed up air support, Westmoreland's reasons for rejecting most of them, and the priority list that gave MACV a veto over bombing outside South Vietnam.</li>
+          <li><b>Chapter II, pages 50 to 54.</b> The first Arc Light strike on June 18, 1965: two bombers lost in a collision, about half the bombs in the box, no enemy found.</li>
+          <li><b>Chapter III, pages 62 to 65 and 69.</b> The Air Staff's questions nobody answered, the six-sorties-per-battalion planning factor, and Schlight's verdict that strategy was assumed to flow from the deployments.</li>
+        </ol>
+        <p>Look at the footnote on page 41 too. Schlight warns that helicopter and fixed-wing activity were not counted the same way, so the sortie rate was not always a fair comparison. The measurement problem starts on page 41 and is still unsolved on page 290. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Questions to Bring · for Monday's decision exercise</span>
+        <h3><a href="#t4">Four Questions Your Group's Brief Has to Answer</a></h3>
+        <p>The syllabus page for Seminar 5 gives a tasking and a timeline, not discussion questions: vectors at 0900, instructor approval of strategic options at 1000, presentations at 1430. These four are ours, built around the brief you will give, and each points to where the book helps.</p>
+        <ol class="qs">
+          <li><b>Which of the President's objectives can airpower serve, and which can't it?</b> Chapter I, pages 15 and 30 to 31 (Johnson's early reluctance to bomb the north, and the April judgment that Hanoi would respond more to failure in the south than to bombing); chapter III, pages 69 to 70 (the alternatives Johnson ruled out, and why).</li>
+          <li><b>Where is the center of gravity: Hanoi's will, the routes south, or the enemy's forces in South Vietnam?</b> Chapter I, pages 21 to 23 (Plan 39 and the sixty-day interdiction test); chapter II, pages 43 to 47 (the monsoon offensive); chapter III, pages 75 to 76 (the chiefs' three-pronged air strategy and McConnell's claim that only air power could defeat the guerrillas).</li>
+          <li><b>Who controls the airplanes in your option, and can you get that control in July 1965?</b> Introduction, pages 9 to 11; chapter II, pages 39 to 40 (Moore as only the "coordinating authority"); chapter III, pages 76 to 77 (Moore's job description and the Marines' first claim on Marine sorties).</li>
+          <li><b>How will McConnell know by December whether your option is working?</b> Introduction, page 13 (the Vietnamese had no way to measure results); chapter I, page 19 (no clear picture of what the raids accomplished); chapter II, pages 52 to 54 (Arc Light's thin follow-up); chapter III, page 65 (the "far from scientific" planning factor).</li>
+        </ol>
+        <p>Opinion: prepare question four. Both groups will have a target set, and the group that also has a measure of progress will be ahead of the real Air Staff. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>Gen. John P. McConnell.</b> Air Force Chief of Staff after LeMay retired on February 8, 1965; champion of Plan 39, and the boss you brief on Monday (page 21).</li>
+          <li><b>Gen. William C. Westmoreland.</b> MACV commander, who had led two airborne divisions and helped Maxwell Taylor's drive to enlarge the Army's role in deterrence (page 9).</li>
+          <li><b>Lt. Gen. Joseph H. Moore.</b> Commander of the 2d Air Division, boyhood friend of Westmoreland, and holder of a 1,216-mile-an-hour speed record in an F-105 (page 10).</li>
+          <li><b>Gen. Hunter Harris, Jr.</b> Pacific Air Forces commander, who kept watching for a wider war beyond Vietnam's borders (page 9).</li>
+          <li><b>Lt. Gen. William W. Momyer.</b> Seventh Air Force commander from July 1, 1966, and the Air Force's leading advocate of centralized control (page 139).</li>
+          <li><b>Nguyen Cao Ky.</b> Commander of the Vietnamese Air Force, then prime minister from June 18, 1965 (pages 12, 58).</li>
+          <li><b>Plan 32 and Plan 39.</b> The two contingency plans of early 1965: a ground effort in Vietnam, or air and sea power around China's edge (page 21).</li>
+          <li><b>Arc Light.</b> The B-52 strikes in South Vietnam, first flown on June 18, 1965 (page 51).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · McDougall to Schlight</span>
+        <h3><a href="#t6">From a Missile Gap to a Sortie Gap</a></h3>
+        <p>McDougall and Schlight describe the same habit in two settings: managing a contest by the numbers without saying what the numbers are for. McDougall's verdict on the space age is that "The objective of American technocracy was to avoid defining its objective," and he shows McNamara admitting that worst-case analysis bought a missile force "more than we require." Schlight's McNamara sized the air war in South Vietnam the same way. His analysts set fixed sortie rates per battalion, and Schlight warns those figures carried the seeds of becoming measures of effectiveness. Westmoreland's own planning factor of six sorties per battalion was, in Schlight's words, "a far from scientific number." Three years later the Air Force had a mountain of data and no objective of its own. (McDougall's satellites, at least, eventually counted the Soviet missiles. Nobody's camera ever counted the Viet Cong.)</p>
+        <p>Keep one question in mind while reading: if the Air Force in 1965 cannot say what its airplanes are for in South Vietnam, who will say it for them? Chapter II's priority list has the answer, and it is not the Air Force. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Schlight, <i>The War in South Vietnam: The Years of the Offensive, 1965–1968</i></p>
+
+      <article id="s-01">
+        <span class="kicker">Chapter by Chapter · Schlight, introduction</span>
+        <h3><a href="#s-01">Built for Korea, Staffed by the Army, Watched From a Palm Tree</a></h3>
+        <p>An organization fights the war it was built and staffed for, so read the org chart before the battle reports. Schlight's introduction covers the advisory years, 1955 to 1964, and shows the United States building South Vietnam's forces for the wrong war while keeping airmen mostly out of the planning room. One of the three policies guiding the advisory group came straight from Korea: shape South Vietnam's forces to stop a large invasion from the north, not subversion in the south. The Vietnamese Air Force got the minor jobs of airlift, paradrop, reconnaissance, and medical evacuation. Air support against an invasion would come from SEATO members outside the country. (It is a bold plan that outsources the air force.)</p>
+        <p>After 1956 the advisory group had 740 people, and 535 were Army while 68 were Air Force. The Air Force contingent then grew almost a hundredfold, to 6,600 people and 84 aircraft by early 1965, and as of January 1965 none of its jets could fly combat in South Vietnam. MACV's staff spent eighty percent of its effort on Army matters. The only Air Force general on it, the chief of plans, worked on long-range SEATO planning and had little to do with the war. Westmoreland offered more Air Force generals in key posts, but only if the Air Force put all its air resources under him, fighters in Thailand included. PACAF, watching for a larger war, refused. Schlight's verdict is that MACV stayed "a unified command in name only." The enemy had already adapted. A Viet Cong soldier would tie green khaki between two palm trees and lie in it, and the bent palms hid him from the spotter plane overhead.</p>
+        <p>The weak seminar comment is "The Army shut the Air Force out of MACV." It is weak because it ignores the author's own counterevidence: the Air Force was offered the seats and turned down the price. The strong version names the trade. PACAF chose control of its aircraft across the Pacific over influence on the staff that would plan the ground war, and Schlight says the Air Force lost a good deal of stature with the Army for not "joining the team." Opinion: the Air Force guarded its airplanes so well that it lost the room where their missions would be decided.</p>
+        <p>First order, planning ran on Army expertise, and two separate control systems grew up, a tactical air control system for Air Force and Vietnamese planes and an air-ground system for Army and Marine aviation at the corps headquarters. No unified system existed at the start of 1965. Second order, when MACV set its air priorities in April 1965, a staff Schlight calls "virtually devoid of air strategists" gained an effective veto over Rolling Thunder and the Laos programs. Third order, the conclusion says the helicopter question was settled before 1965, when the Air Force lost its bid for real representation at MACV's policy level, and the single manager fight ran until March 1968. Every link comes from the Air Force's own historian, which makes it hard to wave off as Army spin.</p>
+        <p>If PACAF had taken Westmoreland's deal, would its generals have shaped MACV's plans, or only signed them? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-02">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter I</span>
+        <h3><a href="#s-02">Plan 39 Lost Because Nobody Was Asking About China</a></h3>
+        <p>When planning runs ahead of decisions, the plan already on alert becomes the decision. Chapter I covers November 1964 to April 1965, and Schlight writes that contingency planning was running ahead of any American decision on an overall strategy. Events then pushed the United States "almost by default" into a ground war in the south.</p>
+        <p>After a November mortar attack destroyed five B-57s at Bien Hoa, and ARVN headquarters refused VNAF A-1s to a ground commander at Binh Gia, Westmoreland decided to rely heavily on air power. On January 27 he could use jets, but only in emergencies and with mission-by-mission approval from the Joint Chiefs, the ambassador, and the Vietnamese high command. Col. William Bethea at Bien Hoa had to carry a Vietnamese observer on every strike, and once took one out of jail, flew him, and returned him to confinement. The observer's real job, Schlight says, was "to lend legitimacy to the employment of U.S. firepower." Most limits fell on March 9. Meanwhile McConnell pushed Plan 39: a holding action in the south and fifteen strike squadrons in Taiwan, Okinawa, Japan, and Korea to deter China. His staff estimated it would take more than five divisions to seal the north at the 17th parallel, so he wanted air power to close the land routes, the Navy the sea routes, and about sixty days to see if it worked. The April Black Virgin raid dropped 816 tons in 417 sorties, and 1,200 South Vietnamese searchers saw no enemy. At Honolulu on April 20 the bombing strategy, "short-lived, and inadequately tested," gave way to the ground war.</p>
+        <p>The weak seminar comment is "McConnell was right, and Washington never gave airpower a chance." It is weak because it asserts a counterfactual without evidence and ignores the author's own counterevidence: Black Virgin found no enemy, and the CIA director wrote that the strikes had, if anything, "hardened their attitude." The strong version says Plan 39 answered a question nobody in charge was asking. Washington's intelligence played down the Chinese threat, while Westmoreland believed Binh Gia opened the war's final phase and the enemy was close to cutting the country in two from Qui Nhon to Pleiku. Opinion: a plan to deter China had trouble beating a plan to keep Saigon alive through the monsoon.</p>
+        <p>First order, Honolulu moved the main effort to the ground, with coastal enclaves and up to 82,000 Americans by September; the conferees agreed Hanoi would respond more to Viet Cong failure in the south than to bombing pain. Second order, Admiral Sharp told Westmoreland that "The first priority for all U.S. air assets" in South Vietnam was the war there; Rolling Thunder strikes that interfered would be cut, and Laos came last. Schlight says those priorities held for the rest of the war. Third order, the Air Force now owed close air support, a mission for which two decades of doctrine, procurement, and training had ill-prepared it, and the next three years became a story of adapting to "this alien environment." That chain pre-empts the reply that McConnell lost on the merits of bombing. He lost the argument over what question to ask, before anyone tested his answer.</p>
+        <p>Your Monday brief arrives three months after Honolulu. Do you reopen Plan 39, or design airpower for the war the President has already chosen? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-03">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter II</span>
+        <h3><a href="#s-03">Thirty Bombers, Half a Target Box, and No Enemy at Home</a></h3>
+        <p>Judge a weapon by the job it was given, not by the expectations its name creates. Chapter II, April to June 1965, is the chapter in which tactical air saved district capitals and the B-52 made its debut in the south. Schlight notes that the use of "strategic" aircraft had raised expectations, particularly among the press corps, and when the results fell short the journalists turned critical.</p>
+        <p>Westmoreland's priorities put troops in contact first and missions outside the country last. In early May the requests swamped a system with no effective central air manager, so Westmoreland canceled all bombing outside Vietnam and asked the Navy for ninety more sorties a day, and a carrier moved to a spot called Dixie Station. Hawaii was puzzled, since the enemy was dormant. Westmoreland blamed better targeting and "the self-generating effects" of having more aircraft. The monsoon offensive then justified the planes. At Ba Gia, 651 sorties were flown and over 2,000 flares lit the battlefield, and at Dong Xoai 644 strike sorties kept the enemy at bay. On June 18 came the first Arc Light. Political sources in Washington asked, twenty-six hours out, to move it up a day, and the embassy put a general aloft in a C-123. Typhoon tailwinds brought the bombers to the tankers seven minutes early, the lead cell turned, and two B-52s collided over the South China Sea. Twenty-seven bombed, dropping 1,300 bombs in thirty minutes, slightly more than half in the box. Search teams found no enemy and surprisingly little damage. The press debated the wisdom of "using a sledgehammer to kill gnats."</p>
+        <p>The weak seminar comment is "The first Arc Light was a sledgehammer to kill gnats." It is weak because it borrows the press's verdict and describes instead of arguing, and it skips Schlight's counterevidence: Westmoreland judged the strike one part of a combined operation, and Viet Cong defections rose afterward. The strong version puts the failure in finding the enemy and following up. The enemy had apparently learned of the mission through infiltration of South Vietnamese forces, the search teams spent four hours poking unenthusiastically through parts of the area, and the Air Staff complained about the small follow-up force. Opinion: you cannot grade a bomb on a target that left the night before.</p>
+        <p>First order, the strike missed an enemy who had gone. Second order, the Air Staff suspected Westmoreland wanted B-52s to pull air power south at the expense of the north, and McConnell shut that down: "If SAC hasn't learned to bomb in fifteen years of extensive training," his staff was not going to teach it in a few weeks. Third order, by August the missions were smaller and more frequent, five free bomb zones had ready target folders, the Joint Chiefs rather than the President approved strikes, and on August 2 the crews aimed by radar instead of a beacon for the first time. Yet McConnell agreed there were no truly good B-52 targets in the south and kept the bombers coming so Westmoreland would not fight only with ground troops and helicopters. That chain pre-empts the reply that Arc Light only needed practice. The aiming got better, and the target problem stayed.</p>
+        <p>If the reason to keep bombing was to keep the Army from forgetting the Air Force, what exactly was the target? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-04">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter III</span>
+        <h3><a href="#s-04">A Masterpiece of Staff Work, Strategy to Follow</a></h3>
+        <p>When the force list arrives before the strategy, the list becomes the strategy. Chapter III covers June to September 1965, the exact weeks the decision exercise puts you in. Schlight calls Westmoreland's July memo "a masterpiece of staff work," then notes that it never mentioned a strategy for using the forces it requested. The unspoken assumption, he writes, was that strategy would flow from the forces instead of deciding them.</p>
+        <p>Westmoreland's June 7 message asked for 58,000 more troops, including an airmobile division for the highlands. Premier Quat resigned, the ninth change of government since Diem, and Ky became prime minister on June 18. McConnell told the other chiefs that sending the division to Pleiku without a secure link to the coast would make them "criminally responsible," and the table went silent. His planners asked questions no theater commander could answer: will the troops be enough, will the reserves be called, can Hanoi be convinced it can't win? The answer, on July 20, was a shopping list of 133 items, not coordinated with CINCPAC. Its air arithmetic gave each non-Vietnamese battalion six sorties a day, "a far from scientific number," and each plane 1.2 sorties a day, so 44 battalions meant almost 15,000 sorties a month and 23 jet squadrons. On July 22 McConnell and the Navy's chief told the President the plan would be fruitless without concentrated bombing of the north, while the Army's chief backed Westmoreland in full. Johnson ruled out the alternatives one by one, and on July 28 he announced forces raising American strength from 75,000 to 125,000. MACV's formal concept arrived at the end of August, a month after the commitment.</p>
+        <p>The weak seminar comment is "Johnson ignored his military advisers." It is weak because it ignores the author's own counterevidence: the chiefs were split, and Schlight says none of the President's advisers convinced him of a better course, so he took Westmoreland's route while far from persuaded. The strong version says the military handed the President a divided recommendation and a force list in place of a strategy, so he decided by elimination. Opinion: that gap is the one your Monday brief is meant to fill. A group that answers the Air Staff's own questions will have done what the 1965 Air Staff did not.</p>
+        <p>First order, the President ruled out bombing the north into submission because the public would not accept it, ruled out leaving because it would damage American credibility, and ruled out the current course because it was failing. Second order, the planning factors became the plan. Six sorties per battalion sized the fighter force, and in 1966 McNamara's analysts used 150 sorties a month per battalion, figures Schlight says carried the seeds of becoming measures of effectiveness. Third order, the Air Force supported a war of attrition it had never favored. McConnell predicted in August that ground forces alone could not win and that the guerrillas could be beaten only from the air, even if that took four fighter-bombers on every Viet Cong squad. By 1968 the Air Force had no objective of its own to measure against. That chain pre-empts the claim that the generals were simply overruled. Their own arithmetic outranked them.</p>
+        <p>If six sorties per battalion was unscientific, what number goes on Monday's slide, and what is it a number of? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-05">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter IV</span>
+        <h3><a href="#s-05">The Most Independent Division Called the Air Force for Gas</a></h3>
+        <p>A successful test proves its own conditions, not a general rule, so write the conditions down next to the result. Chapter IV, September to December 1965, has the Air Force fighting with the planes and bases it had. Its central battle, the Ia Drang, was the first real test of the Army's airmobile division, the formation McConnell had predicted the Viet Cong would destroy. The division passed, with a great deal of outside help.</p>
+        <p>In October, at Plei Me, two North Vietnamese regiments and the Viet Cong attacked a camp 25 miles south of Pleiku held by 350 irregulars and a twelve-man American team. An advisor low on ammunition radioed the forward air controller overhead: "Do you have any influence?" Three cargo planes were circling, about to drop supplies, and the advisor agreed that was influence. For the first three days only air power stood between the garrison and the enemy, with almost 600 strikes in all. In the Ia Drang in November, eighteen B-52s diverted from a campaign farther south dropped over 900 bombs near the fighting, the first time the bombers were used in direct support of ground troops. In the critical week they averaged 23 sorties a day for each battalion, against a planning factor of 5, and a fully committed division might have needed 276 a day. Then the fuel ran low. The division's nearly 300 helicopters were down to 7,000 gallons against a daily need of 70,000, and General Kinnard asked the Air Force for help.</p>
+        <p>The weak seminar comment is "Ia Drang proved the airmobile concept." It is weak because it overgeneralizes from one case and ignores the author's own counterevidence. Schlight says the operation succeeded largely because of its hit-and-run nature, and Westmoreland afterward questioned whether the division had the firepower and endurance the war required. The strong version says Ia Drang proved airmobility as a joint system. The division's logistics chief told McNamara it could not look back to the port and forward to the fight at the same time, "so the Air Force was called in." Opinion: the Army's most self-sufficient division turned out to need the Air Force more than any other division did.</p>
+        <p>First order, fuel and firepower came from outside the division. An average of 300 tons a day was flown in, double the estimate, and Air Force C-130s and C-123s with some Australian Caribous carried 60 percent of it. Second order, Kinnard wrote that his division needed Air Force close air support, reconnaissance, and cargo planes even more than other divisions did, and that doctrine should have Air Force planes fly supplies from the depot to the brigades. Schlight says the battle moved the two services a step closer on doctrine. Third order, in April 1966 McConnell and the Army chief signed an agreement giving the Air Force the Army's fixed-wing transports and giving up the Air Force's claim to helicopters. The Marine seam stayed open. During Harvest Moon in December, Air Force controllers and Marine helicopters directed strikes into the same narrow area, and Westmoreland complained of three air forces in I Corps while each side defended its doctrine "with the fervor and exactitude of theologians." That chain pre-empts the claim that airmobility made Air Force support optional.</p>
+        <p>If the planning factor was five sorties and the battle needed twenty-three, which number was the fighter force built on? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-06">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter V</span>
+        <h3><a href="#s-06">The Runway Moved, the Sortie Count Did Not</a></h3>
+        <p>A planning number becomes a performance target unless someone stops it. Chapter V, January to April 1966, is titled "Settling in and Sorting Out," and its warning is about arithmetic. McNamara's analysts sized the air war with fixed sortie figures, and Schlight writes that such "scientific" calculations "bore the seeds, soon to be germinated," of becoming measures of effectiveness. A commander given a sortie rate could expect to be judged by it, and could be tempted to fly to the number when there were no good targets.</p>
+        <p>McConnell spent the quarter losing the strategy argument. He believed the United States was "playing to the enemy's strength" with a ground war, and by the end of February he concluded his hopes for a change were in vain. Admiral Sharp asked for 459,000 troops and gave General Harris a day and a half to comment. In March McNamara set 150 sorties a month for each Army maneuver battalion and 200 for each Marine battalion, which meant eleven new Air Force squadrons instead of sixteen. Then the bombs ran short. The Air Force canceled 233 sorties on April 7, 134 on the 8th, and 515 from the 11th to the 14th. Pressure from the Defense Secretary to keep sortie rates up, so the shortage would not become known, sent planes out with token loads. General Meyers recalled white phosphorus bombs that had "no relationship to the target at all." At Cam Ranh Bay, meanwhile, the north wind pushed the aluminum taxiway three feet south while landing traffic pushed the runway north, and crews moved it back by landing everyone to the south for three weeks. At least the runway responded to direction.</p>
+        <p>The weak seminar comment is "Sortie counts were a bad metric." It is weak because it is true but unarguable; everyone agrees, and nothing follows from it. The strong version names whom the metric served. Schlight notes that reporting effectiveness by sortie rate favored Navy planes, which flew lighter loads from carriers, and that Sharp was "wedded to sortie rates." The Air Force opposed partial loads because they put more pilots at risk to drop the same tonnage, and McConnell persuaded the Joint Chiefs to cut sorties instead. Opinion: a metric is often a budget argument wearing a lab coat. In plain terms, each service liked the number its own airplanes won.</p>
+        <p>First order, the planes flew token loads to protect a number. Second order, the services competed over the measure itself, and another course book confirms the pattern from outside. Gaddis reports that over North Vietnam, sortie rates drove allocations of fuel and ordnance, which produced a preference for small bomb loads and, during munitions shortages, sorties flown without bombs. Third order, by the end of 1966 the reporting fight had moved from how many sorties to what to call them, and by 1968 Schlight concludes that "An enormous quantity of data described the Air Force's effort, but little its progress." The new Seventh Air Force, meanwhile, controlled only about a third of the airplanes in South Vietnam, which led Schlight to remark, "One man's centralization was another's dispersion." That chain pre-empts the reply that the numbers were only bookkeeping. They changed what went on the airplanes.</p>
+        <p>If Sharp counted sorties and McConnell counted tons, who was counting the enemy? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-07">
+        <span class="kicker">Chapter by Chapter · Schlight, chapters VI and VII</span>
+        <h3><a href="#s-07">Momyer Got a Better Seat for Watching the Bombers</a></h3>
+        <p>In a fight over control, an aircraft belongs to whoever writes its tasking, whatever the org chart says. Chapter VI, May to December 1966, is titled "Setbacks for Centralized Air Power," and it reads like a scorecard. Lt. Gen. William Momyer took over the Seventh Air Force on July 1, 1966, a lifelong tactical airman convinced that air power works best under one commander, and he lost most of the fights to prove it. Chapter VII, "The 'Frontier' Spirit," argues that the airmen's ability to adapt mattered as much as tactics and doctrine.</p>
+        <p>C-130s carried two-thirds of the tonnage moved inside the country, but they belonged to a division in Japan, 2,400 miles away, and rotated in for two weeks at a time. Momyer asked for a C-130 wing based in Vietnam. PACAF and McConnell's analysts said no, and the Hercules stayed outside the country for the rest of the war. His deputy put it plainly: "We don't even do it in the Air Force." The B-52 fight went the same way. Momyer wanted two squadrons flying no more than 150 sorties a month against specific targets. Westmoreland used the bombers as long-range artillery and pushed toward 800 a month, an ordnance bill of half a billion dollars for 1967. In December the chiefs moved a small SAC liaison office from MACV to the Seventh Air Force and grew it from five planners to seventeen. Westmoreland accepted everything except the one point that mattered: planning strike requests stayed at MACV headquarters. In chapter VII, airmen at Bien Hoa shared one hot water heater among forty men while Momyer's Operation Spruce Up planted flowers, and the saying went, "Many flowers but no hot showers." The Seventh still kept 75 percent of its attack planes flying through 1966, above the 71 percent standard.</p>
+        <p>The weak seminar comment is "Momyer failed to centralize air power." It is weak because it describes the outcome instead of arguing about its cause. The strong version says Momyer lost the airplanes whose tasking someone else wrote. The C-130s answered to a command in Japan, and the B-52s' targets came from MACV planners, so the new SAC office gave him planners without the planning. Opinion: Momyer got a better seat for watching the bombers, which is not the same as driving them.</p>
+        <p>First order, B-52 use drifted toward area bombing on Westmoreland's terms, at a cost of half a billion dollars a year in ordnance. Second order, ground teams entered the target areas after only about 10 percent of the strikes, so the chiefs reported instead that 99.7 percent of the bombs planned were dropped. That is a fine statistic about bombers and an empty one about the enemy. Third order, each service graded itself on its own column. Chapter VII compares Navy planes, at 1.21 sorties a day to the Air Force's 0.93, with Air Force planes, at 1.21 tons per sortie to the Navy's 0.94, and Schlight calls ordnance the more important measure. That is a defensible call and also the Air Force's home-field statistic, the mirror image of chapter V, where sortie counts flattered the Navy. That chain pre-empts the excuse that Momyer just lacked persuasiveness; the structure decided the fight before he arrived.</p>
+        <p>If every service grades itself on the number its airplanes were built to win, who was measuring whether any of it hurt the enemy? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-08">
+        <span class="kicker">Chapter by Chapter · Schlight, chapters VIII and IX</span>
+        <h3><a href="#s-08">Redefine Close Air Support, Move Two-Thirds of the War</a></h3>
+        <p>When a category changes and the activity does not, the numbers are measuring the filing system. Chapter VIII covers air operations in 1966 and shows the Air Force doing the job and then failing to describe it. Chapter IX, on aircraft and munitions in 1967, shows an Air Force built for nuclear war re-equipping for this one in the middle of the fight.</p>
+        <p>The Air Force flew over 355,000 tactical sorties in South Vietnam in 1966, and only 74,000 were strikes. Through October, 77 percent of strike sorties were filed as "direct air support," a halfway category between interdiction and close support, and only 15 percent as close air support. A mere 3 percent, by the reports, struck enemy soldiers actually fighting allied forces. An F-100 squadron commander admitted that the line between the categories was left to individuals and an "untrue picture is presented." On November 1 the Seventh Air Force widened its definition of close air support, and two-thirds of the sorties switched columns while the Air Force flew exactly as before. The Army, for its part, asked for air in only one ground clash out of ten. The chapter's best scene is A Shau in March 1966, where Maj. Bernard Fisher landed his Skyraider on a camp's airstrip under fire, picked up the downed Maj. Dafford Myers, and took off. The camp was evacuated that evening anyway. Chapter IX supplies the hardware story. By 1964 the base for nonnuclear weapons was almost nonexistent, and the CBU-24 went from concept to the theater in nine months. Air Force doctrine, Schlight writes, had grown "like an idealistic youth" from theory to practice and was only now learning from experience.</p>
+        <p>The weak seminar comment is "Most Air Force strikes in 1966 were close air support." It is weak because it repeats a label as if it were a fact. The strong version reads the label. Before November only 15 percent of strike sorties were called close air support and 3 percent hit troops in contact, and afterward two-thirds were called close air support with no change in flying. Opinion: on November 1 the only thing that changed was the vocabulary.</p>
+        <p>First order, a definition moved sorties between columns. Second order, in February 1967 the Joint Chiefs, at the Air Force's urging, replaced "direct air support" with "air interdiction" in the reports, a change that brought the word the Air Force cared about back onto the page. Third order, the conclusion says that when MACV dropped "interdiction" from sortie reporting in 1966, the Seventh Air Force simply stretched close air support to cover some of it, and the data never measured progress. Chapter VIII also records the modest promise the Air Force kept making about interdiction: air power alone could not completely halt a determined enemy, only force him to divert enough energy that his attack weakened. Chapter IX explains the gap. Korea had been dismissed by most airmen as a temporary diversion from nuclear deterrence, so the bombs, fins, and racks had to be invented on the way. That chain pre-empts the reply that the reporting was just clerical. The categories decided which mission the Air Force could prove it was flying.</p>
+        <p>If a renamed sortie counts as a different mission, what would a renamed enemy count as? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-09">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter X</span>
+        <h3><a href="#s-09">Two Air Forces, One Valley, Settled by Headcount</a></h3>
+        <p>Beware the exceptional battle that writes the rules for the ordinary ones. Chapter X runs from January 1967 through March 1968 and argues two things. Close air support kept rescuing troops in the field, and divided control of aircraft in the north kept producing confusion until Khe Sanh forced a single manager. Schlight's own caution follows: Khe Sanh "was not typical of the conflicts in South Vietnam."</p>
+        <p>Junction City opened on February 22, 1967, with 845 paratroopers jumping from sixteen C-130s, and drew 5,002 fighter-bomber sorties and 126 B-52 sorties. On March 2 two F-4Cs misread a radio bearing and bombed the village of Lang Vei, killing 100 civilians. At Dak To in November, A-1Es walked their napalm in from a hundred meters to twenty-five, and the ground commander radioed, "The trees are burning over my head." Schlight judges that the enemy lost every border fight that fall and was "quite willing to exchange men for experience." At Khe Sanh, trucks on the roads around the base rose from 480 in September to 6,315 in December. Operation Niagara began on January 22, 1968. Admiral Sharp refused Momyer full control, so Momyer could direct and coordinate while the Marines kept the zones closest to the base, two air forces in one compressed area. The totals were over 24,400 fighter and B-52 sorties and 100,000 tons of ordnance, and the frontal assault never came. On March 7 Momyer got "mission direction" over Marine planes in I Corps, a phrase invented "to avoid the emotional overtones of operational control."</p>
+        <p>The weak seminar comment is "Khe Sanh proves airpower wins when it is centralized." It is weak because it overgeneralizes from one case and ignores the author's own counterevidence. Schlight says Khe Sanh was the first time the enemy offered the kind of target tactical air was best suited for. The strong version says Khe Sanh shows what massed air can do against a massed enemy, at a price. It took roughly half the air effort in South Vietnam for two months and gave the enemy a permissive environment to prepare a second offensive in May. Opinion: the battle that finally centralized air power was the one battle in the war that looked like the Air Force's textbook.</p>
+        <p>First order, the base held and the assault never came. Second order, the single manager arrived by headcount, not doctrine. Westmoreland's case rested on the Army outnumbering the Marines in I Corps two to one, which left the question open anywhere the Marines fought alone. Third order, the conclusion records that the March 1968 decision was quickly modified to return substantial control to the Marines, which "prevented a true test of the single manager concept" and reopened the debate after the war. That chain pre-empts the triumphal reading. Khe Sanh won the argument about who controls the airplanes for a few weeks, and only where the Army had more troops.</p>
+        <p>If Khe Sanh was the untypical battle, why should it decide how air power is commanded in the typical ones? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="s-10">
+        <span class="kicker">Chapter by Chapter · Schlight, chapter XI (conclusion)</span>
+        <h3><a href="#s-10">Whoever Owns the Objective Owns the Scorecard</a></h3>
+        <p>A service that fights for someone else's objective will be graded on someone else's scorecard. Schlight's conclusion closes the period in March 1968 with an audit. The 58,000 airmen in South Vietnam were 11 percent of the American military presence, yet the Air Force flew one and a quarter million combat and combat support missions, and its aircraft there grew from 84 to 1,085. With Thailand and the Pacific added, about one-third of the worldwide inventory was busy with this war. His verdict is that the Air Force had neither its own war objective in the south nor reliable data to measure its results. MACV set ground objectives and filed air under support, so the Air Force graded itself on readiness, response times, sorties, and tons.</p>
+        <p>A diverted fighter averaged twenty minutes from the call to its first bomb, and a scrambled one took twice as long, though no point in South Vietnam was more than fifteen minutes from the nearest jets. The rest of the time went to marking targets and briefing forward air controllers. Meanwhile a third of all firefights ended within fifteen minutes, half within thirty, and three-fourths within an hour. Even a twenty-minute response covered only fifty-five percent of engagements. The Air Force had cut its response time in half since 1965 and was justly proud of it, and the Army was still waiting. Results were hard to see. The canopy hid the targets, and pilots often reported "smoliage," smoke and foliage, as the only visible outcome. Schlight ranks reconnaissance the most disappointing Air Force activity of all, and notes the Air Force spent just $170,000 on aircraft gun research from 1959 to 1967.</p>
+        <p>The weak seminar comment is "The Air Force did its job well in South Vietnam." It is weak because it is true but unarguable, and it ignores the author's own counterevidence about what could and could not be measured. The strong version says the Air Force succeeded tactically and could not prove its strategic value, because it owned neither the objective nor the data. Opinion: "An enormous quantity of data described the Air Force's effort, but little its progress" belongs over the door of every operations analysis shop.</p>
+        <p>First order, air power was decisive against the 1965 offensive: 644 sorties saved Dong Xoai, and only air power held Plei Me for three days. Over the next two years 46,000 tactical strike sorties and 3,300 B-52 sorties supported 73 major ground offensives. Second order, with no objective of its own, the Air Force measured effort, and the reporting categories bent to fit the command arrangements. Third order, the war still changed the service. Air power succeeded in the south without threatening to widen the war, which moved the Air Force to "a qualified acceptance of flexible response," a watershed after two decades of nuclear-first doctrine. Crane had predicted the bill for skipping Korea's lessons; Schlight shows it being paid. That chain pre-empts the easy verdict that the Air Force failed in South Vietnam. It did the work and lacked the means to show what the work bought.</p>
+        <p>If the Air Force had owned an objective in South Vietnam, what would it have measured instead of sorties and tons? <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · four earlier books against Schlight</span>
+        <h3><a href="#r1">Four Old Friends Who Saw the Scorecard Problem Coming</a></h3>
+        <ol class="qs">
+          <li><b>Gaddis, containment.</b> American strategy swung between meeting every threat everywhere and choosing the ground and the tools, depending on how leaders saw their means. The link: in April 1965 McNamara told the chiefs there was "an unlimited appropriation available" for Vietnam, and Gaddis shows that sortie rates over the North became a competition between services. Schlight's token bomb loads in 1966 are the same competition on the ground.</li>
+          <li><b>Crane, Korea.</b> The Air Force could not reach the sources of enemy power, tried interdiction and then air pressure, and let an ambiguous ending convince it the war had worked. The link: Crane predicted another limited war in Asia would expose the same problems in doctrine, technology, and joint operations, and Schlight records that the forward air controller system built in Korea was dismantled after it and rebuilt for Vietnam with borrowed Army planes.</li>
+          <li><b>Zhang, the Chinese air force in Korea.</b> China's air force entered Korea hastily built and dependent on a Soviet patron, and the war left it with a defensive doctrine and a heroic myth. The link: both sides inflated their kill claims, and some American accounts now put the ratio near two to one. Schlight's pilots reporting "smoliage" are the jungle version of the same measurement problem.</li>
+          <li><b>McDougall, the space age.</b> The race after Sputnik made the state the manager of technological change, without ever defining what the race was for. The link: McDougall's reconnaissance satellites ended the missile gap by counting Soviet missiles from orbit, while Schlight calls reconnaissance the Air Force's most disappointing activity in South Vietnam. A camera that could count missiles in Kazakhstan could not find a man in a palm-tree hammock.</li>
+        </ol>
+        <p>Opinion: all four would tell Schlight's Air Force the same thing. Decide what you are trying to achieve before you start counting. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Schlight's page numbers are printed pages (printed page = PDF page minus 15; front matter in roman numerals). John Schlight, <i>The War in South Vietnam: The Years of the Offensive, 1965–1968</i> (Air Force History and Museums Program). McDougall's pages come from the running heads of the reflowed ebook (ebook pages); a range means the passage sits between two markers.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Close air support "ceded much control of aircraft to ground commanders"; least efficient use of the air weapon: Schlight, v (preface).</li>
+          <li>First priority for all U.S. air assets is the in-country effort: Schlight, 32–33.</li>
+          <li>"The largest, most sustained ground support campaign in the history of aerial warfare": Schlight, 289.</li>
+          <li>"Possessed neither its own war objective nor enough reliable data to quantify the results": Schlight, 290.</li>
+          <li>Air Force wanted centralized control at MACV, Army unity at corps level: Schlight, 11. Navy planes controlled from Hawaii; Marines joined grudgingly: Schlight, 295–296.</li>
+          <li>3 percent of sorties struck enemy soldiers engaged with allied forces, through October 1966: Schlight, 216.</li>
+          <li>"Statistics alone are inadequate to resolve the differences of opinion": Schlight, 293.</li>
+          <li>Exercise tasking (Air Staff, July 1965, McConnell, two divergent options by geographic foci, target sets, or centers of gravity); strategic question of preserving an independent, non-communist South Vietnam; reading is introduction and chapters 1–2 plus a document pack: SAASS 628 syllabus, Seminar 5.</li>
+          <li>Chapter II ends with events of late June 1965: Schlight, 55.</li>
+          <li>The "official history with the Air Force's seal" line is our opinion.</li>
+        </ul>
+        <h3>Time plan and read for</h3>
+        <ul>
+          <li>Chapter ranges: introduction 1–13; ch. I, 15–33; ch. II, 35–56; ch. III, 57–83; ch. IV, 85–112; ch. V, 113–138; ch. VI, 139–166; ch. VII, 167–192; ch. VIII, 193–222; ch. IX, 223–248; ch. X, 249–288; ch. XI, 289–309.</li>
+          <li>Eighty percent of staff effort on Army matters; Westmoreland's condition for more Air Force generals; PACAF's refusal: Schlight, 10.</li>
+          <li>Plan 32 and Plan 39, fifteen strike squadrons: Schlight, 21. Five divisions, sixty days: Schlight, 23.</li>
+          <li>Honolulu, April 20: Schlight, 31. Sharp's priority, lasting the war: Schlight, 33.</li>
+          <li>McConnell's proposals and Westmoreland's replies: Schlight, 37–39. Priorities and the effective veto: Schlight, 39–40.</li>
+          <li>First Arc Light: Schlight, 51–54.</li>
+          <li>Air Staff questions: Schlight, 62–63. Six sorties per battalion: Schlight, 65. Strategy to flow from forces: Schlight, 69.</li>
+          <li>Footnote on sorties versus tasks: Schlight, 41.</li>
+        </ul>
+        <h3>Questions to bring</h3>
+        <ul>
+          <li>Seminar 5 timeline (0900 vectors, 1000–1030 approval of strategic options, 1430–1530 presentations): SAASS 628 syllabus, Seminar 5. The four questions are ours.</li>
+          <li>Johnson resisted bombing the north: Schlight, 15. Hanoi more likely to respond to Viet Cong failure in the south: Schlight, 31. Johnson's elimination of alternatives: Schlight, 69–70.</li>
+          <li>Three-pronged air strategy; guerrillas defeated only from the air: Schlight, 75–76.</li>
+          <li>Moore as "coordinating authority": Schlight, 40. Moore's terms of reference; Marines' first claim: Schlight, 76–77.</li>
+          <li>No way to measure results: Schlight, 13. No clear picture of raid results: Schlight, 19.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>McConnell as chief; LeMay retired February 8, 1965: Schlight, 21.</li>
+          <li>Westmoreland's commands and his role on Taylor's staff: Schlight, 9.</li>
+          <li>Moore's speed record and friendship with Westmoreland: Schlight, 10.</li>
+          <li>Harris and contingencies beyond South Vietnam: Schlight, 9.</li>
+          <li>Momyer takes command July 1, 1966: Schlight, 139–140.</li>
+          <li>Ky as VNAF commander: Schlight, 12; prime minister June 18, 1965: Schlight, 58.</li>
+          <li>Arc Light named: Schlight, 51.</li>
+        </ul>
+        <h3>Bridge from today's seminar</h3>
+        <ul>
+          <li>"The objective of American technocracy was to avoid defining its objective": McDougall, ebook pp. 447–448.</li>
+          <li>McNamara's "worst plausible case" and "more than we require"; reconnaissance satellites cut the Soviet missile count to at most fourteen: McDougall, ebook pp. 329–330.</li>
+          <li>Fixed sortie figures as seeds of effectiveness measures: Schlight, 117. "A far from scientific number": Schlight, 65. Neither objective nor data: Schlight, 290.</li>
+          <li>Priority list giving MACV the call on air: Schlight, 39–40.</li>
+          <li>The parenthetical and the framing question are ours.</li>
+        </ul>
+        <h3>Introduction: Built for Korea, Staffed by the Army, Watched From a Palm Tree</h3>
+        <ul>
+          <li>Three policies; forces shaped for an invasion from the north; VNAF minor roles; SEATO air support: Schlight, 2.</li>
+          <li>535 of 740 advisory personnel Army, 68 Air Force: Schlight, 2.</li>
+          <li>Air Force contingent from 68 to 6,600 and 84 aircraft: Schlight, 3. No jets allowed to fly combat in South Vietnam: Schlight, 8.</li>
+          <li>Eighty percent of staff effort; the Air Force plans chief excluded from day-to-day planning; Westmoreland's offer and PACAF's refusal; "joining the team": Schlight, 10.</li>
+          <li>"A unified command in name only"; two separate control systems; no unified system at the start of 1965: Schlight, 11.</li>
+          <li>Viet Cong soldier in a khaki hammock between palms: Schlight, 6.</li>
+          <li>MACV staff "virtually devoid of air strategists"; effective veto over out-of-country programs: Schlight, 40.</li>
+          <li>Helicopter issue settled before 1965 when the Air Force lost its bid for representation at MACV's policymaking levels: Schlight, 295. Single manager modified after March 1968: Schlight, 296.</li>
+          <li>The use-it paragraph, the Opinion line, the parenthetical, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter I: Plan 39 Lost Because Nobody Was Asking About China</h3>
+        <ul>
+          <li>Planning running ahead of a decision on strategy: Schlight, 21. "Almost by default" into a ground strategy: Schlight, 23.</li>
+          <li>Bien Hoa mortar attack, Binh Gia, and Westmoreland's decision to rely on air power: Schlight, 16.</li>
+          <li>January 27 permission with mission-by-mission approval: Schlight, 17. Restrictions removed March 9: Schlight, 18, 20.</li>
+          <li>Bethea and the jailed observer; "to lend legitimacy to the employment of U.S. firepower": Schlight, 20.</li>
+          <li>Air Force first service officially in overt combat: Schlight, 21.</li>
+          <li>Plan 39, fifteen squadrons in Taiwan, Okinawa, Japan, and Korea: Schlight, 21. Chinese threat played down; Westmoreland on Binh Gia and the Qui Nhon to Pleiku line: Schlight, 22.</li>
+          <li>Five divisions, land routes by air and sea routes by Navy, sixty days: Schlight, 23.</li>
+          <li>Black Virgin: 417 sorties, 816 tons, 1,200 ARVN troops saw no enemy: Schlight, 30. McCone, "hardened their attitude": Schlight, 30.</li>
+          <li>Honolulu: Hanoi more responsive to failure in the south; "short-lived, and inadequately tested"; up to 82,000 Americans by September: Schlight, 31.</li>
+          <li>"The first priority for all U.S. air assets"; Laos last; priorities held through the war; two decades of doctrine, procurement, and training; "this alien environment": Schlight, 33.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter II: Thirty Bombers, Half a Target Box, and No Enemy at Home</h3>
+        <ul>
+          <li>Expectations raised by "strategic" aircraft; press criticism; "using a sledgehammer to kill gnats": Schlight, 53.</li>
+          <li>Westmoreland's priorities: Schlight, 39.</li>
+          <li>Early May surge, no central air manager, ninety Navy sorties, Dixie Station, enemy dormant, "self-generating effects": Schlight, 43.</li>
+          <li>Ba Gia, 651 sorties and over 2,000 flares: Schlight, 46. Dong Xoai, 644 strike sorties: Schlight, 46.</li>
+          <li>Request 26 hours out to move the strike up; general aloft in a C-123: Schlight, 51–52.</li>
+          <li>Tailwinds, seven minutes early, collision; 27 bombed; 1,300 bombs in 30 minutes, slightly more than half in the target area: Schlight, 52.</li>
+          <li>No enemy and little damage; enemy forewarned through infiltration; teams poked unenthusiastically for four hours: Schlight, 52.</li>
+          <li>Westmoreland's combined-operation view; defectors rose; Air Staff on the small follow-up; McConnell's SAC quote; suspicion of diverting air power south: Schlight, 53–54.</li>
+          <li>Radar bombing from August 2; no truly good targets but continued use: Schlight, 82. Smaller, more frequent missions, five free bomb zones, JCS approval authority: Schlight, 82–83.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter III: A Masterpiece of Staff Work, Strategy to Follow</h3>
+        <ul>
+          <li>June 7 request, 58,000 troops: Schlight, 57. Quat resigns, ninth change since Diem; Ky prime minister June 18: Schlight, 58.</li>
+          <li>"Criminally responsible" and the silence: Schlight, 62.</li>
+          <li>Air Staff planners' questions: Schlight, 62–63.</li>
+          <li>July 20 shopping list of 133 items, not coordinated with CINCPAC: Schlight, 63.</li>
+          <li>Six sorties per battalion, "a far from scientific number"; 1.2 sorties per plane; 44 battalions, almost 15,000 sorties, 23 squadrons: Schlight, 65.</li>
+          <li>"A masterpiece of staff work"; no strategy; strategy to flow from forces: Schlight, 69.</li>
+          <li>July 22 meeting: Army chief for Westmoreland, McConnell and MacDonald for bombing the north: Schlight, 69. Johnson's elimination of alternatives; 75,000 to 125,000 on July 28: Schlight, 70.</li>
+          <li>McConnell on ground forces and four fighter-bombers per Viet Cong squad; war of attrition the Air Force never favored: Schlight, 76.</li>
+          <li>MACV concept a month after the commitment: Schlight, 79.</li>
+          <li>150 sorties per battalion; seeds of effectiveness measures: Schlight, 116–117. No objective by 1968: Schlight, 290.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter IV: The Most Independent Division Called the Air Force for Gas</h3>
+        <ul>
+          <li>McConnell's prediction about the division: Schlight, 62.</li>
+          <li>Plei Me: two regiments, 25 miles south of Pleiku, 350 irregulars and 12 Americans: Schlight, 99. "Do you have any influence?" and the supply drop: Schlight, 100. Almost 600 strikes; only air power for three days: Schlight, 101.</li>
+          <li>Eighteen B-52s, over 900 bombs, first direct support of ground fighting: Schlight, 104–105.</li>
+          <li>23 sorties per battalion per day against a planning factor of 5; 276 a day; success largely due to hit-and-run; Westmoreland's doubt about firepower and endurance: Schlight, 106.</li>
+          <li>Nearly 300 helicopters, 7,000 gallons against 70,000; Kinnard's request; 300 tons a day, 60 percent by the Southeast Asia Airlift System; Kinnard's letter: Schlight, 107.</li>
+          <li>Doctrine for depot-to-brigade airlift; "so the Air Force was called in"; a step closer on doctrine: Schlight, 108.</li>
+          <li>McConnell-Johnson agreement: Schlight, 122–125.</li>
+          <li>Harvest Moon controllers and Marine helicopters in the same area; three air forces; "with the fervor and exactitude of theologians": Schlight, 109–110.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter V: The Runway Moved, the Sortie Count Did Not</h3>
+        <ul>
+          <li>"Playing to the enemy's strength": Schlight, 114. Hopes in vain by end of February: Schlight, 116.</li>
+          <li>Sharp's 459,000 troops; Harris given a day and a half: Schlight, 115–116.</li>
+          <li>150 and 200 sorties per battalion; 11 rather than 16 squadrons: Schlight, 116.</li>
+          <li>"Bore the seeds, soon to be germinated"; commanders judged by sortie rates; 233, 134, and 515 sorties canceled: Schlight, 117.</li>
+          <li>Token loads lest the shortage become known; Meyers on white phosphorus with "no relationship to the target at all": Schlight, 118.</li>
+          <li>Sharp "wedded to sortie rates"; sortie reporting favored Navy planes; Air Force objection to partial loads; McConnell persuades the chiefs to cut sorties: Schlight, 119.</li>
+          <li>Cam Ranh Bay taxiway and runway shifting: Schlight, 119.</li>
+          <li>Pilot reports, sortie-rate competition, small bomb loads, sorties without bombs: Gaddis, <i>Strategies of Containment</i>, 255.</li>
+          <li>"An enormous quantity of data described the Air Force's effort, but little its progress": Schlight, 290.</li>
+          <li>Seventh Air Force controlling about a third of the planes; "One man's centralization was another's dispersion": Schlight, 129–130.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapters VI and VII: Momyer Got a Better Seat for Watching the Bombers</h3>
+        <ul>
+          <li>Momyer takes command July 1, 1966; belief in centralized control: Schlight, 139–140.</li>
+          <li>C-130s two-thirds of tonnage: Schlight, 144. Command 2,400 miles away: Schlight, 145. Two-week rotations: Schlight, 140.</li>
+          <li>Wing request refused; Hercules outside Vietnam for the war; "We don't even do it in the Air Force": Schlight, 146.</li>
+          <li>Momyer's 150 sorties a month; B-52s as long-range artillery: Schlight, 149.</li>
+          <li>SAC office from five to seventeen planners; strike planning kept at MACV: Schlight, 150.</li>
+          <li>800 sorties a month, half a billion dollars; ground teams after about 10 percent of strikes; 99.7 percent of planned bombs dropped: Schlight, 153.</li>
+          <li>Adaptation as important as tactics and doctrine: Schlight, 167.</li>
+          <li>Operation Spruce Up; one heater for forty men; "Many flowers but no hot showers": Schlight, 174.</li>
+          <li>75 percent of attack planes flying against a 71 percent standard: Schlight, 184.</li>
+          <li>Navy 1.21 sorties a day against Air Force 0.93; Air Force 1.21 tons per sortie against Navy 0.94; ordnance the more important area: Schlight, 191. Sortie reporting favored the Navy: Schlight, 119.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapters VIII and IX: Redefine Close Air Support, Move Two-Thirds of the War</h3>
+        <ul>
+          <li>Over 355,000 tactical sorties; 74,000 strikes: Schlight, 214.</li>
+          <li>77 percent direct air support, 15 percent close air support; "untrue picture is presented"; 3 percent against troops engaged; November 1 redefinition, two-thirds switch, no change in flying; one clash in ten: Schlight, 215–216.</li>
+          <li>A Shau, Fisher and Myers: Schlight, 199–200. Camp evacuated that evening: Schlight, 201.</li>
+          <li>Interdiction could not completely halt a determined enemy: Schlight, 211.</li>
+          <li>Nonnuclear weapons base almost nonexistent by 1964: Schlight, 229. CBU-24, nine months: Schlight, 231.</li>
+          <li>Doctrine "like an idealistic youth"; Korea a temporary diversion from nuclear deterrence: Schlight, 245.</li>
+          <li>February 1967 change to "air interdiction": Schlight, 264.</li>
+          <li>MACV dropped "interdiction" in 1966; Seventh Air Force widened close air support: Schlight, 291. Effort, not progress: Schlight, 290.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter X: Two Air Forces, One Valley, Settled by Headcount</h3>
+        <ul>
+          <li>Junction City, February 22, 845 paratroopers from 16 C-130s: Schlight, 251. 5,002 fighter-bomber and 126 B-52 sorties: Schlight, 255.</li>
+          <li>Lang Vei, March 2, 1967, two F-4Cs, 100 civilians killed: Schlight, 260.</li>
+          <li>Dak To napalm walked in to twenty-five meters; "The trees are burning over my head": Schlight, 274.</li>
+          <li>Enemy defeated in the border fights; "quite willing to exchange men for experience": Schlight, 276.</li>
+          <li>Trucks from 480 to 6,315: Schlight, 276. Sharp refuses full control; direct and coordinate; Marine zones: Schlight, 277–278. Bombing began January 22: Schlight, 280.</li>
+          <li>Over 24,400 sorties, 100,000 tons, no frontal assault; half the air effort for two months; permissive environment for a May offensive: Schlight, 285.</li>
+          <li>"Mission direction," "to avoid the emotional overtones of operational control"; Army outnumbered Marines two to one: Schlight, 286.</li>
+          <li>"Khe Sanh was not typical"; first time the enemy offered the target tactical air suited; open question where Marines fought alone: Schlight, 287.</li>
+          <li>Single manager quickly modified; "prevented a true test of the single manager concept": Schlight, 296.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Chapter XI (conclusion): Whoever Owns the Objective Owns the Scorecard</h3>
+        <ul>
+          <li>58,000 airmen, 11 percent; 1.25 million combat and combat support missions; 84 to 1,085 aircraft; about one-third of the worldwide inventory: Schlight, 289.</li>
+          <li>No objective, no reliable data; MACV ground objectives; readiness, response, sorties, and tons; "An enormous quantity of data": Schlight, 290.</li>
+          <li>"Smoliage": Schlight, 291. Dong Xoai, 644 sorties: Schlight, 291.</li>
+          <li>Plei Me; 46,000 strike sorties and 3,300 B-52 sorties supporting 73 ground offensives: Schlight, 292.</li>
+          <li>Twenty minutes diverted, twice that scrambled; fifteen minutes to the nearest jets; firefight durations; fifty-five percent of engagements; response time cut in half: Schlight, 293.</li>
+          <li>Reconnaissance the most disappointing: Schlight, 298. $170,000 on aircraft gun research: Schlight, 301.</li>
+          <li>"A qualified acceptance of flexible response"; watershed: Schlight, 309.</li>
+          <li>Crane on another limited war in Asia exposing doctrine, technology, and joint operations: Crane, <i>American Airpower Strategy in Korea</i>, 9.</li>
+          <li>The use-it paragraph, the Opinion line, and the closing question are ours.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Gaddis thesis: Gaddis, vii–ix, 342–343. "An unlimited appropriation available": Gaddis, 260. Sortie-rate competition: Gaddis, 255. Token loads: Schlight, 118–119.</li>
+          <li>Crane thesis: Crane, 6–9, 170. Ambiguous ending and the next limited war in Asia: Crane, 9. FAC system dismantled after Korea and rebuilt with Army planes: Schlight, 294.</li>
+          <li>Zhang thesis: Zhang, 6–8, 201–214. Kill claims and the two-to-one ratio: Zhang, 202–203. "Smoliage": Schlight, 291.</li>
+          <li>McDougall thesis: McDougall, ebook pp. 5, 13, 447–448, 451. Satellites ended the missile gap: McDougall, ebook p. 329. Reconnaissance most disappointing: Schlight, 298. Palm-tree hammock: Schlight, 6.</li>
+          <li>The closing opinion is ours.</li>
+        </ul>
+      </section>
+
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>What did Westmoreland demand before he would put more Air Force generals in key MACV jobs?</summary><p>That the Air Force place all its air resources under him, including the fighters in Thailand and the C-130s. PACAF refused. <span class="pg">S 10</span></p></details></li>
+          <li><details><summary>What was Plan 39, and why did McConnell prefer it?</summary><p>A holding action in the south plus fifteen strike squadrons around China's periphery; he thought it more flexible and a way to avoid a land war in Asia. <span class="pg">S 21–22</span></p></details></li>
+          <li><details><summary>What went wrong on the first Arc Light strike?</summary><p>Two B-52s collided near the tankers, only slightly more than half of 1,300 bombs fell in the box, and search teams found no enemy, who had apparently been warned. <span class="pg">S 52</span></p></details></li>
+          <li><details><summary>What planning factor sized the 1965 fighter force, and what did Schlight call it?</summary><p>Six sorties a day per non-Vietnamese maneuver battalion, "a far from scientific number." <span class="pg">S 65</span></p></details></li>
+          <li><details><summary>Why did the 1st Cavalry Division call the Air Force during the Ia Drang?</summary><p>Its nearly 300 helicopters were down to 7,000 gallons of fuel against a need of 70,000 a day. <span class="pg">S 107</span></p></details></li>
+          <li><details><summary>What happened when bombs ran short in April 1966?</summary><p>Sorties were canceled, and pressure to keep sortie rates up sent planes out with token loads unsuited to the targets. <span class="pg">S 117–118</span></p></details></li>
+          <li><details><summary>What did Westmoreland refuse to give the new SAC office at the Seventh Air Force?</summary><p>The planning of B-52 strike requests, which stayed at MACV headquarters. <span class="pg">S 150</span></p></details></li>
+          <li><details><summary>What changed on November 1, 1966, and what did not?</summary><p>The Seventh Air Force widened its definition of close air support, and two-thirds of strike sorties switched categories, though the flying did not change. <span class="pg">S 216</span></p></details></li>
+          <li><details><summary>How did Momyer finally get control of Marine aircraft in I Corps?</summary><p>He got "mission direction" on March 7, 1968, after Westmoreland argued the Army outnumbered the Marines there two to one. <span class="pg">S 286</span></p></details></li>
+          <li><details><summary>Why couldn't the Air Force measure its effectiveness in South Vietnam?</summary><p>It had no war objective of its own and no reliable data, so it measured effort: readiness, response times, sorties, and tons. <span class="pg">S 290</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>
