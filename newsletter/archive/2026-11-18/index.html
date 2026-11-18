@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunrise (morning edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#141a2e;      /* pre-dawn navy */
+  --ink:#f3ece0;        /* warm white */
+  --muted:#b6b2c6;
+  --rule:#2e3654;
+  --accent:#ffb36b;     /* sunrise gold-orange */
+  --accent-soft:#272540;/* violet dawn */
+  --stamp:#ff9a84;      /* rose */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#3a2a4c 0,#24233f 140px,#141a2e 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \2600";color:var(--accent);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Strategy, books, space, and politics. Updated daily, with no ads.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived morning edition, 2026-11-18 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+  <div class="tally" aria-label="Running tallies">
+    <span>628 books: <b>14</b> read · <b>4</b> to go</span>
+    <span>No seminar today · next: <b>Fuller, Thursday</b></span>
+    <span>628 paper due in <b>13</b> days</span>
+  </div>
+
+  <section class="listen" id="listen" aria-label="Today's episode">
+    <p class="listen-h">Today's episode · Matilda &amp; Alice · about 5 minutes</p>
+    <audio controls preload="none" src="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-18.mp3"></audio>
+    <p class="listen-links"><a href="https://codewithemberly.github.io/Fae/newsletter/podcast/2026-11-18.mp3" target="_blank" rel="noopener">Open the MP3</a> · Podcast feed for your phone's podcast app: <span class="feed">https://codewithemberly.github.io/Fae/newsletter/podcast/feed.xml</span></p>
+  </section>
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Wednesday, November 18, 2026 · No seminar today · Fuller Thursday at 1200</p>
+      <nav class="toc" aria-label="Today's articles">
+        <h2>Today's Articles</h2>
+        <p class="toc-after">Tonight's reading prep posts after class: <a href="../2026-11-18-tonight/">The Long Game: Tonight</a> · Course map: <a href="../../map/">every book, one page</a> · <a href="../">Archive of every edition</a></p>
+        <ol>
+          <li><a href="#a1">Counterpoint: Weinberger Wrote Six Tests, and Kosovo Took the Test Anyway</a></li>
+          <li><a href="#a2">A Cheap Hold Is Only Cheap Until the Reapers Start Falling</a></li>
+          <li><a href="#a3">Finding the Target Was Always the Expensive Part</a></li>
+          <li><a href="#a4">"Militant" Is Doing a Lot of Work in That Sentence</a></li>
+          <li><a href="#a5">Fifty Reapers Later, the Fighters Got the Call</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Q&amp;A</a></p>
+      </nav>
+
+      <article id="a1">
+        <span class="kicker">Counterpoint · Henriksen against Kitfield · review before Fuller</span>
+        <h3><a href="#a1">Counterpoint: Weinberger Wrote Six Tests, and Kosovo Took the Test Anyway</a></h3>
+        <p>Kitfield and Henriksen disagree on whether soldiers should insist on clear objectives before they fight. Kitfield's answer comes through Caspar Weinberger and Colin Powell, and it is yes. At the National Press Club on November 28, 1984, Weinberger laid out six tests for sending forces into combat: vital interests at stake, enough force to win decisively, clearly defined political and military objectives, forces sized to meet them, a reasonable assurance that the public would support the war, and combat only as a last resort. His speechwriters warned him that six was an awkward number and asked for three. He kept six. (Anyone who has argued with a Secretary of Defense will understand.) Powell doubted that one doctrine could fit every crisis, but he liked the questions, and he judged that the Marines sent into Lebanon's five-faction civil war would never have passed them.</p>
+        <p>Henriksen makes the strongest case against that view, and his witnesses are the generals who had to fight the next war. Gen. Sir Rupert Smith told him that soldiers are "stupid to ask for that degree of precision" from politicians, and that soldiers in the politicians' chairs would be no cleverer. Naumann went further. Given the choice between tolerating killings and expulsions or acting "with the vague hope that it might work," he said, you choose the latter. Henriksen then hands part of the blame back to the uniforms. When politicians said "we have got to do something," the military had no adequate reply. France's General Kelche drew the practical lesson and set up a permanent cell to prepare crisis options, because politicians with no options "will opt to wait or do nothing."</p>
+        <p>Each book's evidence fits its own war. Kitfield wrote in 1995 and follows the generation of officers who led Desert Storm, so his proof is their careers and their victory. Opinion: Desert Storm was the kind of war the tests were written for, with an invasion to reverse, a clear objective, and a large force. Kitfield can show that the tests produce good wars of that kind. He can't show that they help in a televised civil war, and his own epilogue sees one coming. McCaffrey traveled to Bosnia to weigh the "five-alarm risks" of joining a civil war, and by the last pages Somalia, and potentially Bosnia and Korea, "beckoned." Henriksen's evidence has the opposite gap. His interviews are with the Europeans who fought the limited war, and the book stops in the first week of bombing. It shows what having no options cost NATO. It can't show whether stricter tests would have kept NATO out, or whether they should have. Even Smith, asked about Kosovo in particular, agreed that more clarity was needed there.</p>
+        <p>Opinion: Henriksen has the better of it, and tomorrow's book shows why. The first-order effect is real: the tests filtered out bad wars for the Pentagon. The second-order effect is that the wars didn't go away. They moved. Fuller says Weinberger's "parsimonious attitude" toward deploying the military denied the Reagan hardliners the Pentagon's resources, so Shultz, Casey, and North turned to other people to do their fighting. The third-order effect, which is our reading of Fuller's opening chapters, is that one of those other people was the CIA, whose Counterterrorism Center grew out of that hardline philosophy and later ran the drone campaign. Kosovo shows the same pattern from the other side. When the military offered nothing short of the full campaign, NATO improvised with air power. A rule that only says no ends up deciding who fights the war and how ready they are. The seminar comment: "Weinberger's tests decided whether the Pentagon would fight, not whether America would; Henriksen and Fuller show where the excluded wars went." Saying no, it turns out, is a policy only for the people who are listening. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a2">
+        <span class="kicker">The 628 Paper · Hormuz through Fuller (tomorrow's book) · extrapolation</span>
+        <h3><a href="#a2">A Cheap Hold Is Only Cheap Until the Reapers Start Falling</a></h3>
+        <p>The prompt asks for the most important potential crisis facing the nation and how Airmen should prepare for it, in ten pages due December 1. Shaun's crisis is the Strait of Hormuz after the United States leaves the war with Iran without a settlement. His thesis: Airmen should prepare now to hold the Strait of Hormuz the way America holds Korea, cheaply and with partners, so that time works for Washington and against Tehran. What follows is our extrapolation from Christopher Fuller, not Shaun's answer.</p>
+        <p>Fuller describes a cheap hold that already worked. For a decade, he writes, the United States kept a lethal presence in Pakistan, Somalia, and Yemen without bases in those countries, and "semipermeable frontiers patrolled by unmanned aircraft" let trade, people, and money keep moving while giving Washington more control. He even notes that the drone bases became a springboard toward places such as Iranian airspace. The presence changed enemy behavior at little cost. In an October 2010 letter, bin Laden told his men to meet no more than once or twice a week, and then only when the clouds were heavy. A strait patrol that makes the other side plan around the weather is doing its job. (It is also the rare military program whose success shows up in a meteorology report.)</p>
+        <p>Fuller cuts against the plan in two places. The first is the airspace. Armed drones suited the rural tribal areas, Yemen's deserts, and Somalia's camps, he says, but against the Islamic State's antiaircraft weapons the slow drones lost their chance to loiter, and in the campaign against it they mostly found targets for faster jets. Iran is not Waziristan. This week's reporting says Iran has downed about fifty MQ-9s since February 28, and it was fighters, not drones, that struck Qeshm on Tuesday. A cost per kill has to include the drones lost per week. The second is that cheap makes easy. Fuller cites Peter Singer's warning that the technology makes a military response look costless, and David Cortright's that this "reduces the political inhibitions" against deadly force. That is Shaun's own stated limit, that a cheap war is easier to start, now with a book behind it.</p>
+        <p>Opinion, extrapolated: Fuller would endorse the small footprint and question the second point, that cost felt at home is what ends American wars. His drone war didn't end when the cost was felt. It drew down, and the improvised system Obama inherited grew into what Ian Shaw called a "Predator empire." The risk of a cheap hold may be that nobody notices it is still running, which argues for making each renewal a decision someone has to defend. Two questions for the draft:</p>
+        <ol class="qs">
+          <li>What does the hold cost per week if Iran keeps shooting down drones at this week's rate?</li>
+          <li>Who has to vote to keep it going, so that it stays a choice instead of a habit? <span class="by">(S)</span></li>
+        </ol>
+      </article>
+
+      <article id="a3">
+        <span class="kicker">The Readings So Far · Schlight, Olsen, Haun, Lambeth, Henriksen, and Kitfield</span>
+        <h3><a href="#a3">Finding the Target Was Always the Expensive Part</a></h3>
+        <p>Almost every book on our shelf finds that locating the target is harder than hitting it. Schlight reports that until the end of October 1966, 3 percent of Air Force sorties in South Vietnam struck enemy soldiers actually engaged with allied forces. Olsen says the Desert Storm planners knew little about Iraq beyond the locations of buildings and communications. Haun counts airstrikes destroying about 10 percent of Iraqi armor before the ground war. Lambeth has 79 percent of NATO's precision munitions hitting their targets over Kosovo, while attacks on fielded Serb forces were largely ineffective. Naumann put it best to the North Atlantic Council: you cannot stop the individual murderer going from village to village with a knife "from the air." Accuracy kept improving. The address book did not.</p>
+        <p>Last Wednesday's paper item found the other half of the lesson in Olsen. Thirteen-foot decoy drones drew Iraq's radars into the fight on the first night, radar activity fell by more than 90 percent within three days, and for the rest of the war the Iraqis were reluctant to turn their radars on. Bin Laden's instruction to meet only under heavy clouds, in Fuller, is the same effect. A sensor that stays overhead changes behavior even when it destroys very little. (Persistence is the one airpower virtue nobody has ever lost a promotion over.)</p>
+        <p>Fuller, tomorrow, gives the bridge between those books. Over Bosnia in 1995, Clinton was shocked at how little his agencies could tell him about Sarajevo. Cloud cover blinded the satellites and U-2s, Serb SA-6s made low-level scouting too dangerous, and the Serbs hid their weapons in barns and woods during the hours they knew satellites passed overhead. Fuller says that search for better intelligence for Clinton-era airstrikes, along with the Reagan-era fights with terrorists, drove drone development more than the hunt for bin Laden did. Yesterday's item on Braver and quiet resignation asked when an officer should walk away from an order. Today's counterpoint asks the institutional version, when a military should refuse a war, and Fuller's answer is that the refused war often turns up later at another agency. Opinion: the shelf's oldest problem is finding the enemy, and its newest solution created a new set of problems. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="a4">
+        <span class="kicker">Technical Writing · Week 4, Day 3 · precise language</span>
+        <h3><a href="#a4">"Militant" Is Doing a Lot of Work in That Sentence</a></h3>
+        <p>A key word in an argument has to mean one thing every time it appears. Mortimer Adler and Charles Van Doren, in <i>How to Read a Book</i>, call this coming to terms. Their fifth rule tells readers to find the important words and work out exactly how the author uses them, and they define the goal plainly: "a term is a word used unambiguously." Most words in a book need no attention, they add; the ones that matter are the words an author uses in a special way. Writers can apply the rule from the other side. Find your own important words and pin each one down before the reader has to.</p>
+        <p>Fuller, tomorrow's book, shows what happens when a key word goes undefined. In June 2011, John Brennan said there hadn't been "a single collateral death" from drone strikes. Critics pointed to a May 2012 <i>New York Times</i> report that the White House counted all military-age males in a strike zone as combatants unless intelligence proved them innocent after their deaths. The New American Foundation, defining the word differently, counted 152 to 191 civilians killed between 2004 and October 2012. The two sides were counting the same bodies. They disagreed about the word. Before: "Drone strikes killed few civilians." After: "By counting every military-age male in a strike zone as a combatant, the White House could report almost no civilian deaths; the New American Foundation, counting differently, found 152 to 191 from 2004 to October 2012." The second sentence tells the reader where the number came from. The legal debate in Fuller works the same way: whether a strike is a "targeted killing" or an "assassination," banned since President Ford's 1976 executive order, decides whether it is legal.</p>
+        <p>Pro tip, an old editor's trick: run a search for each key term in your draft and read every hit. If "hold," "deterrence," or "partner" means something different on page eight than on page two, define it once early and keep that meaning, or the reader will pick one for you. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">News × the Books</p>
+
+      <article id="a5">
+        <span class="kicker">Defense &amp; Conflict × Fuller · via <i>Air &amp; Space Forces Magazine</i>, November 17</span>
+        <h3><a href="#a5">Fifty Reapers Later, the Fighters Got the Call</a></h3>
+        <p>U.S. fighters struck an IRGC missile launch site on Qeshm Island on Tuesday, after Iran sent one-way attack drones at facilities used by American forces in Bahrain, Chris Gordon reports in <i>Air &amp; Space Forces Magazine</i>. A U.S. official called the strike self-defense against "IRGC aggression." Iran claimed it hit a radar site at Isa Air Base. CENTCOM and the Bahrain Defense Force said the drones were intercepted with no damage or injuries. Qeshm sits in the Persian Gulf just outside the Strait of Hormuz and is a frequent U.S. target. The article's most striking number is buried: according to people familiar with the matter, Iran has downed about fifty MQ-9 Reapers and several MQ-1s since hostilities began on February 28. Iran also claimed a new MQ-1 kill, which the magazine could not verify. Behind it all, the April ceasefire ended the big strike campaign, a blockade continues, a tanker exploded after an attack on Monday, and talks have stalled.</p>
+        <p>Fuller explains the division of labor. Armed drones, he writes, suited targets hiding in Pakistan's tribal areas, Yemen's deserts, and Somalia's camps. Against the Islamic State's antiaircraft weapons, the slow drones lost their chance to loiter and hunt, and the Pentagon used them mostly to find targets for "faster moving, more evasive jets," as the GNAT-750s had done over Bosnia. Fifty Reapers suggests Iran's airspace is closer to the second case. The drone still sees. The fighter shoots. That is the old reconnaissance-and-strike pairing that the "see it/shoot it" option was supposed to merge into one aircraft. (In contested air, it seems, the Reaper is back to just looking.)</p>
+        <p>Fuller's conclusion also predicted the drones coming the other way. He notes that Iran sent its own drones to defend Maliki's government in Iraq, and he says it was only a matter of time before the "relatively cheap and easy Radio Shack solution" was adopted by America's rivals, for the same reason the CIA wanted it: to strike targets in places they could not otherwise reach. Tuesday's drones aimed at Bahrain are that sentence carried out.</p>
+        <p>Opinion: the exchange shows both sides doing the cheap thing and paying for it in hardware, not people, which is how a limited war stays limited. It is also how one lasts. Vice President Vance said on Monday that the president "is not going to let this become a forever war," and Fuller's drone war is a reminder that the wars America never feels are the ones it forgets to end. Fifty Reapers is a lot of aircraft to lose in a war that isn't supposed to be happening. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of today's articles.</p>
+
+      <section class="sources" id="sources" aria-label="Sources">
+        <h2>Sources</h2>
+        <p class="fine">Keyed to the phrase each one supports. Fuller pages are ebook pages from the PDF on file (reflowed, no printed page numbers): Christopher J. Fuller, <i>See It/Shoot It: The Secret History of the CIA's Lethal Drone Program</i> (New Haven: Yale University Press, 2017). Henriksen pages are ebook pages: Dag Henriksen, <i>NATO's Gamble</i> (Annapolis: Naval Institute Press, 2007). Kitfield pages are printed pages: James Kitfield, <i>Prodigal Soldiers</i> (New York: Simon &amp; Schuster, 1995). Mortimer J. Adler and Charles Van Doren, <i>How to Read a Book</i>, rev. ed., printed pages. Other books as in earlier issues. <i>Opinion</i> needs no source.</p>
+
+        <h3>Today's episode</h3>
+        <ul>
+          <li>Debate: did the drone campaign work? Success by its primary goals; core devastated; time diverted to staying alive; power vacuum for the Islamic State: Fuller, ebook 41–42. 294 strikes in Pakistan in Obama's first term against forty-six under Bush; 1,250 to 2,118 militants and 124 to 154 civilians killed (NAF): ebook 295. Panetta, "the only game in town": ebook 301. Bin Laden, "when the clouds are heavy": ebook 310–311. Panetta, "the cancer has metastasized": ebook 315. Twenty-eight groups in 2007, forty-nine by the end of 2013; 44,000 to 105,000 fighters; the Rand report ties the growth to instability since 2010: ebook 316. Cortright, "reduces the political inhibitions": ebook 41.</li>
+          <li>Drones suited to rural areas; antiaircraft weapons reduce loitering: Fuller, ebook 335. About fifty MQ-9s downed since February 28: <i>Air &amp; Space Forces Magazine</i>, November 17. Thirteen-foot decoys; radar activity down over 90 percent: Olsen, 242.</li>
+          <li>Quiz: "see it/shoot it option," Richard Clarke: Fuller, ebook 26, 42. First airborne Hellfire shot from a Predator, February 21, 2001: ebook 173. Weinberger's "parsimonious attitude": ebook 101. Executive Order 11905, Ford, 1976: ebook 33–34. Weinberger's six tests, November 28, 1984: Kitfield, 269. Smith, "stupid to ask for that degree of precision": Henriksen, ebook 339.</li>
+        </ul>
+
+        <h3>Counterpoint: Weinberger Wrote Six Tests, and Kosovo Took the Test Anyway</h3>
+        <ul>
+          <li>National Press Club, November 28, 1984; the six tests: Kitfield, 269. Speechwriters warned six was too awkward and asked for three; Powell's reservations about a "when-to-go-to-war doctrine"; Lebanon's five-faction civil war would not have qualified: Kitfield, 270.</li>
+          <li>Smith, "we are stupid to ask for that degree of precision," and soldiers would be no cleverer: Henriksen, ebook 339. Naumann, "with the vague hope that it might work," "you choose the latter": ebook 340. "We have got to do something"; no adequate reply; military shares the blame: ebook 337. Kelche's permanent cell; "opt to wait or do nothing": ebook 336.</li>
+          <li>Copyright 1995; the book follows the officers who led Desert Storm: Kitfield, front matter and jacket. McCaffrey's trips to Bosnia, "five-alarm risks": Kitfield, 428. Somalia, "and potentially Bosnia and Korea beckoned": Kitfield, 434. Henriksen's interviews and his book's endpoint: as in yesterday's issue. Smith accepts more clarity was needed in Kosovo: Henriksen, ebook 340.</li>
+          <li>Weinberger's "parsimonious attitude"; Shultz, Casey, and North turned to others: Fuller, ebook 101. The hardliners' philosophy prompted the CTC, which now runs the drone campaign: Fuller, ebook 30. The third-order link and the verdict are our reading and opinion.</li>
+        </ul>
+
+        <h3>A Cheap Hold Is Only Cheap Until the Reapers Start Falling</h3>
+        <ul>
+          <li>Paper prompt and due date: SAASS 628 syllabus, "Grading." The crisis and thesis are Shaun's.</li>
+          <li>Lethal presence in Pakistan, Somalia, and Yemen without bases; "semipermeable frontiers patrolled by unmanned aircraft"; springboard toward Iranian airspace: Fuller, ebook 343. Bin Laden's October 21, 2010, letter; once or twice a week; heavy clouds: ebook 310–311.</li>
+          <li>Drones suited to the FATA, Yemen, and Somalia; antiaircraft weapons reduce loitering; reconnaissance for faster jets: Fuller, ebook 335–336. About fifty MQ-9s downed since February 28; fighters struck Qeshm: <i>Air &amp; Space Forces Magazine</i>, November 17. Singer, response perceived as costless; Cortright, "reduces the political inhibitions": Fuller, ebook 41.</li>
+          <li>AfPak campaign drawing down: Fuller, ebook 344. "Predator empire," Ian Shaw; improvised system grew into a network: ebook 341–342. The application to Hormuz and the questions are our extrapolation.</li>
+        </ul>
+
+        <h3>Finding the Target Was Always the Expensive Part</h3>
+        <ul>
+          <li>3 percent of Air Force sorties through October 1966: Schlight, 216. Planners knew little beyond buildings and communications: Olsen, 290. About 10 percent of Iraqi armor: Haun, 272. 79 percent of precision munitions; fielded forces largely ineffective: Lambeth, 225. Naumann, the murderer with a knife, "that you cannot do from the air": Henriksen, ebook 329–330.</li>
+          <li>Last Wednesday's item (November 11 issue): thirteen-foot decoys; radar activity down over 90 percent in three days: Olsen, 242. Bin Laden and heavy clouds: Fuller, ebook 310–311.</li>
+          <li>Bosnia, 1995: Clinton shocked at the scarcity of information; cloud cover; SA-6s; weapons hidden in barns and woodland: Fuller, ebook 160. Better intelligence for Clinton-era airstrikes as a key driver: ebook 32. Yesterday's Braver item: <i>War on the Rocks</i>, November 16. The rest is our opinion.</li>
+        </ul>
+
+        <h3>"Militant" Is Doing a Lot of Work in That Sentence</h3>
+        <ul>
+          <li>Coming to terms; "a term is a word used unambiguously": Adler and Van Doren, 100. Rule 5, find the important words and come to terms: 101. Words used in a special way are the important ones: 104.</li>
+          <li>Brennan, June 2011, "a single collateral death"; <i>New York Times</i>, May 2012, military-age males counted as combatants; New American Foundation, 152 to 191 civilians, 2004 to October 2012: Fuller, ebook 38. Targeted killing versus assassination; Executive Order 11905, Ford, 1976: ebook 33–34.</li>
+          <li>The search-every-hit check is an old editor's trick.</li>
+        </ul>
+
+        <h3>Fifty Reapers Later, the Fighters Got the Call</h3>
+        <ul>
+          <li>Chris Gordon, "US Fighters Strike Iranian Missile Site After Base in Bahrain Targeted," <i>Air &amp; Space Forces Magazine</i>, November 17, 2026: Qeshm Island IRGC site; self-defense, "IRGC aggression"; one-way attack drones; Isa Air Base claim; CENTCOM and Bahrain Defense Force on interceptions; about fifty MQ-9s and several MQ-1s downed since February 28, per people familiar; unverified MQ-1 claim; April ceasefire; blockade; LPG tanker explosion November 16; stalled talks; Vance, "not going to let this become a forever war."</li>
+          <li>Drones suited to the FATA, Yemen, and Somalia; antiaircraft weapons; "faster moving, more evasive jets"; GNAT-750 over Bosnia: Fuller, ebook 335–336. "See it/shoot it" capability of the armed Predator: ebook 173.</li>
+          <li>Iran deployed its own drones to help Maliki: Fuller, ebook 344. "Relatively cheap and easy Radio Shack solution"; to strike targets in places they could not otherwise reach: ebook 345.</li>
+          <li>The asides and the closing judgment are our opinion.</li>
+        </ul>
+      </section>
+
+
+      <section class="block qa" id="qa" aria-label="Q&amp;A">
+        <h2>Q&amp;A · Test Yourself</h2>
+        <p class="howto">Answer from memory first, then open each question to check.</p>
+
+        <h3 class="qa-h">Today's practice · from Adler and Van Doren, <i>How to Read a Book</i></h3>
+        <p class="fine">The rule: find the important words and come to terms, which means using each key word in one meaning only (pp. 100–101).</p>
+        <p class="protip">Rewrite so the key term is defined: "The drone campaign killed few civilians." (Fuller, ebook 38.)</p>
+        <div class="mine">
+          <label for="mine-practice">Your version, with the term pinned down:</label>
+          <textarea id="mine-practice" placeholder="Counting as civilians only…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+        <ul class="recall">
+          <li><details><summary>One possible answer</summary><p>"Because the White House counted every military-age male in a strike zone as a combatant unless proved innocent after death, officials could claim almost no civilian deaths; the New American Foundation, counting differently, found 152 to 191 between 2004 and October 2012" (Fuller, ebook 38). The disputed word is "civilian," so the sentence defines it (Adler and Van Doren, 100).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Connect the dots</h3>
+        <ul class="recall">
+          <li><details><summary>Iran has downed about fifty MQ-9s since February 28, and fighters struck Qeshm. Link it to Fuller and Olsen.</summary><p>Fuller: drones suited permissive areas, and against antiaircraft weapons they lost the chance to loiter and shifted to finding targets for faster jets (ebook 335–336). Olsen: the first night's decoy drones worked because they were expendable, drawing radars out so HARMs could follow, and radar activity fell over 90 percent (242). In defended air, the unmanned aircraft's best job is to be seen, or shot at, so something else can strike.</p></details></li>
+          <li><details><summary>The U.S. answered Bahrain's drone attack within a day. Link it to Henriksen and Kitfield.</summary><p>Henriksen: Naumann's lesson from Determined Falcon was never to threaten what you cannot execute the next day or so (ebook 244). Kitfield: Weinberger's tests asked for clear objectives and public support before committing forces (269). A prompt reply keeps a threat credible, but tit-for-tat without a defined objective is the open-ended commitment Weinberger's tests were written to prevent.</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Henriksen: seminar recall</h3>
+        <ul class="recall">
+          <li><details><summary>How many targets did NATO have at the start, and how many on night one?</summary><p>About 90, three days' worth; fifty-one on the first night. <span class="pg">H e47</span></p></details></li>
+          <li><details><summary>What was Determined Falcon, and what was Naumann's lesson?</summary><p>An air show of force on 15 June 1998, eighty aircraft from thirteen nations; never threaten what you cannot execute the next day or so. <span class="pg">H e244</span></p></details></li>
+          <li><details><summary>What did Milosevic tell his Supreme Defense Council about NATO bombing?</summary><p>They would bomb for about five to seven days, then be forced to stop, and the Serbs would be the moral winners (via Djukanovic). <span class="pg">H e261</span></p></details></li>
+          <li><details><summary>What did General Kelche build after Allied Force, and why?</summary><p>A permanent cell in the operational headquarters to develop crisis options, because politicians with no options "will opt to wait or do nothing." <span class="pg">H e336</span></p></details></li>
+          <li><details><summary>What did Gen. Sir Rupert Smith say about demanding precise end states?</summary><p>That soldiers are "stupid to ask for that degree of precision," and would be no cleverer in the politicians' place. <span class="pg">H e339</span></p></details></li>
+        </ul>
+
+        <h3 class="qa-h">The Shelf</h3>
+        <ul class="recall">
+          <li><details><summary>Gaddis: what did flexible response in Vietnam assume about force?</summary><p>"Calibration," moving up or down a range of precisely calculated actions without extreme escalation or humiliation (241).</p></details></li>
+          <li><details><summary>Crane: what did the June 1952 hydroelectric strikes achieve?</summary><p>546 Navy and 730 Fifth Air Force sorties destroyed 90 percent of North Korea's electric power potential in four days (119).</p></details></li>
+          <li><details><summary>Zhang: what did Zhou Enlai tell a Soviet general about China's air force in Korea?</summary><p>China could endure losing half a million to a million soldiers, "but we will not sacrifice our newly built air force" (116).</p></details></li>
+          <li><details><summary>McDougall: what killed the missile gap?</summary><p>Reconnaissance satellites in 1961, which cut the CIA's count of Soviet missiles to at most fourteen (327–330).</p></details></li>
+          <li><details><summary>Schlight: what share of Air Force sorties in South Vietnam hit enemy troops engaged with allied forces, through October 1966?</summary><p>About 3 percent (216).</p></details></li>
+          <li><details><summary>Clodfelter: how did January 1973's agreement differ from October's?</summary><p>"Largely cosmetic" differences (ch. VI, e217).</p></details></li>
+          <li><details><summary>Randolph: how does he score the Easter Offensive for Hanoi?</summary><p>"A strategic success, despite its ambiguous, or even failed, military outcome" (339).</p></details></li>
+          <li><details><summary>Nguyen: who does she say actually ran Hanoi's war?</summary><p>Le Duan, first secretary from 1960 until his death in 1986, with Le Duc Tho as his right hand (intro, e19–20).</p></details></li>
+          <li><details><summary>Haun: how much Iraqi armor and artillery did airstrikes destroy before the ground war?</summary><p>About 10 percent; desertions accounted for most of the 25 to 30 percent attrition (272).</p></details></li>
+          <li><details><summary>Kitfield: what were Weinberger's six tests, and when did he give them?</summary><p>Vital interests, enough force to win decisively, clearly defined political and military objectives, forces sized to them, reasonable assurance of public support, and force as a last resort; National Press Club, November 28, 1984 (269).</p></details></li>
+          <li><details><summary>Olsen: what share of the air effort went against Warden's inner ring?</summary><p>2 percent; 740 of 43,123 strikes hit the "central nervous system" (167, 295).</p></details></li>
+          <li><details><summary>Fravel: who started eight of China's nine strategies since 1949?</summary><p>Senior military officers, subject only to the chairman's approval (ebook 429).</p></details></li>
+          <li><details><summary>Lambeth: what role does he forecast for land power against large-scale aggression?</summary><p>"To secure a win rather than to achieve it" (320–321).</p></details></li>
+          <li><details><summary>Henriksen: what did key leaders expect from the bombing, and why?</summary><p>Two to four days would move Milosevic, because they believed Deliberate Force had done so in Bosnia in 1995 (ebook 13).</p></details></li>
+        </ul>
+
+        <h3 class="qa-h">Writing drills</h3>
+        <ul class="recall">
+          <li><details><summary>Define the term: "The hold will deter Iran."</summary><p>Say what "hold" and "deter" mean once, early, and keep those meanings: which forces, which waters, and which Iranian action the hold is meant to prevent. Then search every use of both words and check that each one matches (Adler and Van Doren, 100–101).</p></details></li>
+          <li><details><summary>Pin down "precise": "The Kosovo campaign was precise."</summary><p>"Seventy-nine percent of NATO's precision munitions hit their targets, by Clark's count at the end of May, though attacks on fielded Serb forces were largely ineffective" (Lambeth, 225). "Precise" now means hitting the aim point, which is different from achieving the effect.</p></details></li>
+          <li><details><summary>Review (Tuesday, evidence): show the source chain for "Iran has shot down fifty Reapers."</summary><p>"According to people familiar with the matter, Iran has downed about fifty MQ-9s since February 28, <i>Air &amp; Space Forces Magazine</i> reported on November 17." The reader now knows it is anonymous sourcing, relayed by one outlet (Booth et al., 135–136).</p></details></li>
+        </ul>
+
+        <div class="mine">
+          <label for="mine-crane">Your turn: one sentence on today's counterpoint, "Should soldiers demand clear objectives before they fight?", with one Kitfield and one Henriksen page in a Chicago-style note (Kitfield, 269–270; Henriksen, ebook 337, 339).</label>
+          <textarea id="mine-crane" placeholder="Weinberger's tests…"></textarea>
+          <small>Saved only in this browser on this device.</small>
+        </div>
+      </section>
+
+
+      </main>
+
+    <aside>
+      <section>
+        <h2>Reading Log · SAASS 628</h2>
+        <table class="ledger">
+          <tbody>
+            <tr><td>26 Oct</td><td class="st-done">Gaddis, <i>Strategies of Containment</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>27 Oct</td><td class="st-done">Crane, <i>Airpower Strategy in Korea</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>29 Oct</td><td class="st-done">Zhang, <i>Red Wings over the Yalu</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>30 Oct</td><td class="st-done">McDougall, <i>…The Heavens and the Earth</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>2 Nov</td><td class="st-done">Schlight (intro, ch. 1–2) + document pack (decision exercise)</td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>3 Nov</td><td class="st-done">Clodfelter, <i>The Limits of Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>5 Nov</td><td class="st-done">Randolph, <i>Powerful and Brutal Weapons</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>6 Nov</td><td class="st-done">Nguyen, <i>Hanoi's War</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>9 Nov</td><td class="st-done">Haun, <i>Tactical Air Power and the Vietnam War</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>10 Nov</td><td class="st-done">Kitfield, <i>Prodigal Soldiers</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>12 Nov</td><td class="st-done">Olsen, <i>Strategic Air Power in Desert Storm</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>13 Nov</td><td class="st-done">Fravel, <i>Active Defense</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>16 Nov</td><td class="st-done">Lambeth, <i>The Transformation of American Air Power</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>17 Nov</td><td class="st-done">Henriksen, <i>NATO's Gamble</i></td><td><span class="pill done">READ</span></td></tr>
+            <tr><td>19 Nov</td><td class="st-now">Fuller, <i>See It/Shoot It</i></td><td><span class="pill now">NEXT</span></td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Four more after Henriksen: Fuller, Wasser, Sekirin, and Wuthnow and Saunders, ending with Wuthnow and Saunders on 1 Dec. Dates from the 628 syllabus course calendar.</p>
+      </section>
+      <section>
+        <h2>Countdowns</h2>
+        <div class="count"><span>Fuller seminar, 19 Nov</span><b>1</b></div>
+        <div class="count"><span>628 paper due, 1 Dec</span><b>13</b></div>
+      </section>
+      <section>
+        <h2>Daily Lineup</h2>
+        <ol class="lineup">
+          <li>Today's or tomorrow's reading</li>
+          <li>The readings so far</li>
+          <li>Technical writing</li>
+          <li>News × the books: one story, defense, leadership, or conflict (Fridays add Space × Sci-Fi; politics is on the afternoon page)</li>
+          <li>Sources, then Q&amp;A</li>
+        </ol>
+      </section>
+      <section>
+        <h2>How This Page Teaches</h2>
+        <p class="fine"><b>Listen first, test after.</b> The articles read cleanly aloud with no footnote numbers. Sources and the Q&amp;A wait at the end, where answering from memory does the real work.</p>
+        <p class="fine"><b>Spacing.</b> Each book stays on The Shelf for weeks, so you meet it again on day 2, day 7, and day 30. That's the EV effect: a little, every day.</p>
+        <p class="fine"><b>Connections.</b> Every news item gets pinned to a book. Ideas tied to a story stick better than ideas alone.</p>
+        <p class="fine"><b>Write it yourself.</b> The "Your turn" box matters most. Producing the paragraph teaches more than reading mine.</p>
+        <p class="fine"><b>Built for comps.</b> Class is book and notebook only. This page is the testing ground: every book read stays here as recall questions, cumulative through the year.</p>
+        <p class="fine">Weekends: reader mail. News sources: Electoral-vote.com, Punchbowl News, <i>Military Times</i>, <i>War on the Rocks</i>, <i>Defense News</i>, <i>Breaking Defense</i>, <i>Air &amp; Space Forces Magazine</i>, SpaceNews, CSIS, and RAND.</p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="style" id="style">
+    <h2>House Style</h2>
+    <p class="lede">What electoral-vote.com does on the page, turned into rules for this site. These come from reading the site's front page in late October 2026. They describe its habits without copying its text.</p>
+    <div class="rules">
+      <div class="rule"><h4>1. One page, numbered items, linked list on top</h4><p>Each day is a list of headlined items, with links at the top so readers can skip. Weight decides length. A big item runs four to seven paragraphs and a small one runs two.</p></div>
+      <div class="rule"><h4>2. Headlines carry the joke or the claim</h4><p>EV headlines are title case, often a pun, sometimes a two-part setup across consecutive items. A headline should make a claim or land a joke. It should never just name a topic.</p></div>
+      <div class="rule"><h4>3. Open on a hook, close on a line</h4><p>Openings are an aside, a generalization, or a joke. Closings are a dry one-liner, a deadpan sentence, or "here's what to watch next."</p></div>
+      <div class="rule"><h4>4. Every news item ties to a book</h4><p>EV's signature habit is translating news into what it means for the race. Here, every news item gets pinned to something on the shelf, with a page number.</p></div>
+      <div class="rule"><h4>5. Rhythm: short, short, long-with-a-turn</h4><p>Alternate plain declarative sentences with a longer one that turns sardonic at the end. Parentheticals carry the asides.</p></div>
+      <div class="rule"><h4>6. Show your sources</h4><p>Every factual claim gets a footnote, and opinion is labeled as opinion. Readers should always be able to tell which is which.</p></div>
+      <div class="rule"><h4>7. State uncertainty out loud</h4><p>Use conditional chains ("if X holds, then Y") and say so when a source contradicts itself. Confident and hedged at once is the house tone.</p></div>
+      <div class="rule"><h4>8. Initials as bylines</h4><p>Sign each item (S). If a co-writer joins, add their initial, the way EV uses (V) and (Z).</p></div>
+      <div class="rule"><h4>9. A fixed daily lineup</h4><p>Politics × books, defense news × books, leadership, writing, and the nightstand. Readers learn where to look, the same way EV readers know where the Senate table is.</p></div>
+      <div class="rule"><h4>10. Running jokes that carry over</h4><p>Callbacks to earlier items (Kennan's "X" article, the empty poll column) reward daily readers and connect the issues.</p></div>
+    </div>
+
+  </section>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+<script>
+['mine-crane','mine-practice'].forEach(function(id){
+  var ta=document.getElementById(id); if(!ta) return;
+  var key='tlg-'+id;
+  try{ var v=localStorage.getItem(key); if(v) ta.value=v; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem(key,ta.value); }catch(e){} });
+});
+</script>
+
+</body>
+</html>
