@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-18 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Wednesday, November 18, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-18/">This morning's issue and podcast</a> · <a href="../">Archive of every edition</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Fuller, <i>See It/Shoot It</i></a></li>
+          <li><a href="#t1a">The world around the book</a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tomorrow's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from Tuesday's seminar</a></li>
+          <li><a href="#t7">Political strategy × Fuller</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#f-00">Prologue and introduction: Who Counted the Dead at Boyya? Everyone Except Washington</a></li>
+          <li><a href="#f-01">Ch. 1: The Drone Policy Showed Up Two Decades Before the Drone</a></li>
+          <li><a href="#f-02">Ch. 2: Outsource the Bomb, Keep the Blame</a></li>
+          <li><a href="#f-03">Ch. 3: Hellfire Ready, Permission Pending</a></li>
+          <li><a href="#f-04">Ch. 4: The President Wanted Him Dead. The Memo Said Maybe.</a></li>
+          <li><a href="#f-05">Ch. 5: The Drone Got the Job Because Every Other Applicant Flunked</a></li>
+          <li><a href="#f-06">Ch. 6: Loitering With Intent: The Drones Won Their Game, and the Players Moved to Syria</a></li>
+          <li><a href="#f-07">Conclusion: The Drone Monopoly Expired. The Bases Stayed.</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Thursday's seminar</span>
+        <h3><a href="#t1">Fuller, <i>See It/Shoot It</i>: The Drone War Was Older Than the Drone</a></h3>
+        <p>Fuller argues that the CIA's drone campaign is not a product of 9/11. It is the old goal of Reagan's counterterrorism hardliners, killing terrorists before they strike, finally made possible by better technology and a government willing to put clear lethal authority in writing. George Shultz, William Casey, and Oliver North pushed preemption and lethal retaliation in the early 1980s. Their directives created the CIA's Counterterrorist Center, the same office that runs the drone war today. Clinton's lawyers then drafted the authorities that Bush and Obama inherited. Fuller's own summary: the campaign is unique in scale and still not unprecedented.</p>
+        <p>The book argues against three popular claims. First, that Obama invented a "drone doctrine." Second, that 9/11 turned a civilian spy agency into a paramilitary one, when the CIA was in the killing business by 1985. Third, that the campaign runs without oversight, when the agency insisted on layers of legal cover before it would fire. Fuller is no cheerleader, though. His sixth chapter grades the campaign a success against al-Qaeda's core and then blames it for helping open the vacuum the Islamic State filled.</p>
+        <p>For this course, Fuller ties all three themes together. On effectiveness, he shows a tool that won the target list and lost the region. On limits, the limits came from lawyers, Congress, and Pakistan, not from the nuclear shadow. On technology, the policy came first and waited twenty years for an aircraft. (The CIA wanted the capability before anyone could build it. Sound familiar?) Read it asking who wrote each permission slip, and whether the drone made killing easier to start. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t1a">
+        <span class="kicker">The World Around the Book</span>
+        <h3><a href="#t1a">A British Historian Reads the CIA's Mail and Finds It Postmarked 1984</a></h3>
+        <p><b>The author.</b> Christopher Fuller is a historian, and that matters more than anything else about him. When the book came out he was a lecturer in modern American history at the University of Southampton, with joint British and American citizenship and a career teaching U.S. foreign policy since 2000. He never served in the CIA or the military and had no inside access. His evidence is the public record: memoirs, journalism, congressional reports, and declassified files from the CIA's own electronic archive, which he uses to show the new Counterterrorist Center's early fixation on Libya. His stated purpose, in the acknowledgments, is a critical appraisal of counterterrorism that protects society without giving up its decency. Our take: his axe is aimed at the Drone President story. He never argues against drones as such, and his last pages are hopeful about them. A historian's instinct is to find continuity, and continuity is the one thing this book always finds. Read each of his claims that nothing here is new with that in mind.</p>
+        <p><b>The moment.</b> Yale published the book in April 2017, three months after Obama left office, and it argues against the way people talked about his drone war. Jimmy Carter wrote in 2012 that the practice began after 9/11. The press called Obama the "Drone President," and Greg Miller wrote that no president had relied so heavily on secret killing. Fuller says that story misses where the program came from. Reagan's hardliners wrote the policy, the CIA built the center that runs it, and Clinton's lawyers drafted the authority, all before the first armed Predator flew. He also wrote as the campaign was winding down: he judges that the days of weekly strikes in Pakistan's tribal areas had passed. Our take: that timing helps his history and hurts his verdict. Chapter 6 grades a campaign whose aftermath, the Islamic State, was still unfolding as he wrote.</p>
+        <p><b>The reception.</b> Reviewers praised the history and argued about its tone. Emil Archambault, in <i>International Affairs</i> in January 2018, called the narrative compelling and somewhat revisionist, and credited it with showing a consistent policy line from Reagan's NSDD 138 forward. William Astore, reviewing for H-War in November 2021, found the argument more subtle than the title, and praised the sections on the language of drone warfare. He faulted Fuller for not explaining how the worst results, the civilian dead, are kept from the American public, and he called the drone names (Predator, Reaper, Hellfire) a missed subject. The publisher's praise came from Bruce Riedel and Loch Johnson, both intelligence scholars, which tells you the book's first audience. We could not find a review in a military journal, so the airmen's reaction is undocumented.</p>
+        <p>Our verdict: the critics are right about the continuity and too easy on the thesis. Fuller's own numbers cut against his claim that the campaign returns to old methods. By his count, Obama authorized more strikes in his first year than Bush had in eight. A policy that keeps its old goals and multiplies its methods has still changed. That is the seminar's question about how dramatic the change was, and Fuller answers it more modestly than his evidence does. (Historians call this continuity. Pilots call it a much longer shift.) <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Seven Chapters, One Evening, Sorted by Payoff</a></h3>
+        <p>Read the argument, then the verdict, then the history. Your edition may have printed pages; these are ebook pages, so match them by chapter.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The introduction, ebook 27 to 43 (six popular claims, and Fuller's answer to each), then the conclusion, ebook 340 to 348 (the "Predator empire" and proliferation).</li>
+          <li><b>60 minutes.</b> Add chapter 6, ebook 289 to 311 and 329 to 339 (Obama's strategy, the strike counts, endurance, and the Islamic State vacuum), and chapter 5, ebook 266 to 273 (why cruise missiles failed and the armed Predator replaced them).</li>
+          <li><b>2 hours.</b> Add chapter 3, ebook 132 to 138 and 149 to 174 (the CTC, the Eagle Program, and arming the Predator over Kosovo); chapter 4, ebook 185 to 197 and 221 to 236 (the covert action pendulum and Clinton's four memos); and chapter 1, ebook 66 to 73 and 95 to 97 (NSDD 138 and Sporkin's legal theory).</li>
+        </ol>
+        <p>Chapter 2, the Fadlallah car bomb, can wait. Its lesson, that proxies make the CIA own their mistakes, is in the chapter 2 lesson below. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 3, ebook 167 to 174.</b> Arming the Predator came out of the Kosovo air war, not the hunt for bin Laden. Then watch the September 4, 2001, meeting approve the armed drone and put off deciding who would pull the trigger.</li>
+          <li><b>Chapter 4, ebook 221 to 225.</b> Four memorandums of notification in a year, each one hedging on whether the CIA could kill bin Laden. Mark the clause that allowed killing only if capture was "not feasible."</li>
+          <li><b>Chapter 5, ebook 266 to 273.</b> Clinton asks why the missiles lack cameras. Hours of flight time doomed Infinite Reach, and Richard Clarke's answer was the armed Predator.</li>
+          <li><b>Chapter 6, ebook 295 and 301 to 311.</b> 294 strikes in Obama's first term against forty-six under Bush, and Fuller's claim that endurance is the drone's overlooked defining trait. Bin Laden's 2010 letter shows what that pressure felt like.</li>
+          <li><b>Chapter 6, ebook 335 to 339.</b> The Islamic State shoots back, holds cities, and governs. Then read the CIA's own 2009 warning about leaving a vacuum.</li>
+          <li><b>Introduction, ebook 37 to 38.</b> Brennan's zero collateral deaths against the outside counts of 482 and of 152 to 191. Watch how Fuller handles numbers no one can check.</li>
+        </ol>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 15, "How Technology and Ethics Evolved to Counter Terrorism." Tomorrow morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>Does unmanned aircraft make the threat or use of airpower more effective?</b> Chapter 6, ebook 301 to 311 (al-Qaeda's core under pressure) and 329 to 339 (the Islamic State vacuum); chapter 5, ebook 272 to 273 (why the drone beat the cruise missile).</li>
+          <li><b>What changed from the 1980s to the 2000s to alter the ethical use of the technology?</b> Chapter 1, ebook 70 to 73 (the assassination ban and Sporkin's way around it); chapter 4, ebook 221 to 231 (Clinton's memos, then the September 17, 2001, Finding); chapter 5, ebook 263 (rendition becomes poison).</li>
+          <li><b>How dramatic was the change?</b> Introduction, ebook 33 and 42 to 43 (unique in scale, not unprecedented); chapter 6, ebook 295 (the strike counts).</li>
+          <li><b>How does this history relate to contemporary debates about cheaper drone technology?</b> Chapter 3, ebook 142 and 149 to 150 (Clarridge's "Radio Shack" approach and the Eagle prototype); conclusion, ebook 343 to 346 (proliferation, Iran's drones in Iraq, drones over French reactors).</li>
+          <li><b>Why were the larger drones pursued instead of smaller, more expendable ones?</b> Fuller never asks this directly. Use chapter 3, ebook 153 to 157 (Karem's high-endurance Amber and GNAT-750), chapter 5, ebook 273 (real-time intelligence and a small blast radius), and chapter 6, ebook 308 (endurance).</li>
+        </ol>
+        <p>Opinion: prepare question five. It is the one the book does not answer, so whoever connects endurance to the target set will be the person the room listens to. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Name Tags</a></h3>
+        <ol class="qs">
+          <li><b>William Casey.</b> Reagan's CIA director, who put his agency on the front line against terrorism and told his general counsel to "find me a legal way to do it" (ebook 31, 73).</li>
+          <li><b>Duane "Dewey" Clarridge.</b> First head of the Counterterrorist Center, father of its Radio Shack approach and the Eagle drone prototype (ebook 32, 142, 150).</li>
+          <li><b>NSDD 138.</b> Reagan's April 1984 directive on preemptive action against terrorists, drafted by North and never carried out as written (ebook 66 to 67).</li>
+          <li><b>CTC.</b> The CIA's Counterterrorist Center, born February 1, 1986, which now runs the drone campaign (ebook 30, 136).</li>
+          <li><b>MON.</b> Memorandum of notification, the paper that told the CIA what it could do to bin Laden; Clinton signed several, all hedged (ebook 36, 221).</li>
+          <li><b>Covert action pendulum.</b> Fuller's cycle of CIA excess, congressional backlash, tighter oversight, and agency risk aversion (ebook 35, 188).</li>
+          <li><b>Richard Clarke.</b> The White House counterterrorism chief who named the "see it/shoot it" option (ebook 26, 272).</li>
+          <li><b>Disposition Matrix.</b> The targeting database fed by NSA intercepts that matched al-Yazid's voice in the prologue (ebook 19, 294).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Tuesday · Henriksen to Fuller</span>
+        <h3><a href="#t6">Kosovo Armed the Predator</a></h3>
+        <p>Henriksen's war is where Fuller's weapon got its gun. In March 1999 Predators flew surveillance over Kosovo and beamed live video to Naples, Germany, the Pentagon, and the White House. NATO pilots, held above fifteen thousand feet by Serb air defenses and blinded by cloud, still could not find the targets the controllers could see. So technicians fitted the Predator with a laser designator, and the next step was a missile. Fuller says the decision to arm the drone had nothing to do with bin Laden at first. (Henriksen's nineteen governments, it turns out, also produced a weapons program.) The two books share a problem: Henriksen's NATO wanted force it could control from capitals, and the Predator was force a capital could watch live.</p>
+        <p>Keep one question in mind while reading. Henriksen showed coalition politics shrinking a target list; Fuller shows lawyers and memos shrinking a kill list. Which kind of limit made the airpower less effective, and which made it easier to keep using? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Fuller · via Punchbowl News AM and electoral-vote.com, November 18</span>
+        <h3><a href="#t7">The Power of the Purse Meets the Pendulum</a></h3>
+        <p>A government shutdown on December 11 is getting more likely, and the Iran war is why, Punchbowl News reported this morning. A growing number of Democrats want to use the funding deadline to cut off money for a war they call illegal and unauthorized. Speaker Mike Johnson and Majority Leader John Thune cannot accept a deal that limits the President's conduct of the war, and Chuck Schumer and Hakeem Jeffries cannot accept one that does not. Thune calls Iran funding limits "not a realistic ask." Sen. Jack Reed, the top Democrat on Armed Services, wants no shutdown and still wants to channel public opposition to the war. Rep. Rosa DeLauro wants a short stopgap into February, when Democrats will hold both chambers. Meanwhile Senate Republicans are weighing a party-line package that could raise Pentagon funding by as much as $350 billion. Electoral-vote.com adds the new math: Mary Peltola's win in Alaska puts Senate Democrats at 56 seats next Congress. It also notes that a classified NSA network went down on November 17, the same day as an FAA outage. (Somewhere a router in Arkansas is being questioned.)</p>
+        <p>Fuller has a name for what Congress is attempting: the covert action pendulum. Agency excess draws a congressional backlash, the backlash brings tighter oversight, and the agency turns cautious and demands everything in writing. In the 1990s that caution meant four hedged memos on bin Laden and a CIA unwilling to act without clear sanction. Fuller's lesson for today's fight is that Congress shapes a war less by turning money off than by what it forces the executive to write down. A shutdown cuts everything at once. A written limit lasts.</p>
+        <p>Our take: the cheap parts of a war are the hardest for Congress to stop. Fuller says Obama found drones relatively cheap in American lives and in cash, and Congress stayed quiet while strikes multiplied. A funding fight aimed at a big war may leave its smallest, cheapest tools running. (The NSA outage is a reminder of what those tools run on. Fuller's prologue starts with an NSA alarm.) <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Fuller, <i>See It/Shoot It</i></p>
+
+      <article id="f-00">
+  <span class="kicker">Chapter by Chapter · Fuller, introduction</span>
+  <h3><a href="#f-00">Who Counted the Dead at Boyya? Everyone Except Washington</a></h3>
+  <p>Before you use a casualty figure, ask who counted it and when, because the number is only as good as the counter. Fuller's thesis: the CIA's drone campaign is unique in scale and still a return to counterterrorism methods built in the decades before 9/11, the embodiment of what Richard Clarke dubbed the see it/shoot it option, made possible by better technology and a government more willing to authorize the CIA.</p>
+  <p>The strike at Boyya shows the machinery. On the night of May 21, 2010, Mustafa Abu al-Yazid, al-Qaeda's chief financial manager and commander for Afghanistan, broke his own security rules to phone a safe house in Boyya, North Waziristan, where his family was staying, and the NSA heard him. The Counterterrorism Center had lost seven colleagues at Camp Chapman six months earlier, and al-Yazid had praised the bomber. Fuller's read on Langley: "This was a chance at revenge." An Air Force crew 7,500 miles away fired a Hellfire with a nine-millisecond delay fuse, built to burst inside the roof and spare the neighbors, after a CIA civilian gave permission.</p>
+  <p>The count took five years. That evening Geo TV reported ten dead. Dawn said five civilians among at least ten. Reuters quoted Pakistani intelligence claiming six militants, and residents claiming twelve civilians from one family. The reliable tally surfaced in March 2015, in an internal al-Qaeda communication seized at bin Laden's compound: al-Yazid's wife, three daughters, and granddaughter died, along with another Arab supporter, his young son, and four local militants. (The best casualty report came from the enemy's own mail.)</p>
+  <p>The claim you'll hear: "On ebook page 38, Fuller quotes John Brennan in June 2011 saying, 'There hasn't been a single collateral death,' and the Bureau of Investigative Journalism counted at least 482 civilians, so the government lied." It asserts more than the passage shows. Fuller sets two outside counts and a dispute over definitions side by side there, and on ebook page 37 he calls the official precision claim impossible to corroborate, a judgment about evidence with no finding about intent.</p>
+  <p>A stronger response: concede the zero first. Ebook page 25, where al-Yazid's wife, daughters, and granddaughter appear on al-Qaeda's own list of the dead, sinks it. If we look at ebook page 38, the White House counted military-age males in a strike zone as combatants unless proven innocent after death, and the New American Foundation found 152 to 191 civilians, well below the bureau. Zero, 152, and 482 rest on different definitions of a civilian. Opinion: the charge that sticks is secrecy, which leaves the proportionality test on ebook page 37 with nothing to grade.</p>
+  <p>Why it's stronger: first order, the missile killed its target and the family beside him, and Washington refused to acknowledge it. Second order, the counting fell to the Pakistani press, anonymous sources, and al-Qaeda, which held its announcement ten days to keep the news on its Bagram attack. Third order, outside counts fed a perception that the campaign is not proportional, and more than twenty calls for transparency followed. That chain pre-empts the reply that critics inflate the numbers: a government with no published data has nothing to rebut them with.</p>
+  <p>A question for the room: turn to ebook page 26, where Fuller poses the question he says nobody asked, how intelligence civilians came to order Air Force personnel to strike. At Boyya an airman fired on a CIA civilian's permission, so who owns the casualty count? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-01">
+  <span class="kicker">Chapter by Chapter · Fuller, chapter 1</span>
+  <h3><a href="#f-01">The Drone Policy Showed Up Two Decades Before the Drone</a></h3>
+  <p>A policy that loses the fight for forces can still win the fight for authority, and authority will wait years for a weapon. Fuller's line: the policy preceded the technology. Secretary of State George Shultz, CIA director William Casey, and NSC staffer Lt. Col. Oliver North pushed for lethal force against terrorists, preemptively when possible. They lost inside the Reagan administration, yet Fuller argues their ideas became the backbone of the CIA's drone campaign.</p>
+  <p>The hardliners had the words. On June 24, 1984, Shultz called for preemptive action against terrorists before they strike, a first for a U.S. official in public, and four months later he warned against becoming the Hamlet of nations. North drafted NSDD 138, signed April 3, 1984, and the draft told the CIA director to build capabilities for the preemptive neutralization of terrorist groups. Casey's deputy, John McMahon, feared the word breached the assassination ban. Casey's standing order to his counsel, Stanley Sporkin, was "find me a legal way to do it." Sporkin found one: terrorists were not foreign political leaders, so targeting them was not assassination, and hard intelligence of a coming attack allowed preemption under Article 51 of the U.N. Charter. The final text swapped neutralize for proactive efforts. The reasoning survived the edit.</p>
+  <p>The hardliners lacked the guns. Defense Secretary Caspar Weinberger kept the military out of it. After the Beirut barracks bombing killed 241 Americans, national security adviser Robert McFarlane says Reagan approved a strike with France for November 16, 1983. Weinberger says no order reached him, and he told the French it was too late to join. When McFarlane told Reagan his secretaries agreed on next to nothing, the president told him to make it work. (He did not say how.)</p>
+  <p>The claim you'll hear: "On ebook page 67, Noel Koch says no part of NSDD 138 was ever implemented, so the directive was a dead letter and the drone story starts after 9/11." It reads one quote and ignores the author's counterevidence. On that same page Fuller gives three reasons the failure does not reduce the directive's significance, and on ebook page 95 he calls the Obama administration's legal case for targeted killing identical to Sporkin's.</p>
+  <p>A stronger response: concede the 1980s. On ebook page 90, the administration launched no response against Iran, Syria, and Hezbollah for Beirut. If we look at ebook page 86, policy belonged to whoever could mobilize or block resources, so Weinberger could block a strike, and nobody could block a legal opinion. On ebook page 73, Sporkin hands the CIA its theory of lethal self-defense outside the assassination ban, and on ebook page 95 that theory reappears intact under Obama. Opinion: Weinberger won the short argument and lost the long one.</p>
+  <p>Why it's stronger: first order, Weinberger's veto and Reagan's refusal to choose left NSDD 138 on paper. Second order, with the military out, the CIA became the lead counterterrorism agency because its director was willing. Third order, by 9/11 the CIA was ready to lead because it had been fighting this war since NSDD 138. That chain pre-empts the 9/11 objection: Fuller grants that the attacks changed how Americans saw the threat, and shows the theory and the agency already waiting.</p>
+  <p>A question for the room: turn to ebook page 96, where Fuller says the hardliners built terrorism into something it was not, because Beirut did not threaten national security. If Weinberger read the threat correctly, was he also right to block the strike? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-02">
+  <span class="kicker">Chapter by Chapter · Fuller, chapter 2</span>
+  <h3><a href="#f-02">Outsource the Bomb, Keep the Blame</a></h3>
+  <p>A government that hands the trigger to someone else still owns the explosion. In his second chapter Fuller argues that two 1985 episodes, the failed attempt to kill Ayatollah Mohammed Hussayn Fadlallah and the Achille Lauro intercept, taught lessons that still shape the Obama-era drone campaign. Fadlallah taught control: foreign agents may find the target, and Americans do the killing. Achille Lauro taught that the home crowd forgives a great deal when the guilty are caught.</p>
+  <p>The car bomb went off on March 8, 1985, near Fadlallah's apartment building in Beirut's Bir al-'Abd quarter. It killed more than eighty people and injured two hundred. Fadlallah escaped unharmed, if he was there at all (the one result a targeted killing exists to prevent). Local operatives recruited by Lebanese intelligence, the G-2, did the work, and his followers hung a banner reading "MADE IN THE USA" in front of a blown-out building. Casey's deputy, John McMahon, had asked whether the CIA could control the G-2. Three months later, Hezbollah and Islamic Jihad members hijacked TWA 847 and killed Navy diver Robert Stethem. The lead hijacker asked the control tower, "Did you forget the Bir al Abed massacre?"</p>
+  <p>The claim you'll hear: on ebook page 103, Fuller reports that the official investigation found no evidence of CIA complicity and blamed rogue operatives, so the agency's hands were clean and Fadlallah is a story about bad partners. It falls short because it reads one passage and skips the counterevidence on the next two pages. It also assumes the world assigns blame the way an inspector general does.</p>
+  <p>A stronger response: concede the finding first, since Fuller never proves Casey ordered the bomb. On ebook page 104, the Senate inquiry under Bernie McMahon concluded that the CIA had created a mechanism that got out of control. On ebook page 105, Robert Oakley recalls two assessments, one by Special Forces advisers and one by the CIA itself, that found the units' discipline unacceptable. On ebook page 112, Fuller says the link to the CIA damaged America's standing regardless of how culpable the agency actually was. The hijackers on TWA 847 did not wait for the inquiry's report. Opinion: legal innocence is worth very little once the banner is up, which is why, on ebook page 107, the CIA kept the trigger even after Pakistan's prime minister, Yousaf Gilani, asked in November 2008 for the technology to strike targets on his own soil.</p>
+  <p>The chain of consequences makes the case. First order, the G-2 bomb killed more than eighty people and missed its man. Second order, Hezbollah recruited on the grievance, and the CIA dismantled its foreign-agent counterterror program and, less than a year later, created the Counterterrorism Center as a direct response. Third order, the agency had no agents who could reach the tribal areas after 9/11; in April 2004 George Tenet told the 9/11 Commission the rebuild would take five more years. That chain pre-empts the critic who says sharing the drones would have bought goodwill. Fuller concedes it likely would have, in the short term, and answers with the Afghan-jihad weapons that flowed through Pakistan's intelligence service to anti-American jihadists.</p>
+  <p>A question for the room: on ebook page 114, Fuller admits that, given the secrecy, he cannot tell whether drone strikes drive terrorist recruitment or deter it. If even the author cannot say which way the blowback runs, how should a planner weigh it before the first strike? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-03">
+  <span class="kicker">Chapter by Chapter · Fuller, chapter 3</span>
+  <h3><a href="#f-03">Hellfire Ready, Permission Pending</a></h3>
+  <p>Working hardware is rarely the last thing a new weapon waits for. The hold-up is usually the question of who gets to fire it. Fuller argues that the CIA's Counterterrorism Center was founded in 1986 to strike terrorists preemptively, lost its nerve after Iran-Contra, and returned to its founding principles after 9/11.</p>
+  <p>Duane "Dewey" Clarridge wrote an eight-page blueprint that Casey accepted without a single edit, and the CTC opened on February 1, 1986. The April 1986 raid on Libya missed Gaddafi and reportedly killed thirty-seven civilians. Clarridge asked Casey why an expensive raid like that was "more morally acceptable than a bullet to the head." His answer was the Eagle Program, a pilotless drone with an infrared camera and quiet wooden propellers, meant to carry small rockets. By his account the CTC had a working model within a year. (The CIA will neither confirm nor deny it exists, which is a very CIA way to have a prototype.) On February 21, 2001, a Predator fired a Hellfire in flight for the first time.</p>
+  <p>The claim you'll hear: on ebook page 184, Fuller calls Clarridge the father of the CTC's drone campaign, so the armed Predator was the CIA's own 1986 idea, built in-house and finally delivered. It asserts more than the passage shows. Fuller himself says on ebook page 155 that Eagle's role in drone development is near impossible to establish, and on ebook page 167 that the decision to arm the Predator came out of the Kosovo air war.</p>
+  <p>A stronger response: concede the intent, because it was real. On ebook page 138, Clarridge's plan called for two secret action teams with authority to kill terrorists to preempt an attack. Then separate the idea from the weapon and the permission. On ebook page 168, it is the Air Force's General John Jumper who decides in May 2000 to arm the Predator. The CIA's own managers balked: on ebook page 170, operations chief James Pavitt asked, "Why would we want to do this?" On ebook page 174, a September 4, 2001, principals meeting approved the armed drone and deferred who would fire it. On September 17, six days after the attacks, Bush signed a Finding letting the CIA kill listed targets without further presidential approval. Opinion: the CIA owned the idea long before it owned the weapon, and it took 9/11 to settle who could pull the trigger.</p>
+  <p>Iran-Contra explains most of the gap. First order, it removed the CTC's champions: Reagan dismissed North in November 1986, Casey died in May 1987, and Clarridge was forced to retire that June. Second order, the center slid back into the cautious, report-writing culture its founders had scorned, and when a Predator later crashed on takeoff, its managers fought the Air Force over the bill. Third order, the armed drone sat tested and unused for nearly seven months until 9/11 broke the deadlock; the first lethal CIA Predator strike came on October 7, 2001. That chain pre-empts the rebuttal that the technology was not ready. Fuller grants the drone took more than a decade to mature, then says the delays in 2001 were legal, political, and cultural.</p>
+  <p>A question for the room: turn to ebook page 174, where the September 4, 2001, meeting left open who would fire the Predator's missiles. Had 9/11 never come, should the CIA or the Air Force have held the trigger, and what would each choice have cost? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-04">
+  <span class="kicker">Chapter by Chapter · Fuller, chapter 4</span>
+  <h3><a href="#f-04">The President Wanted Him Dead. The Memo Said Maybe.</a></h3>
+  <p>Legal authority is a capability, and an order the shooter cannot safely read is no order at all. Fuller argues that the laws behind the CIA's drone campaign proved as vital as the technology. Decades of what he calls the covert action pendulum, with Washington demanding bold covert action and then punishing it, left the agency risk-averse by the late 1990s. Clinton's team spotted al-Qaeda early and was slow to give the CIA clear legal sanction to stop it.</p>
+  <p>The CIA drafted four Memorandums of Notification for Clinton between February 1998 and February 1999. The first, a tribal snatch of bin Laden, never reached the president: all six senior officers between station chief Michael Scheuer and George Tenet recommended against it. After the August 1998 embassy bombings, NSC staff had CIA counsel John Rizzo limit the tribals to force in self-defense, a phrase he thought fit for jury instructions. In December the tribals could kill bin Laden only if capture was not feasible, which handed the judgment, and the blame, to the CIA. In February 1999 Clinton himself wrote the self-defense limit back in for Ahmed Shah Massoud's forces, so the shakier tribals had more latitude than the professionals. Massoud's men noticed: "Oh, okay, you want us to capture him. Right. You crazy white guys."</p>
+  <p>The claim you'll hear: On ebook page 230, the 9/11 Commission says the Pentagon had the capabilities but the CIA had the authorities, so the CIA had all the authority it needed and lost its nerve. It falls short because it skips Fuller's counterevidence on ebook pages 230 and 231: the CIA's first targeted killing of al-Qaeda came only after Bush's new Finding of September 17, 2001, and the use-of-force authorization the next day. It also ignores ebook page 236, where Attorney General Janet Reno reportedly warned that an action meant solely to kill bin Laden would be illegal.</p>
+  <p>A stronger response: Concede the will first. The commission concluded on ebook page 230 that Clinton "wanted him dead." Then turn it. If we look at ebook page 224, the December memo never says who decides whether capture is feasible: Tenet, the handlers, or a tribal fighter mid-gunfight. On ebook pages 229 and 230, Paul Pillar suspects the White House wanted nothing on paper that looked like an authorization to assassinate. The will was real, and it thinned at every hop up the NSC chain. Opinion: an order that makes the shooter judge feasibility protects the signer and exposes the shooter. That is a liability waiver with a code name.</p>
+  <p>Why it's stronger: First order, the hedged memos meant the CIA's first targeted killing of al-Qaeda waited until after 9/11. Second order, the agency kept demanding explicit paper: even after 9/11 its lawyers found Bush's Finding too ambiguous, and it would kill only terrorists the president designated. Third order, Obama kept that architecture and stretched it to al-Qaeda in the Arabian Peninsula, formed in 2009, and to the Islamic State, which Fuller says leaves the campaign on unstable foundations. That pre-empts the reply that the agency was simply timid: the agency that balked in 1998 struck in Yemen by November 2002, once the authorities were written down.</p>
+  <p>A question for the room: Turn to ebook page 225, where Clinton personally wrote the self-defense limit back into the Massoud memo and later told the 9/11 Commission he could not remember why. Was that a reasonable guard against an assassination charge, or the moment the White House handed its risk to Langley? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-05">
+  <span class="kicker">Chapter by Chapter · Fuller, chapter 5</span>
+  <h3><a href="#f-05">The Drone Got the Job Because Every Other Applicant Flunked</a></h3>
+  <p>Before crediting a weapon, count the alternatives it beat. Fuller argues that each president's counterterrorism tools were built on his predecessors' successes and failures, and Obama's turn to CIA drones in Pakistan was the end of that elimination contest. Rendition became politically poisonous, the cruise missile proved too blunt, commando raids could be used only sparingly, and the Pakistani army bludgeoned the tribal areas. Obama authorized more drone strikes in his first year than Bush had in two terms.</p>
+  <p>The cruise missile flunked in public. After the June 26, 1993 strike on Iraqi intelligence headquarters, Clinton asked Richard Clarke, "Why don't the missiles have cameras in them?" Twenty of the twenty-three hit; three went astray and killed the artist Layla al-Attar. Clinton finally confirmed the result by phoning CNN, which found a cameraman's cousin who could see the building from his apartment. (Battle damage assessment, by relative.) In August 1998 Operation Infinite Reach fired seventy-nine missiles, with hours between launch order and impact and a warning to Pakistan on the way. They missed bin Laden, and three follow-up strikes were called off because a single human source was not reliable enough. Clinton told Joint Staff chairman Hugh Shelton he wanted "Ninja guys in black suits" in al-Qaeda's camps. Shelton agreed to look into it, and no plan ever reached the president.</p>
+  <p>The claim you'll hear: On ebook page 272, Fuller calls the cruise missile too blunt an instrument and shows Clarke asking for an armed Predator, so the drone took over because the technology finally worked. It falls short because it ignores Fuller's own counterevidence on ebook page 257: the CIA proved its armed drones in November 2002, yet Pakistan saw only four strikes in 2007. Strikes rose to thirty-six in 2008 and fifty-four in 2009, and Fuller credits a five-year effort to build informants on the ground alongside the change in administration.</p>
+  <p>A stronger response: Concede the hardware. On ebook page 273 Fuller calls the armed Predator custom made for this work, quicker and with a smaller blast. Then turn it. If we look at ebook page 257, Bush told Obama the drones were essentially flying video cameras with missiles, useless without spies on the ground telling the CIA where to look. On ebook page 256, the Afghan pursuit teams that feed the campaign grew out of TRODPINT, the tribals who never did find Mir Ami Kasi, and reportedly number more than three thousand men. Opinion: the most important drone component has a pulse, and its ancestors rode CIA-issued motorcycles.</p>
+  <p>Why it's stronger: First order, in 1998 single-source human intelligence grounded three follow-up missile strikes. Second order, Clarke's armed Predator fixed the speed problem by shortening the chain from order to impact, while the source problem stayed, so the proven drone waited for a spy network (we infer it was the same bottleneck). Third order, once the spies arrived, strikes surged, and U.N. rapporteur Phillip Alston warned in May 2010 that accurate, closely controlled, riskless force could lower the threshold for using it; Fuller says Clinton's successors bore him out. That pre-empts the new-technology reply: one bottleneck stopped missiles in 1998 and drones until 2008.</p>
+  <p>A question for the room: Turn to ebook page 288, where Fuller calls expanding the drone campaign a sensible choice, cheap in lives and cash, and set it beside Alston's warning on ebook page 272. If the drone won by elimination, did anyone ever enter the option of doing less in the contest? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-06">
+  <span class="kicker">Chapter by Chapter · Fuller, chapter 6</span>
+  <h3><a href="#f-06">Loitering With Intent: The Drones Won Their Game, and the Players Moved to Syria</a></h3>
+  <p>A campaign can hit every objective on its list and still lose ground on the problem, so grade the objectives before you grade the execution. Fuller's sixth chapter shows Obama shrinking the War on Terror to a fight with al-Qaeda's core and handing the Counterterrorism Center three goals: decapitate the leadership, deny safe haven, degrade the Taliban. By those goals the drones succeeded. The movement they were meant to cripple grew anyway, and the drone's quietest trait, its ability to hover for days, did as much damage as its missiles.</p>
+  <p>The tempo rose fast. The CIA launched more lethal strikes in Obama's first year than in Bush's eight, and the New American Foundation counts 294 strikes in Pakistan over the first term against forty-six under Bush. The hovering did the rest. In an October 2010 letter, bin Laden told his men to stop meeting on roads and to gather once or twice a week at most, only "when the clouds are heavy." (A terrorist group that schedules meetings by weather forecast has a management problem.) By 2013 Zawahiri could referee the feud between Baghdadi and the Nusra Front only through handwritten letters carried by Abu Khalid al-Suri. His May 23, 2013, order to dissolve ISIS got its answer on February 21, 2014, when ISIS killed al-Suri with a suicide bomb.</p>
+  <p>The claim you'll hear: "On ebook page 301, Fuller quotes the administration's September 2011 report that the drones took out more than half of al-Qaeda's leadership, so the campaign worked." It confuses a first-order effect with the outcome. On ebook page 316, Fuller cites Rand: twenty-eight Salafi-jihadist groups in 2007, forty-nine by the end of 2013, and up to 105,000 active fighters.</p>
+  <p>A stronger response: concede the kill list, since al-Qaeda's own letters confirm it. Point the room to ebook page 308, where Fuller says the decline came as much from the drone's endurance as from its strikes, because constant coverage kept the leadership hidden and cut off. That isolation is the hinge. On ebook page 306, Zawahiri cannot stop his own franchise from walking out. Concede one more point: on ebook page 331, Fuller credits the wider upheaval of the Arab Spring with the movement's revival, which was beyond the CTC's reach. The drones left al-Qaeda's core too isolated to manage that chaos when it arrived. Opinion: winning the only game in town matters less once the players move to Syria.</p>
+  <p>The chain runs in three links, all from Fuller. First order, loitering drones pushed al-Qaeda's leaders into constant concealment and diverted their time from plotting to guarding themselves. Second order, a leader who governs by courier loses his franchises: by July 2015 about three dozen groups in at least eighteen nations had backed the Islamic State. Third order, the winner was a city-holding proto-state with antiaircraft weapons, an enemy a slow drone hunts badly. That chain pre-empts both camps, because the drone's fans and its critics each have to accept the half of the sequence they would rather skip.</p>
+  <p>A question for the room: Turn to ebook page 338, where the CIA's own 2009 study warned of "creating a vacuum into which more radical groups can enter," and Fuller suggests the jihadist infighting was expected and even encouraged. If the analysts saw it coming, was the Islamic State an accepted cost of the strategy, or a risk nobody owned? <span class="by">(S)</span></p>
+</article>
+
+      <article id="f-07">
+  <span class="kicker">Chapter by Chapter · Fuller, conclusion</span>
+  <h3><a href="#f-07">The Drone Monopoly Expired. The Bases Stayed.</a></h3>
+  <p>A weapon's edge is temporary, while the bases built around it last, so plan for the day the other side owns the same tool. Fuller's conclusion argues that John Brennan's drone strategy remodeled American national security policy and left behind a global network of bases that may prove to be Obama's most lasting legacy. He then shows the monopoly leaking to rival states and, eventually, to anyone with a few hundred dollars.</p>
+  <p>The growth is easiest to see in the real estate. When the CTC first flew Predator reconnaissance over Afghanistan in September 2000, the pilots worked from a fenced-off corner of Ramstein Air Base: a satellite antenna, one ground control station, a thirty-foot-square tent and a couple of porta-potties. By the end of Obama's first term the improvised setup had become a web of runways, hangars and relay stations from Turkey to the Seychelles. Ian Shaw called it a "Predator empire." The copying came fast. Iraq's Maliki government made drones its primary request against the Islamic State, and Iran sent its own drones to help defend that same government. An Army counter-drone engineer put it plainly: "Every country has them." In January 2015 a drunk, off-duty employee of the agency that helps map territory for U.S. drone strikes lost a $300 DJI Phantom 2 on the White House grounds, where it slipped past the Secret Service's radar. (The irony files itself.)</p>
+  <p>The claim you'll hear: "On ebook page 343, Fuller says the United States kept a lethal presence in Pakistan, Somalia and Yemen without bases there, so drones let America project power without holding territory." It reads one passage and ignores the counterevidence beside it. On ebook page 342, Fuller tests that very idea, Charles Maier's post-territorial empire, and concludes that the drone bases show frontiers are far from irrelevant.</p>
+  <p>A stronger response: concede the narrow point, since no bases were needed inside those three countries. If we look at ebook page 341, the strikes depended on a relay hub in Germany and a planned backup in Italy, so the territory moved somewhere else. On ebook page 343, Fuller's history does the rest: the Maxim gun cut down the Mahdist army in 1898 and then helped produce the First World War's stalemate, and the tank that broke the stalemate carried Hitler's panzers through the Ardennes in 1940. On ebook page 345 he names the reason drones will spread fast: Clarridge pursued a cheap and easy Radio Shack solution, and cheap travels. Opinion: Fuller's closing optimism about civilian drones is generous, given that ebook page 346 lists at least fourteen illegal drone flights over French nuclear plants in about four weeks of 2014.</p>
+  <p>The chain shows why. First order, drones gave the United States lethal reach into Pakistan, Somalia and Yemen without a base in any of them. Second order, that reach required a permanent network elsewhere, including a requested $15 million backup relay at Sigonella meant to avoid a single point of failure. Third order, the method spread: the 2015 National Security Strategy flagged Chinese and Russian drones in hybrid warfare, and Fuller says the CIA may scale down while the United States and the rest of the world will not. That chain pre-empts the comfortable reply that the CIA is leaving the drone business, because the bases and the copycats outlast whichever agency flies the aircraft.</p>
+  <p>A question for the room: Turn to ebook page 347, where Fuller says innovations born from fear can eventually provide hope and save lives. Does the evidence he lists one page earlier earn that ending, or did the conclusion run out of worry before the book ran out of pages? <span class="by">(S)</span></p>
+</article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+      <span class="kicker">Spaced Review · five earlier books against Fuller</span>
+      <h3><a href="#r1">Five Old Friends Who Would Have Asked for a Predator</a></h3>
+      <ol class="qs">
+      <li><b>Gaddis, containment.</b> American strategy swung between meeting every threat everywhere and picking the terrain and the tools, depending on how leaders saw their means. The link: Obama narrowed the war to al-Qaeda's core and the AfPak border, and Fuller calls drones relatively cheap in lives and cash. That is asymmetric containment run by a targeting cell.</li>
+      <li><b>McDougall, the space race.</b> Sputnik made the state the manager of technological change. The link: DARPA, born of Sputnik, gave Abraham Karem the five-million-dollar grant behind the Amber, the ancestor of the Predator line. The technocracy McDougall described built the CIA's favorite airplane.</li>
+      <li><b>Olsen, Desert Storm.</b> Attacks on Saddam's power base degraded Iraq and still did not change the regime. The link: Fuller's drones decapitated al-Qaeda's core, and the movement grew anyway. Killing leaders worked twice and solved the problem neither time.</li>
+      <li><b>Lambeth, transformation.</b> Stealth, precision, and battlespace awareness made air power strategic from the start of a campaign. The link: the armed Predator delivered real-time intelligence and a small blast radius, which is Lambeth's promise in one airframe. Then the Islamic State shot back and moved into cities, and the promise shrank.</li>
+      <li><b>Clodfelter, North Vietnam.</b> Bombing's value depends on the goals and the kind of war. The link: Fuller says that measured against Obama's own orders the drone war looks like a success, and that the goals had not changed since Reagan's 1986 Libya raid. Clodfelter would ask the next question: were those the right goals?</li>
+      </ol>
+      <p>Opinion: all five authors would have recognized the drone's sales pitch, and three would have warned about the fine print. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Fuller's page numbers are ebook pages from the PDF on file; the edition is reflowed and has no printed page numbers. Match them to your copy by chapter.</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Shultz, Casey, and North; preemption and lethal retaliation; directives and Finding led to the CTC, which now runs the drone campaign: Fuller, ebook 30.</li>
+          <li>Clinton's MONs drawn from Reagan-era authorizations, adopted through Bush and Obama Findings: Fuller, ebook 35–36.</li>
+          <li>Unique in scale, not unprecedented; Clarke's see it/shoot it option; technology and willingness to authorize: Fuller, ebook 42–43.</li>
+          <li>"Drone doctrine," "Drone President": Fuller, ebook 29. CIA in the Fadlallah plot in 1985: Fuller, ebook 31. Legal cover sought before acting: Fuller, ebook 35.</li>
+          <li>Chapter 6 verdict, success against the core; role in the vacuum the Islamic State filled: Fuller, ebook 41–42.</li>
+          <li>Policy preceded the technology: Fuller, ebook 55. The three-theme framing and the asides are ours.</li>
+        </ul>
+        <h3>Time plan, read for, and seminar questions</h3>
+        <ul>
+          <li>Chapter page ranges: introduction ebook 27–43; ch. 1, 44–98; ch. 2, 99–131; ch. 3, 132–184; ch. 4, 185–248; ch. 5, 249–288; ch. 6, 289–339; conclusion, 340–348.</li>
+          <li>Predator arming from the Balkans, not bin Laden: Fuller, ebook 167. September 4, 2001, meeting deferred who fires: Fuller, ebook 174.</li>
+          <li>Four MONs; "not feasible": Fuller, ebook 221, 224.</li>
+          <li>Clinton and the missile cameras; Infinite Reach; Clarke and the armed Predator: Fuller, ebook 266–273.</li>
+          <li>294 strikes versus forty-six: Fuller, ebook 295. Endurance: Fuller, ebook 308. Bin Laden's October 2010 letter: Fuller, ebook 310–311.</li>
+          <li>Islamic State antiaircraft weapons, cities, governance: Fuller, ebook 335. CIA 2009 vacuum warning: Fuller, ebook 338.</li>
+          <li>Brennan, BIJ 482, NAF 152 to 191: Fuller, ebook 38; impossible to corroborate: Fuller, ebook 37.</li>
+          <li>Questions from the syllabus, Seminar 15. Radio Shack approach: Fuller, ebook 142; Eagle: ebook 150. Iran's drones in Iraq, French reactors: Fuller, ebook 344, 346. Karem's high-endurance designs, Amber and GNAT-750: Fuller, ebook 153–157. Rendition politically poisonous: Fuller, ebook 263.</li>
+          <li>Which question to prepare is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Pages as given in each entry: Casey (ebook 31, 73), Clarridge (32, 142, 150), NSDD 138 (66–67), CTC (30, 136), MON (36, 221), covert action pendulum (35, 188), Clarke (26, 272), Disposition Matrix (19, 294).</li>
+        </ul>
+        <h3>Bridge from Tuesday's seminar</h3>
+        <ul>
+          <li>Predators over Kosovo in March 1999, live video to Naples, EUCOM, the Pentagon, and the White House; fifteen thousand feet; clouds; controllers could not talk pilots on; arming had nothing to do with bin Laden: Fuller, ebook 167.</li>
+          <li>Laser designator fitted by Big Safari; June 2, 1999 test: Fuller, ebook 168.</li>
+          <li>Nineteen nations and targeting approval by capital: Henriksen, ebook 13, 48–56. The asides and the closing question are ours.</li>
+        </ul>
+        <h3>Political strategy × Fuller</h3>
+        <ul>
+          <li>Shutdown on December 11 more likely; Democrats want to use the deadline against Iran war funding; Big Four positions; Thune, "not a realistic ask"; Reed; DeLauro's stopgap into February; Senate GOP weighing up to $350 billion more for the Pentagon via reconciliation: Punchbowl News AM, November 18, 2026.</li>
+          <li>Peltola wins Alaska, Democrats at 56 Senate seats; classified NSA network down November 17; FAA outage blamed on a router in Arkansas; Hawley skeptical: <a href="https://www.electoral-vote.com/">electoral-vote.com, November 18, 2026</a>.</li>
+          <li>Covert action pendulum: Fuller, ebook 35, 188. Risk aversion limited Clinton's options; four MONs: Fuller, ebook 197, 221. Congress quiet as strikes rose: Fuller, ebook 33. Relatively cheap in lives and cash: Fuller, ebook 288. NSA alarm in the prologue: Fuller, ebook 18.</li>
+          <li>The reading of today's fight and the closing take are our opinion.</li>
+        </ul>
+        <h3>The world around the book</h3>
+        <ul>
+        <li>Lecturer in modern American history at Southampton; joint U.K. and U.S. citizenship; researching and teaching U.S. foreign policy since 2000; published April 25, 2017; praise from Riedel, Johnson, Jeffreys-Jones, and Olmsted: <a href="https://yalebooks.yale.edu/book/9780300218541/see-itshoot-it/">Yale University Press book page</a>.</li>
+        <li>CIA electronic archive used for the CTC's early focus on Libya: Fuller, ebook 142.</li>
+        <li>Stated purpose, a critical appraisal of counterterrorism that protects society without sacrificing kindness: Fuller, acknowledgments (front matter, PDF pp. 8–9).</li>
+        <li>Carter's 2012 op-ed; "Drone President"; Greg Miller: Fuller, ebook 29.</li>
+        <li>Reagan hardliners, CTC, Clinton-era Memorandums of Notification: Fuller, ebook 30, 32, 35–36.</li>
+        <li>Days of sustained weekly strikes in the FATA seem to have passed: Fuller, ebook 344.</li>
+        <li>Islamic State and the vacuum: Fuller, ebook 42, 335–339.</li>
+        <li>Archambault review, compelling and somewhat revisionist, consistency from NSDD 138: <a href="https://academic.oup.com/ia/article-abstract/94/1/227/4762685"><i>International Affairs</i> 94, no. 1 (January 2018): 227–228</a> (abstract page).</li>
+        <li>Astore review, more subtle than the title, language of drone warfare, public kept from the worst results, drone names: <a href="https://www.h-net.org/reviews/showrev.php?id=51963">William J. Astore, H-War, H-Net Reviews, November 2021</a>.</li>
+        <li>Obama authorized more strikes in his first year than his predecessor in eight: Fuller, ebook 33.</li>
+        <li>No review in a military journal found in our search; the takes and verdict are our opinion.</li>
+        </ul>
+        <h3>Fuller, introduction: Who Counted the Dead at Boyya? Everyone Except Washington</h3>
+        <ul>
+        <li>Unique in scale, not unprecedented; a return to pre-9/11 methods; Clarke's see it/shoot it option; technology and willingness to authorize the CIA: Fuller, ebook 42 to 43.</li>
+        <li>Al-Yazid broke his own protocols and called the safe house; family nearby: Fuller, ebook 18.</li>
+        <li>NSA algorithm and voice match; chief financial manager and commander in Afghanistan: Fuller, ebook 18 to 19.</li>
+        <li>Seven colleagues killed at Camp Chapman six months earlier, al-Yazid praised the bomber, "a chance at revenge": Fuller, ebook 20.</li>
+        <li>Crew controlling an aircraft 7,500 miles away from Creech: Fuller, ebook 21.</li>
+        <li>Nine-millisecond delay fuse; civilian commander at Langley granted permission to fire: Fuller, ebook 22.</li>
+        <li>Geo TV and Dawn reports: Fuller, ebook 23 to 24.</li>
+        <li>Reuters report; U.S. government refused to acknowledge the strike: Fuller, ebook 24.</li>
+        <li>Al-Qaeda delayed its announcement ten days over the Bagram news cycle: Fuller, ebook 24.</li>
+        <li>March 2015 internal al-Qaeda communication and the list of dead: Fuller, ebook 25.</li>
+        <li>The unasked question of CIA civilians ordering Air Force personnel to strike: Fuller, ebook 25 to 26.</li>
+        <li>More than twenty separate calls for transparency: Fuller, ebook 34 to 35.</li>
+        <li>Precision and proportionality claimed by U.S. officials but impossible to corroborate given the lack of transparency: Fuller, ebook 37.</li>
+        <li>Brennan, June 2011, "There hasn't been a single collateral death": Fuller, ebook 38.</li>
+        <li>New York Times on military-age males; BIJ count of at least 482 civilians among more than 2,500 dead; New American Foundation count of 152 to 191; outside counts fueled the perception the campaign is not proportional: Fuller, ebook 38.</li>
+        <li>The "different definitions" reading, the secrecy judgment, and the closing question are our opinion.</li>
+        </ul>
+        <h3>Fuller, chapter 1: The Drone Policy Showed Up Two Decades Before the Drone</h3>
+        <ul>
+        <li>Shultz, Casey, and North as the hardline group favoring preemptive lethal force; resistance inside the administration; ideas became mainstream and owe the drone campaign: Fuller, ebook 44 to 45.</li>
+        <li>The policy preceded the technology: Fuller, ebook 55.</li>
+        <li>Shultz at the Jonathan Institute, June 24, 1984, first public U.S. call for preemptive action: Fuller, ebook 53 to 54.</li>
+        <li>Park Avenue Synagogue speech four months later, "Hamlet of nations": Fuller, ebook 54.</li>
+        <li>Beirut barracks bombing killed 241: Fuller, ebook 55.</li>
+        <li>NSDD 138 signed April 3, 1984, drafted by North; Koch: no part of it was ever implemented; three reasons the failure does not reduce its significance: Fuller, ebook 66 to 67.</li>
+        <li>Draft language on preemptive neutralization: Fuller, ebook 69.</li>
+        <li>McMahon's objection; EO 12333 assassination ban: Fuller, ebook 70.</li>
+        <li>CIA as lead agency reflecting its director's willingness: Fuller, ebook 72 to 73.</li>
+        <li>Casey to Sporkin, "find me a legal way to do it"; Sporkin's conclusions on assassination and Article 51; neutralize replaced by proactive efforts: Fuller, ebook 73.</li>
+        <li>Weinberger kept the military out of counterterrorism: Fuller, ebook 75.</li>
+        <li>McFarlane tells Reagan the secretaries agree on next to nothing; "just make it work"; policy defined by whoever could mobilize or block resources: Fuller, ebook 85 to 86.</li>
+        <li>November 1983 strike with France; Weinberger's call with Hernu, too late to join: Fuller, ebook 86 to 87.</li>
+        <li>No response against Iran, Syria, and Hezbollah for Beirut: Fuller, ebook 90.</li>
+        <li>Deadlock leads the CIA to fill the counterterrorism void: Fuller, ebook 92.</li>
+        <li>Obama administration's legal justification identical to Sporkin's: Fuller, ebook 95.</li>
+        <li>Hardliners built terrorism into something it was not; Beirut did not threaten U.S. national security; 9/11 changed perceptions: Fuller, ebook 96 to 97.</li>
+        <li>CIA ready to lead after 9/11, fighting the war since NSDD 138: Fuller, ebook 97.</li>
+        <li>The "short argument, long one" judgment, and the closing question are our opinion.</li>
+        </ul>
+        <h3>Fuller, chapter 2: Outsource the Bomb, Keep the Blame</h3>
+        <ul>
+        <li>Fadlallah and Achille Lauro as lessons visible in the CTC's Obama-era drone campaign; the public less concerned with fallout when the guilty are brought to justice: Fuller, ebook 99 to 100.</li>
+        <li>March 8, 1985, Bir al-'Abd car bomb, more than eighty killed, two hundred injured, Fadlallah unharmed if present, G-2 operatives, "MADE IN THE USA" banner: Fuller, ebook 102.</li>
+        <li>John McMahon's doubts about controlling the G-2 agents: Fuller, ebook 103.</li>
+        <li>Official investigation finds no evidence of Casey's or the CIA's complicity, blames "rogue operatives": Fuller, ebook 103.</li>
+        <li>Senate inquiry under Bernie McMahon: the CIA created a mechanism that got out of control: Fuller, ebook 104.</li>
+        <li>Oakley's account of two assessments finding discipline standards unacceptable: Fuller, ebook 105 (and 111).</li>
+        <li>CIA dismantles the foreign-agent counterterror program: Fuller, ebook 106.</li>
+        <li>Gilani's request in the November 13, 2008, cable for the technology; the CIA keeps tight control; foreign agents provide intelligence and targeting but do not do the neutralization: Fuller, ebook 107.</li>
+        <li>No agents for the tribal areas; Tenet to the 9/11 Commission, April 14, 2004, on five more years to rebuild: Fuller, ebook 107 to 108.</li>
+        <li>Afghan-jihad weapons via the ISI reaching anti-American jihadists; drones kept under strict control though sharing would likely limit anti-Americanism and legal criticism in the short term: Fuller, ebook 108 to 110.</li>
+        <li>CTC created less than a year after the bombing as a direct response: Fuller, ebook 111.</li>
+        <li>Reputation damaged regardless of the agency's culpability; TWA 847, Robert Stethem, "Did you forget the Bir al Abed massacre?", Hezbollah recruitment: Fuller, ebook 112.</li>
+        <li>Impossible, given secrecy, to discern whether drones drive or deter recruitment: Fuller, ebook 114.</li>
+        <li>The stronger response's opinion, the parentheticals, and the question for the room are ours.</li>
+        </ul>
+        <h3>Fuller, chapter 3: Hellfire Ready, Permission Pending</h3>
+        <ul>
+        <li>The CTC's aggressive stance as a return to founding principles; Iran-Contra and Casey's death kept it from launching its campaign under Reagan: Fuller, ebook 132 to 133.</li>
+        <li>Eight-page blueprint accepted without an edit; CTC born February 1, 1986: Fuller, ebook 136.</li>
+        <li>Two secret action teams with authority to kill terrorists to preempt an attack: Fuller, ebook 137 to 138.</li>
+        <li>El Dorado Canyon misses Gaddafi; thirty-seven civilians reported killed: Fuller, ebook 144 to 147.</li>
+        <li>Clarridge: "more morally acceptable than a bullet to the head": Fuller, ebook 149.</li>
+        <li>Eagle Program drone with infrared camera, wooden propellers, small rockets; working model within a year; the CIA neither confirms nor denies it: Fuller, ebook 150.</li>
+        <li>Eagle's role in the Amber's development near impossible to ascertain: Fuller, ebook 155.</li>
+        <li>Decision to arm the Predator driven by the Balkans, not CIA operations against bin Laden: Fuller, ebook 167.</li>
+        <li>Jumper's May 1, 2000, announcement on weaponizing the Predator: Fuller, ebook 168.</li>
+        <li>Pavitt: "Why would we want to do this?": Fuller, ebook 170.</li>
+        <li>Air Force tries to bill the CIA for a crashed Predator; bureaucratic deadlock: Fuller, ebook 171.</li>
+        <li>First airborne Hellfire live-fire test, February 21, 2001; delays legal, political, and cultural: Fuller, ebook 173.</li>
+        <li>September 4, 2001, principals meeting deploys the armed drone and defers who fires; September 17, 2001, Finding on high-value targets; first lethal CIA Predator strike October 7, 2001: Fuller, ebook 174.</li>
+        <li>North dismissed November 1986, Casey dies May 5, 1987, Clarridge forced to retire June 1, 1987: Fuller, ebook 177.</li>
+        <li>CTC returns to cautious, analytical, report-writing culture: Fuller, ebook 178.</li>
+        <li>Technology took more than a decade to mature: Fuller, ebook 181 to 182.</li>
+        <li>Clarridge as father of the center's drone campaign: Fuller, ebook 184.</li>
+        <li>The stronger response's opinion, the parenthetical, and the question for the room are ours.</li>
+        </ul>
+        <h3>Fuller, chapter 4: The President Wanted Him Dead. The Memo Said Maybe.</h3>
+        <ul>
+        <li>Laws behind the drone campaign as vital as the technology; lack of clear legal sanction crippled Clinton's efforts: Fuller, ebook 187.</li>
+        <li>The covert action pendulum defined: Fuller, ebook 188.</li>
+        <li>Pendulum swings produced risk aversion that limited Clinton's options: Fuller, ebook 197.</li>
+        <li>Clinton's staff quick to identify al-Qaeda, too slow to grant legal sanction: Fuller, ebook 244.</li>
+        <li>Four MONs drafted between February 1998 and February 1999: Fuller, ebook 221.</li>
+        <li>First MON for the tribal snatch never reached the president; six senior officers between Scheuer and Tenet all recommended against: Fuller, ebook 221 to 222.</li>
+        <li>August 1998 MON, NSC staff tell Rizzo to add "self-defense," better suited to a judge's jury instructions: Fuller, ebook 223.</li>
+        <li>December 1998 MON, kill only if capture "not feasible"; responsibility on the CIA; who judges, and possibly retrospectively by a Senate committee: Fuller, ebook 224.</li>
+        <li>Clinton reinserted the self-defense limit for Massoud; tribals had more latitude; "You crazy white guys"; Clinton had no recollection of editing the MON: Fuller, ebook 225.</li>
+        <li>Clarke: CIA had all the legal authority it needed; the president's intent was clear, kill bin Laden: Fuller, ebook 226 to 227.</li>
+        <li>Pillar: White House did not want anything on paper seen as an authorization to assassinate: Fuller, ebook 229 to 230.</li>
+        <li>9/11 Commission: the president wanted him dead; Pentagon had capabilities, CIA had authorities; first CIA targeted killing came only after the September 17 Finding and the AUMF: Fuller, ebook 230 to 231.</li>
+        <li>Reno's oral warning that action solely to kill bin Laden would be illegal; Tenet read it as murder-charge risk: Fuller, ebook 236.</li>
+        <li>Agency lawyers found the Bush Finding and AUMF too ambiguous; willing to kill terrorists designated by the president: Fuller, ebook 207.</li>
+        <li>First lethal drone strike outside Afghanistan, Yemen, November 3, 2002: Fuller, ebook 208.</li>
+        <li>Obama relied on the same legal structures as Bush: Fuller, ebook 211 to 212.</li>
+        <li>AUMF stretched to AQAP (formed 2009) and the Islamic State; unstable foundations: Fuller, ebook 247.</li>
+        <li>The "liability waiver" reading and the stronger response's turn are our opinion.</li>
+        </ul>
+        <h3>Fuller, chapter 5: The Drone Got the Job Because Every Other Applicant Flunked</h3>
+        <ul>
+        <li>Policies built on predecessors' successes and failures; Obama authorized more strikes in his first year than Bush in two terms: Fuller, ebook 250.</li>
+        <li>Rendition a politically poisonous issue: Fuller, ebook 263. Raids usable only sparingly: Fuller, ebook 284. Pakistani army bludgeoned the FATA: Fuller, ebook 286.</li>
+        <li>June 26, 1993 Baghdad strike; Clinton asks why the missiles lack cameras: Fuller, ebook 266 to 267.</li>
+        <li>Twenty of twenty-three hit; Layla al-Attar killed; CNN reaches a cameraman's cousin: Fuller, ebook 267.</li>
+        <li>Infinite Reach, seventy-nine missiles, hours from launch order to impact, Pakistan warned: Fuller, ebook 270.</li>
+        <li>Missiles missed; three follow-ups called off over single-source intelligence: Fuller, ebook 271.</li>
+        <li>"Ninja guys in black suits" to Shelton: Fuller, ebook 280. Shelton agreed to look into it; no plan presented: Fuller, ebook 281.</li>
+        <li>Cruise missile too blunt; Clarke's call for an armed Predator with Hellfires, see it/shoot it, shortened kill chain: Fuller, ebook 272.</li>
+        <li>Alston's May 2010 warning on lowering the threshold; successors' willingness adds validity: Fuller, ebook 272 to 273.</li>
+        <li>Armed Predator custom made: shorter timescale, real-time intelligence, smaller blast radius: Fuller, ebook 273.</li>
+        <li>TRODPINT given motorcycles, never located Kasi; pursuit teams evolved from TRODPINT, more than three thousand men: Fuller, ebook 256.</li>
+        <li>Bush's description of drones to Obama; five years to build the network; technology ahead of human intelligence; four, thirty-six, and fifty-four strikes: Fuller, ebook 257.</li>
+        <li>Expanding the drone campaign a sensible choice, cheap in lives and cash: Fuller, ebook 288.</li>
+        <li>The motorcycle line, the shared-bottleneck link, and the closing question are our opinion and inference.</li>
+        </ul>
+        <h3>Fuller, chapter 6: Loitering With Intent: The Drones Won Their Game, and the Players Moved to Syria</h3>
+        <ul>
+        <li>Obama narrows the war to al-Qaeda's core; three-part strategy; CTC given principal responsibility: Fuller, ebook 289-290.</li>
+        <li>More strikes in Obama's first year than Bush's eight; 294 strikes versus forty-six (New American Foundation): Fuller, ebook 295.</li>
+        <li>September 2011 Quarterly Report: more than half of al-Qaeda's leadership taken out: Fuller, ebook 301.</li>
+        <li>Constant concealment; resources diverted from plotting and training to protecting leaders: Fuller, ebook 303.</li>
+        <li>Zawahiri limited to handwritten letters via Abu Khalid al-Suri; May 23, 2013, order; al-Suri killed February 21, 2014; caliphate declared June 30, 2014: Fuller, ebook 306.</li>
+        <li>About three dozen groups in at least eighteen nations back the Islamic State by July 2015: Fuller, ebook 307.</li>
+        <li>Endurance as the drone's overlooked defining characteristic; containment and psychological impact on the core: Fuller, ebook 308-309.</li>
+        <li>Bin Laden's October 21, 2010, letter on roads, meetings and heavy clouds: Fuller, ebook 310-311.</li>
+        <li>Rand figures: twenty-eight groups in 2007, forty-nine by end of 2013, up to 105,000 fighters: Fuller, ebook 316.</li>
+        <li>Resurgence owed more to wider instability after the Arab Spring, beyond the CTC's scope: Fuller, ebook 331.</li>
+        <li>Islamic State's antiaircraft weapons, urban basing and governing structure blunt the drone approach: Fuller, ebook 335.</li>
+        <li>CIA 2009 high-value targeting study warns of a vacuum; infighting likely expected and even encouraged: Fuller, ebook 338-339.</li>
+        <li>The stronger response's framing, "winning the only game in town," and the room question are our opinion.</li>
+        </ul>
+        <h3>Fuller, conclusion: The Drone Monopoly Expired. The Bases Stayed.</h3>
+        <ul>
+        <li>Brennan's strategy, built on two decades of innovation, remodels national security policy: Fuller, ebook 340.</li>
+        <li>Ramstein in September 2000: antenna, one ground control station, tent, porta-potties; $15 million Sigonella backup against a single point of failure; network from Turkey to the Seychelles: Fuller, ebook 341.</li>
+        <li>Ian Shaw's "Predator empire" as Obama's possible lasting legacy; Maier's post-territorial empire; frontiers far from irrelevant: Fuller, ebook 342.</li>
+        <li>Lethal presence in Pakistan, Somalia and Yemen without bases there; the pretense of a post-territorial empire; Maxim gun, 1898 and the First World War; the tank and the Ardennes, 1940: Fuller, ebook 343.</li>
+        <li>Maliki's primary request; Iran's drones; Manfredi Luciana quote; the CIA may scale down, the United States and the world will not: Fuller, ebook 344.</li>
+        <li>Clarridge's cheap and easy Radio Shack solution; 2015 National Security Strategy on Chinese and Russian drones in hybrid warfare: Fuller, ebook 345.</li>
+        <li>Pirate Party drone at a Merkel rally, September 2013; at least fourteen illegal flights over French nuclear plants, October 5 to November 2, 2014; the NGA employee's $300 DJI Phantom 2 at the White House, January 2015; pistol-firing homemade drone, July 2015: Fuller, ebook 346.</li>
+        <li>Innovations born from fear can provide hope and save lives: Fuller, ebook 347.</li>
+        <li>The stronger response's turn, the opinion on Fuller's optimism and the room question are our opinion.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+        <li>Gaddis thesis: Gaddis, vii–ix, 302, 342–343. Obama's narrowed campaign against al-Qaeda's core, AfPak the front line: Fuller, ebook 290. Relatively cheap in lives and cash: Fuller, ebook 288.</li>
+        <li>McDougall thesis: McDougall, 5, 13, 451. DARPA established after Sputnik: Fuller, ebook 155. $5 million DARPA grant to Karem for the Amber, December 1984: Fuller, ebook 154. Karem's GNAT-750 line: Fuller, ebook 156–157.</li>
+        <li>Olsen thesis: Olsen, 1–2, 4, 293, 295. More than half of al-Qaeda's leadership taken out: Fuller, ebook 301. Rand count of jihadist groups rising: Fuller, ebook 316.</li>
+        <li>Lambeth thesis: Lambeth, 6, 297–299. Real-time intelligence, smaller blast radius: Fuller, ebook 273. Islamic State's antiaircraft weapons and urban basing: Fuller, ebook 335.</li>
+        <li>Clodfelter thesis: Clodfelter, ebook pp. 9–11, 223–225. Goals unchanged since the 1986 Libya raid; drone war a success against Obama's orders: Fuller, ebook 329.</li>
+        <li>The closing opinion is ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+          <li><details><summary>How many civilians did first reports of the May 2010 Boyya strike claim, and where did the reliable tally come from?</summary><p>Dawn said five civilians among at least ten dead; residents told Reuters twelve civilians from one family. The full list, including al-Yazid's wife, three daughters, and granddaughter, came from an internal al-Qaeda communication seized at bin Laden's compound and published in March 2015. <span class="pg">F e23</span> <span class="pg">F e25</span></p></details></li>
+          <li><details><summary>What is Fuller's thesis about where the CIA drone campaign came from?</summary><p>It is unique in scale but not unprecedented: a return to pre-9/11 counterterrorism methods, the embodiment of Clarke's see it/shoot it option made possible by technology and the government's willingness to authorize the CIA. <span class="pg">F e42</span></p></details></li>
+          <li><details><summary>Brennan claimed zero collateral deaths in June 2011. What did the BIJ and the New American Foundation count?</summary><p>The BIJ counted at least 482 credibly reported civilians among more than 2,500 killed in 330 Pakistan strikes since 2004; the New American Foundation counted 152 to 191 civilians through October 2012. <span class="pg">F e38</span></p></details></li>
+          <li><details><summary>What did NSDD 138's draft ask the CIA to develop, and what happened to the word?</summary><p>Capabilities for the preemptive neutralization of anti-American terrorist groups; McMahon objected, and the final text replaced neutralize with proactive efforts. <span class="pg">F e69</span> <span class="pg">F e73</span></p></details></li>
+          <li><details><summary>What legal reasoning did Stanley Sporkin give Casey?</summary><p>Targeting terrorists was not assassination, which applied to foreign political leaders, and hard intelligence of a planned attack justified preemption under Article 51; Fuller says the Obama administration's justification is identical. <span class="pg">F e73</span> <span class="pg">F e95</span></p></details></li>
+          <li><details><summary>Why did the hardliners' policy go unimplemented in the 1980s?</summary><p>Weinberger blocked military involvement and Reagan would not overrule him, so policy went to whoever could mobilize or block resources. <span class="pg">F e86</span></p></details></li>
+          <li><details><summary>What did the CIA change about foreign agents after the Fadlallah bombing?</summary><p>It dismantled the foreign-agent counterterror program; in the drone era foreign agents provide intelligence and targeting but do not do the killing. <span class="pg">F e106-107</span></p></details></li>
+          <li><details><summary>What did the Senate inquiry into the Fadlallah bombing conclude?</summary><p>Bernie McMahon's inquiry found the CIA had not taken part in the bombing but had created a mechanism that got out of control and led to it. <span class="pg">F e104</span></p></details></li>
+          <li><details><summary>What did Pakistan's prime minister ask for in November 2008, and what did the United States do?</summary><p>Yousaf Gilani asked for the technology to strike targets in Pakistan himself; the CIA kept tight control of the program. <span class="pg">F e107</span></p></details></li>
+          <li><details><summary>What was the Eagle Program?</summary><p>Clarridge's CTC drone project from 1986: a pilotless aircraft with an infrared camera and wooden propellers, meant to carry small rockets against predesignated targets. <span class="pg">F e150</span></p></details></li>
+          <li><details><summary>When did a Predator first fire a Hellfire in flight, and when did the CIA first use one lethally?</summary><p>The first airborne live-fire test was February 21, 2001; the first lethal CIA Predator strike came on October 7, 2001. <span class="pg">F e173-174</span></p></details></li>
+          <li><details><summary>What did the September 4, 2001, principals meeting leave unresolved?</summary><p>It agreed to deploy the armed drone but deferred the legal question of who would fire its missiles. <span class="pg">F e174</span></p></details></li>
+          <li><details><summary>What is Fuller's covert action pendulum?</summary><p>Support for aggressive covert action from the White House and Congress swings from one side to the other with political circumstances, and the backlash after each swing left the CIA risk-averse by the 1990s. <span class="pg">F e188</span></p></details></li>
+          <li><details><summary>What did the December 1998 MON say about killing bin Laden, and why did the CIA dislike it?</summary><p>The tribals could kill him only if capture was not feasible, which left the CIA, possibly after the fact, to judge feasibility and carry the blame. <span class="pg">F e224</span></p></details></li>
+          <li><details><summary>Why was Massoud's force more restricted than the TRODPINT tribals?</summary><p>Clinton personally reinserted the self-defense limit in the February 1999 MON, so the more capable Northern Alliance could use force only in self-defense. <span class="pg">F e225</span></p></details></li>
+          <li><details><summary>How many CIA drone strikes hit Pakistan in 2007, 2008, and 2009, and why did they rise?</summary><p>Four, thirty-six, and fifty-four. The CIA's five-year investment in informant networks and pursuit teams on the ground had begun to pay off. <span class="pg">F e257</span></p></details></li>
+          <li><details><summary>What handicapped Operation Infinite Reach in August 1998?</summary><p>The missiles took hours to arrive after the launch order, and the United States had to warn Pakistan of the flight path, giving a mobile target time to move or be tipped off. <span class="pg">F e270</span></p></details></li>
+          <li><details><summary>What warning did Phillip Alston issue in May 2010?</summary><p>That the perceived accuracy of drones, direct control, and no immediate risk to American personnel could lower the threshold for leaders to use lethal force. <span class="pg">F e272</span></p></details></li>
+          <li><details><summary>What drone characteristic does Fuller say did as much damage to al-Qaeda's core as decapitation?</summary><p>Endurance. Sustained drone coverage kept the leadership hidden and isolated, starving it of exposure, support and influence. <span class="pg">F e308</span></p></details></li>
+          <li><details><summary>How could Zawahiri intervene in the 2013 ISI and Nusra Front dispute, and what happened to his envoy?</summary><p>Only through handwritten letters carried by Abu Khalid al-Suri. ISIS killed al-Suri with a suicide bomb on February 21, 2014. <span class="pg">F e306</span></p></details></li>
+          <li><details><summary>What did Rand count for Salafi-jihadist groups in 2007 and at the end of 2013?</summary><p>Twenty-eight groups in 2007 and forty-nine by the end of 2013, with active fighters estimated at 44,000 to 105,000. <span class="pg">F e316</span></p></details></li>
+          <li><details><summary>What did the CTC's first drone operating site at Ramstein look like in September 2000?</summary><p>A fenced-off corner with a satellite antenna, a single ground control station, a thirty-foot-square tent and a couple of porta-potties. <span class="pg">F e341</span></p></details></li>
+          <li><details><summary>What phrase does Fuller borrow from Ian Shaw for the drone base network, and what does he say it may become?</summary><p>A "Predator empire," which may prove to be Obama's most lasting legacy. <span class="pg">F e342</span></p></details></li>
+          <li><details><summary>Which two historical weapons does Fuller use to show that a technological monopoly is short lived?</summary><p>The Maxim gun, which beat the Mahdists in 1898 and then fed the First World War's stalemate, and the tank, which broke that stalemate and then carried the panzers through the Ardennes in 1940. <span class="pg">F e343</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+</body>
+</html>
