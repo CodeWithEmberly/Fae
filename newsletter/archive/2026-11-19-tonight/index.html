@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-19 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Thursday, November 19, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-19/">This morning's issue and podcast</a> · <a href="../">Archive of every edition</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Tonight's reading: Wasser et al., <i>The Air War Against the Islamic State</i></a></li>
+          <li><a href="#t1a">The world around the book</a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tomorrow's seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar</a></li>
+          <li><a href="#t7">Political strategy × Wasser</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#w-01">Summary and ch. 1: Under Ninety Minutes to Kill One Drone: Wasser on Why the Air War Ran Long</a></li>
+          <li><a href="#w-02">Ch. 2: The Bombers Came Home Full: Phase I Waited on the Ground War</a></li>
+          <li><a href="#w-03">Ch. 3: ISIS Moved Every Two Weeks. The Paperwork Took Six.</a></li>
+          <li><a href="#w-04">Ch. 4: Count the Months Before You Count the Bombs</a></li>
+          <li><a href="#w-05">Ch. 5: Bank Shots Beat Road Work: Wasser's Deep Fight Rewards Narrow Targets</a></li>
+          <li><a href="#w-06">Ch. 6: Got Your Back, Got the Fitter: Delegated Authority Kept the Syrian Sky Small</a></li>
+          <li><a href="#w-07">Ch. 7: The Air War Moved at the Speed of Its Slowest Partner</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Chapter recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Tonight's Reading · for Friday's seminar</span>
+        <h3><a href="#t1">Wasser, <i>The Air War Against the Islamic State</i>: The Partners Held the Stopwatch</a></h3>
+        <p>Airpower was indispensable against the Islamic State, and it still did not set the war's pace. That is the RAND team's argument, and we think it is right. Washington chose a partner-led, limited-risk strategy: Iraqi, Syrian, and Kurdish forces did the fighting, and coalition aircraft supplied the intelligence and the firepower. Territory was the measure of success, so the close fight came first and the deep strikes on oil and cash were useful but peripheral. Wasser's bottom line on the great debate is that a more aggressive air war from day one might have sped ISIS's defeat, but not dramatically.</p>
+        <p>The report argues against two camps. The first is the airpower camp, which says an airman in command, looser rules, and strategic attack would have finished ISIS sooner; the authors call the evidence for those claims mixed. The second is everyone who files the war under counterinsurgency. The coalition released an average of 26,645 weapons a year, while fewer than 2,000 fell on Iraq even in 2007, the peak of that counterinsurgency. (Nobody calls 117,000 weapons a police action.)</p>
+        <p>For this course, the syllabus asks whether Slessor or Douhet explains the campaign. Slessor does, and it is not close: airpower won by working with an army on the ground, and here the army belonged to someone else. The limits came from partners, lawyers, and a Russian air force that showed up over Syria on September 30, 2015, and not from a nuclear shadow. Read it asking one question: who held the stopwatch? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t1a">
+        <span class="kicker">The World Around the Book</span>
+        <h3><a href="#t1a">The Air Force Paid for the Study. The Study Declined to Agree With the Air Force.</a></h3>
+        <p>The author matters less than the customer. Becca Wasser led a team of nine at RAND Project AIR FORCE, the Department of the Air Force's own federally funded research center, and the Assistant Vice Chief of Staff of the Air Force sponsored the work. The team built its case from more than fifty interviews with participants and two strike data sets, and the draft went to the Air Force on May 27, 2020, after formal peer review. Wasser was a senior policy analyst who designed wargames and led research for the Pentagon, the Army, the Air Force, and the State Department, and she left for the Center for a New American Security that June. She was a wargamer and a policy analyst, and it shows: the report's best chapters are about how decisions moved through headquarters.</p>
+        <p>Our take on the axe: there is no documented personal grudge, so look at the question instead. The Air Force paid RAND to test the airmen's favorite complaint about this war, and RAND came back and called the evidence for it mixed. A study funded by the service and published under its program is the last place you would expect that verdict, which makes the verdict more credible. Read the report as a referee's ruling, and notice when it gives the airmen a point, such as centralized strike approval clearly hurting in year one.</p>
+        <p>The moment shapes the argument. The caliphate fell at Baghuz in March 2019, and the team wrote while the arguments about the war were still loud. The authors say much ink had been spilled criticizing the slow, limited start, and they wrote against that criticism. They also wrote facing forward: the preface says the lessons are meant for future wars against nonstate and near-peer adversaries. Ben Lambeth, Monday's author, wrote a rival account, <i>Airpower in the War Against ISIS</i>, arguing that coalition airpower was underused for more than two years. When you read chapter 7, remember that it is half history and half a reply to Lambeth's camp.</p>
+        <p>The reception is thin, and the scholarly part is undocumented. We found no review in a scholarly or military journal. The press read it as a story about priorities: Oriana Pawlyk of Military.com, on February 9, 2021, led with the campaign favoring close air support over deep strike. The sharpest critic was Robbin Laird at Defense.info, in July 2021. He said the report mostly repeats the official account, takes its lessons from a slow Army counterinsurgency mindset, and is a poor guide for China or Russia. He held up Lambeth's book as the better guide.</p>
+        <p>Our verdict: Laird is wrong about the history and partly right about the future. RAND's own data answers his main charge, because the coalition began with few, if any, deliberate target packages and with partners who could not yet attack. No bolder air commander fixes either problem in a month. His point about China lands, though, and the authors concede it themselves: the coalition had time to fix its targeting process, and a future enemy may not give it that time. (Patience was the war's most important capability, and it does not come in the next war's budget.) <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Three Hundred Pages, Sorted by Payoff</a></h3>
+        <p>Read the verdict first, then the evidence for it. Skip the appendixes tonight.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> The Summary, pages xiii to xvi; chapter 1, pages 1 to 3 (the al-Tanf drone) and 10 to 11 (airpower's contribution and the critics); chapter 7, pages 298 to 302 (the findings).</li>
+          <li><b>60 minutes.</b> Add the rest of chapter 7, pages 293 to 297 and 302 to 308 (how OIR compares with other air wars, and the recommendations); chapter 2's Phase I assessment, pages 79 to 86; and chapter 6, pages 260 to 273 (Russia, the Su-22 shootdown, and the drones over al-Tanf).</li>
+          <li><b>2 hours.</b> Add chapter 5, pages 204 to 210, 226 to 235, and 252 to 256 (oil, cash, and the deep fight's verdict); chapter 4, pages 129 to 134 and 166 to 198 (Tactical Directive 1, Mosul, and Raqqa); and chapter 3, pages 93 to 101 and 117 to 122 (car bombs at Mosul, Baghuz, and what came after).</li>
+        </ol>
+        <p>Chapter 2's first sixty pages, the decision to intervene and the coalition's makeup, can wait. The chapter 2 lesson below carries its argument. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Things to Mark in the Margin</a></h3>
+        <ol class="qs">
+          <li><b>Chapter 1, page 11.</b> The sentence calling the critics' evidence mixed, and the one point the authors grant the airmen: centralized strike approval clearly limited airpower in the first year.</li>
+          <li><b>Chapter 2, pages 55, 61, and 83 to 84.</b> A zero civilian casualty standard and slow approvals in Iraq, against approvals measured in minutes at Kobani. Ask whether the rules or the missing targets did more to slow the war.</li>
+          <li><b>Chapter 3, pages 99 to 100.</b> A four- to six-week targeting cycle against an enemy that moved every two weeks, and the Mosul headquarters that built its own process to cut the wait to 24 to 48 hours.</li>
+          <li><b>Chapter 5, pages 206 to 210 and 221.</b> Oil revenue cut by about 90 percent, while taxes brought in six times as much as oil. Watch how ISIS covered the loss.</li>
+          <li><b>Chapter 6, pages 260 to 273.</b> The Russian intervention and the June 18, 2017, Su-22 shootdown, the war's closest brush with a great power.</li>
+          <li><b>Chapter 7, pages 293 to 297.</b> The numbers that put OIR in airpower history: more than 117,000 weapons, the largest overall operation in the authors' table, and far below Desert Storm's weekly pace.</li>
+        </ol>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Tomorrow's Seminar Questions</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <p>These come from the syllabus page for Seminar 16, "American Airpower Returns to Conventional War." Tomorrow morning's issue answers them.</p>
+        <ol class="qs">
+          <li><b>How does this air campaign fit in the overall arc of airpower history?</b> Chapter 7, pages 293 to 298 (the comparisons with Afghanistan, Iraq, Kosovo, Libya, and Desert Storm); chapter 2, page 27 (the small start next to Deliberate Force).</li>
+          <li><b>What lessons did strategists take into OIR, and what did they leave with?</b> Coming in: chapter 2, pages 64 to 65 and 83 to 84 (an atrophied targeting enterprise and centralized authority). Going out: chapter 7, pages 298 to 308 (the "lesson learned" lines and the recommendations).</li>
+          <li><b>Given that the Islamic State still inspires terror, how effective was OIR?</b> Chapter 3, pages 118 to 119 (Votel's warning and the shift to Phase IV); chapter 7, page 298 (the authors' verdict of success); chapter 3, page 113 (civilian deaths and a possible successor).</li>
+          <li><b>How did the return of great power competition alter the war, or vice versa?</b> Chapter 2, pages 70 to 71 (Russia arrives and Congress bans cooperation); chapter 6, pages 260 to 273; chapter 7, pages 298 and 306 to 307.</li>
+          <li><b>Was Obama right to back local ground forces even if it took longer?</b> The syllabus frames this one. Chapter 2, pages 27 to 28 (why Washington would not "own" the problem); chapter 7, pages 300 to 301.</li>
+        </ol>
+        <p>Opinion: prepare question three. The report ends in March 2019, so the room will argue about everything after, and you will be the one who knows what Votel said about it at the time. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, With Call Signs</a></h3>
+        <ol class="qs">
+          <li><b>CJTF-OIR.</b> The coalition task force that ran the war; its commander controlled all the airspace over Iraq and Syria (page 70).</li>
+          <li><b>TEA.</b> Target engagement authority, the power to approve a strike. It never sat below a one-star general in Phase I (pages 55, 84).</li>
+          <li><b>Tactical Directive 1.</b> The change that let advisory commanders able to control strikes approve ones that once needed a one-star or three-star general (page 133).</li>
+          <li><b>Strike cells.</b> Operations centers that tied airpower to partner forces when no American controllers were at the front (page 299).</li>
+          <li><b>Lt Gen Charles Q. Brown.</b> Took over AFCENT in June 2015, found well over 90 percent of strikes were dynamic, and ordered target development fixed (pages 67 to 68).</li>
+          <li><b>Tidal Wave II and Point Blank.</b> The deep-strike operations against ISIS's oil and cash (pages 204, 226).</li>
+          <li><b>MG Joseph Martin.</b> The Mosul ground commander whose headquarters built a faster targeting process (pages 99 to 100).</li>
+          <li><b>SDF.</b> The Syrian Democratic Forces, the coalition's irregular light infantry partner in Syria (page 190).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Fuller to Wasser</span>
+        <h3><a href="#t6">Fuller's Drones Lost the Hunt. Wasser Gave Them a Day Job.</a></h3>
+        <p>Fuller ended where Wasser begins. His last chapter says the Islamic State blunted the drone campaign: it had antiaircraft weapons, it lived in cities, and it governed. A slow drone hunting leaders is the wrong tool against an enemy that holds ground. Wasser shows the drone's new job. With no American controllers on the front lines, drones overhead let strike cells see for the partners, and six or seven of them could circle small Ramadi for days. (Fuller's Predator was an assassin. Wasser's Reaper is a spotter with a very long shift.) The other change is ownership. Fuller's war belonged to the CIA, and Wasser's belonged to uniformed task forces with lawyers at every step.</p>
+        <p>Keep one question in mind while reading. Fuller measured success by leaders killed, and Wasser measures it by ground retaken. Which yardstick fits an enemy that is half army and half terrorist group, and what does each one miss? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Wasser · via Punchbowl News AM and electoral-vote.com, November 19</span>
+        <h3><a href="#t7">Congress Discovers the Word "Offensive"</a></h3>
+        <p>Congress is trying to limit the Iran war by defining it, Punchbowl News reported this morning. Reps. Ro Khanna and Yassamin Ansari say they will oppose any government funding bill that does not explicitly bar funds for offensive operations in Iran. The deadline is December 11. Meanwhile, Senate Republicans have all but abandoned a $350 billion defense reconciliation package, and the annual defense bill, law for 65 straight years, faces its hardest path in memory, partly because of a push for $1.5 trillion in Pentagon funding and partly because of a war Punchbowl calls highly unpopular. On January 3, Hakeem Jeffries takes the gavel with a 260-seat majority. Electoral-vote.com adds the Senate math: 56 Democrats. It also notes the Iran war may hang over the presidential prospects of Marco Rubio and JD Vance. (The war now has a primary calendar.)</p>
+        <p>Wasser's report shows why "offensive" is a harder word than it looks. In Syria, U.S. pilots shot down three aircraft attacking partner forces, and the task force announced that it would defend its partners and did not seek a fight with the regime or Russia. Each shootdown was defensive by the coalition's account, and someone in uniform made that call in the cockpit or the operations center. Congress has also done this before. After Crimea, the FY2016 defense bill banned military cooperation with Russia, so CENTCOM deconflicted with Moscow's pilots but would not coordinate with them. A rider written in Washington set the rules for pilots over Syria.</p>
+        <p>Our take: a ban on offensive operations will be enforced by whoever drafts the rules of engagement. The vote only supplies the words. Obama's 2014 design kept Washington from "owning" the ISIS problem so it could leave if needed. Congress is now trying to buy the same exit after the fact, and that is harder. The cheapest wars to start are the hardest to define. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Wasser et al., <i>The Air War Against the Islamic State</i></p>
+
+      <article id="w-01">
+  <span class="kicker">Chapter by Chapter · Wasser, summary and chapter 1</span>
+  <h3><a href="#w-01">Under Ninety Minutes to Kill One Drone: Wasser on Why the Air War Ran Long</a></h3>
+  <p>Before you blame a slow air war on its leash, ask what the airplanes would have hit with the leash off. Wasser's RAND team tests the airpower camp's complaint that politics stretched out the war against ISIS. The verdict is that more aggressive air operations might have slightly sped up ISIS's defeat but probably would not have changed the timeline much. Airpower was indispensable because it made partner ground forces work, and that strategy shaped everything the airplanes did.</p>
+  <p>The opening scene shows how crowded this war was. On June 8, 2017, two F-15E Strike Eagles near the al-Tanf garrison in eastern Syria found an Iranian-made Shahed 129 armed with two Hellfire-like missiles over Syrian partners and U.S. advisers. The jets left to refuel and came back to find one missile gone. (A missing missile clarifies intent wonderfully.) The pilot asked to shoot; the operations center tried jamming first. When the drone turned back, two Russian Su-27s within range made him wait so his shot would not look aimed at them. The guidance arrived: "if that thing [UAS] turns hot, smoke it." Within an hour and a half of the first sighting, an AIM-120C brought it down. This was a war under different authorities in Syria and Iraq, with hostile third parties sharing the sky.</p>
+  <p>The claim you'll hear: "On page 10, Wasser says airpower was indispensable to defeating ISIS. So an airman should have run an air campaign, and it would have ended sooner." It asserts more than the passage shows. The same page says airpower was indispensable for enabling partner ground operations, and on page 11 the authors say even a USAF commander would have struggled to sustain early strategic attacks, because intelligence problems blocked deliberate targets.</p>
+  <p>A stronger response: concede the airmen their best point. On page 11, Wasser agrees that centralized strike approval clearly limited airpower in the first year. Of the complaints about an airman in command and civilian-casualty limits, the same page says flatly, "The evidence for these two claims is mixed." The big oil and banking targets ran out, and territory supplied most of ISIS's wealth anyway. Earlier delegation might not have helped, since few Iraqi or Syrian partners were able and willing to attack. Opinion: the leash cost something, but the dog had few places to run, meaning looser rules mattered less than having targets and an army to support.</p>
+  <p>First order, Washington wanted a limited liability, limited risk approach and made Iraqi and Syrian ground forces the main effort. Second order, close air support outranked strategic attack, and drones overhead stood in for controllers kept off the front lines. Third order, deliberate targeting, unused in a real operation for years, had to be relearned, while the task force and air component commanders feuded over battlespace management, which shaped the deep fight. That chain pre-empts the claim that rules alone slowed the war, because the strategy decided what airpower was for before anyone argued about approvals.</p>
+  <p>A question for the room: Turn to page 8, where the authors warn that metrics mislead and that Vietnam's body counts contributed to failure. They judge airpower by correlating major campaign shifts with battlefield outcomes. Is that a better yardstick than counting bombs, or the same trap with a nicer map? <span class="by">(S)</span></p>
+</article>
+
+      <article id="w-02">
+  <span class="kicker">Chapter by Chapter · Wasser, chapter 2</span>
+  <h3><a href="#w-02">The Bombers Came Home Full: Phase I Waited on the Ground War</a></h3>
+  <p>In a by-with-through war, the partner on the ground sets the bombing tempo, so loosening the rules buys less than critics promise until somebody is attacking. Wasser's Phase I, from August 2014 to March 2016, started small and reactive and picked up once ground offensives began and a deep fight was built. By the end, Iraqi and Syrian partners had reclaimed 40 percent of the territory ISIS once held.</p>
+  <p>Kobani shows what a visible enemy does to the numbers. In August 2014, U.S. aircraft flew 949 air-to-ground sorties and released weapons on only 100. (Bosnia in 1995 ran over three times that sortie rate.) Over the last three months of 2014 and January 2015, the coalition launched 887 strikes at Kobani. ISIS massed in the open behind a clear front line, and Syria required no host-nation clearance. Lt Gen John Hesterman said approval was "measured in minutes, not hours, or even halves of hours." B-1s emptied their bomb bays on 31 missions, which is not how a bomber short of permission behaves. Then ISIS adapted. Strikes on fighters fell from 77 percent of targets in August 2014 to 33 percent in October, and over the first ten months 74 percent of sorties came home without dropping a bomb.</p>
+  <p>The claim you'll hear: "On page 55, Wasser describes a zero civilian casualty cutoff and approvals taking 30 minutes or hours, and critics called the result a drizzle. The rules cost us the first year." It reads one passage and ignores the counterevidence. On page 83, the authors say Kurdish and Iraqi forces could not or would not attack in late 2014 and early 2015, so ISIS stayed hidden in its cities.</p>
+  <p>A stronger response: concede the rules did damage. If we look at pages 83 and 84, the authors agree that centralized strike authority limited airpower and never dropped below a one-star in Phase I. Page 61 shows that when targets existed, approval took minutes. Pages 64 and 65 show deliberate targets took three to six weeks from an atrophied targeting enterprise, and no rule change conjures targets. On page 84, Gen Mark Welsh says it plainly: "the DoD approach is not to defeat ISIS from the air." Opinion: the rules slowed the bombing, and the empty battlefield slowed the war.</p>
+  <p>First order, precision strikes at Kobani shredded massed formations. Second order, ISIS shifted from lasting and expanding to simply lasting: it dispersed, blended into the population and dug layered defenses, so targets dried up. Third order, the campaign needed deep strikes it could not yet produce. Lt Gen Charles Q. Brown took over AFCENT in June 2015, found over 90 percent of strikes dynamic, and ordered the broken target-development process fixed. Ramadi still became a slog that December, partly because no deep fight had shaped it, and the task force resolved to soften Mosul and Raqqa from the air first. That chain pre-empts the counter that looser rules alone would have ended things sooner, because Kobani is what taught ISIS to hide.</p>
+  <p>A question for the room: Turn to page 85, where the authors report six or seven drones over small Ramadi for days while ground forces sat still, and admit they cannot judge it. Was that scarce ISR wasted, or the redundancy a partner-led war requires? <span class="by">(S)</span></p>
+</article>
+
+      <article id="w-03">
+  <span class="kicker">Chapter by Chapter · Wasser, chapter 3</span>
+  <h3><a href="#w-03">ISIS Moved Every Two Weeks. The Paperwork Took Six.</a></h3>
+  <p>When the enemy moves faster than your approval process runs, the approved target becomes a historical document, so build a short loop where the ground maneuver is owned and choose which safeguards ride along. Wasser's third chapter runs from April 2016 to the fall of Baghuz in March 2019. Its argument is that airpower did its heaviest work when partners advanced and forced ISIS into the open, and the authors admit they cannot separate what the deep strikes on ISIS's money did from what losing territory did.</p>
+  <p>In late 2016, ISIS launched ten to 15 car bombs a day at Mosul, and about 80 percent killed or damaged Iraqi units. The CAOC's deliberate-targeting process took four to six weeks, while ISIS moved its facilities every two weeks. The Iraqis drew up more than five plans and picked one at the last minute. The civilian-protection rule required hours of unbroken video over a target, and any interruption restarted the clock, a bar described as the "platinum standard." MG Joseph Martin bought time by cratering approach roads with 500-pound bombs fused to burst ten feet underground. (The Iraqis then bulldozed through the crater of their choice, a sentence no doctrine manual has ever had to contain.) Then his headquarters built its own nondoctrinal deliberate-dynamic process and turned out targets in 24 to 48 hours.</p>
+  <p>The claim you'll hear: "On page 100, Wasser shows Martin's process produced targets in 24 to 48 hours, so the CAOC's six-week process was just bureaucracy and should be scrapped." It asserts more than the passage shows. On page 112 the authors say the trade-offs of the faster process still need research, and page 99 says part of the slowness came from video rules meant to prevent civilian deaths.</p>
+  <p>A stronger response: concede the clock. A six-week process against a two-week target loses, and page 100 says the CJTF-run process never got fast enough to interrupt ISIS resupply. Page 99 shows the slow part was the protective part. Page 112 reports that Airwars counted more than 1,400 civilian deaths in Iraq in March 2017, the month one Mosul strike on rooftop snipers killed more than 100 people in a basement (the Pentagon blamed explosives ISIS staged there). On page 113, the authors list delegated authority as a possible cause, beside city fighting itself. Opinion: keep the speed, and argue openly about which safeguards travel with it.</p>
+  <p>First order, faster targeting and delegated authority gave Iraqi units responsive fires, and they cleared Mosul by July 2017. Second order, aircraft found more to hit: in Phase II only 39 percent of counterland sorties came home without dropping, against 56 percent in Phase I. Third order, the civilian toll opened a fight over transparency, and the authors say it remains to be seen whether those deaths feed ISIS or a successor. That chain pre-empts both camps, since speed enthusiasts and safeguard defenders each must sign for the half they would rather skip.</p>
+  <p>A question for the room: Turn to page 93, where 8,803 Phase II strikes, a quarter of the total, hit terrain and roads, and the authors concede, "We do not have sufficient evidence to determine what percentage" were really morale strikes. If RAND cannot tell, how would a commander know whether he is bombing for effect or for confidence? <span class="by">(S)</span></p>
+</article>
+
+      <article id="w-04">
+  <span class="kicker">Chapter by Chapter · Wasser, chapter 4</span>
+  <h3><a href="#w-04">Count the Months Before You Count the Bombs</a></h3>
+  <p>A strike total measures volume, so divide it by the months and ask what it misses before calling a battle intense or a policy useless. Wasser's fourth chapter walks through six close-fight cases, Mosul Dam in August 2014 through Raqqa in 2017, and finds a template: at the height of a city fight, the coalition delivered 100 to 200 strikes a month. Its argument: airpower plus a ground partner took ground, and the processes changed more than the tempo.</p>
+  <p>The coalition flew more than 1,500 strikes at Mosul over roughly 12 months, a record at the time. Yet Mosul never took more than a third of the coalition's strikes in any month, because Raqqa's shaping ran at the same time. Kobani's peak month, 253 strikes in January 2015, beat every month at Mosul. (A border town most Americans could not find on a map outbombed Iraq's second city.) Mosul's big number came from duration: months of shaping, then nine months of close air support. Then the authors complicate it: between October 2016 and April 2017, 57 percent of the weapons released from coalition aircraft went to Mosul. Same battle, ordinary or enormous, depending on the column you read.</p>
+  <p>The claim you'll hear: "On page 172, Wasser says Tactical Directive 1 had no appreciable impact on the scale of air strikes in Mosul, so delegating strike authority didn't matter." It reads one passage and ignores the authors' counterevidence. On page 184, the same delegation significantly sped approvals in Raqqa and raised the number of strikes the special operations cells could authorize.</p>
+  <p>A stronger response: concede the Mosul data, since strikes clustered at 100 to 150 a month on both sides of the river. The directive was a speed tool, and speed never shows up in a monthly count. On page 133, MG Joseph Martin says, "The resultant responsiveness was tremendous." Page 177 explains why the count stayed flat: forward advisers mostly authorized surface fires, while strike cells kept running the air strikes because they deconflicted faster. On page 134, a controller says the coalition could not have massed fires quickly enough for Tabqah and Raqqa without the change. Opinion: grading a speed reform by volume is grading a fire department by gallons used.</p>
+  <p>First order, the directive let any advisory commander able to control strikes approve ones that once needed a one-star or three-star general. Second order, faster approvals in Raqqa let special operations cells answer a lightly armed SDF in contact, with controllers running three or four strikes at once inside a cylinder four to five nautical miles wide. Third order, the fight for Raqqa city lasted about four and a half months, under half the time it took to clear Mosul. The authors warn that Raqqa is about a quarter of Mosul's size, so we infer delegation helped without claiming it explains the gap. That pre-empts the reply that Raqqa was simply smaller, because we grant it first.</p>
+  <p>A question for the room: Turn to page 132, where the authors say a brief burst of strikes at Tikrit "validates the general correlation" between airpower and ground gained. Page 153 puts that burst at 37 strikes in one week, and page 157 has the militias back for the final assault. Can one week carry that much of the chapter's argument? <span class="by">(S)</span></p>
+</article>
+
+      <article id="w-05">
+  <span class="kicker">Chapter by Chapter · Wasser, chapter 5</span>
+  <h3><a href="#w-05">Bank Shots Beat Road Work: Wasser's Deep Fight Rewards Narrow Targets</a></h3>
+  <p>A deep strike pays when the target is valuable and still sitting there when the approvals clear, so pick targets your process can catch. Wasser's fifth chapter grades four deliberate-strike operations against ISIS. The two aimed at money, Tidal Wave II against oil and Point Blank against cash, did real damage. The two aimed at supply roads mostly did not, because ISIS moved about every two weeks and the deliberate-targeting cycle took four to six.</p>
+  <p>Point Blank's January 2016 strike on a Mosul bank shows the method at its best. For cash in the basement of a nine-story building, weaponeers dropped three GBU-39 Small Diameter Bombs with staggered fuse delays to open the roof, then two 2,000-pound JDAMs into the vault. The fire took an estimated 75 percent of ISIS's cash for fighter salaries, and a nearby mosque came through untouched. As one interviewee put it, "it wasn't a pickup basketball game." The road war looked different. Planners spent three months building 14 targets near Abu Kamal and Al-Qaim, hit them all on February 15, 2016, and watched ISIS return within 48 to 72 hours. The task force's own intelligence and operations staffs asked, "Is the juice worth the squeeze?" (Three months of homework for a weekend away is a poor exchange rate.) Near Hawija, a large deliberate strike on a car-bomb factory hit 44 aimpoints and destroyed an empty chicken farm.</p>
+  <p>The claim you'll hear: "On page 210, Wasser says Tidal Wave II cost ISIS about 90 percent of its oil revenue, so the deep fight starved the caliphate." It confuses a first-order effect with the outcome. On page 206, taxes brought ISIS six times as much as oil did, and on page 221, ISIS covered the lost oil money by raising taxes and extortion.</p>
+  <p>A stronger response: concede the oil numbers, since monthly oil income fell from a $50 million peak to under $4 million. On pages 206 and 207, oil was chosen because airpower could hit it without first retaking the ground. The payoff shows up on page 221, where pay cuts drove desertions and ISIS scaled back its recruiting of foreign fighters. On page 255, airpower paired with partner ground forces liberated the territory, and strategic attacks hastened it. Opinion: the money strikes made the close fight shorter and cheaper, which is plenty, and the authors doubt they could have done the job alone.</p>
+  <p>First order, the oil and cash strikes cut ISIS's income and burned its reserves, more than $500 million in cash by August 2016. Second order, ISIS cut salaries, lost fighters to desertion, and squeezed its subjects with harsher taxes and extortion. Third order, the personnel shortage bit harder once Iraqi and Syrian offensives drove up attrition, and coalition officials still judged that rolling back territory was the surest way to destroy ISIS's wealth. That chain pre-empts both the airpower-alone reading and the shrug that the deep fight was a sideshow.</p>
+  <p>A question for the room: Turn to page 253, where the authors admit they cannot judge whether ground commanders truly needed all the surveillance aircraft they got. If the close fight was the main effort, who should decide when a Reaper leaves it to chase a target that may move in two weeks? <span class="by">(S)</span></p>
+</article>
+
+      <article id="w-06">
+  <span class="kicker">Chapter by Chapter · Wasser, chapter 6</span>
+  <h3><a href="#w-06">Got Your Back, Got the Fitter: Delegated Authority Kept the Syrian Sky Small</a></h3>
+  <p>Tell pilots what they may shoot before the crisis, and a shootdown can end a confrontation. Wasser's sixth chapter covers the missions that let the bombers bomb, including tankers that flew about a quarter of all sorties. ISIS had no air force worth the name, but Syrian, Russian, and Iranian aircraft shared its sky, and the coalition had to guard its partners without starting a second war.</p>
+  <p>On June 8, 2017, two Navy Hornets watched a Syrian Su-22 Fitter drop bombs over the al-Tanf exclusion zone and let it leave. Gen David Goldfein and Lt Gen Jeffrey Harrigian used that to restate the rules of engagement face to face, including to Navy pilots on USS George H.W. Bush. One pilot recalled the message: "I have your back; I've given you authority to fight." On June 18, a four-ship from the Bush was flying close air support for the Syrian Democratic Forces near Jadin. One Super Hornet's targeting sensor was misbehaving, so its pilot switched to air-to-air mode to watch a Russian Su-35 circling overhead, and he spotted the Fitter coming from the south. (A broken infrared pod turned out to be a career opportunity.) The AWACS made guard calls, and he flew three headbutts, dumping flares in its path. The Fitter dove and released its bombs on the partners. His AIM-9X missed, his AMRAAM did not, and the U.S. had its first kill of a manned aircraft since 1999. Two Hornets then refueled and went to Mosul to fight ISIS. (Busy morning.)</p>
+  <p>The claim you'll hear: "On page 272, Wasser says OIR faced a very permissive air environment and ISIS had no air capability beyond small drones, so counterair was a sideshow." It reads one sentence and skips the rest of the page, where the sky turns genuinely contested from 2017, and page 264, where U.S. pilots down three aircraft, likely regime-flown, to protect partners.</p>
+  <p>A stronger response: concede that ISIS was no air threat and that, on page 264, no one is known to have tried to shoot down a coalition jet. Then point to page 263, where Syrian aircraft and Iranian-made drones tried to strike partners with U.S. special forces nearby. On page 265, Jim Mattis says the Euphrates deconfliction line may look "a little more squiggly," and pilots had to hold their airspace without ceding precedent. Page 273 supplies the yardstick: partners fought without losses to hostile airpower, and nothing escalated into war with Syria or Russia. Opinion: the guidance mattered more than the missile.</p>
+  <p>First order, the shootdown removed a jet that had just bombed partner forces. Second order, the deconfliction arrangement with Moscow was suspended and then restored, and the task force announced it would defend its partners and had no wish to fight the regime or Russia. Third order, after an F-15E downed a second Iranian-made drone on June 20, aerial tensions eased, and those were the last air-to-air engagements as the authors wrote. That chain pre-empts the worry that killing a Syrian jet invited a fight with Russia.</p>
+  <p>A question for the room: Turn to page 269, where the Hornets let the June 8 Su-22 leave after it bombed. Was that restraint a gap Harrigian then closed, or the reason the June 18 kill read as self-defense? <span class="by">(S)</span></p>
+</article>
+
+      <article id="w-07">
+  <span class="kicker">Chapter by Chapter · Wasser, chapter 7</span>
+  <h3><a href="#w-07">The Air War Moved at the Speed of Its Slowest Partner</a></h3>
+  <p>An air war moves at the speed of its slowest prerequisite, and against the Islamic State the slow ones were intelligence and the partners on the ground. Wasser's closing chapter grants that the early rules were too tight, then argues that a more aggressive air war from day one would have shortened the war only slightly. The partners set the clock, and airpower kept time.</p>
+  <p>The money war shows it best. Operations Tidal Wave II and Point Blank stressed ISIS's finances at a key moment, but they could not start until the coalition had built a federated intelligence enterprise and a SOF raid had produced exceptional intelligence. That raid killed Abu Sayyaf, and its haul was never replicated. There were few known currency stashes to begin with, and Point Blank hit all of them quickly. (More sorties do not create more vaults.) The ground side ran just as slow. Capable partner forces were in short supply the first year, Iraqi forces had fled ISIS in 2014 and often would not move without coalition aircraft overhead, and Iraqi or Kurdish officials had to approve every strike in their territory. Wasser borrows the adage that the enemy gets a vote and adds, "so too do partner forces." It was no small war, either: 234,000 sorties over 242 weeks, the largest total in the authors' table.</p>
+  <p>The claim you'll hear: "On page 300, Wasser says the stringent rules of engagement and centralized strike authority created bottlenecks, and outcomes improved once they were relaxed. So gradualism cost us the first year of the war." It reads one passage and ignores the authors' verdict a page later. On page 301, Wasser concludes the gain would have been modest, because partners' capability and willingness to attack drove the timeline.</p>
+  <p>A stronger response: concede the first half. If we look at page 300, the constraints did shrink the number of targets aircraft could engage. The same page says there were few, if any, deliberate target packages at the outset, and that airpower alone was unlikely to pry ISIS out of its cities. On page 301, ISIS dispersed and went clandestine as the campaign wore on, offering fewer lucrative targets. Opinion: the rules debate is the comfortable one for airmen, since it blames lawyers. The harder lesson is that nobody can buy partner readiness by the sortie.</p>
+  <p>First order, tight rules and slow target validation choked the strike process. Second order, the coalition improvised: it ran strikes as dynamic or on-call when they could have been preplanned, and it invented a nondoctrinal middle fight that developed targets in 48 to 72 hours inside the land component's area. Third order, those workarounds handed ground entities a say over airpower that doctrine does not support and bred tension between the components, which the authors expect to worsen as the Army fields a 500-kilometer precision-strike missile. That pre-empts the tidy reply that looser rules were the fix: the rules loosened and the process still needed patching.</p>
+  <p>A question for the room: Turn to page 306, where the authors write that "the coalition benefited from time to refine its targeting processes" and warn that future wars may not allow it. If OIR's fixes took more than four years of patient tinkering, which of its lessons survive an opponent that will not wait? <span class="by">(S)</span></p>
+</article>
+
+      <article id="r1">
+      <span class="kicker">Spaced Review · six earlier books against Wasser</span>
+      <h3><a href="#r1">Six Old Friends Read the RAND Report</a></h3>
+      <ol class="qs">
+      <li><b>Haun, tactical air power in Vietnam.</b> Airpower works best attacking enemy forces alongside a capable friendly army, which forces the enemy to hide or die if it masses. The link: Kobani is Haun's thesis in one battle. ISIS massed in the open, precision strikes shredded it, and it dispersed into cities and layered defenses. Haun also warns that air without controllers beside the partner fails, as at Lam Son 719. OIR had no controllers at the front either, and it built strike cells and put drones overhead to stand in for them.</li>
+      <li><b>Randolph, the Easter Offensive.</b> Nixon's air and naval power blunted the 1972 invasion and covered the American exit, and still could not compel a lasting settlement. The link: both wars used American airpower to carry a partner army. Wasser's Iraqis often would not move without coalition aircraft overhead, which tells you who depended on whom.</li>
+      <li><b>Henriksen, Kosovo.</b> NATO bombed on a gamble that a few days would move Milosevic, and coalition politics shaped every target. The link: in OIR, Iraqi or Kurdish officials had to approve every strike in their territory. In Kosovo the capitals held the veto; in Iraq the partners on the ground did.</li>
+      <li><b>Lambeth, transformation.</b> Stealth, precision, and battlespace awareness made airpower strategic from the start of a campaign. The link: Lambeth later wrote that coalition airpower against ISIS was underused for more than two years, and Wasser calls that camp's evidence mixed. Monday's author is tonight's opponent.</li>
+      <li><b>Clodfelter, North Vietnam.</b> Bombing's value depends on the political goals and the kind of war being fought. The link: Wasser's first lesson learned is that political considerations will at times require airpower to be used in ways the Air Force does not plan for. Clodfelter would call that a description of every war in this course.</li>
+      <li><b>Olsen, Desert Storm.</b> Strategic attack on Saddam's power base worked against the regime's tools and did not topple the regime. The link: Wasser leaves Desert Storm off her comparison chart because it is an outlier, at 19,800 sorties a week. OIR flew about 1,000 a week and took four years. The 1991 model has become the exception.</li>
+      </ol>
+      <p>Opinion: five of these six authors would read Wasser and nod. Lambeth would write a rebuttal, and he did. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Wasser page numbers are the report's printed pages (the Summary uses roman pages xiii to xvi).</p>
+        <h3>Tonight's reading</h3>
+        <ul>
+          <li>Airpower indispensable for enabling partner ground operations; limited liability, limited risk approach: Wasser, 10. Partner-led strategy; partners central: Wasser, 298.</li>
+          <li>Territory the key measure; close fight prioritized; deep strikes helped but peripheral: Wasser, 299.</li>
+          <li>More aggressive air operations might have slightly accelerated the defeat: Wasser, xv; "not dramatically": Wasser, 301.</li>
+          <li>Critics' claims about an airman in command and civilian-casualty limits "mixed": Wasser, 11.</li>
+          <li>Average 26,645 weapons a year in OIR; fewer than 2,000 dropped in Iraq even in 2007: Wasser, 295. More than 117,000 weapons in all: Wasser, 293.</li>
+          <li>Russia begins air strikes in Syria on September 30, 2015: Wasser, 70.</li>
+          <li>Slessor versus Douhet framing: syllabus, Seminar 16. The verdict for Slessor, the "stopwatch" framing, and the aside are our opinion.</li>
+        </ul>
+        <h3>The world around the book</h3>
+        <ul>
+          <li>Sponsored by the Assistant Vice Chief of Staff of the Air Force; RAND Project AIR FORCE, the DAF's federally funded research and development center; lessons meant for future wars against nonstate and near-peer adversaries: Wasser, iii.</li>
+          <li>Draft shared with the DAF May 27, 2020, reviewed by formal peer reviewers and DAF experts: Wasser, iv.</li>
+          <li>Three inputs, including two data sets and interviews with more than 50 participants: Wasser, xiii.</li>
+          <li>Nine authors (Wasser, Pettyjohn, Martini, Evans, Mueller, Edenfield, Tarini, Haberman, Zeman): title page; <a href="https://www.rand.org/pubs/research_reports/RRA388-1.html">RAND product page, RR-A388-1</a>.</li>
+          <li>Senior policy analyst at RAND; wargames and research for DoD, Army, Air Force, and State; joined CNAS: <a href="https://cnas.org/press/press-release/becca-wasser-joins-cnas-as-fellow-in-defense-program">CNAS press release, June 22, 2020</a>.</li>
+          <li>Critics' claims "mixed"; centralized approval clearly limited airpower in year one: Wasser, 11.</li>
+          <li>Baghuz and the end of the physical caliphate, March 2019: Wasser, 293. Much ink spilled criticizing the limited, gradual start: Wasser, 295.</li>
+          <li>Lambeth's <i>Airpower in the War Against ISIS</i>: coalition air underused for more than two years; Laird's criticism of the RAND report: <a href="https://defense.info/re-thinking-strategy/2021/07/lessons-learned-from-the-land-wars-for-the-future-of-airpower/">Robbin Laird, "Lessons Learned from the Land Wars for the Future of Airpower," Defense.info, July 23, 2021</a>.</li>
+          <li>Close air support prioritized over deep strike: <a href="https://www.yahoo.com/news/us-used-fighter-jets-bombers-190637130.html">Oriana Pawlyk, Military.com, February 9, 2021 (republished on Yahoo News)</a>.</li>
+          <li>Few, if any, deliberate target packages at the outset; partners' capability drove the timeline: Wasser, 300 to 301. Time to refine targeting a luxury future wars may lack: Wasser, 306.</li>
+          <li>No scholarly or military-journal review found in our search. The takes, the verdict, and the asides are our opinion.</li>
+        </ul>
+        <h3>Time plan, read for, and seminar questions</h3>
+        <ul>
+          <li>Chapter page ranges from the table of contents: Summary xiii to xvi; ch. 1, 1 to 14; ch. 2, 15 to 86; ch. 3, 87 to 122; ch. 4, 125 to 198; ch. 5, 199 to 256; ch. 6, 257 to 292; ch. 7, 293 to 308; appendixes from 309.</li>
+          <li>Centralized approval clearly limited airpower in year one: Wasser, 11. Zero civilian casualty cutoff and slow approvals: Wasser, 55. Kobani approvals in minutes: Wasser, 61. Centralized TEA: Wasser, 83 to 84.</li>
+          <li>Four- to six-week cycle; ISIS moving every two weeks; 24 to 48 hours: Wasser, 99 to 100.</li>
+          <li>About 90 percent of oil revenue cut: Wasser, 210. Taxes six times oil: Wasser, 206. ISIS raises taxes and extortion: Wasser, 221.</li>
+          <li>Su-22 shootdown, June 18, 2017: Wasser, 270 to 272.</li>
+          <li>Largest overall operation; Desert Storm 19,800 sorties a week: Wasser, 296 to 297.</li>
+          <li>Deliberate Force comparison, August 2014: Wasser, 27. Atrophied targeting: Wasser, 64 to 65. Votel's warning, Phase IV: Wasser, 118. Success verdict: Wasser, 298. Civilian deaths and a successor: Wasser, 113. Russia and the FY2016 NDAA: Wasser, 70 to 71. "Own" the ISIS problem: Wasser, 28. Recommendations: Wasser, 306 to 307.</li>
+          <li>Questions from the syllabus, Seminar 16; question five is drawn from its framing paragraph. Which question to prepare is our opinion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Pages as given in each entry: CJTF-OIR (70), TEA (55, 84), Tactical Directive 1 (133), strike cells (299), Brown (67 to 68), Tidal Wave II and Point Blank (204, 226), Martin (99 to 100), SDF (190).</li>
+        </ul>
+        <h3>Bridge from today's seminar</h3>
+        <ul>
+          <li>Islamic State's antiaircraft weapons, urban basing, and governing structure blunt the drone approach: Fuller, ebook 335.</li>
+          <li>RPAs enable integration without JTACs on the front lines: Wasser, 10. Six or seven RPAs over Ramadi for days: Wasser, 84 to 85.</li>
+          <li>The CIA's Counterterrorist Center runs the drone campaign: Fuller, ebook 30. The asides and the closing question are ours.</li>
+        </ul>
+        <h3>Political strategy × Wasser</h3>
+        <ul>
+          <li>Khanna and Ansari vow to oppose funding without a ban on offensive operations in Iran; December 11 deadline; $350 billion defense reconciliation all but dead; NDAA law 65 straight years; $1.5 trillion push; Iran war highly unpopular; Jeffries speaker January 3 with a 260-seat majority: Punchbowl News AM, November 19, 2026.</li>
+          <li>Democrats win 56 Senate seats; Iran war may affect Rubio's and Vance's prospects (Vibes Index item): <a href="https://www.electoral-vote.com/">electoral-vote.com, November 19, 2026</a>.</li>
+          <li>Three shootdowns of aircraft attacking partners; CJTF-OIR statement on defending partners and not seeking to fight the regime or Russia: Wasser, 264.</li>
+          <li>FY2016 NDAA ban on military cooperation with Russia; CENTCOM deconflicts but does not coordinate: Wasser, 71.</li>
+          <li>Avoid "owning" the ISIS problem, preserving the ability to disengage: Wasser, 28.</li>
+          <li>The reading of today's fight, the aside, and the closing take are our opinion.</li>
+        </ul>
+<h3>Wasser, summary and chapter 1: Under Ninety Minutes to Kill One Drone: Wasser on Why the Air War Ran Long</h3>
+<ul>
+  <li>Debate over whether airpower reached its potential; more-aggressive air operations might have slightly accelerated defeat but unlikely to have significantly altered the timeline: Wasser, xiii, xv.</li>
+  <li>Deliberate targeting used for the first time in years and in need of reinvigoration; battlespace-management disagreement between CJTF commander and CFACC affected the deep fight: Wasser, xv.</li>
+  <li>June 8, 2017, F-15Es near al-Tanf; Shahed 129 with two Hellfire-like missiles over partners and U.S. advisers; refueling; missile gone on return: Wasser, 1-2.</li>
+  <li>Pilot asks to shoot; jamming first; two Russian Su-27s within range; "smoke it" guidance; shootdown less than an hour and a half after first sighting with an AIM-120C: Wasser, 2-3.</li>
+  <li>Different authorities in Syria and Iraq; hostile third parties on the ground and in the air: Wasser, 3.</li>
+  <li>Correlating major shifts in the campaign with battlefield outcomes; metrics can mislead; Vietnam body counts contributed to failure: Wasser, 8.</li>
+  <li>Airpower indispensable; limited liability, limited risk approach; partner ground forces as primary effort; CAS prioritized over strategic attack; RPAs enable integration without JTACs on the front lines: Wasser, 10.</li>
+  <li>Critics' claims "mixed"; intelligence problems would have hampered even a USAF commander; finite oil and banking targets, then small smuggling; territory as main source of wealth; centralized approval clearly limited airpower in year one; delegation improved responsiveness; earlier delegation not clearly faster given few capable partners: Wasser, 11.</li>
+  <li>The leash-and-dog verdict, the jokes, and the room question are our opinion.</li>
+</ul>
+<h3>Wasser, chapter 2: The Bombers Came Home Full: Phase I Waited on the Ground War</h3>
+<ul>
+  <li>August 2014: 949 air-to-ground sorties, weapons released on 100; Deliberate Force sortie rate more than three times higher: Wasser, 27.</li>
+  <li>NCV of zero; TEA held by Austin, then Terry alone until delegated to one-star strike cell commanders in fall 2014; approvals over 30 minutes and sometimes hours; "drizzle" criticism: Wasser, 55.</li>
+  <li>887 strikes at Kobani over the last three months of 2014 and January 2015: Wasser, 58.</li>
+  <li>Kobani: massed ISIS targets, clear FLOT, no host-nation clearance in Syria, Hesterman's "minutes" remark, B-1s winchester on 31 missions: Wasser, 61.</li>
+  <li>ISIS less willing to attack after Kobani, builds layered defenses; strikes on fighters fall from 77 percent to 33 percent of targets, August to October 2014: Wasser, 62.</li>
+  <li>Deliberate targets took three to six weeks; targeting enterprise atrophied: Wasser, 64-65.</li>
+  <li>Brown takes AFCENT in June 2015, finds well over 90 percent dynamic strikes, orders the "broken" target-development process fixed: Wasser, 67-68.</li>
+  <li>Ramadi offensive begins December 2015 and becomes a grind and a slog, partly for lack of a deep fight; lesson to shape Mosul and Raqqa with deep strikes before a direct assault: Wasser, 72-73.</li>
+  <li>74 percent of sorties returned without dropping in the first ten months: Wasser, 78.</li>
+  <li>Partners reclaim 40 percent of former ISIS territory; ISIS shifts from "lasting and expanding" to lasting; dispersal and layered defenses; precision strikes effective against large formations: Wasser, 79.</li>
+  <li>By-with-through let partners dictate pace; Kurdish and Iraqi forces not capable of or willing to attack in late 2014 and early 2015; ISIS hidden in cities; centralized TEA limited effectiveness: Wasser, 83.</li>
+  <li>TEA never below one-star level in Phase I; Welsh quote: Wasser, 84.</li>
+  <li>Six or seven RPAs over Ramadi for days while ground forces were static; authors cannot adjudicate: Wasser, 84-85.</li>
+  <li>The verdict that the empty battlefield slowed the war, the jokes, and the room question are our opinion.</li>
+</ul>
+<h3>Wasser, chapter 3: ISIS Moved Every Two Weeks. The Paperwork Took Six.</h3>
+<ul>
+  <li>Chapter scope, Phase II and III dates, Mosul and Raqqa counterattacks: Wasser, 87.</li>
+  <li>Baghuz, the last village, falls in March 2019: Wasser, 117.</li>
+  <li>Revenue decline and inability to isolate the effects of deep strikes from the close fight: Wasser, 106.</li>
+  <li>Ten to 15 VBIED attacks a day; about 80 percent killed or damaged Iraqi units: Wasser, 98.</li>
+  <li>ISIS moved facilities every two weeks; four- to six-week CAOC process; Iraqis' five-plus plans chosen at the last minute; uninterrupted FMV clock and "platinum standard": Wasser, 99.</li>
+  <li>Road cratering with delayed-fuse 500-pound GBU-38 ten feet below ground; Iraqi bulldozers: Wasser, 99.</li>
+  <li>Nondoctrinal deliberate-dynamic process producing targets in 24 to 48 hours; CJTF-run process unable to interrupt resupply: Wasser, 100.</li>
+  <li>Eastern Mosul cleared January 2017; whole city liberated July 2017: Wasser, 101.</li>
+  <li>Phase II counterland sorties without a weapon release, 39 percent, against 56 percent in Phase I: Wasser, 109.</li>
+  <li>More research needed on the trade-offs of the deliberate-dynamic process: Wasser, 111-112.</li>
+  <li>Airwars: more than 1,400 civilian deaths reported in Iraq in March 2017; strike on rooftop snipers kills more than 100 civilians in a basement; Pentagon investigation says ISIS staged explosives: Wasser, 112.</li>
+  <li>Delegation of authority listed as a possible cause of rising civilian casualties; uncertain whether deaths generate support for ISIS or a successor: Wasser, 113.</li>
+  <li>8,803 Phase II strikes, 25 percent of the total, against terrain LOCs; insufficient evidence on morale strikes: Wasser, 93.</li>
+  <li>The doctrine-manual joke, the stronger response's verdict, the "both camps" framing, and the room question are our opinion.</li>
+</ul>
+<h3>Wasser, chapter 4: Count the Months Before You Count the Bombs</h3>
+<ul>
+  <li>Six close-fight case studies, Mosul Dam through Raqqa: Wasser, 129-130.</li>
+  <li>Template of 100 to 200 strikes a month at the height of a city liberation: Wasser, 196.</li>
+  <li>Processes and capabilities evolved over time, driven by Mosul and Raqqa: Wasser, 197.</li>
+  <li>More than 1,500 strikes in Mosul over roughly 12 months, the largest number in OIR at the time: Wasser, 168.</li>
+  <li>Mosul never exceeded one-third of monthly coalition strikes, owing to concurrent Syria operations: Wasser, 169.</li>
+  <li>Kobani's 253 strikes in January 2015 exceeded any Mosul month; Mosul's total driven by duration: Wasser, 170.</li>
+  <li>57 percent of weapons released from coalition aircraft, October 2016 to April 2017, supported Mosul: Wasser, 170.</li>
+  <li>Months of shaping followed by nine months of CAS at Mosul: Wasser, 179-180.</li>
+  <li>Strikes clustered at 100 to 150 a month on both sides of the river; Tactical Directive 1 had no appreciable impact on scale: Wasser, 172.</li>
+  <li>Tactical Directive 1 let advisory commanders with terminal-control ability approve strikes once requiring a one-star or three-star; Martin on responsiveness: Wasser, 133.</li>
+  <li>JTAC: without the shift, Tabqah and Raqqa liberations not possible: Wasser, 133-134.</li>
+  <li>Forward advisers mostly authorized surface fires; strike cells approved most air strikes faster: Wasser, 177.</li>
+  <li>Devolved TEA sped approvals and raised the number of strikes SOF strike cells authorized for SDF forces in contact in Raqqa: Wasser, 184-185.</li>
+  <li>SDF an irregular light infantry force: Wasser, 190.</li>
+  <li>Three to four strikes at a time in a four- to five-nautical-mile cylinder over Raqqa: Wasser, 185.</li>
+  <li>Raqqa city battle about four and a half months, under half the Mosul clearing time; Raqqa about one-quarter Mosul's size: Wasser, 194.</li>
+  <li>Tikrit strikes "validate" the correlation between airpower and territorial gain: Wasser, 132.</li>
+  <li>37 Tikrit strikes, all in the week of March 23, 2015: Wasser, 153.</li>
+  <li>Shia militias returned for the final assault on Tikrit: Wasser, 157.</li>
+  <li>The map joke, the fire-department comparison, the stronger response's verdict, and the room question are our opinion.</li>
+</ul>
+<h3>Wasser, chapter 5: Bank Shots Beat Road Work: Wasser's Deep Fight Rewards Narrow Targets</h3>
+<ul>
+  <li>Four deep-fight case studies, two against resources and two against logistics: Wasser, 202-203.</li>
+  <li>Four- to six-week CAOC deliberate-targeting process: Wasser, 204, 246, 250.</li>
+  <li>ISIS moved its stuff every two weeks; altered operations roughly every two weeks: Wasser, 224, 250.</li>
+  <li>January 2016 Mosul bank strike: nine-story building, three GBU-39s, two 2,000-pound JDAMs, 75 percent of salary cash, mosque undamaged, "pickup basketball game": Wasser, 231.</li>
+  <li>Abu Kamal-Al-Qaim targets developed November 2015 to January 2016; 14 targets: Wasser, 237, 239.</li>
+  <li>February 15, 2016: 15 strikes against 14 targets: Wasser, 237.</li>
+  <li>ISIS returned 48-72 hours later; "Is the juice worth the squeeze?": Wasser, 239-240.</li>
+  <li>Hawija car-bomb factory strike, 44 aimpoints, empty chicken farm: Wasser, 250.</li>
+  <li>About 90 percent of oil revenue lost; $50 million peak to less than $4 million a month: Wasser, 210.</li>
+  <li>Taxes six times oil revenue; oil the stream degradable without liberating territory: Wasser, 206-207.</li>
+  <li>ISIS raised taxation and extortion, cut pay; desertions; fewer foreign fighters recruited; strain grew with attrition: Wasser, 221.</li>
+  <li>More than $500 million in cash removed by August 2016: Wasser, 234.</li>
+  <li>Surest way to destroy ISIS wealth was to roll back territory: Wasser, 235.</li>
+  <li>Narrowly scoped operations against clear strategic targets more effective: Wasser, 252.</li>
+  <li>No data to adjudicate whether ground commanders needed all their ISR: Wasser, 253.</li>
+  <li>Airpower with partner ground forces liberated the territory; strategic attacks hastened it: Wasser, 255.</li>
+  <li>The stronger response's verdict and the "exchange rate" aside are our opinion.</li>
+</ul>
+<h3>Wasser, chapter 6: Got Your Back, Got the Fitter: Delegated Authority Kept the Syrian Sky Small</h3>
+<ul>
+  <li>Chapter scope: DCA, airlift, aerial refueling as enabling missions: Wasser, 257.</li>
+  <li>Tankers about one-quarter of all OIR sorties: Wasser, 285.</li>
+  <li>ISIS air capability limited to small UASs; Syrian regime, Russia, and Iran possessed air capabilities: Wasser, 260-261.</li>
+  <li>June 8, 2017: Su-22 over the exclusion zone tracked by two F/A-18Cs, allowed to exit after dropping bombs: Wasser, 269.</li>
+  <li>Goldfein and Harrigian reiterate ROE "eyeball-to-eyeball"; meeting with Navy pilots from USS George H.W. Bush; "I have your back; I've given you authority to fight": Wasser, 269-270.</li>
+  <li>June 18 four-ship CAS mission for the SDF near Jadin: Wasser, 270.</li>
+  <li>FLIR issue, air-to-air mode, Russian Su-35 circling the CAS stack, Su-22 approaching from the south: Wasser, 271.</li>
+  <li>Guard calls, three headbutts with flares, Fitter releases munitions: Wasser, 271.</li>
+  <li>AIM-9X misses, AMRAAM strikes; two F/A-18Cs refuel and are retasked to Mosul CAS: Wasser, 272.</li>
+  <li>First air-to-air kill of a manned aircraft by a U.S. pilot since Operation Allied Force in 1999: Wasser, 267.</li>
+  <li>Syrian aircraft and Iranian-made UASs attempted strikes on partners with U.S. SOF nearby: Wasser, 263.</li>
+  <li>Three shootdowns, likely flown or controlled by Syrian regime forces; CJTF-OIR statement on not seeking to fight; no disclosed attempt to shoot down coalition jets: Wasser, 264.</li>
+  <li>Mattis on a "squiggly" deconfliction line; guidance to assert airspace without ceding precedent: Wasser, 265.</li>
+  <li>Deconfliction arrangements suspended and reestablished after the June 2017 shootdown: Wasser, 261.</li>
+  <li>Permissive environment initially; genuinely contested from 2017 onward: Wasser, 272.</li>
+  <li>June 20 Shahed 129 shootdown; tensions deescalate; June 2017 engagements the last in OIR; success measured by no losses and no escalation: Wasser, 273.</li>
+  <li>The stronger response's verdict and the parenthetical asides are our opinion.</li>
+</ul>
+<h3>Wasser, chapter 7: The Air War Moved at the Speed of Its Slowest Partner</h3>
+<ul>
+  <li>Table 7.1: OIR 234,000 sorties over 242 weeks, about 1,000 a week, against Allied Force's 3,500 a week; OIR ranks highest in overall size; duration of more than four years: Wasser, 297.</li>
+  <li>Partner-led, limited-risk strategy with Iraqi, Syrian and Kurdish partners in the lead: Wasser, 298.</li>
+  <li>Iraqi forces fled in 2014 and often refused to move without aircraft overhead; Iraqi or Kurdish officials approved all strikes in their territory; "so too do partner forces": Wasser, 299.</li>
+  <li>Stringent ROE and centralized TEA created bottlenecks and cut targets; outcomes improved as they relaxed; airpower alone doubtful to dislodge ISIS from cities; few if any deliberate target packages at the outset; federated intelligence enterprise took time: Wasser, 300.</li>
+  <li>Tidal Wave II and Point Blank needed those improvements and SOF-raid intelligence; capable partner forces in short supply the first year; partners' capability and willingness drove the timeline; ISIS dispersed and presented fewer lucrative targets; a more aggressive air war would have accelerated defeat, but not dramatically: Wasser, 301.</li>
+  <li>Abu Sayyaf raid intelligence never replicated; few known currency stashes, all hit quickly in Point Blank: Wasser, 302.</li>
+  <li>Strikes run as on-call or dynamic when they could have been preplanned; nondoctrinal middle fight developing targets in 48 to 72 hours in CJFLCC's area: Wasser, 304 to 305.</li>
+  <li>Strike cells and middle fight gave ground entities a say over airpower inconsistent with doctrine; tension between components; negative lessons learned: Wasser, 305.</li>
+  <li>"The coalition benefited from time to refine its targeting processes," a luxury future wars may lack: Wasser, 306.</li>
+  <li>Army's 500-kilometer precision-strike missile will make battlespace geography a larger source of tension: Wasser, 307.</li>
+  <li>The aside that more sorties do not create more vaults is our inference.</li>
+  <li>The stronger response's verdict on the rules debate is our opinion.</li>
+</ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+        <li>Haun thesis: Haun, 1 to 2, 6 to 7, 224, 228. Lam Son 719, no advisors or air controllers in Laos: Haun, 139 to 140. Kobani precision strikes against massed ISIS formations; dispersal and layered defenses: Wasser, 61 to 62, 79. RPAs and strike cells in place of JTACs at the front: Wasser, 10, 299.</li>
+        <li>Randolph thesis: Randolph, 333, 337 to 342. Iraqi forces often refused to move without coalition aircraft overhead: Wasser, 299.</li>
+        <li>Henriksen thesis: Henriksen, ebook 11 to 15, 193, 324 to 325. Iraqi or Kurdish officials approved all strikes in their territory: Wasser, 299.</li>
+        <li>Lambeth thesis: Lambeth, 6, 297 to 299. Lambeth's <i>Airpower in the War Against ISIS</i> on two years of underuse: <a href="https://defense.info/re-thinking-strategy/2021/07/lessons-learned-from-the-land-wars-for-the-future-of-airpower/">Laird, Defense.info, July 23, 2021</a>. Evidence "mixed": Wasser, 11.</li>
+        <li>Clodfelter thesis: Clodfelter, ebook pp. 9 to 11, 223 to 225. Lesson learned on political considerations: Wasser, 300.</li>
+        <li>Olsen thesis: Olsen, 1 to 2, 4, 293, 295. Desert Storm left off the chart as an outlier, 19,800 sorties a week: Wasser, 296. OIR about 1,000 sorties a week over 242 weeks: Wasser, 297.</li>
+        <li>The links' framing and the closing opinion are ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Chapter recall</h2>
+        <ul class="recall">
+<li><details><summary>What do Wasser's authors conclude about whether a more aggressive air campaign would have defeated ISIS faster?</summary><p>It might have slightly accelerated the defeat, but it is unlikely to have significantly altered the timeline. <span class="pg">W xv</span></p></details></li>
+<li><details><summary>Why did the F-15E pilot at al-Tanf on June 8, 2017, delay shooting the Shahed 129?</summary><p>Two Russian Su-27s were within range, and he worried they would think a missile fired from that angle was aimed at them. <span class="pg">W 2</span></p></details></li>
+<li><details><summary>Which constraint do the authors say clearly limited airpower in OIR's first year?</summary><p>The centralization of authority to approve air strikes; delegating target engagement authority later made airpower more responsive against small, mobile targets. <span class="pg">W 11</span></p></details></li>
+<li><details><summary>Why were strike approvals at Kobani so much faster than elsewhere in Phase I?</summary><p>ISIS massed in the open behind a clear front line, and strikes in Syria needed no host-nation clearance, so approvals took minutes rather than hours. <span class="pg">W 61</span></p></details></li>
+<li><details><summary>What share of air-to-ground sorties came back without dropping a weapon in OIR's first ten months, and in the second ten?</summary><p>74 percent in the first ten months and 43 percent in the second ten. <span class="pg">W 78</span></p></details></li>
+<li><details><summary>What did CJTF-OIR learn from the Battle of Ramadi?</summary><p>That it would need to shape Mosul and Raqqa with deep air strikes to weaken ISIS before beginning a direct assault. <span class="pg">W 73</span></p></details></li>
+<li><details><summary>How long did the CAOC's deliberate-targeting process take in Mosul, and how often did ISIS move its facilities?</summary><p>Four to six weeks, while ISIS moved facilities every two weeks in areas being targeted, so approved packages were often irrelevant. <span class="pg">W 99</span></p></details></li>
+<li><details><summary>How did MG Martin blunt ISIS car bombs before his deliberate-dynamic process was running?</summary><p>He cratered approach roads with 500-pound GBU-38s fused to explode ten feet underground, which blocked VBIEDs without wrecking nearby buildings. <span class="pg">W 99</span></p></details></li>
+<li><details><summary>What share of counterland sorties came home without releasing a weapon in Phase II, compared with Phase I?</summary><p>39 percent in Phase II, against 56 percent in Phase I. <span class="pg">W 109</span></p></details></li>
+<li><details><summary>Which battle had the single highest monthly strike total among the chapter's cases, Kobani or Mosul?</summary><p>Kobani. Its 253 strikes in January 2015 exceeded any monthly total at Mosul, whose large overall count came from the operation's length. <span class="pg">W 170</span></p></details></li>
+<li><details><summary>How many strikes a month did the coalition typically deliver at the height of a city liberation?</summary><p>Between 100 and 200 strikes a month in support of a single counterattack on a city. <span class="pg">W 196</span></p></details></li>
+<li><details><summary>What did Tactical Directive 1 change about strike approval?</summary><p>Any commander of an advisory element with organic terminal-control ability could approve strikes that once needed a one-star or even three-star general. <span class="pg">W 133</span></p></details></li>
+<li><details><summary>How did the January 2016 Point Blank strike destroy the cash vault in a Mosul bank?</summary><p>Three GBU-39 Small Diameter Bombs with staggered fuse delays opened the nine-story building, then two 2,000-pound JDAMs penetrated the basement vault, burning an estimated 75 percent of ISIS's salary cash without damaging a nearby mosque. <span class="pg">W 231</span></p></details></li>
+<li><details><summary>What happened after the February 15, 2016, strikes near Abu Kamal and Al-Qaim?</summary><p>ISIS briefly withdrew and returned within 48 to 72 hours, prompting the task force's intelligence and operations staffs to ask whether the juice was worth the squeeze. <span class="pg">W 239-240</span></p></details></li>
+<li><details><summary>Why did oil become the coalition's main financial target even though taxes earned ISIS more?</summary><p>Oil was the large revenue stream airpower could degrade without first liberating territory; taxes generated about six times as much but required rolling back ISIS's control. <span class="pg">W 206-207</span></p></details></li>
+<li><details><summary>What did Goldfein and Harrigian do after the Syrian Su-22 was allowed to leave on June 8, 2017?</summary><p>They restated the self-defense rules of engagement directly to airmen, including Navy pilots on USS George H.W. Bush, making clear the pilots had authority to defend partner forces. <span class="pg">W 269-270</span></p></details></li>
+<li><details><summary>What sequence led to the June 18, 2017, shootdown of the Su-22 near Jadin?</summary><p>AWACS guard calls and three flare-dispensing headbutts failed; the Fitter released munitions on partner forces, and a Super Hornet's AMRAAM downed it after an AIM-9X missed. <span class="pg">W 271-272</span></p></details></li>
+<li><details><summary>By what measure do the authors judge the DCA mission in OIR a success?</summary><p>Coalition and partner forces operated against ISIS without losses to hostile airpower and without the air situation escalating into a wider conflict with Syria or Russia. <span class="pg">W 273</span></p></details></li>
+<li><details><summary>Would a more aggressive air war from the start have defeated ISIS much faster, according to Wasser?</summary><p>Only slightly. The partners' capability and willingness to attack, plus the time needed to build intelligence and target packages, drove the timeline. <span class="pg">W 301</span></p></details></li>
+<li><details><summary>Why could Operation Point Blank not be scaled up?</summary><p>There were few known ISIS currency stashes, the coalition hit them all quickly, and the raid intelligence that found them was never replicated. <span class="pg">W 302</span></p></details></li>
+<li><details><summary>How did OIR compare with Allied Force in sorties per week and in total sorties?</summary><p>OIR averaged about 1,000 sorties a week against Allied Force's 3,500, but over 242 weeks it flew 234,000 sorties, the largest total in the table. <span class="pg">W 297</span></p></details></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+
+
+
+</body>
+</html>
