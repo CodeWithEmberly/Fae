@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-20 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Friday, November 20, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-20/">This morning's issue and podcast</a> · <a href="../">Archive of every edition</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Next reading: Sekirin, <i>Rise of the Machines</i></a></li>
+          <li><a href="#t1a">The world around the book</a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Monday the 30th: seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from today's seminar</a></li>
+          <li><a href="#t7">Political strategy × Sekirin</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#c0">Not yet: the book isn't on the shelf</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Next Reading · for Monday, November 30</span>
+        <h3><a href="#t1">Sekirin, <i>Rise of the Machines</i>: The Book Arrives Before the Text Does</a></h3>
+        <p>The next seminar is Monday, November 30, after the Thanksgiving break, and its book is Illya Sekirin's <i>Rise of the Machines: Drone Warfare in the Russia-Ukraine War</i>, edited by Andrew Simms. Tonight's page has a gap: the book is not in the 628 folder, on Drive, or on this computer, so we have not read a page of it. Everything below about the book's argument comes from the publisher and from reviewers, and it is labeled that way. Get the PDF into the 628 folder this weekend and the next afternoon run will build the chapter lessons from the text.</p>
+        <p>The argument, as the publisher states it: unmanned systems have changed war at the tactical, operational, and strategic levels. FPV attack drones, reconnaissance drones, electronic warfare, naval drones, and autonomous systems now watch everything, and tanks, artillery, and manned aircraft struggle to survive under that watch. Ukraine's experience, the publisher says, is a blueprint for how armies should reorganize, buy, train, and fight. The case studies named are the early fighting of 2022, Bakhmut, Avdiivka, the Kursk offensive, and the defense of Southern Donbas.</p>
+        <p>Its target is the kind of force this course has studied for eight weeks: armies built around tanks, artillery, and manned aircraft. The syllabus calls it "a bold prediction" about the character of war and asks whether the character has changed as much as the author claims. That question matters for 628 because every technology in this course arrived with the same claim. Sputnik, the laser-guided bomb, stealth, and the Predator each came with a book announcing a new kind of war. Our working view, before reading: Sekirin will win the tactical argument easily and will have to fight for the strategic one, because the war he describes is, by the syllabus's own account, a stalemate. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t1a">
+        <span class="kicker">The World Around the Book</span>
+        <h3><a href="#t1a">The Author Helped Build the Branch He Is Writing About</a></h3>
+        <p>Illya Sekirin is an advocate first and a historian second, and that is the most useful thing to know before you open the book. He is a Ukrainian-born, naturalized Canadian who volunteered to fight in March 2022 and was trained as a drone operator. He served at the front, worked as a translator for the Ukrainian General Staff, and became an unofficial adviser to several members of the Stavka, the high command that President Zelensky chairs. His publisher says he wrote a paper that informed Zelensky's decision to create the Unmanned Systems Forces as a separate branch. (Few authors get to review their own reorganization.)</p>
+        <p>The axe is documented, so we can name it. A local newspaper interview with his editor reports that Sekirin believes Ukraine could have won earlier had his drone "blitz" been fully carried out, and that he now sees a costly stalemate and favors a negotiated settlement. That is the claim of a man who thinks his idea was right and was under-used. Read every judgment about Ukrainian commanders with that in mind. Our take: an insider's access is the book's strength, and an insider's stake is its blind spot.</p>
+        <p>The editor matters too. Andrew Simms spent twelve years at the British Army's <i>Soldier</i> magazine, rising to editor-in-chief, and now edits the <i>British Army Review</i> for the Army's historical analysis center at Sandhurst. Sekirin first reached him by submitting articles to that journal. Expect a book shaped for a Western army audience: lessons, recommendations, and a warning.</p>
+        <p>The moment is a war still being fought. Helion lists publication on January 30, 2026, and its U.S. distributor lists April 16, 2026, so the book went to press with no ending to write. The publisher's description pitches it against an orthodoxy: armies built around tanks, artillery, and manned aircraft, which it says now struggle under constant observation and cheap, expendable attack. It also sets the war inside a wider contest with China, Iran, North Korea, and Russia, which it calls an "axis of upheaval," and argues the West must adapt or face strategic obsolescence. Those are the publisher's words for the argument. We will judge the argument itself once the text is on the desk.</p>
+        <p>The reception is thin and friendly. The publisher's pages quote the <i>Journal of the Air Force Historical Foundation</i>, which called it "a timely and ambitious contribution" to the literature on unmanned systems. The only independent review we could open, by Robert McKie on a New Zealand army logistics history blog in April 2026, strongly recommends it and reads it as a book about logistics: when everything on the battlefield can be seen, the rear area stops being safe. McKie's only caveat is that it offers no neat answers. We found no scholarly review and no critical one, so the critical reception is undocumented.</p>
+        <p>Our verdict: the friendly reviews are probably right that the book is valuable, and they have not yet tested its biggest claim. "The character of war has changed" is the sentence every technology enthusiast in this course has written, from the space race to Lambeth. The seminar question is whether Sekirin proves it or only reports it. (Mark the pages where he counts results, and the pages where he predicts them.) <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Ten Days, Zero Pages, One Errand</a></h3>
+        <p>The first task is getting the book. Ten days is plenty of time to read 272 pages, and no time at all if the copy arrives on the 29th.</p>
+        <ol class="qs">
+          <li><b>30 minutes, tonight.</b> Find the PDF (class Teams channel or the shared 628 folder) and save it as "17. Sekirin, Rise of the Machines.pdf" in the 628 folder. Then read the introduction and the conclusion. Note his thesis sentence and his three or four biggest predictions.</li>
+          <li><b>60 minutes, over the weekend.</b> Add the table of contents and one case study. Bakhmut or Avdiivka will show the drone war at its most grinding; Kursk will show whether drones helped an offensive or only a defense.</li>
+          <li><b>2 hours, before the 30th.</b> Add the chapters on organization and procurement, the ones about the Unmanned Systems Forces, and any chapter on autonomy or AI. The seminar's second question turns on those pages.</li>
+        </ol>
+        <p>Page ranges will replace these guesses as soon as the text is on disk. (A time plan without page numbers is a horoscope with homework.) <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Five Things to Catch Him Doing</a></h3>
+        <ol class="qs">
+          <li><b>Counting versus predicting.</b> Mark every passage where he gives a number for what drones did, and every passage where he says what they will do. The seminar's first question lives in the gap between the two.</li>
+          <li><b>The stalemate problem.</b> The syllabus says the war has outlasted the First World War as a stalemate. Watch whether he explains why a revolution in weapons produced a frozen front.</li>
+          <li><b>His own role.</b> He helped create the branch he writes about. Watch how he treats commanders who resisted his ideas, and whether he cites anyone who disagrees with him.</li>
+          <li><b>The deep strikes.</b> The syllabus says Ukraine now strikes commercial infrastructure deep inside Russia. Read it next to Clodfelter and Olsen: what result does he claim, and how does he measure it?</li>
+          <li><b>Cheap against expensive.</b> The publisher stresses cheap, expendable attack. Track whether he counts the cost of the defense too: jammers, interceptors, and the people who fly the drones.</li>
+        </ol>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Seminar Questions · Monday, November 30</span>
+        <h3><a href="#t4">Four Questions and Where the Answers Will Live</a></h3>
+        <p>These come from the syllabus page for Seminar 17, "The Future Character of War?" Chapter locations follow once the text is on disk; for now, here is where each answer will come from.</p>
+        <ol class="qs">
+          <li><b>Has the character of war changed to the extent the author claims?</b> His introduction and conclusion for the claim; his case studies for the proof. Lambeth and McDougall are the best rival witnesses.</li>
+          <li><b>If paired with AI for autonomous strikes, can drone technology alter the nature of war?</b> His chapter on autonomy, if there is one. Note the shift in the question from "character" to "nature," which is Clausewitz's line between how war is fought and what war is.</li>
+          <li><b>What other technological advances should be compared to Ukraine's drones?</b> The course itself: the jet over MiG Alley in Zhang, the laser-guided bomb in Randolph, stealth and precision in Lambeth, the Predator in Fuller.</li>
+          <li><b>What opportunities or dangers does this pose for strategists?</b> His recommendations to Western armies, and the publisher's "axis of upheaval" framing.</li>
+        </ol>
+        <p>Opinion: prepare question two. The others ask about drones; that one asks about war, and the room will need someone who knows the difference. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">The Cast, Before the Credits Roll</a></h3>
+        <ol class="qs">
+          <li><b>Illya Sekirin.</b> Volunteer drone operator from March 2022, General Staff translator, and later unofficial adviser to members of the Stavka (Helion author page).</li>
+          <li><b>Andrew Simms.</b> The editor; former editor-in-chief of <i>Soldier</i>, now editor of the <i>British Army Review</i> (Casemate author page).</li>
+          <li><b>Stavka.</b> Ukraine's high command, chaired by President Zelensky (Helion author page).</li>
+          <li><b>Unmanned Systems Forces.</b> The separate branch of Ukraine's armed forces that Sekirin's paper helped persuade Zelensky to create (Helion author page).</li>
+          <li><b>FPV drone.</b> First-person-view attack drone, flown by an operator watching the drone's camera; one of the systems the book covers (Helion book page).</li>
+          <li><b>USV.</b> Uncrewed surface vessel, a naval drone, also covered (Helion book page).</li>
+          <li><b>"Drone wall."</b> A front line held by layers of drones, as described in coverage of the book (<i>Farnham Herald</i>).</li>
+          <li><b>"Axis of upheaval."</b> The publisher's name for China, Iran, North Korea, and Russia acting together (Helion book page).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Today · Wasser to Sekirin</span>
+        <h3><a href="#t6">An F-15E, a Missile, and a Drone Worth Rather Less</a></h3>
+        <p>Wasser's report opens with the drone war arriving early. On June 8, 2017, near the al-Tanf garrison in Syria, F-15E Strike Eagles found an Iranian-made Shahed 129 armed with two Hellfire-like missiles, and after it turned hot one of the pilots shot it down with an AIM-120C. Twelve days later, another F-15E shot down a second Shahed 129. ISIS itself flew only small drones for reconnaissance and attacks, so the coalition's air defense worried far more about Russia. In 2017, then, the drone was a nuisance that a fighter could swat, one expensive missile at a time.</p>
+        <p>Sekirin writes about the war where that arithmetic broke. If drones come by the thousand, a fighter and a missile per drone is a way to lose slowly. (The Strike Eagle crews at al-Tanf were not, to be fair, solving for 2026.) Keep one question in mind while reading: what did Wasser's coalition have that Ukraine does not, and is it the airspace, the budget, or the enemy's restraint? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Sekirin · via Punchbowl News AM and electoral-vote.com, November 19</span>
+        <h3><a href="#t7">Three Hundred Fifty Billion Dollars and No Shopping List</a></h3>
+        <p>The Pentagon's $350 billion plus-up is all but dead, and the administration is blaming Senate Majority Leader John Thune, Punchbowl News reported this morning. Senate Republicans sidelined the defense reconciliation package days ago. The Pentagon still says it wants the full amount by year's end and warns that without it the supplier base will suffer and adversaries could outpace the United States in next-generation technology. Republicans in both chambers are pushing back. Sen. Mitch McConnell said reconciliation "should never have been a substitute" for regular defense spending, and House Armed Services Chair Mike Rogers told the Pentagon to separate what it would like to have from what it has to have. (A Senate Republican aide pointed out that House Republicans adjourned early, which settles who was going to finish first.)</p>
+        <p>Electoral-vote.com's latest page, dated November 19, supplies the geopolitics. President Trump arrived in China, where Xi Jinping greeted him, and Vladimir Putin is attending a three-way summit. EV's writer expects Xi and Putin to strike a deal that serves them at American expense. That is EV's opinion, and the summit had not ended when it was written.</p>
+        <p>Sekirin's book is about exactly Rogers's question. His publisher says Ukraine's war shows how militaries should reorganize and buy weapons, and it names China, Iran, North Korea, and Russia as the challenge. A one-time lump sum is a strange fit for that lesson. The drone advantage the publisher describes comes from changing designs as fast as the enemy changes jammers, and a package passed once in a lame-duck session buys a snapshot. (That is our inference; read the book's procurement chapter and see whether Sekirin agrees.)</p>
+        <p>Our take: the fight over $350 billion is about how to pay, and Rogers is the only person quoted who asked what to buy. If Sekirin is right, that list looks very different from the one the Pentagon wrote. The most expensive answer is rarely the one the war chose. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Sekirin, <i>Rise of the Machines</i></p>
+
+      <article id="c0">
+        <span class="kicker">Chapter by Chapter · not yet built</span>
+        <h3><a href="#c0">No Text, No Lessons, No Kidding</a></h3>
+        <p>There are no chapter lessons tonight, because the book's text is not available to us and we will not write lessons from a publisher's blurb. Every lesson on this page checks three facts against the book, and with no book there is nothing to check. The PDF is not in the 628 folder, the shared class folder, or Drive search, and the morning run could not pre-build the lessons for the same reason.</p>
+        <p>Once a copy lands in the 628 folder, the next afternoon run will extract it, split it by chapter, and publish the full set of lessons in the usual format before the November 30 seminar. In the meantime, the review below runs six earlier books against the question Sekirin will be asked on the 30th. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · six earlier books against Sekirin's question</span>
+        <h3><a href="#r1">Six Authors Who Already Heard "Everything Has Changed"</a></h3>
+        <ol class="qs">
+          <li><b>McDougall, the space race.</b> The rivalry that peaked with Sputnik made the state the main manager of technological change, and that race for security through technology risks eroding what it defends. The link: McDougall's sharpest line is that American technocracy aimed "to avoid defining its objective." Ask whether Sekirin's drone program defines its objective, or only its production numbers.</li>
+          <li><b>Zhang, the Korean air war.</b> China built an air force in a year and learned that new jets do not make a skilled force. The link: Zhang finds that inexperienced pilots could not use the MiG-15 well and that their proficiency "showed no significant improvement." Watch whether Sekirin credits the drone or the trained operator.</li>
+          <li><b>Randolph, the Easter Offensive.</b> Nixon's airpower blunted a conventional invasion but could not force a lasting settlement. The link: in 1972 the Americans had precision weapons, sensors, and satellite communications but lacked the command systems, doctrine, and training to use them together. Sekirin's case for a separate drone branch is an argument about exactly that gap.</li>
+          <li><b>Lambeth, transformation.</b> Stealth, standoff precision, and battlespace awareness made airpower's contribution grow in a nonlinear way. The link: Lambeth is the last author in this course to announce a new kind of war, and his own Kosovo chapter shows Serb units hiding in barns and forests and decoys made of milk-carton material cutting NATO's tank-kill claim from 150 to 110. Constant watching invites constant hiding.</li>
+          <li><b>Fravel, active defense.</b> China changes military strategy when a foreign war shows the nature of warfare has changed. The link: Jiang Zemin said in 1991 that "backwards technology means being in a passive position and taking a beating," and the PLA concluded it needed new concepts as well as new equipment. Every army in the world is reading Ukraine the way the PLA read the Gulf War, which is the syllabus's point about who is watching.</li>
+          <li><b>Fuller, the CIA's drones.</b> The armed drone carried out a policy of killing terrorists that Reagan-era hardliners set long before the Predator could fly. The link: Fuller shows the policy came before the technology, and that the CIA's "technological capacity was ahead of its human intelligence." Ask Sekirin which came first in Ukraine, the drones or the plan for them.</li>
+        </ol>
+        <p>Opinion: five of these six would tell Sekirin that the machine matters less than the organization flying it. His career suggests he agrees, since his best-known achievement is a reorganization. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>We have not read Sekirin's text; every claim about the book comes from the publisher, its distributor, a news interview, or a review, and is marked that way. Wasser page numbers are the report's printed pages.</p>
+        <h3>Next reading</h3>
+        <ul>
+          <li>Seminar 17, November 30, "The Future Character of War?"; Sekirin, ed. Simms, Helion 2026; "a bold prediction"; stalemate longer than World War I; deep strikes on commercial infrastructure; the four questions: SAASS 628 AY27 syllabus, course calendar and Seminar 17 page.</li>
+          <li>Argument, systems covered, tanks, artillery, and manned aircraft struggling under observation and cheap attack, blueprint for reorganizing, procuring, training, and fighting; case studies (2022, Bakhmut, Avdiivka, Kursk, Southern Donbas); 272 pages: <a href="https://www.helion.co.uk/military-history-books/rise-of-the-machines-drone-warfare-in-the-russia-ukraine-war---tactics-operations-strategy.php">Helion book page</a>.</li>
+          <li>The working view on tactics and strategy is our opinion, to be tested against the text.</li>
+        </ul>
+        <h3>The world around the book</h3>
+        <ul>
+          <li>Ukrainian-born naturalized Canadian; volunteered March 2022; trained as a drone operator; served at the front; translator for the General Staff; unofficial adviser to members of the Stavka, chaired by Zelensky; paper informing the creation of the Unmanned Systems Forces: <a href="https://www.helion.co.uk/people/illya-sekirin.php">Helion author page</a>. The book page instead says researcher for the General Staff and interpreter for Western units: <a href="https://www.helion.co.uk/military-history-books/rise-of-the-machines-drone-warfare-in-the-russia-ukraine-war---tactics-operations-strategy.php">Helion book page</a>.</li>
+          <li>Drone "blitz" could have won earlier; costly stalemate; favors negotiated settlement; IT company in Kyiv; contacted Simms through the <i>British Army Review</i>: <a href="https://www.farnhamherald.com/news/new-book-examines-rise-of-drone-warfare-in-ukraine-881919">Hugo Berger, <i>Farnham Herald</i>, February 25, 2026</a> (reported claims from an interview with Simms).</li>
+          <li>Simms: twelve years at <i>Soldier</i>, editor-in-chief; Sandhurst think tank; edits the <i>British Army Review</i>: <a href="https://www.farnhamherald.com/news/new-book-examines-rise-of-drone-warfare-in-ukraine-881919"><i>Farnham Herald</i></a>; <a href="https://www.casematepublishers.com/9781804519707/rise-of-the-machines/">Casemate author tab</a>.</li>
+          <li>Publication January 30, 2026: Helion book page. Sales date April 16, 2026: <a href="https://www.casematepublishers.com/9781804519707/rise-of-the-machines/">Casemate</a>.</li>
+          <li>"Axis of upheaval"; adapt or face strategic obsolescence: Helion book page; Casemate.</li>
+          <li>"a timely and ambitious contribution": <i>Journal of the Air Force Historical Foundation</i>, as quoted on the <a href="https://www.casematepublishers.com/9781804519707/rise-of-the-machines/">Casemate page</a> (we could not open the review itself).</li>
+          <li>McKie's review: strong recommendation, logistics reading, rear area no longer safe, no neat answers: <a href="https://rnzaoc.com/2026/04/13/review-rise-of-the-machines-drone-warfare-in-the-russia-ukraine-war/">Robert McKie, "To the Warriors Their Arms," April 13, 2026</a>.</li>
+          <li>No scholarly or critical review found in searches on November 20, 2026. The verdicts are our opinion.</li>
+        </ul>
+        <h3>Your time plan, Read for, and seminar questions</h3>
+        <ul>
+          <li>Book not found in the 628 folder, the shared class folder, Drive search, or local disk, November 20, 2026.</li>
+          <li>Question wording and the stalemate and deep-strike framing: syllabus, Seminar 17. Book topics: Helion book page. The reading order is our suggestion.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>Sekirin, Stavka, Unmanned Systems Forces: Helion author page. Simms: Casemate author tab. FPV, USV, "axis of upheaval": Helion book page. "Drone wall": <i>Farnham Herald</i>, February 25, 2026.</li>
+        </ul>
+        <h3>Bridge from today</h3>
+        <ul>
+          <li>June 8, 2017, al-Tanf; F-15Es; Iranian-made Shahed 129 with two Hellfire-like missiles; AIM-120C: Wasser, 1 to 2.</li>
+          <li>Second Shahed 129 shot down June 20, 2017; three shootdowns in all (an Su-22 and two Shahed 129s): Wasser, 264, 267.</li>
+          <li>ISIS had only small drones for reconnaissance and attacks; the defensive counter-air requirement came mainly from Russia's arrival: Wasser, 260.</li>
+          <li>The cost arithmetic and the closing question are our inference.</li>
+        </ul>
+        <h3>Political strategy × Sekirin</h3>
+        <ul>
+          <li>Administration blames Thune; $350 billion package sidelined; Pentagon committed to full request; supplier-base and next-generation technology warnings; McConnell's "should never have been a substitute"; Rogers on what you've got to have; a Senate GOP aide on House Republicans adjourning early: Punchbowl News AM, November 20, 2026.</li>
+          <li>Trump in China, greeted by Xi; Putin at a trilateral summit; EV expects a Xi-Putin deal at U.S. expense: <a href="https://www.electoral-vote.com/">electoral-vote.com, November 19, 2026</a> (the November 20 page was not yet up at 1100).</li>
+          <li>Publisher's reorganize-and-procure claim and the four-country framing: Helion book page. The point about lump sums and design cycles is our inference.</li>
+        </ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>McDougall thesis: McDougall, 5, 13, 451. "to avoid defining its objective": McDougall, 447 to 448.</li>
+          <li>Zhang: inexperienced pilots and "showed no significant improvement": Zhang, 211 to 212.</li>
+          <li>Randolph thesis: Randolph, 333, 337 to 342. Lacked command systems, doctrine, and training: Randolph, 2.</li>
+          <li>Lambeth nonlinear growth: Lambeth, 6. Serb units hiding; milk-carton decoys; tank claim 150 to 110: Lambeth, 196 to 197.</li>
+          <li>Fravel: "backwards technology means being in a passive position and taking a beating"; concepts as well as equipment: Fravel, 304.</li>
+          <li>Fuller: policy before technology, ebook pp. 44 to 45, 55; "technological capacity was ahead of its human intelligence": ebook p. 257.</li>
+          <li>The links' framing and the closing opinion are ours.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Recall</h2>
+        <ul class="recall">
+<li><details><summary>What did an F-15E use to shoot down the Shahed 129 near al-Tanf on June 8, 2017?</summary><p>An AIM-120C, after the Iranian-made drone fired one of its missiles. <span class="pg">W 1-2</span></p></details></li>
+<li><details><summary>How many air-to-air shootdowns did U.S. pilots make in Syria to protect partners, and of what?</summary><p>Three: an Su-22 Fitter and two Shahed 129 drones. <span class="pg">W 264</span></p></details></li>
+<li><details><summary>What line did McDougall use about the objective of American technocracy?</summary><p>That its objective "was to avoid defining its objective." <span class="pg">McD 447-448</span></p></details></li>
+<li><details><summary>What did Jiang Zemin say about backwards technology in 1991?</summary><p>That it "means being in a passive position and taking a beating." <span class="pg">F 304</span></p></details></li>
+<li><details><summary>What did Serb decoys do to NATO's tank-kill claim in Kosovo?</summary><p>Milk-carton decoys helped cut the claim from 150 to 110. <span class="pg">L 197</span></p></details></li>
+<li><details><summary>What did Randolph say the Americans lacked in 1972, despite their new technology?</summary><p>The command systems, doctrine, and training programs to exploit it. <span class="pg">R 2</span></p></details></li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+
+
+
+</body>
+</html>
