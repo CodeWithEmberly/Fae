@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}</style>
+<title>The Long Game: Tonight</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a plain daily page in the EV tradition, always dark, set in Times for easy reading on a phone at night. */
+:root{
+  --paper:#121417;
+  --ink:#e8e6e1;
+  --muted:#a3a7ae;
+  --rule:#2d3138;
+  --accent:#9cc2ee;
+  --accent-soft:#1b2430;
+  --stamp:#e3a56f;
+  --ok:#8fcf9d;
+  --font-head:"Times New Roman",Times,Georgia,serif;
+  --font-body:"Times New Roman",Times,Georgia,serif;
+  --font-data:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:dark;
+}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:20px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.mast{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:10px}
+.mast h1{font-family:var(--font-head);font-weight:700;font-size:clamp(34px,6vw,52px);letter-spacing:-.01em;margin:0;line-height:1}
+.mast .tag{font-family:var(--font-head);font-size:15px;color:var(--muted);margin:0}
+.tally{display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--font-data);font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule);color:var(--muted)}
+.tally b{color:var(--ink);font-weight:600}
+.mockflag{font-family:var(--font-head);font-size:14px;background:var(--accent-soft);color:var(--ink);padding:10px 12px;margin:14px 0 0;max-width:68ch;line-height:1.45}
+.mockflag strong{color:var(--accent);letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:48px;margin-top:22px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+main{min-width:0;max-width:68ch}
+
+.dateline{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.toc{margin:0 0 30px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.toc h2{font-family:var(--font-head);font-size:20px;margin:0 0 6px}
+.toc ol{margin:0;padding-left:1.4em;font-family:var(--font-head);font-size:16.5px;line-height:1.5}
+
+article{margin:0 0 36px}
+article h3{font-family:var(--font-head);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance}
+article h3 a{color:var(--accent);text-decoration:none}
+article h3 a:hover{text-decoration:underline}
+.kicker{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.kicker .tie{color:var(--accent)}
+article p{margin:0 0 14px}
+.by{font-family:var(--font-data);font-size:14px;color:var(--muted)}
+.qs{margin:0 0 14px;padding-left:1.2em}
+.qs li{margin-bottom:6px}
+sup a{font-family:var(--font-data);font-size:11px;text-decoration:none;padding:0 1px}
+
+.notes{margin:4px 0 0;padding:10px 0 0 1.6em;border-top:1px solid var(--rule);font-size:14px;line-height:1.5;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes li:target{background:var(--accent-soft)}
+.chk,.tbc{font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:6px;white-space:nowrap}
+.chk{color:var(--ok)}
+.tbc{color:var(--stamp)}
+
+.archive{margin-top:8px;border-top:3px solid var(--ink);padding-top:10px}
+.archive summary{font-family:var(--font-head);font-weight:700;font-size:20px;cursor:pointer;padding:6px 0}
+.archive summary span{font-weight:500;color:var(--muted);font-size:15px}
+.archive[open] summary{margin-bottom:14px}
+
+aside{min-width:0;font-family:var(--font-head);font-size:15px}
+aside section{margin-bottom:28px}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ledger td{padding:4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger td:first-child{font-family:var(--font-data);font-size:12.5px;color:var(--muted);width:54px}
+.ledger td:last-child{text-align:right;font-family:var(--font-data);font-size:12px;width:64px}
+.st-done{color:var(--muted);text-decoration:line-through}
+.st-now{font-weight:700}
+.pill{display:inline-block;padding:0 6px;border:1px solid currentColor;border-radius:3px;font-size:11px;letter-spacing:.04em}
+.pill.now{color:var(--accent)}
+.pill.done{color:var(--muted)}
+.count{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding:5px 0}
+.count b{font-family:var(--font-data);font-size:20px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.45}
+.lineup{margin:0;padding-left:1.3em;font-size:14.5px;line-height:1.5}
+
+.style{margin-top:30px;border-top:3px solid var(--ink);padding-top:18px}
+.style h2{font-family:var(--font-head);font-size:28px;margin:0 0 4px}
+.style .lede{color:var(--muted);margin:0 0 20px;max-width:68ch}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 36px}
+.rule h4{font-family:var(--font-head);font-size:18px;margin:0 0 4px}
+.rule p{margin:0;font-size:15.5px;line-height:1.55}
+.vs{margin-top:28px;overflow-x:auto}
+.vs table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+.vs th,.vs td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-family:var(--font-head);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.vs th.h{color:var(--stamp)}
+.vs td:first-child{font-family:var(--font-head);font-weight:600;white-space:nowrap}
+.vs caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:8px}
+/* Seminar block + Writing Lab */
+.block{margin:0 0 34px;padding:16px 16px 6px;border:1px solid var(--rule);border-top:4px solid var(--accent);background:var(--paper)}
+.block > h2{font-family:var(--font-head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.block article{margin-bottom:26px}
+.recall{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:8px}
+.recall details{border:1px solid var(--rule);padding:8px 10px;background:var(--accent-soft)}
+.recall summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px}
+.recall summary::marker{color:var(--accent)}
+.recall details p{margin:8px 0 2px;font-size:15.5px}
+.howto{font-size:14px;color:var(--muted);margin:-4px 0 12px;font-family:var(--font-head)}
+.lab{border-top-color:var(--stamp)}
+.lab > h2{color:var(--stamp)}
+.lab h3{font-family:var(--font-head);font-size:23px;margin:0 0 8px;line-height:1.2}
+.lab h4{font-family:var(--font-head);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.ba{display:grid;gap:10px}
+.ba div{padding:10px 12px;border-left:3px solid var(--rule);font-size:15.5px;line-height:1.55}
+.ba .before{border-left-color:var(--stamp)}
+.ba .after{border-left-color:var(--ok)}
+.ba b{font-family:var(--font-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ba .before b{color:var(--stamp)}
+.ba .after b{color:var(--ok)}
+.tag-p{font-family:var(--font-data);font-size:11px;color:var(--accent);white-space:nowrap}
+.protip{background:var(--accent-soft);padding:10px 12px;font-size:15.5px;margin:0 0 12px}
+.protip b{font-family:var(--font-head)}
+.mine label{font-family:var(--font-head);font-weight:600;display:block;margin-bottom:6px}
+.mine textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:15.5px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.mine textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mine small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.shelf{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:12px}
+.shelf li{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.shelf .t{font-family:var(--font-head);font-weight:700;font-size:17px}
+.shelf p{margin:4px 0;font-size:15.5px}
+/* Comps bank */
+.bank{border-top-color:var(--ok)}
+.bank > h2{color:var(--ok)}
+.bank-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+.bank-head h3{font-family:var(--font-head);font-size:23px;margin:0}
+.progress{font-family:var(--font-data);font-size:13px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{font-family:var(--font-head);font-size:14px;padding:4px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qbank{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.qbank > li{border:1px solid var(--rule);padding:8px 10px}
+.qbank > li.got{border-left:4px solid var(--ok)}
+.qbank summary{cursor:pointer;font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.35}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;font-family:var(--font-data);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qmeta .lock{color:var(--stamp)}
+.qbank .ans{margin-top:8px;font-size:15.5px}
+.qbank .ans ul{margin:4px 0 8px;padding-left:1.2em}
+.qbank .ans li{margin-bottom:4px}
+.qbank .argue{font-style:italic;color:var(--muted);margin:0 0 6px}
+.qbank label.nail{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-head);font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px}
+.pg{font-family:var(--font-data);font-size:12px;color:var(--accent);white-space:nowrap}
+/* Reading size: larger text throughout */
+.toc ol{font-size:20px}
+article h3,.lab h3,.bank-head h3{font-size:28px}
+.kicker,.dateline{font-size:15px}
+.rule p,.ba div,.protip,.shelf p,.recall details p,.qbank .ans,.mine textarea,.qs li{font-size:19px}
+.recall summary,.qbank summary{font-size:19px}
+.shelf .t{font-size:20px}
+.notes{font-size:16px}
+.fine,.howto{font-size:16.5px}
+aside{font-size:18px}
+.lineup{font-size:17px}
+.ledger td:first-child{font-size:14px}
+.tally{font-size:14px}
+.mast .tag{font-size:17px}
+/* Article layout: prose first, sources and Q&A at the end */
+main > article{padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.toc-after{margin:10px 0 0;font-size:16.5px;color:var(--muted)}
+.toc li.toc-sub{list-style:none;margin:10px 0 2px -1.4em;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.section-label{font-family:var(--font-head);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 14px}
+.endmark{text-align:center;font-style:italic;color:var(--muted);margin:10px 0 34px;font-size:18px}
+.sources{margin:0 0 34px;padding-top:14px;border-top:3px solid var(--ink)}
+.sources h2{font-family:var(--font-head);font-size:26px;margin:0 0 6px}
+.sources h3{font-family:var(--font-head);font-size:19px;margin:18px 0 4px}
+.sources ul{margin:0;padding-left:1.2em;font-size:16.5px;line-height:1.5;color:var(--muted)}
+.sources li{margin-bottom:4px}
+.qa{border-top-color:var(--ok)}
+.qa > h2{color:var(--ok)}
+.qa-h{font-family:var(--font-head);font-size:20px;margin:16px 0 8px}
+.qa .mine{margin-top:18px}
+/* Podcast player */
+.listen{margin:16px 0 0;padding:12px 14px;border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-soft)}
+.listen-h{margin:0 0 8px;font-family:var(--font-head);font-weight:600;font-size:17px}
+.listen audio{width:100%;max-width:560px;display:block}
+.listen-links{margin:8px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.listen .feed{font-family:var(--font-data);font-size:13px;word-break:break-all;user-select:all;color:var(--ink)}
+/* Sources stay, verification badges go */
+.chk{display:none}
+.tbc{border:none;padding:0;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-style:italic;font-size:inherit}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<style>/* THEME: sunset (afternoon "Tonight" edition). Keep this block; runs must not remove it. */
+:root{
+  --paper:#1c1219;      /* dusk plum */
+  --ink:#f6e9e3;        /* warm white */
+  --muted:#c6abb2;
+  --rule:#3d2632;
+  --accent:#ff9466;     /* sunset coral */
+  --accent-soft:#2f1a27;/* deep rose */
+  --stamp:#ffc46b;      /* amber */
+  --ok:#9fd8b0;
+}
+body{background:linear-gradient(180deg,#5a2a33 0,#3a1d2b 140px,#1c1219 360px) no-repeat,var(--paper)}
+.mast{border-bottom-color:var(--accent)}
+.mast h1::after{content:" \263E";color:var(--stamp);font-size:.6em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>The Long Game</h1>
+    <p class="tag">Tonight: after-class prep for this evening's reading.</p>
+  </header>
+<p class="toc-after" style="margin:10px 0 0">Archived evening edition, 2026-11-25 · <a href="../">All editions</a> · <a href="../../">Latest issue</a></p>
+
+
+  <div class="cols">
+    <main>
+      <p class="dateline">Wednesday, November 25, 2026 · Afternoon Edition</p>
+      <p class="toc-after"><a href="../2026-11-25/">This morning's issue and podcast</a> · <a href="../">Archive of every edition</a></p>
+
+      <!-- The after-class run replaces everything inside <main> above the endmark. See PLAYBOOK "Afternoon edition". -->
+
+      <nav class="toc" aria-label="Contents">
+        <h2>Tonight</h2>
+        <ol>
+          <li class="toc-sub">Part 1 · Prep</li>
+          <li><a href="#t1">Next reading after Sekirin: Wuthnow and Saunders, <i>China's Quest for Military Supremacy</i></a></li>
+          <li><a href="#t1a">The world around the book</a></li>
+          <li><a href="#t2">Your time plan</a></li>
+          <li><a href="#t3">Read for</a></li>
+          <li><a href="#t4">Tuesday, December 1: seminar questions</a></li>
+          <li><a href="#t5">People and terms</a></li>
+          <li><a href="#t6">Bridge from Sekirin</a></li>
+          <li><a href="#t7">Political strategy × Wuthnow and Saunders</a></li>
+          <li class="toc-sub">Part 2 · Chapter by Chapter</li>
+          <li><a href="#w-00">Introduction: Restraint, Entered in Both Columns</a></li>
+          <li><a href="#w-01">Chapter 1: Absolute Loyalty, Pending Audit</a></li>
+          <li><a href="#w-02">Chapter 2: Threats Come in Rings, and the PLA Has to Wear All of Them</a></li>
+          <li><a href="#w-03">Chapter 3: New Wiring, Same Electricians</a></li>
+          <li><a href="#w-04">Chapter 4: Every Service a Champion, the Team Still Pending</a></li>
+          <li><a href="#w-05">Chapter 5: Four Theories Walk Into a Silo Field</a></li>
+          <li><a href="#w-06">Chapter 6: Winning the Reef, Losing the Neighborhood</a></li>
+          <li><a href="#w-07">Chapter 7: The 2027 Deadline Is a To-Do List</a></li>
+          <li><a href="#w-08">Chapter 8: Flags Everywhere, Brigades Nowhere</a></li>
+          <li class="toc-sub">Part 3 · Review</li>
+          <li><a href="#r1">Earlier books, one minute each</a></li>
+          <li><a href="#bed">The Bedtime Version</a></li>
+        </ol>
+        <p class="toc-after"><a href="#sources">Sources</a> · <a href="#qa">Recall</a> · <a href="../../map/">Course map</a></p>
+      </nav>
+
+      <article id="t1">
+        <span class="kicker">Next Reading · for Tuesday, December 1 (Sekirin is still Monday)</span>
+        <h3><a href="#t1">Wuthnow and Saunders, <i>China's Quest for Military Supremacy</i>: Ten Feet Tall, Still Waiting for the Ladder</a></h3>
+        <p>Sekirin has had three evening pages this week, so tonight jumps ahead to the course's last book. Joel Wuthnow and Phillip Saunders argue that the People's Liberation Army is stronger and more confident than at any point in its history, and that it carries flaws neither technology nor money will fix. The flaws are human and political: a party that does not fully trust its army, officers with no combat experience, and a command culture that waits for orders.</p>
+        <p>They are arguing against two easy readings. The first is the alarm that August 2022's drills around Taiwan meant an attack by 2027. The second is mirror imaging, the habit of judging the PLA as if it were a Western military with Chinese labels. Their central claim is that Beijing wants a war with a quick victory all but guaranteed, and does not yet believe it has one.</p>
+        <p>We think they have the ledger right, and the quick-victory point is the one an airman should carry out of the book. If Beijing only fights when it is sure of winning fast, then the deterrent is anything that makes fast unsure. Their evidence is open-source work on a famously opaque army, and they say so. (Candor about your sources is rarer in this field than stealth fighters.) For a course that began with Zhang's PLA Air Force learning to fly over the Yalu, this is where that story ends up. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t1a">
+        <span class="kicker">The World Around the Book</span>
+        <h3><a href="#t1a">A Textbook With a Return Address</a></h3>
+        <p><b>The authors.</b> Wuthnow and Saunders write from inside the U.S. defense education system, and the book reads like it. Both work at National Defense University's Institute for National Strategic Studies. The book grew out of a course they built there for students who were mostly lieutenant colonels, colonels, and senior civilians. They say their work draws on access to the PLA through U.S.-China military exchanges, and on many conversations with PLA analysts and commanders in their NDU roles. That is real access, and it is access granted to two officials of the country the PLA calls its main challenger. Their axe, as far as the record shows, is a teaching one: they say the material had to be relatable to American officers while avoiding mirror imaging. We found nothing documenting a personal grievance, and we won't invent one.</p>
+        <p><b>The moment.</b> They wrote during the 2027 scare. The book opens with the August 2022 drills after Speaker Pelosi's Taipei visit, and the fear that Xi would order a full-scale attack by the PLA's centennial. They also wrote just after Xi's late-2023 purge of his defense minister and Rocket Force leaders, men he had picked himself. The Pentagon had by then named the PLA its "pacing challenge," a phrase the authors use in the first paragraph of the acknowledgments. Polity published in March 2025, and the newest events in the book date to 2024, such as Admiral Paparo's June 2024 "hellscape" of drones. Read every judgment about Xi's confidence as a judgment made before 2025.</p>
+        <p><b>The reception.</b> Reviewers liked it, and nobody we found has fought it. Zenel Garcia of the Army War College, reviewing for the <i>Parameters</i> bookshelf in September 2025, called it sharp and deeply researched and said it was essential reading on Asian power. The Australian Naval Institute's October 2025 review praised it as balanced, and read its core thesis as weaknesses that are structural rather than about resources. Kirkus called it "important if unsettling" and warned general readers about the density of acronyms and bureaucratic detail. We think Kirkus has the fair criticism, and the praise is earned. No review we found tests the book's central bet, that strategic discipline will keep holding Beijing back. That one you will have to audit yourself, against anything you have seen since 2024.</p>
+        <p><b>The subtext.</b> Our read: this is a deterrence brief written for the American officer corps, telling it that the PLA is formidable and beatable and that the answer is to deny Beijing a quick win. That is our interpretation. The authors' stated aim is a general reader on the PLA. Three things support it.</p>
+        <ol class="qs">
+          <li>The audience is the classroom. The book grew out of lectures for U.S. officers at NDU, and the introduction closes by telling the United States and its allies to build the agile forces, operational concepts, and skilled leaders to deter and defeat aggression.</li>
+          <li>The emphasis falls on the seams. The introduction's ledger gives the PLA four strengths and then spends most of its space on flaws: party-army trust, the "peace disease," rigid command, and a thin global reach. Chapter 7 then argues that the 2027 deadline shows Xi lacked confidence in his army.</li>
+          <li>The prescription matches the chapter that matters most to the reader. Chapter 7's last sections turn to what Taiwan should buy, from coastal missiles and mines to drones, and to U.S. plans like the drone "hellscape" meant to slow a PLA attack.</li>
+        </ol>
+        <p>The book can still be right. The "beatable" half of the argument is the half its readers wanted to hear, so check that half hardest. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t2">
+        <span class="kicker">Your Time Plan</span>
+        <h3><a href="#t2">Three Speeds, One Strait</a></h3>
+        <p>Read the argument and the Taiwan chapter first. The ebook has no printed page numbers, so these are ebook pages.</p>
+        <ol class="qs">
+          <li><b>30 minutes.</b> Introduction, "General Argument," ebook pages 17 to 22. Then chapter 7's conclusion, pages 265 to 268.</li>
+          <li><b>60 minutes.</b> Add chapter 7's "Strategic Decisions" and "Major Combat," pages 245 to 254, and chapter 5's nuclear section, pages 187 to 195.</li>
+          <li><b>2 hours.</b> Add chapter 4's air force section, pages 137 to 145, and "Service Politics," pages 154 to 156. Then chapter 3's reorganization, pages 103 to 112, and the conclusions of chapters 6 and 8, pages 231 to 233 and 295 to 298.</li>
+        </ol>
+        <p>Chapters 1 and 2 are the slowest going and the least tested in seminar, so leave them for the lessons below. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t3">
+        <span class="kicker">Read For</span>
+        <h3><a href="#t3">Six Places Where the Ledger Balances</a></h3>
+        <ol class="qs">
+          <li><b>Introduction, ebook pages 17 to 22.</b> Strategic discipline appears as the last strength and the last weakness. Decide which column it belongs in for 2027.</li>
+          <li><b>Chapter 1, pages 45 to 48.</b> The late-2023 firings. Ask what "absolute" loyalty means when the fired men were Xi's own picks.</li>
+          <li><b>Chapter 4, pages 137 to 145.</b> The air force's move from territorial air defense to offensive missions, and the fighter count on page 144. Count what the airframes leave out.</li>
+          <li><b>Chapter 5, pages 192 to 195.</b> Four explanations for the nuclear buildup. Note which one the authors rank last, and why.</li>
+          <li><b>Chapter 7, pages 245 to 249.</b> The 2027 deadline, read as a readiness milestone. Weigh it against the closing-window argument on page 249.</li>
+          <li><b>Chapter 8, pages 293 to 296.</b> Why overseas ports are not wartime bases, and why access denial may matter more to American airmen.</li>
+        </ol>
+      </article>
+
+      <article id="t4">
+        <span class="kicker">Seminar Questions · Tuesday, December 1</span>
+        <h3><a href="#t4">Five Questions and Where the Answers Live</a></h3>
+        <ol class="qs">
+          <li><b>How effective will airpower be in a future fight with the PRC?</b> Chapter 4's air force section, pages 137 to 145, then chapter 7's "Countering Intervention," pages 254 to 257, and chapter 8 on access, page 296.</li>
+          <li><b>What role will nuclear weapons play in the near future, and can their use be avoided in a direct confrontation?</b> Chapter 5, pages 187 to 195, especially the "nuclear shield" on page 193. The introduction previews the shield on page 25.</li>
+          <li><b>What role will technology play in changing the character of war?</b> Chapter 3's "Resources and Innovation," pages 112 to 120, and chapter 7's lessons from Ukraine, pages 257 to 261.</li>
+          <li><b>What opportunities and pitfalls should strategists draw from warfare since World War II?</b> The Gulf War lessons on page 100, the Ukraine lessons on pages 257 to 261, and the "peace disease" on pages 19 and 20.</li>
+          <li><b>What about lessons from before World War II?</b> The book barely goes there. The closest it comes is the party's memory of coups and of Lin Biao, page 19, so bring your own history.</li>
+        </ol>
+        <p>Opinion: prepare question two. It is the one where the book takes the clearest position, and the one most likely to start an argument. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t5">
+        <span class="kicker">People and Terms</span>
+        <h3><a href="#t5">Who's Who in the New Era</a></h3>
+        <ol class="qs">
+          <li><b>Central Military Commission.</b> The party body that commands the PLA, chaired by Xi, and prone to micromanage (ebook page 20).</li>
+          <li><b>Li Shangfu.</b> Defense minister fired in late 2023, one of several senior officers Xi had appointed in 2022 (page 48).</li>
+          <li><b>Liu Huaqing.</b> The admiral who sold carriers as a way to project airpower across the Strait (page 156).</li>
+          <li><b>Main strategic direction.</b> The PLA's priority theater. Since 1993 it has been the southeast, opposite Taiwan (pages 95, 99).</li>
+          <li><b>Eastern Theater Command.</b> The joint command facing Taiwan. Many forces it would need sit outside it (page 253).</li>
+          <li><b>Joint Island Landing Campaign.</b> The PLA's name for an invasion of Taiwan (page 239).</li>
+          <li><b>Peace disease.</b> Officers without combat experience who cannot picture what war demands (pages 19 and 20).</li>
+          <li><b>Gray zone coercion.</b> Pressure kept below the threshold of lethal force (pages 206 and 207).</li>
+        </ol>
+      </article>
+
+      <article id="t6">
+        <span class="kicker">Bridge From Sekirin</span>
+        <h3><a href="#t6">The Hellscape Has a Supplier</a></h3>
+        <p>Sekirin's drones end up in Wuthnow and Saunders as America's plan for Taiwan. Chapter 7 reports that Admiral Samuel Paparo said in June 2024 that a U.S. operational goal would be a "hellscape" of combat drones that could delay PLA operations by up to a month. The same chapter says Chinese analysts watched smartphones, drones, and open-source imagery help Ukraine find Russian targets. Sekirin, on page xvi of his preface, calls China a major maker of military-grade drones and parts, and a systemic risk for Western militaries. (A hellscape assembled from the other side's parts catalog would be a novel procurement strategy.) Keep one question in mind tonight: if both sides can field cheap drones by the thousand, does Sekirin's drone war make Beijing's quick victory harder, or make America's month of delay easier to cancel out? <span class="by">(S)</span></p>
+      </article>
+
+      <article id="t7">
+        <span class="kicker">Political Strategy × Wuthnow and Saunders · via Punchbowl News AM and electoral-vote.com, November 25</span>
+        <h3><a href="#t7">Washington Reshuffles Its China Desk. Beijing Reads the Tariff Line.</a></h3>
+        <p>Congress returns Monday with eight legislative days to fund the government before the December 11 deadline, and China is in the mix. Punchbowl News reports that the White House sent an anomaly list that assumes a stopgap through March 31, and that Democrats are weighing whether to let funding pass without language curbing the Iran war. Punchbowl also passes along a Wall Street Journal report that the president is looking to raise tariffs on China and other countries, which puts him on a collision course with Democrats who say rolling tariffs back will be among their first acts next Congress.</p>
+        <p>Electoral-vote.com supplies the size of that next Congress. EV reports that the AP called Tennessee's 4th District for Democrat Victoria Broderick by 361 votes, which gives Democrats 259 House seats clinched. Punchbowl adds that Rep. Gregory Meeks, who will chair House Foreign Affairs, thinks the House China select committee's work could move under his committee. (Washington's main China debate this week is about the org chart. Beijing would sympathize; its own reorganization took twenty years.)</p>
+        <p>Wuthnow and Saunders explain why the tariff line will get more attention in Beijing than the committee chart. Chapter 2 shows a party that files economics under security. It weighs military money against stimulus and subsidies, because economic complaints can become threats to the regime, and Xi describes American policy as "comprehensive containment, encirclement and suppression." The introduction goes further: the party weighs its military tools against priorities that could matter more to it than even reunification with Taiwan.</p>
+        <p>Our take: a tariff fight is a security signal in Beijing whether Washington means it as one or not. A tariff that rises in December and faces a repeal vote in January also tells Beijing that U.S. economic pressure has a short shelf life. That's our inference, and the evidence would change if either side wrote its China policy into something that outlasts a Congress. In plain terms, the book says Beijing's restraint rests on protecting its economy, so how Washington handles China's economy is part of deterrence. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="section-label">Chapter by Chapter: Wuthnow and Saunders, <i>China's Quest for Military Supremacy</i></p>
+
+<article id="w-00">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, introduction</span>
+  <h3><a href="#w-00">Restraint, Entered in Both Columns</a></h3>
+  <p>When an author lists a military's strengths and its flaws, look for the item that shows up on both lists, because that is where the argument lives. Wuthnow and Saunders say the PLA is stronger and more confident than at any point in its history, yet carries flaws that neither technology nor money will fix. Their strengths run from Xi's leadership to new hardware to money to something they call strategic discipline. Their list of flaws ends with the same item. They also warn that information on the PLA is fragmentary and their judgments tentative, a fair posture when some Chinese sources are written to shape foreign opinion.</p>
+  <p>The money makes the case. China's official defense budget has passed $200 billion, the real figure is higher, and it is still roughly 2 percent of GDP. The United States spends about $800 billion, but those dollars have to cover the globe. Chinese diplomats like to note that China has not gone to war since 1979, and it signs no alliances. The authors say this restraint reflects no benign foreign policy. Peace is cheap, and the savings bought the fleet. The same restraint also left commanders with no combat experience, said to suffer from a "peace disease."</p>
+  <p>The claim you'll hear: "On ebook page 14, the PLA ran blockade-style closure zones and fired missiles over Taiwan after Speaker Pelosi's 2022 visit. The army is brazen now, and an attack by 2027 is coming." This reads the opening scene and stops. The authors present 2027 as something observers feared, then spend the introduction explaining why fear is a poor forecast.</p>
+  <p>A stronger response: Concede the confidence first; on ebook page 14 the authors call the 2022 PLA brazen. Then turn to ebook page 15. The party wants a war with a "quick victory" all but guaranteed, and 2027 is only the first milestone of a modernization plan with later targets in 2035 and 2049. On ebook page 21 comes the twist: "The last disadvantage for the PLA, paradoxically, is strategic discipline." Beijing even de-escalated after the deadly June 2020 clash with India. Opinion: 2027 belongs on a planning calendar, and a planning calendar is a poor guide to a decision for war.</p>
+  <p>Why it's stronger. First order, restraint spared China the cost of war and funded modernization. Second order, it denied the PLA the combat experience to cure the peace disease, keeping a guaranteed quick victory out of reach. Third order, the authors say those lingering weaknesses create openings for China's adversaries, and that the United States and its allies should build agile forces and skilled leaders to deter or defeat aggression. Our inference: for Airmen, the job this book sets up is denying Beijing the quick win it insists on. The chain is hard to rebut because every link sits in the authors' own ledger.</p>
+  <p>A question for the room: On ebook page 21, the authors say some of the party's priorities could matter more to it than even reunification with Taiwan; what would we need to see to conclude that ranking had flipped? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-01">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 1</span>
+  <h3><a href="#w-01">Absolute Loyalty, Pending Audit</a></h3>
+  <p>Every tool a ruling party uses to control its army costs that army some fighting power, so price the control before you count the troops. Wuthnow and Saunders argue that Deng gave the PLA room to modernize, and even let it run businesses. That autonomy bred secrecy, corruption, and ideological drift. Xi pulled control back harder than any leader since Mao, and he still did not get all of it.</p>
+  <p>Officer rotation shows the trade. Under Xi's early reforms, four of the five theater commanders came from other regions while all five theater political commissars were local. At the group army level the pattern ran the other way, with almost all commanders transferred in and most commissars local. Strangers are less likely to collude, and a theater commander tempted to misuse ground units would face subordinates he does not know well. The authors add that this likely costs operational effectiveness. Xi also put the auditors, the anti-corruption inspectors, and the military courts directly under the Central Military Commission, and his campaign punished more than 100 senior officers.</p>
+  <p>The claim you'll hear: "On ebook page 39, Xi made 53 publicized appearances at military events in his first three years, against 36 for Hu in the same span. On ebook page 41, his campaign punished over 100 senior officers. Xi owns the PLA." This counts effort and calls it control. The authors' own scorecard ends with Xi firing men he picked himself.</p>
+  <p>A stronger response: Concede the strength first. Xi is the strongest PLA leader since Mao, and on ebook page 46 the ground forces could not stop large manpower cuts. Then go to ebook pages 47 and 48. In late 2023 Xi fired the Rocket Force commander and political commissar, defense minister Li Shangfu, and the head of the military court, in sensitive posts Xi had filled in 2022. The party never announced why; commentary pointed to procurement graft, which is thin open-source evidence. On ebook page 47 the authors put it plainly: "formal compliance is not the same thing as genuine belief." Opinion: Xi bought more control than Jiang or Hu, and paid for it in agility.</p>
+  <p>Why it's stronger. First order, rotation and independent watchdogs cut collusion and gave Xi separate channels of information. Second order, the authors warn that co-equal commissars, committee consensus, and micromanagement could slow wartime decisions, especially at lower levels. As they put it, "Every hour spent on political indoctrination is one hour less" for training. Third order, control still runs through one man, the party general-secretary, so a weak successor or a contested succession could turn the army into a kingmaker. Our inference: Airmen facing the PLA should expect its lower echelons to adapt slowly under pressure. The chain is hard to rebut because the cost and the gaps come from the same reforms.</p>
+  <p>A question for the room: On ebook page 49, the authors imagine a succession fight with the PLA as kingmaker; do Xi's reforms make that scenario less likely, or more likely, by tying control so tightly to a single man? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-02">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 2</span>
+  <h3><a href="#w-02">Threats Come in Rings, and the PLA Has to Wear All of Them</a></h3>
+  <p>When a government files everything under national security, watch how it ranks the threats, because the ranking tells you where its army goes. Wuthnow and Saunders map Beijing's threat picture as concentric rings: the regime at home, Taiwan and the neighbors, the United States, and interests beyond Asia. Under Xi, the party sees danger in every ring at once, and the PLA is only one tool among many.</p>
+  <p>The evidence starts in 2014, when Xi proposed a "holistic national security concept" covering eleven areas, with political security listed first. At the 20th Party Congress in October 2022, Xi did not repeat the old line that the "period of strategic opportunity" remained open. Official tallies of "mass incidents" rose from 8,700 in 1993 to more than 87,000 in 2005, after which Beijing stopped publishing the number (no reason given, none needed). China borders fourteen countries by land and buys more than 70 percent of its oil overseas, mostly through the Strait of Malacca. The authors sum up the army's place: "The armed forces are only one bright star in this constellation." A caveat: this is perception read from white papers and party reports, which tell you what Beijing says it fears.</p>
+  <p>The claim you'll hear: On ebook page 79, Xi complains of "comprehensive containment, encirclement and suppression" led by the United States, so the PLA is built to fight us and everything else is noise. That reads the loudest ring and skips the authors' own ordering. On ebook page 64 they start at home, where the threats sit "virtually outside the window," and on ebook page 84 they note that even a Taiwan war would keep forces on alert across the whole periphery.</p>
+  <p>A stronger response: Concede that the United States is the main challenger and drove the missile and nuclear buildup on ebook page 79. On ebook pages 83 and 84, the budget fight is among forms of security: the PLA competes with infrastructure, financial stimulus, and subsidies for state firms, which Beijing counts as security because economic grievances can threaten the regime. Opinion: an army sharing a security budget with the police and the stimulus program is big and boxed in.</p>
+  <p>Why it's stronger. First order, the holistic concept put internet monitors and financial regulators in the security business. Second order, the PLA must still cover Tibet, disasters, Korea, India, and the sea lanes, so it buys specialized forces for mountains and small islands. Third order, and this is our inference: every yuan spent on an inner or outer ring is a yuan not spent on the Taiwan fight. The chain uses the authors' own tradeoff list, so it is hard to wave away.</p>
+  <p>A question for the room: On ebook page 60, the authors say Xi kept his predecessors' caution about crossing the threshold of lethal violence, yet on ebook page 69 he gave the PLA a 2027 deadline to build the capability to settle the Taiwan question by force. Is that caution a strategy, or a waiting period until the capability arrives? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-03">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 3</span>
+  <h3><a href="#w-03">New Wiring, Same Electricians</a></h3>
+  <p>A strategy is a document and an organization is thousands of careers, so measure the lag between them before you judge a military. Wuthnow and Saunders show that China's strategy has pointed the same way since the early 1990s: short, high-intensity regional wars, with Taiwan as the "main strategic direction" and the United States as the expected intervener. Xi added urgency, and the organization finally caught up. In the authors' words, Xi told his forces to "be better at their current assignments."</p>
+  <p>The lag is the story. A 1993 update moved the main strategic direction to the southeast, opposite Taiwan. Yet as late as 2015 the ground forces made up nearly 70 percent of the PLA, and the nominally joint military region commanders controlled only army units in peacetime. In the 1995-1996 crisis, the war zone staff flew in from Beijing. Jiang and Hu lacked the clout to force change, so the overhaul waited twenty years, until late 2015. Xi then cut 300,000 troops, disbanded the four general departments in early 2016 for fifteen smaller bodies, and created five theater commands. The army, called the "biggest loser," fell to just under half the force.</p>
+  <p>The claim you'll hear: On ebook page 110, the authors say today's PLA has largely fixed its command problems, so China now has a joint force ready for a Taiwan war. That reads the wiring diagram and skips the next two pages. On ebook pages 111 and 112 the authors list what remains: no command structure for global combat, forces spread evenly against a "chain reaction," army officers in most top jobs, and party control that may freeze junior commanders.</p>
+  <p>A stronger response: Concede the structure is real. On ebook page 110, theater commanders control land, air, naval, and conventional missile forces, and the August 2022 show of force after Speaker Pelosi's Taiwan visit would have been far harder before. Then go to ebook pages 117 and 118. China has not fought a war since 1979, leaders complain of a "peace disease," and promotions remain service-centric. The Joint Operations College opened only in 2017. Opinion: Xi fixed the org chart in a few years, and the careers that fill it will take much longer.</p>
+  <p>Why it's stronger. First order, the reforms gave theater commanders real joint authority. Second order, Beijing gained confidence to run coordinated coercion short of war. Third order, and this is our inference: the lag has moved from boxes to people, so the weak link in a Taiwan campaign is a command led mostly by army officers with thin joint experience and little license to improvise. After a twenty-year lag on structure, anyone betting on a quick cultural fix carries the burden of proof.</p>
+  <p>A question for the room: On ebook page 100, Chinese strategists describe "system destruction warfare," won by wrecking the enemy's sensors, command networks, and logistics. On ebook page 112, the authors doubt, on thin open-source evidence, that junior PLA commanders will act without orders from the top. If both are right, has the PLA built a theory of war that aims at its own weakest point? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-04">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 4</span>
+  <h3><a href="#w-04">Every Service a Champion, the Team Still Pending</a></h3>
+  <p>Judge a military service by the joint campaign it must serve, and treat its inventory as a sales pitch. Wuthnow and Saunders survey the PLA's army, air force, and navy and find each one racing toward world-class status in its own domain. Their warning is that a set of excellent services is not yet a joint force, and they show where the seams are.</p>
+  <p>The navy grew from 216 ships in 2005 to 328 in 2023, more than the U.S. Navy's 289. Its destroyers doubled from 21 to 42. The air force moved from territorial air defense to a 2004 mandate for "both offensive and defensive missions," and by 2024 it flew roughly 200 J-20s. Service headquarters kept their own forces: the air force holds the bombers, transports, and airborne corps, and the navy holds the marines and the ballistic missile submarines. At the Zhurihe training range, the resident blue force that plays the Americans has routinely beaten the visiting red units.</p>
+  <p>The claim you'll hear: "On ebook page 144, the PLA Air Force has about 1,300 modern fighters to our 1,500, so the air war over Taiwan is already a fair fight." The count is real. It measures airframes, and the authors spend the rest of the chapter on what airframes leave out.</p>
+  <p>A stronger response: Concede the hardware first. On ebook page 141, the J-20 flies in all five theaters, and a domestic engine came online in 2022. Then go to ebook page 143, where pilot retention and a lack of combat experience remain weaknesses, and to ebook page 156, where the authors explain prestige buying. Liu Huaqing sold carriers as a way to project airpower across the Strait. Long-range precision munitions overtook that argument, and the program carried on as "naval nationalism." The army bought 1,200 Type-99 tanks, a source of pride that may not handle the Himalayas. The authors' verdict is that world-class status "does not necessarily translate into fielding the forces necessary for joint campaigns." Opinion: the fighter count is the least interesting number in the chapter.</p>
+  <p>Why it's stronger: First order, the reforms gave the army its own headquarters in 2016 and removed the service chiefs from the Central Military Commission in 2017, so every chief now argues for money from the same level. Second order, the authors say that competition can reward appeals to national pride or jobs over the joint mission, which is how carriers outlived their rationale. Third order, and this link is our inference, a PLA that buys symbols has less to spend on what a Taiwan landing needs. The response is hard to rebut because it keeps the authors' credit for the high command too: the 2023 reform handed most land-based naval aviation to the air force and cut a duplicated mission.</p>
+  <p>A question for the room: Turn to ebook page 156, where the air force keeps the bombers and the navy keeps the missile submarines outside theater control. Is that a flaw in jointness, or the same way any military guards its scarcest strategic assets? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-05">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 5</span>
+  <h3><a href="#w-05">Four Theories Walk Into a Silo Field</a></h3>
+  <p>When an opaque government won't explain itself, list every plausible motive and ask what each one predicts you would see. Wuthnow and Saunders do exactly that with China's nuclear buildup, the weightiest section of a chapter that also covers space, cyber, and the Rocket Force. Their verdict is that the evidence supports three motives at once and barely supports the scariest one.</p>
+  <p>For five decades, Mao's 1964 no-first-use statement set the terms of Chinese nuclear policy, and the force stayed small and unalerted. The 2021 discovery of as many as 360 new ICBM silos overturned the expectation of a force of several hundred warheads. The Defense Department estimated more than 500 operational warheads by May 2023 and over 1,000 by 2030. Beijing has not acknowledged the silos, and its officials deny any change in policy. Fravel, in Active Defense, found China's nuclear strategy largely unchanged since 1964; this chapter tests that finding.</p>
+  <p>The claim you'll hear: "On ebook page 189, China is digging up to 360 silos, so it has dropped no first use and is building a force to fight a nuclear war." It reads motive straight off the hardware, and the authors' own scorecard cuts against it.</p>
+  <p>A stronger response: Concede the growing gap between declared policy and capability, which the authors flag on ebook page 192. Then walk the room through the four explanations on ebook pages 192 to 194. A secure second strike fits the silos, which are easier to alert and suit a launch-on-warning posture, though the projected force exceeds what survival requires. A nuclear shield would stalemate the nuclear level and free China to fight a conventional war over Taiwan, the stability-instability paradox. Great-power status fits Xi calling nuclear capability a "pillar of our status as a great power." Theater nuclear dominance has the least support: a reported low-yield warhead aside, the PLA has not deployed tactical nuclear weapons or changed Rocket Force training to use them. Opinion: the shield is the theory Airmen should plan against, because it hands the decision back to the conventional fight.</p>
+  <p>Why it's stronger: First order, more warheads ride on silos, six Jin-class submarines, and H-6N bombers training for a nuclear air-launched missile, giving China a triad. Second order, the authors say a shield puts a greater premium on the local conventional balance and forces hard U.S. choices about splitting scarce dollars between nuclear and conventional forces. Third order, China stays wary of arms control that would lock it into an inferior position, and, as our inference, the air fight over the Strait carries more of the deterrent weight. The response accepts every fact the claimant cites and disputes only the motive, which the evidence cannot pin to a single theory.</p>
+  <p>A question for the room: Turn to ebook page 195, where U.S. nuclear development "will set the benchmark" for what a nuclear great power is. If Beijing builds partly to match Washington, does U.S. nuclear modernization strengthen deterrence over Taiwan or feed the buildup it is meant to answer? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-06">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 6</span>
+  <h3><a href="#w-06">Winning the Reef, Losing the Neighborhood</a></h3>
+  <p>Judge coercion by what it does to the neighbors, because a tactic can win every standoff and still lose the region. Chapter 6 shows the PLA running two tracks at once. Military diplomacy sells China as a peaceful supplier of public goods, while gray zone coercion takes ground below the threshold of lethal force. Wuthnow and Saunders conclude that the second track keeps eating the first.</p>
+  <p>The coercion track has real wins. China dredged about 3,200 acres in the Spratlys and built bases on Mischief, Fiery Cross, and Subi Reefs. At Scarborough Shoal in 2012, Chinese ships accepted a U.S.-brokered mutual withdrawal, came back, and took control. Beijing also knows when to stop. In 2014 it pulled back from the HY-981 oil rig standoff in Vietnam's exclusive economic zone only after deadly anti-China protests in Hanoi. At Doklam in 2017 it left after a two-month standoff with India, then built other roads across the plateau. (Withdrawal, Beijing style.)</p>
+  <p>The claim you'll hear: "On ebook page 214, foreign officials skip protocol and fly to Beijing without return visits, and U.S. allies like Thailand and South Korea visit and exercise with the PLA. The charm offensive is working." The data are real. The claim counts meetings and ignores the outcome the authors measure on the chapter's last pages.</p>
+  <p>A stronger response: Concede that China's weight is real and that coercion has strengthened its effective control, especially in the South China Sea. Then turn to ebook pages 232 and 233. The coercion has resolved none of the underlying disputes, public opinion has soured, and the unintended result is stronger U.S. alliances. In July 2021 Duterte reversed his decision to cancel an agreement for more U.S. military presence, and Marcos widened U.S. access. The Quad, AUKUS, and U.S.-Japan-South Korea cooperation round out the picture. The verdict on ebook page 233 is that Beijing shaped the region, "but not in the manner party leaders intended." Opinion: China ran a very effective recruiting drive for the other side.</p>
+  <p>Why it's stronger: First order, construction and patrols gave China facts on the ground, with bases that let ships patrol longer and farther and host more fighters and bombers. Second order, the targets hedged by tightening ties with the United States, Japan, India, and Australia. Third order, those ties now stand as a potential balancing coalition if Chinese pressure grows. Squeezing one target at a time stopped working once Xi widened the pressure after 2012. Our inference: every new front Beijing opens makes it easier for its neighbors to coordinate. The chain is hard to rebut because it takes China's wins as its starting premise.</p>
+  <p>A question for the room: Turn to ebook page 229, where Beijing limits escalation by leaning on lightly armed Coast Guard and militia ships, yet a J-11 pilot came within ten feet of a B-52 at night in 2023. If gray zone restraint depends on one pilot's judgment at night, who really holds the escalation switch? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-07">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 7</span>
+  <h3><a href="#w-07">The 2027 Deadline Is a To-Do List</a></h3>
+  <p>A leader's readiness deadline tells you more about his army's capability than about his intent. Chapter 7 argues that China has spent thirty years building the forces to deter Taiwan independence and, if ordered, to compel unification. Yet the authors judge a deliberate war of choice unlikely in the near term, because the costs remain steep.</p>
+  <p>Start with the invasion math. A Joint Island Landing Campaign would push roughly six brigades across a 185-kilometer strait. Many units it needs, including the airborne corps, the marines, and the Joint Logistic Support Force, sit outside the Eastern Theater Command and would have to be resubordinated in a crisis. Few senior officers have served in a joint billet. The PLA lacks the sealift and airlift to move its amphibious and airborne brigades, and is trying civilian ferries. The Pentagon's 2023 China report calls an amphibious invasion "one of the most complicated and difficult military operations." (The PLA has no recent combat experience to check that against.)</p>
+  <p>The claim you'll hear: "On ebook page 246, Xi told the PLA to be ready for major combat against Taiwan by 2027, and on ebook page 249 the authors describe a closing window of opportunity. So 2027 is the invasion date." It turns a readiness order into a decision and skips the rebuttal on the same pages.</p>
+  <p>A stronger response: Concede that coercion is rising and that a declaration of independence could trigger a war of necessity at any time. Then read ebook page 246: analysts generally agreed that 2027 was a readiness milestone, not an operational timeline. On ebook page 247 the authors admit there is little direct evidence of how Xi rates his army, but they read the deadline as a sign he lacked confidence in it in the early 2020s. Even the order is known only from reports. On ebook page 266 they ask, "Why the need to motivate a system already ready to go?" The sharper worry on that page is blockade, which plays to China's naval and Coast Guard strength and Taiwan's dependence on seaborne imports. Opinion: the tankers deserve more attention than the calendar.</p>
+  <p>Why it's stronger: First order, the deadline drives PLA readiness and keeps pressure high around the island. Second order, that pressure forces Taiwan to keep buying fighters and ships to answer peacetime incursions, such as the 2019 sale of 66 F-16Vs, money an invasion defense needs for missiles, mines, and drones. Third order, the authors warn that Taiwan's own window may be short, closing as China absorbs lessons from Ukraine, insulates its economy from sanctions, and finishes its nuclear expansion. It is hard to rebut because it treats the PLA as dangerous and still refuses the date.</p>
+  <p>A question for the room: Turn to ebook page 263, where steps to strengthen Taiwan, such as putting U.S. troops on the island, might push Beijing into a war of necessity, and China has never stated clear red lines. How does a planner tell deterrence from provocation when the adversary won't say where the line is? <span class="by">(S)</span></p>
+</article>
+
+<article id="w-08">
+  <span class="kicker">Chapter by Chapter · Wuthnow and Saunders, chapter 8</span>
+  <h3><a href="#w-08">Flags Everywhere, Brigades Nowhere</a></h3>
+  <p>Measure an expeditionary military by its command and logistics, the parts that keep a force fighting far from home. Chapter 8 argues that the PLA has become a global actor but not yet a global power. Its overseas work is light, cooperative, and mostly short of war, because Beijing has not asked it to fight abroad. The twist for Americans: China's bigger lever abroad may be closing doors to U.S. forces.</p>
+  <p>Start with the headcount. At any time roughly 5,000 PLA personnel serve overseas, under one percent of a two-million-person force, while the U.S. deploys more than 160,000. The Djibouti base covers 90 acres, and its 2021 pier can take any ship in the PLA navy, carriers included. Transport is improving: Y-20s, each carrying 300 troops, grew from 27 in 2019 to more than 70 in 2024, up from Il-76s carrying about 140. Yet no joint command runs overseas operations, service headquarters lead most missions, and the overseas logistics system is built for operations short of war. In Sudan in 2023, U.S. special forces rescued embassy staff in Khartoum while China's navy loaded passengers at a port several hundred kilometers away. (Prudent, if not cinematic.)</p>
+  <p>The claim you'll hear: "On ebook page 285, Kardon and Leutert count 96 ports with a Chinese ownership stake, and on ebook page 286 China is negotiating access from Cambodia to the Solomon Islands. That is a String of Pearls to rival American basing." It counts sites and assumes they work as combat bases.</p>
+  <p>A stronger response: Concede the ambition; on ebook page 286 the authors say the PLA is clearly interested in expansion. Then go to ebook page 293: neither civilian ports nor Djibouti has the munitions stockpiles or air and missile defenses to serve as wartime staging areas, and without alliances, wartime access is doubtful. On ebook page 296 the risk shifts. The bigger challenge may be China's ability to deny access to U.S. forces, and the 2001 Afghanistan war needed air bases in Uzbekistan and Kyrgyzstan. Opinion: for an air force that lives on overflight rights, a closed airspace hurts more than an open Chinese pier.</p>
+  <p>Why it's stronger: First order, ports and Djibouti sustain anti-piracy patrols, evacuations, and intelligence collection. Second order, China's trade and investment buy political influence that Beijing could use to persuade third parties to close borders, facilities, and airspace to U.S. forces in a conflict it opposes. Third order, alongside missiles and bombers that could threaten Hawaii and Alaska, that pressure pushes the United States and its allies toward hardening key sites, dispersing forces, and building their own strike assets. Our inference: the access fight will be settled in foreign capitals before any runway matters. It grants the base count and still calls it the smaller problem.</p>
+  <p>A question for the room: Turn to ebook page 291, where the authors say the main limits on a PLA strike force beyond Asia "are political, not technological," a page after noting the H-20 bomber's planned range of roughly 6,700 miles. What signal would show the politics had changed before the hardware arrives? <span class="by">(S)</span></p>
+</article>
+
+      <p class="section-label">Earlier Books, One Minute Each</p>
+
+      <article id="r1">
+        <span class="kicker">Spaced Review · five earlier books against Wuthnow and Saunders</span>
+        <h3><a href="#r1">The PLA Has Been Reading Our Syllabus</a></h3>
+        <ol class="qs">
+          <li><b>Zhang, Korea.</b> The PLA Air Force entered Korea hastily built and dependent on a Soviet patron, and the war left it a defensive doctrine and a heroic myth that distorted its view of airpower for forty years. The link: Zhang says overstated kill claims fed unrealistically high expectations of the air force. Wuthnow and Saunders still list lack of combat experience as a PLA Air Force weakness. Korea remains the last big air war it has to learn from.</li>
+          <li><b>Fravel, <i>Active Defense</i>.</b> China changed its military strategy in response to shifts in how wars are fought, but only when the party leadership was united. The link: Wuthnow and Saunders show the 1993 strategy waited about twenty years for the matching reorganization, because Jiang and Hu lacked the clout to force it. Xi had the clout. Fravel's condition, met at last.</li>
+          <li><b>Olsen, Desert Storm.</b> The strategic air campaign degraded Iraq but did not achieve its unstated aim of changing the regime. The link: Beijing drew a different lesson from the same war. Wuthnow and Saunders say Gulf War lessons led the PLA to joint operations and "system destruction warfare," aimed at sensors, command networks, and logistics. The PLA copied the part that worked.</li>
+          <li><b>Gaddis, containment.</b> U.S. strategy swung between symmetrical and asymmetrical containment, driven mostly by how leaders saw their means. The link: in 1955 Eisenhower admitted that massive retaliation offered no defense against "nibbling" below the threshold of major war. Chapter 6's gray zone coercion is nibbling with a coast guard.</li>
+          <li><b>Lambeth, transformation.</b> American air power had become "truly strategic," able to shape a joint campaign from the outset, though it could not win wars alone. The link: the PLA read the same evidence and took it seriously. Fravel records that PLA studies of Kosovo found air strikes "more powerful and destructive than previously imagined," and judged them the most likely way China would be attacked. Wuthnow and Saunders show the answer two decades on: counterspace and cyber forces built to exploit U.S. vulnerabilities. Lambeth wrote the brochure, and Beijing bought the countermeasures.</li>
+        </ol>
+        <p>Opinion: every earlier book in this course watched America learn from its wars. This one watches China learn from ours. <span class="by">(S)</span></p>
+      </article>
+
+      <article id="bed">
+        <span class="kicker">The Bedtime Version</span>
+        <h3><a href="#bed">The Heron Who Wanted a Sure Thing</a></h3>
+        <p>On the far side of Quiet Pond lived Grey Heron. Grey Heron had the biggest flock of geese anyone had ever seen.</p>
+        <p>Every morning the geese practiced. Every morning there were more of them.</p>
+        <p><i>Bigger every day, and not quite ready.</i></p>
+        <p>Out in the water sat a little island, and on it lived Turtle. Grey Heron said the island should be his. Turtle said it was home.</p>
+        <p>"I could fly my geese over," said Heron. "But only if it's quick. Only if I'm sure."</p>
+        <p>So Heron counted. The geese had never flown in a real storm. Each goose waited for Heron to say "turn" before it turned. And some geese had been tucking away extra seeds when nobody looked.</p>
+        <p><i>Bigger every day, and not quite ready.</i></p>
+        <p>Juniper the small owl watched from the sky. She did not chase anyone. She just helped Turtle plant tall reeds all around the island, so nothing there could ever be quick.</p>
+        <p>Heron looked at the reeds. He looked at his geese. "Not today," said Heron.</p>
+        <p>The geese tucked their heads under their wings. Turtle pulled in her feet. Juniper fluffed her feathers.</p>
+        <p><i>Bigger every day. Not today. Goodnight.</i></p>
+        <p><b>For the grown-up:</b> Grey Heron is China's Communist Party, the geese are the PLA, and Turtle's island is Taiwan. The geese that never flew in a storm, wait for orders, and hide seeds are the book's three flaws: no combat experience, centralized command, and corruption. Heron's "only if it's quick" is the thesis, and Juniper's reeds are what the authors tell the United States and its allies to build, forces that deny a quick victory. <span class="by">(S)</span></p>
+      </article>
+
+      <p class="endmark">End of tonight's edition.</p>
+
+      <section class="sources" id="sources">
+        <h2>Sources</h2>
+        <p>Wuthnow and Saunders's ebook has no printed page numbers, so citations give the ebook (PDF) page, matching the course's markdown copy. Their PLA facts come from open sources on an opaque army, and they call many judgments tentative (ebook 17).</p>
+        <h3>Next reading</h3>
+        <ul>
+          <li>Main contention, stronger and more confident than ever, flaws neither technology nor money will solve: Wuthnow and Saunders, intro, ebook 17. Party-army trust, peace disease, Leninist command: 19 to 20.</li>
+          <li>August 2022 drills and fears of an attack by 2027: ebook 14. Mirror imaging: acknowledgments, ebook 11.</li>
+          <li>"Quick victory" all but guaranteed: ebook 15; lingering weaknesses limit it: 21.</li>
+          <li>Information fragmentary, judgments tentative: ebook 17. The deterrence inference is our opinion.</li>
+          <li>Korea as the PLA Air Force's formative war: SAASS 628 syllabus, seminar 3.</li>
+        </ul>
+        <h3>The world around the book</h3>
+        <ul>
+          <li>Course at National Defense University for mostly lieutenant colonels, colonels, and senior civilians; avoiding mirror imaging; access through U.S.-China military exchanges; "pacing challenge": acknowledgments, ebook 11. Interactions with PLA analysts and commanders in NDU roles: intro, ebook 16. Polity editor's vision for a general reader: ebook 12.</li>
+          <li>Authors "of the Institute for National Strategic Studies," published by Polity March 17, 2025, "Important if unsettling," density of acronyms and minutiae: <a href="https://kirkusreviews.com/book-reviews/joel-wuthnow/chinas-quest-for-military-supremacy/">Kirkus Reviews</a>, posted January 16, 2025.</li>
+          <li>Pelosi visit and 2027 fears: ebook 14. Late-2023 firings of men appointed in 2022: ch. 1, ebook 47 to 48. Paparo "hellscape," June 2024: ch. 7, ebook 264. Copyright 2025: ebook 10.</li>
+          <li>Zenel Garcia, Army War College, "sharp, deeply researched," essential reading: <a href="https://press.armywarcollege.edu/parameters_bookshelf/96">Parameters bookshelf</a>, September 22, 2025. We read the review's summary page, not the full PDF.</li>
+          <li>Balanced assessment; weaknesses structural, not about resources: <a href="https://navalinstitute.com.au/chinas-quest-for-military-supremacy/">Australian Naval Institute review</a>, October 5, 2025.</li>
+          <li>Subtext evidence: U.S. and allies should build agile forces, operational concepts, and skilled leaders: intro, ebook 21 to 22. Strengths and flaws ledger: ebook 17 to 21. Deadline suggests Xi lacked confidence: ch. 7, ebook 247. Taiwan's asymmetric purchases (coastal defense missiles, mines, drones): ebook 261 to 262. The subtext itself is our interpretation.</li>
+        </ul>
+        <h3>Your time plan and Read for</h3>
+        <ul>
+          <li>Section start pages (ebook): intro argument 17; ch. 1 conclusion 48; ch. 3 reorganization 103, resources 112; ch. 4 air forces 137, service politics 154; ch. 5 nuclear 187, conclusion 195; ch. 6 conclusion 231; ch. 7 strategic decisions 245, major combat 249, countering intervention 254, Ukraine 257, Taiwan's defense 261, conclusion 265; ch. 8 bases 283, conclusion 295.</li>
+          <li>Strategic discipline as strength and weakness: ebook 18 to 19, 21. Late-2023 firings: 47 to 48. Territorial air defense to offensive missions: 139 to 140; fighter count: 144. Four nuclear explanations: 192 to 194. Readiness milestone: 246; closing window: 249. Ports not wartime staging areas: 293; access denial: 296.</li>
+        </ul>
+        <h3>Seminar questions</h3>
+        <ul>
+          <li>Questions: SAASS 628 syllabus, seminar 18. Nuclear shield: ch. 5, ebook 193; intro preview, 25. Gulf War lessons: 100. Peace disease: 19 to 20. Lin Biao and coups: 19.</li>
+        </ul>
+        <h3>People and terms</h3>
+        <ul>
+          <li>CMC micromanagement: ebook 20. Li Shangfu: 48. Liu Huaqing: 156. Main strategic direction: 95, 99. Eastern Theater Command and forces outside it: 253. Joint Island Landing Campaign: 239. Peace disease: 19 to 20. Gray zone coercion: 206 to 207.</li>
+        </ul>
+        <h3>Bridge from Sekirin</h3>
+        <ul>
+          <li>Paparo "hellscape" of combat drones, delay of up to a month: Wuthnow and Saunders, ch. 7, ebook 264. Smartphones, drones, and open-source imagery locating Russian targets: ebook 259.</li>
+          <li>China a major maker of military-grade drones and parts, "systemic risk": Sekirin, xvi.</li>
+        </ul>
+        <h3>Political strategy × Wuthnow and Saunders</h3>
+        <ul>
+          <li>Eight legislative days to the December 11 deadline; anomaly list assuming a stopgap to March 31; Iran language; Wall Street Journal report on raising tariffs on China; Democrats plan to roll tariffs back; Meeks on moving the China select committee's work under Foreign Affairs: Punchbowl News AM, November 25, 2026.</li>
+          <li>TN-04 called for Victoria Broderick by 361 votes; Democrats clinch 259 House seats: <a href="https://www.electoral-vote.com/evp2026/Items/Nov25-1.html">electoral-vote.com, November 25</a>.</li>
+          <li>Military funding weighed against infrastructure, stimulus, and subsidies; economic complaints as regime threats: Wuthnow and Saunders, ch. 2, ebook 83 to 84. "comprehensive containment, encirclement and suppression": 79. Priorities more vital than reunification: intro, 21. Twenty-year reorganization lag: ch. 3, 104 to 105.</li>
+          <li>The shelf-life point is our inference.</li>
+        </ul>
+<h3>Wuthnow and Saunders, introduction: Restraint, Entered in Both Columns</h3>
+<ul>
+  <li>Main contention: PLA stronger and more confident than ever, with flaws neither technology nor money will solve: Wuthnow and Saunders, intro, ebook 17.</li>
+  <li>Strengths: CCP and Xi leadership, hardware (ebook 17&ndash;18), money (ebook 18), strategic discipline (ebook 18&ndash;19).</li>
+  <li>Information fragmentary, judgments tentative: ebook 17. Some sources, especially in English, meant to influence foreign perceptions: ebook 16.</li>
+  <li>Official budget over $200 billion, actual figure higher; roughly 2% of GDP; U.S. roughly $800 billion, stretched globally: ebook 18.</li>
+  <li>No war since 1979; no alliances; restraint not a reflection of benign foreign policy; manageable expenses because no war costs: ebook 18&ndash;19.</li>
+  <li>"Peace disease," commanders without combat experience: ebook 19&ndash;20.</li>
+  <li>August 2022 demonstrations after Pelosi's visit: seven live-fire zones mimicking blockade closure areas, missiles over the island; fears of attack by 2027: ebook 14. PLA "now more confident, even brazen": ebook 14.</li>
+  <li>Caution; "quick victory" all but guaranteed; 2020 plan with 2027 milestone, 2035 and 2049 targets: ebook 15.</li>
+  <li>Strategic discipline as last disadvantage; some priorities could be more vital than reunification; de-escalation after June 2020 clash with India, fatalities on both sides; no combat experience to overcome the peace disease: ebook 21.</li>
+  <li>Lingering weaknesses limit "quick victory," create opportunities for adversaries; U.S. and allies need agile forces, operational concepts, skilled leadership: ebook 21&ndash;22.</li>
+  <li>"Peace is cheap, and the savings bought the fleet" is our compression of ebook 18&ndash;19. The Airmen link is our inference, not the authors' claim.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 1: Absolute Loyalty, Pending Audit</h3>
+<ul>
+  <li>Deng expanded latitude, allowed business to compensate for tight budgets; secrecy, corruption, drift; Jiang and Hu limited success: Wuthnow and Saunders, ch. 1, ebook 29. Three negative consequences named: ebook 36.</li>
+  <li>Xi strongest leader since Mao; mixed results: ebook 29.</li>
+  <li>Rotation: four of five Theater Command commanders from other regions, all five commissars local; group army commanders almost all transferred, most commissars local: ebook 41&ndash;42.</li>
+  <li>Rotation reduces trust and collusion; theater commander would not know subordinates well; likely at a cost to operational effectiveness: ebook 42.</li>
+  <li>Audit Office moved to CMC October 2014: ebook 43. Discipline Inspection Commission and Political and Legal Affairs Commission moved from GPD to CMC, January 2016 reorganization: ebook 44.</li>
+  <li>More than 100 officers above Corps Leader level (major generals) punished: ebook 41.</li>
+  <li>53 publicized appearances 2012&ndash;2015 vs. Hu's 36 in 2004&ndash;2007: ebook 39&ndash;40.</li>
+  <li>Ground forces could not effectively oppose large manpower cuts: ebook 46.</li>
+  <li>Late 2023 dismissals: Rocket Force commander and commissar, Li Shangfu, head of military court; reasons not announced, commentary suggested acquisition graft; appointed by Xi in 2022; "manifestly not 'absolute'": ebook 47&ndash;48.</li>
+  <li>"formal compliance is not the same thing as genuine belief": ebook 47.</li>
+  <li>Nexus confined to a single individual, could resurface under a weak successor: ebook 46.</li>
+  <li>Micromanagement, party committee consensus, commissars could hinder quick wartime decisions at lower levels; "Every hour spent on political indoctrination is one hour less spent on professional military training and education": ebook 50.</li>
+  <li>Commissars co-equal down to company level: ebook 32.</li>
+  <li>Succession crisis, military as "kingmaker": ebook 49.</li>
+  <li>"Paid for it in agility" and the Airmen link are our inference, not the authors' claim.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 2: Threats Come in Rings, and the PLA Has to Wear All of Them</h3>
+<ul>
+  <li>Concentric rings: regime and mainland, Taiwan and region, United States, interests beyond Asia: Wuthnow and Saunders, ch. 2, ebook 55-56, 63.</li>
+  <li>2014 "holistic national security concept," eleven areas, political security listed first: Wuthnow and Saunders, ch. 2, ebook 61.</li>
+  <li>20th Party Congress, October 2022: Xi failed to repeat that the "period of strategic opportunity" remained open: Wuthnow and Saunders, ch. 2, ebook 63.</li>
+  <li>"Mass incidents" rose from 8,700 in 1993 to more than 87,000 in 2005, the last year figures were released: Wuthnow and Saunders, ch. 2, ebook 65.</li>
+  <li>Land borders with fourteen countries: Wuthnow and Saunders, ch. 2, ebook 70.</li>
+  <li>More than 70 percent of oil from overseas, most through the Strait of Malacca (per the U.S. government): Wuthnow and Saunders, ch. 2, ebook 80.</li>
+  <li>"The armed forces are only one bright star in this constellation"; wider cast of security actors (Internet monitors, health authorities, financial regulators): Wuthnow and Saunders, ch. 2, ebook 83.</li>
+  <li>White papers as the authoritative view of security challenges: Wuthnow and Saunders, ch. 2, ebook 61. The "says it fears" caveat is our framing.</li>
+  <li>Xi quote, "comprehensive containment, encirclement and suppression"; long-range missiles and larger strategic arsenal to counter U.S. intervention: Wuthnow and Saunders, ch. 2, ebook 79.</li>
+  <li>United States as "most important strategic challenger": Wuthnow and Saunders, ch. 2, ebook 56.</li>
+  <li>Most immediate threats "virtually outside the window": Wuthnow and Saunders, ch. 2, ebook 64.</li>
+  <li>Tradeoffs among forms of security; military funding balanced against infrastructure, stimulus, SOE subsidies; economic complaints can become regime threats: Wuthnow and Saunders, ch. 2, ebook 83-84.</li>
+  <li>"Chain reaction" keeps forces on alert across the periphery; specialized forces for mountain or jungle warfare, small island seizure, countering WMD: Wuthnow and Saunders, ch. 2, ebook 84.</li>
+  <li>PLA and PAP missions across the rings (Tibet, Xinjiang, disasters, Korea, Sino-Indian border, sea lanes): Wuthnow and Saunders, ch. 2, ebook 83.</li>
+  <li>Xi retained predecessors' caution in crossing the threshold of lethal violence: Wuthnow and Saunders, ch. 2, ebook 60.</li>
+  <li>2027 deadline to build capability to solve the cross-Strait impasse through force: Wuthnow and Saunders, ch. 2, ebook 69.</li>
+  <li>The yuan-for-yuan third-order link and the "boxed in" opinion are our inference, not the authors' claim.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 3: New Wiring, Same Electricians</h3>
+<ul>
+  <li>Strategy since early 1990s: short, high-intensity "local wars" against regional opponents, likely with U.S. support: Wuthnow and Saunders, ch. 3, ebook 121.</li>
+  <li>2014 and 2019 updates kept the southeast as "main strategic direction"; the change under Xi was urgency, not the strategy: Wuthnow and Saunders, ch. 3, ebook 101.</li>
+  <li>"be better at their current assignments": Wuthnow and Saunders, ch. 3, ebook 121.</li>
+  <li>1993 update shifted the main strategic direction to the southeast opposite Taiwan: Wuthnow and Saunders, ch. 3, ebook 99.</li>
+  <li>Gulf War lessons led the PLA to focus on joint operations and short, high-intensity campaigns; "system destruction warfare" targets sensors, C3 networks, logistics hubs: Wuthnow and Saunders, ch. 3, ebook 100.</li>
+  <li>Ground forces nearly 70 percent of the PLA as late as 2015; military region commanders had peacetime control only over army units: Wuthnow and Saunders, ch. 3, ebook 104.</li>
+  <li>1995-1996 crisis war zone staff flown in from Beijing: Wuthnow and Saunders, ch. 3, ebook 109.</li>
+  <li>Jiang and Hu lacked deep ties to the PLA; twenty-year lag between 1993 strategy and overhaul at end of 2015; 300,000 cut; army just under half: Wuthnow and Saunders, ch. 3, ebook 104-105.</li>
+  <li>Four general departments disbanded early 2016, replaced by fifteen smaller departments, commissions, and offices: Wuthnow and Saunders, ch. 3, ebook 106.</li>
+  <li>Army called the "biggest loser" of the reforms: Wuthnow and Saunders, ch. 3, ebook 107.</li>
+  <li>Five theater commands: Wuthnow and Saunders, ch. 3, ebook 108.</li>
+  <li>PLA has largely fixed command problems; theater commanders have operational control over land, air, naval, conventional missile forces; Pelosi August 2022 response far harder to coordinate in the past: Wuthnow and Saunders, ch. 3, ebook 110-111.</li>
+  <li>Persistent challenges: no organizational basis for global combat; even force distribution against "chain reaction"; army dominance in senior commands; Leninist centralization vs. junior initiative, "remains in doubt": Wuthnow and Saunders, ch. 3, ebook 111-112.</li>
+  <li>No war since 1979, border clashes ended 1991; "peace disease"; assignments and promotions remain service-centric: Wuthnow and Saunders, ch. 3, ebook 117-118.</li>
+  <li>Joint Operations College established in 2017 at National Defense University: Wuthnow and Saunders, ch. 3, ebook 118.</li>
+  <li>The "careers take longer" opinion and the third-order link (weak link is people, not boxes) are our inference, not the authors' claim.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 4: Every Service a Champion, the Team Still Pending</h3>
+<ul>
+  <li>Services pursue "world-class" capabilities within their own domains; competition and prestige systems hinder transition to a joint force: Wuthnow and Saunders, ch. 4, ebook 129, 154, 158.</li>
+  <li>PLAN ships 216 (2005) to 328 (2023); U.S. Navy 289 in 2023: Wuthnow and Saunders, ch. 4, ebook 147.</li>
+  <li>Destroyers doubled from 21 to 42, 2005 to 2023: Wuthnow and Saunders, ch. 4, ebook 148.</li>
+  <li>Traditional mission territorial air defense; 2004 CMC strategy, "both offensive and defensive missions": Wuthnow and Saunders, ch. 4, ebook 139-140.</li>
+  <li>J-20 in all five theaters, roughly 200 in service in 2024; WS-10C engine 2019, WS15 engine online 2022: Wuthnow and Saunders, ch. 4, ebook 141.</li>
+  <li>Air force retains bombers, transport aircraft, airborne corps; navy retains marine corps and SSBNs: Wuthnow and Saunders, ch. 4, ebook 144, 152, 156.</li>
+  <li>Zhurihe opposition force brigade; "blue" unit emulates U.S. tactics and routinely defeats visiting "red" units: Wuthnow and Saunders, ch. 4, ebook 134.</li>
+  <li>Fourth and fifth generation fighters roughly 1,300 vs. 1,500 for the U.S. Air Force in 2024: Wuthnow and Saunders, ch. 4, ebook 144.</li>
+  <li>PLAAF human capital weaknesses: retention given private-sector wages, lack of combat experience: Wuthnow and Saunders, ch. 4, ebook 143-144.</li>
+  <li>Separate army headquarters 2016, service chiefs removed from CMC 2017, chiefs must argue for resources; appeals to national pride or jobs; Liu Huaqing's carrier rationale superseded by long-range precision munitions, program continued as "naval nationalism"; 1,200 Type-99 tanks after 2011, may not operate in the Himalayas, a source of pride; "does not necessarily translate into fielding the forces necessary for joint campaigns": Wuthnow and Saunders, ch. 4, ebook 156.</li>
+  <li>2023 division of labor: land-based naval aviation transferred to the PLAAF, naval aviation focuses on carriers: Wuthnow and Saunders, ch. 4, ebook 145, 155.</li>
+  <li>Retained forces reflect desire to centralize control over scarce assets and services in any system reluctant to give up control: Wuthnow and Saunders, ch. 4, ebook 156.</li>
+  <li>The claim that the fighter count means a fair fight, the link from prestige buying to less money for a Taiwan landing, and the judgment on the fighter count are our inference and opinion.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 5: Four Theories Walk Into a Silo Field</h3>
+<ul>
+  <li>1964 test; Mao's statement committed China to no first use; it guided policy and PLARF practice for five decades: Wuthnow and Saunders, ch. 5, ebook 188.</li>
+  <li>Small, immature, unalerted force for decades: Wuthnow and Saunders, ch. 5, ebook 189.</li>
+  <li>Expectation of several hundred warheads overturned by 2021 discovery of as many as 360 new ICBM silos; government has not acknowledged them: Wuthnow and Saunders, ch. 5, ebook 189.</li>
+  <li>DoD estimate: more than 500 operational warheads as of May 2023, over 1,000 by 2030: Wuthnow and Saunders, ch. 5, ebook 190.</li>
+  <li>No clear-cut evidence of shift in core strategy; Chinese officials deny changes in nuclear policy; growing discrepancy between declaratory policy and capabilities: Wuthnow and Saunders, ch. 5, ebook 192.</li>
+  <li>Secure second strike: launch on warning ("early warning counterstrike"); silos easier to alert and faster to launch; counter-argument that projected force exceeds second-strike needs: Wuthnow and Saunders, ch. 5, ebook 192-193.</li>
+  <li>Nuclear shield and stability-instability paradox, deterring U.S. intervention over Taiwan: Wuthnow and Saunders, ch. 5, ebook 193.</li>
+  <li>Great power status; Xi: nuclear capability a "pillar of our status as a great power": Wuthnow and Saunders, ch. 5, ebook 193.</li>
+  <li>Theater nuclear dominance: reported low-yield warhead; PLA has not developed and deployed tactical nuclear weapons or changed PLARF practices and training; very limited evidence; evidence supports the other three: Wuthnow and Saunders, ch. 5, ebook 194.</li>
+  <li>Six Jin-class (Type-094) SSBNs on deterrence patrols; H-6N training to launch a nuclear air-launched ballistic missile: Wuthnow and Saunders, ch. 5, ebook 190.</li>
+  <li>Nuclear shield places greater premium on local conventional balance and forces difficult choices on scarce defense dollars; U.S. nuclear force development "will set the benchmark"; China reluctant on arms control that locks it into an inferior position: Wuthnow and Saunders, ch. 5, ebook 195.</li>
+  <li>Fravel: China's nuclear strategy "remained largely unchanged since" its first test in October 1964: Fravel, Active Defense, 373.</li>
+  <li>The claim, the judgment that the shield is the theory to plan against, and the link to the air fight over the Strait carrying more deterrent weight are our inference and opinion.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 6: Winning the Reef, Losing the Neighborhood</h3>
+<ul>
+  <li>Military diplomacy as the friendly face; coercion kept below lethal force ("gray zone coercion"): Wuthnow and Saunders, ch. 6, ebook 206-207.</li>
+  <li>Foreign countries disregard protocol and send senior officials without reciprocal visits: Wuthnow and Saunders, ch. 6, ebook 215. Thailand, South Korea, Australia, Vietnam, Cambodia visit China more than they host, and exercise bilaterally with the PLA: ebook 214.</li>
+  <li>About 3,200 acres dredged in the Spratlys; bases on Mischief, Fiery Cross, and Subi Reefs: Wuthnow and Saunders, ch. 6, ebook 225.</li>
+  <li>Doklam 2017: two-month standoff, China agreed to leave, then built other roads through the plateau: Wuthnow and Saunders, ch. 6, ebook 226.</li>
+  <li>New bases allow longer, farther patrols and more PLA fighters and bombers in theater: Wuthnow and Saunders, ch. 6, ebook 227.</li>
+  <li>Scarborough Shoal 2012, U.S.-brokered withdrawal, Chinese ships returned and gained control; HY-981 rig 2014, Beijing backed off after deadly protests in Hanoi: Wuthnow and Saunders, ch. 6, ebook 227.</li>
+  <li>2023 J-11 within ten feet of a B-52 at night: Wuthnow and Saunders, ch. 6, ebook 229. Reliance on Coast Guard and maritime militia ships lacking heavy weapons; B-52 case suggests poor skills or risk-taking: ebook 229-230.</li>
+  <li>Coercion strengthened effective control; divide and conquer, one target at a time; intensified disputes with Japan, India and Bhutan, Southeast Asian states after 2012: Wuthnow and Saunders, ch. 6, ebook 232.</li>
+  <li>No underlying issue resolved; public opinion more negative; countries improving ties with the U.S., EU, Japan, India, Australia; unintended outcome of stronger U.S. alliances: Wuthnow and Saunders, ch. 6, ebook 232.</li>
+  <li>Duterte reversal July 2021; Marcos expanded access; Quad, AUKUS, U.S.-Japan-South Korea; potential balancing coalition; "but not in the manner party leaders intended": Wuthnow and Saunders, ch. 6, ebook 233.</li>
+  <li>The link that each new front makes coordination easier for neighbors is our inference, as is the "recruiting drive" opinion.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 7: The 2027 Deadline Is a To-Do List</h3>
+<ul>
+  <li>Thirty years of buildup to deter independence and compel unification; coercion at new levels under Xi: Wuthnow and Saunders, ch. 7, ebook 238.</li>
+  <li>War of choice less likely because of military, diplomatic, and economic price: Wuthnow and Saunders, ch. 7, ebook 238; costs detailed ebook 247-248.</li>
+  <li>Xi reportedly instructed readiness by 2027; analysts agreed it was a readiness milestone, not an operational timeline: Wuthnow and Saunders, ch. 7, ebook 246. A formal declaration of independence would probably trigger conflict: ebook 246.</li>
+  <li>Little direct evidence of how Xi assesses PLA capabilities; 2027 injunction suggests he was not confident in the early 2020s: Wuthnow and Saunders, ch. 7, ebook 247.</li>
+  <li>Closing-window speculation and skeptics' rebuttal (no direct evidence; party optimistic about long-term prospects): Wuthnow and Saunders, ch. 7, ebook 249.</li>
+  <li>Roughly six brigades across the 185-kilometer strait: Wuthnow and Saunders, ch. 7, ebook 251.</li>
+  <li>DoD 2023 report: amphibious invasion "one of the most complicated and difficult military operations"; no recent combat experience: Wuthnow and Saunders, ch. 7, ebook 253.</li>
+  <li>Airborne corps, marines, JLSF and others outside Eastern Theater command, would need resubordination; few officers serve in joint billets: Wuthnow and Saunders, ch. 7, ebook 253.</li>
+  <li>Insufficient sealift and airlift; experimenting with civilian ferries: Wuthnow and Saunders, ch. 7, ebook 254.</li>
+  <li>Peacetime coercion requires fighters, navy, Coast Guard; 2019 sale of 66 F-16Vs; asymmetric systems (coastal defense missiles, mines, UAVs): Wuthnow and Saunders, ch. 7, ebook 261-262. Conventional platforms sap energy from invasion defense: ebook 265-266.</li>
+  <li>U.S. options that might push China into a war of necessity; no clear red lines: Wuthnow and Saunders, ch. 7, ebook 263-264.</li>
+  <li>"Why the need to motivate a system already ready to go?"; blockade risk, naval and Coast Guard capabilities, reliance on seaborne imports: Wuthnow and Saunders, ch. 7, ebook 266.</li>
+  <li>Taiwan's short window: Ukraine lessons, sanctions insulation, nuclear expansion: Wuthnow and Saunders, ch. 7, ebook 267.</li>
+  <li>The opinion that the tankers deserve more attention than the calendar is ours.</li>
+</ul>
+<h3>Wuthnow and Saunders, chapter 8: Flags Everywhere, Brigades Nowhere</h3>
+<ul>
+  <li>Global actor, not yet a global power; Beijing has not asked the PLA to conduct large missions abroad: Wuthnow and Saunders, ch. 8, ebook 296.</li>
+  <li>Roughly 5,000 overseas, under one percent of a two-million-person force; U.S. more than 160,000 abroad: Wuthnow and Saunders, ch. 8, ebook 274.</li>
+  <li>No joint command and control for overseas troops; service headquarters lead; logistics designed for operations short of war; no alliances to guarantee access: Wuthnow and Saunders, ch. 8, ebook 283.</li>
+  <li>Il-76s ferry about 140 troops each: Wuthnow and Saunders, ch. 8, ebook 284.</li>
+  <li>Y-20: 300 troops, 27 in 2019, more than 70 in 2024; Kardon and Leutert's 96 ports: Wuthnow and Saunders, ch. 8, ebook 285.</li>
+  <li>Djibouti: 90-acre base, 2021 pier for all PLA navy ships including carriers; negotiations with Cambodia (Ream), Pakistan, Sri Lanka, UAE, Equatorial Guinea, Namibia, Vanuatu, Solomon Islands; "clearly interested in expansion": Wuthnow and Saunders, ch. 8, ebook 286.</li>
+  <li>Sudan 2023: U.S. special forces airborne rescue in Khartoum; PLA navy loaded passengers at a port several hundred kilometers away: Wuthnow and Saunders, ch. 8, ebook 288-289.</li>
+  <li>H-20 range roughly 6,700 miles vs. 3,700 for H-6K: Wuthnow and Saunders, ch. 8, ebook 289. Threat to Hawaii and Alaska: ebook 290.</li>
+  <li>"are political, not technological": Wuthnow and Saunders, ch. 8, ebook 291.</li>
+  <li>Ports and Djibouti lack personnel, munitions stockpiles, and air and missile defenses to serve as wartime staging areas; access hard without alliances: Wuthnow and Saunders, ch. 8, ebook 293.</li>
+  <li>Access denial as the bigger challenge; Afghanistan 2001 needed bases in Uzbekistan and Kyrgyzstan; China could persuade third parties to close borders, facilities, airspace: Wuthnow and Saunders, ch. 8, ebook 296.</li>
+  <li>Hawaii and Alaska at risk; hardening, dispersal, new doctrine, strike assets: Wuthnow and Saunders, ch. 8, ebook 297.</li>
+  <li>Djibouti uses (anti-piracy, peacekeeper resupply, evacuations, intelligence): Wuthnow and Saunders, ch. 8, ebook 286.</li>
+  <li>The claim that the access fight will be settled in capitals first, and the overflight opinion, are our inference.</li>
+</ul>
+        <h3>Earlier books, one minute each</h3>
+        <ul>
+          <li>Zhang thesis: 6 to 8, 201 to 214. Overstated kills and unrealistic expectations: 197. PLA Air Force lacks combat experience: Wuthnow and Saunders, ebook 143 to 144.</li>
+          <li>Fravel thesis: ebook 24, 426 to 427. Twenty-year lag, Jiang and Hu lacked clout: Wuthnow and Saunders, ebook 104 to 105.</li>
+          <li>Olsen thesis: 1 to 2, 4, 293, 295. Gulf War lessons and system destruction warfare: Wuthnow and Saunders, ebook 100.</li>
+          <li>Gaddis thesis: vii to ix, 302, 342 to 343. Eisenhower on "nibbling," 1955: 176. Gray zone coercion: Wuthnow and Saunders, ebook 206 to 207.</li>
+          <li>Lambeth thesis: 6, 297 to 299. PLA Kosovo studies: Fravel, ebook 355, 358. Counterspace and cyber forces to exploit U.S. military vulnerabilities: Wuthnow and Saunders, intro, ebook 25.</li>
+        </ul>
+        <h3>The Bedtime Version</h3>
+        <ul>
+          <li>The story is fiction. Quick victory all but guaranteed: Wuthnow and Saunders, ebook 15, 21. Peace disease, commissars and centralized command, corruption: 19 to 20. Agile forces to deter: 21 to 22.</li>
+        </ul>
+      </section>
+      <section class="block qa" id="qa">
+        <h2>Recall</h2>
+        <h3 class="qa-h">Chapter recall</h3>
+        <ul class="recall">
+<li><details><summary>Which item do Wuthnow and Saunders list as both a PLA strength and a PLA weakness?</summary><p>Strategic discipline: avoiding war since 1979 saved money for modernization, but it also left the PLA without combat experience and made Beijing hesitate to use its new capabilities. <span class="pg">W&amp;S e18&ndash;21</span></p></details></li>
+<li><details><summary>How did Xi's officer rotations strengthen party control, and what did they cost?</summary><p>Pairing commanders and commissars who did not know each other cut collusion and made unauthorized orders harder, but the authors say it likely cost operational effectiveness because command teams were strangers. <span class="pg">W&amp;S e41&ndash;42</span></p></details></li>
+<li><details><summary>What did Xi's 2014 "holistic national security concept" cover, and which area came first?</summary><p>Eleven areas of security, from political and homeland to ecological, resource, and nuclear, with political security listed first, reflecting fear that problems anywhere could coalesce into threats to the regime. <span class="pg">W&amp;S e61</span></p></details></li>
+<li><details><summary>How long did the PLA take to restructure after adopting its 1993 strategy, and why?</summary><p>About twenty years, until the end of 2015; bureaucratic resistance and the political weakness of Jiang and Hu, who lacked deep ties to the PLA, blocked earlier reform. <span class="pg">W&amp;S e104-105</span></p></details></li>
+<li><details><summary>What happened to Liu Huaqing's original rationale for Chinese aircraft carriers, and why did the program continue?</summary><p>Advances in long-range precision munitions superseded his case for carriers projecting airpower across the Taiwan Strait, but the program continued under the banner of "naval nationalism" and international respect. <span class="pg">W&amp;S e156</span></p></details></li>
+<li><details><summary>Which of the four explanations for China's nuclear buildup do Wuthnow and Saunders find least supported, and why?</summary><p>Theater nuclear dominance: apart from a reported low-yield warhead, the PLA has not deployed tactical nuclear weapons or changed Rocket Force practices and training to support theater nuclear warfighting. <span class="pg">W&amp;S e194</span></p></details></li>
+<li><details><summary>According to Wuthnow and Saunders, what has China's gray zone coercion achieved, and what has it cost?</summary><p>It strengthened China's effective control in contested areas, especially the South China Sea, but resolved none of the disputes and pushed neighbors toward the United States and groupings like the Quad and AUKUS. <span class="pg">W&amp;S e232-233</span></p></details></li>
+<li><details><summary>Why do Wuthnow and Saunders treat Xi's 2027 deadline as evidence against an imminent invasion?</summary><p>Analysts read it as a readiness milestone, not an operational timeline, and an order to get ready suggests Xi was not confident the PLA already was. <span class="pg">W&amp;S e246-247, e266</span></p></details></li>
+<li><details><summary>Per Wuthnow and Saunders, what may be a bigger challenge for the United States than PLA overseas basing?</summary><p>China's ability to deny access to U.S. forces by using its trade and investment influence to get third parties to close bases and airspace, as the 2001 Afghanistan war showed U.S. dependence on access. <span class="pg">W&amp;S e296</span></p></details></li>
+        </ul>
+        <h3 class="qa-h">Earlier books</h3>
+        <ul class="recall">
+<li><details><summary>What did Zhang say overstated F-86 kill claims did to the air force?</summary><p>They may have fed unrealistically high expectations of the air force and blocked a realistic assessment of its role. <span class="pg">Z 197</span></p></details></li>
+<li><details><summary>What condition does Fravel attach to major changes in Chinese military strategy?</summary><p>A united party leadership, which lets senior officers lead the change. <span class="pg">F e24, e426-427</span></p></details></li>
+<li><details><summary>What did Eisenhower admit about massive retaliation in 1955?</summary><p>It offered no defense against political and military "nibbling" below the threshold of major war. <span class="pg">G 176</span></p></details></li>
+<li><details><summary>What did the PLA take from the Gulf War, per Wuthnow and Saunders?</summary><p>A focus on joint operations and short, high-intensity campaigns, and "system destruction warfare" against sensors, command networks, and logistics. <span class="pg">W&amp;S e100</span></p></details></li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    The views on this page are the author's own and do not represent the Department of the Air Force, the US Space Force, the Department of Defense, or Air University. All sources are public and unclassified.
+  </footer>
+</div>
+
+
+
+
+</body>
+</html>
